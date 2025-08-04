@@ -1,4 +1,4 @@
-## ArcGIS Pro 3.5 SDK for .NET
+## ArcGIS Pro 3.5 SDK Snippets
 
 ```
 ArcGIS Pro Version: 3.5.0.57365
