@@ -164,7 +164,7 @@ namespace ProSnippetsEditing
       // set up some attributes
       var attribs = new Dictionary<string, object> { };
       attribs.Add("Layer", "Parcels");
-      attribs.Add("Description", "OID: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString());
+      attribs.Add("Description", "objectId: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString());
 
       //create a record in an audit table
       var sTable = MapView.Active.Map.FindStandaloneTables("EditHistory").First();
@@ -203,7 +203,7 @@ namespace ProSnippetsEditing
 
         // set up some attributes
         var attribs = new Dictionary<string, object> { };
-        attribs.Add("Description", "OID: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString());
+        attribs.Add("Description", "objectId: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString());
 
         // update Notes table with information about the new feature
         using (var geoDatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(Project.Current.DefaultGeodatabasePath))))
@@ -216,7 +216,7 @@ namespace ProSnippetsEditing
       }
       catch (Exception e)
       {
-        MessageBox.Show($@"Error in OnRowCreated for OID: {args.Row.GetObjectID()} : {e.ToString()}");
+        MessageBox.Show($@"Error in OnRowCreated for objectId: {args.Row.GetObjectID()} : {e.ToString()}");
       }
     }
     #endregion

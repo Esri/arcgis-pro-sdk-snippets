@@ -112,7 +112,7 @@ namespace ProSnippetsEditing
     internal async void UpdateAnnotation()
     {
       BasicFeatureLayer annoLayer = MapView.Active.Map.GetLayersAsFlattenedList().First() as BasicFeatureLayer;
-      var oid = 1;
+      var objectId = 1;
       MapPoint pnt = null;
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
@@ -162,7 +162,7 @@ namespace ProSnippetsEditing
         // use the inspector methodology
         //at 2.x - var insp = new Inspector(true);
         var insp = new Inspector();
-        insp.Load(annoLayer, oid);
+        insp.Load(annoLayer, objectId);
 
         // get the annotation properties
         AnnotationProperties annoProperties = insp.GetAnnotationProperties();
@@ -193,7 +193,7 @@ namespace ProSnippetsEditing
         //Don't use 'Shape'....Shape is the bounding box of the annotation text. This is NOT what you want...
         //
         //var insp = new Inspector();
-        //insp.Load(annoLayer, oid);
+        //insp.Load(annoLayer, objectId);
         //var shape = insp["SHAPE"] as Polygon;
         //...wrong shape...
 
@@ -202,7 +202,7 @@ namespace ProSnippetsEditing
         //annoLayer is ~your~ Annotation layer
         //at 2.x - var insp = new Inspector(true);
         var insp = new Inspector();
-        insp.Load(annoLayer, oid);
+        insp.Load(annoLayer, objectId);
 
         AnnotationProperties annoProperties = insp.GetAnnotationProperties();
         var shape = annoProperties.Shape;

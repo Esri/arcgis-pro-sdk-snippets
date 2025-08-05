@@ -114,7 +114,7 @@ namespace ProSnippetsEditing
 
     public static async void InspectorProviderExample()
     {
-      int oid = 1;
+      int objectId = 1;
       // cref: ArcGIS.Desktop.Editing.InspectorProvider
       // cref: ArcGIS.Desktop.Editing.InspectorProvider.Create()
       #region Using the custom inspector provider class
@@ -125,7 +125,7 @@ namespace ProSnippetsEditing
       //Create an embeddable control from the inspector class to display on the pane
       var icontrol = _featureInspector.CreateEmbeddableControl();
 
-      await _featureInspector.LoadAsync(layer, oid);
+      await _featureInspector.LoadAsync(layer, objectId);
       var attribute = _featureInspector.Where(a => a.FieldName == "FontStyle").FirstOrDefault();
       var visibility = attribute.IsVisible; //Will return false
 

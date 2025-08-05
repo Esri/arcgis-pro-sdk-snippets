@@ -34,7 +34,7 @@ namespace ProSnippetsEditing
 
     public static async void LoadFirstFeature2Inspector()
     {
-      int oid = 0;
+      int objectId = 0;
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.#ctor
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(ArcGIS.Desktop.Mapping.MapMember, System.Int64)
@@ -46,8 +46,8 @@ namespace ProSnippetsEditing
 
       // create an instance of the inspector class
       var inspector = new ArcGIS.Desktop.Editing.Attributes.Inspector();
-      // load the feature with ObjectID 'oid' into the inspector
-      await inspector.LoadAsync(firstFeatureLayer, oid);
+      // load the feature with ObjectID 'objectId' into the inspector
+      await inspector.LoadAsync(firstFeatureLayer, objectId);
 
       #endregion
     }
