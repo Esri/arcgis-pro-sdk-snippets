@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides utility methods for displaying pop-ups and custom pop-ups in the active map view.
@@ -23,9 +23,14 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Popups
     #endregion
 
-    #region Show a pop-up for a feature
     // cref: ArcGIS.Desktop.Mapping.MapView.ShowPopup(ArcGIS.Desktop.Mapping.MapMember, System.Int64)
-
+    #region Show a pop-up for a feature
+    /// <summary>
+    /// This method shows a standard pop-up for a feature identified by its object ID in the specified map member (layer).
+    /// </summary>
+    /// <param name="mapMember"></param>
+    /// <param name="objectID"></param>
+    /// <remarks>This method shows a standard pop-up for a feature identified by its object ID in the specified map member (layer).</remarks>
     public static void ShowPopup(MapMember mapMember, long objectID)
     {
       //Get the active map view.
@@ -38,11 +43,14 @@ namespace ProSnippetsMapExploration
 
     #endregion
 
-    #region Show a custom pop-up
     // cref: ArcGIS.Desktop.Mapping.PopupContent
     // cref: ArcGIS.Desktop.Mapping.PopupContent.#ctor(System.String, System.String)
     // cref: ArcGIS.Desktop.Mapping.MapView.ShowCustomPopup
-
+    #region Show a custom pop-up
+    /// <summary>
+    /// This method shows a custom pop-up in the active map view with specified HTML content and a link.
+    /// </summary>
+    /// <remarks>This method creates a custom pop-up with various content types, including HTML strings and URIs.</remarks>
     public static void ShowCustomPopup()
     {
       //Get the active map view.
@@ -58,14 +66,18 @@ namespace ProSnippetsMapExploration
             };
       mapView.ShowCustomPopup(popups);
     }
-
     #endregion
 
-    #region Show a pop-up for a feature using pop-up window properties
     // cref: ArcGIS.Desktop.Mapping.PopupDefinition
     // cref: ArcGIS.Desktop.Mapping.PopupDefinition.#ctor()
     // cref: ArcGIS.Desktop.Mapping.MapView.ShowPopup(ArcGIS.Desktop.Mapping.MapMember, System.Int64, ArcGIS.Desktop.Mapping.PopupDefinition)
-
+    #region Show a pop-up for a feature using pop-up window properties
+    /// <summary>
+    /// This method shows a standard pop-up for a feature identified by its object ID in the specified map member (layer)
+    /// </summary>
+    /// <param name="mapMember"></param>
+    /// <param name="objectID"></param>
+    /// <remarks>This method shows a standard pop-up for a feature identified by its object ID in the specified map member (layer)</remarks>
     public static void ShowPopupWithWindowDef(MapMember mapMember, long objectID)
     {
       if (MapView.Active == null) return;
@@ -83,13 +95,16 @@ namespace ProSnippetsMapExploration
 
     #endregion
 
-    #region Show a custom pop-up using pop-up window properties
     // cref: ArcGIS.Desktop.Mapping.PopupContent
     // cref: ArcGIS.Desktop.Mapping.PopupContent.#ctor(System.String, System.String)
     // cref: ArcGIS.Desktop.Mapping.PopupDefinition
     // cref: ArcGIS.Desktop.Mapping.PopupDefinition.#ctor()
     // cref: ArcGIS.Desktop.Mapping.MapView.ShowCustomPopup(System.Collections.Generic.IEnumerable<ArcGIS.Desktop.Mapping.PopupContent>, System.Collections.Generic.IEnumerable<ArcGIS.Desktop.Mapping.PopupCommand>, System.Boolean, ArcGIS.Desktop.Mapping.PopupDefinition)
-
+    #region Show a custom pop-up using pop-up window properties
+    /// <summary>
+    /// This method shows a custom pop-up in the active map view with specified HTML content and a link, using
+    /// </summary>
+    /// <remarks>This method creates a custom pop-up with various content types, including HTML strings and URIs, using specified window properties.</remarks>
     public static void ShowCustomPopupWithWindowDef()
     {
       if (MapView.Active == null) return;
@@ -122,6 +137,12 @@ namespace ProSnippetsMapExploration
     // cref: ArcGIS.Desktop.Mapping.PopupCommand.Tooltip
     // cref: ArcGIS.Desktop.Mapping.MapView.ShowCustomPopup(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.PopupContent},System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.PopupCommand},System.Boolean)
     #region Show A pop-up With Custom Commands
+    /// <summary>
+    /// This method shows a custom pop-up in the active map view for a specified feature, adding a custom command to the pop-up window.
+    /// </summary>
+    /// <param name="mapMember"></param>
+    /// <param name="objectID"></param>
+    /// <remarks>This method creates a custom pop-up for a specified feature, adding a custom command to the pop-up window.</remarks>
     public static void ShowCustomPopup(MapMember mapMember, long objectID)
     {
       //Get the active map view.
@@ -145,10 +166,16 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Show A Dynamic Pop-up
     // cref: ArcGIS.Desktop.Mapping.PopupContent.OnCreateHtmlContent
     // cref: ArcGIS.Desktop.Mapping.PopupContent.IsDynamicContent
     // cref: ArcGIS.Desktop.Mapping.MapView.ShowCustomPopup(System.Collections.Generic.IEnumerable<ArcGIS.Desktop.Mapping.PopupContent>)
+    #region Show A Dynamic Pop-up
+    /// <summary>
+    /// This method shows a dynamic pop-up in the active map view for a list of object IDs in the specified map member (layer).
+    /// </summary>
+    /// <param name="mapMember"></param>
+    /// <param name="objectIDs"></param>
+    /// <remarks>This method creates a dynamic pop-up for a list of object IDs in the specified map member (layer).</remarks>
     public static void ShowDynamicPopup(MapMember mapMember, List<long> objectIDs)
     {
       //Get the active map view.
@@ -183,6 +210,5 @@ namespace ProSnippetsMapExploration
     }
 
     #endregion
-
   }
 }

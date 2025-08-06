@@ -14,18 +14,31 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
+  /// <summary>
+  /// Provides a collection of tools and utilities for working with ArcGIS Pro, including custom map tools, sketch
+  /// tools, and tools with embeddable controls.
+  /// </summary>
+  /// <remarks>The <see cref="ProSnippetsTool"/> class contains various examples of custom tools that extend the
+  /// functionality of ArcGIS Pro. These tools demonstrate how to implement features such as custom sketch symbols,
+  /// retrieving map coordinates, identifying features, and embedding controls within tools. Each tool is designed to
+  /// showcase a specific capability and can be used as a reference for creating similar tools in your own
+  /// applications.</remarks>
   public static class ProSnippetsTool
   {
-    /// <summary>
-    /// 
-    /// </summary>
+
     #region ProSnippet Group: Tools
     #endregion
 
-    #region Change symbol for a sketch tool
     // cref: ArcGIS.Desktop.Mapping.MapTool.SketchSymbol
+    #region Change symbol for a sketch tool
+    /// <summary>
+    /// Represents a sketch tool that allows users to draw geometries on the map using a custom sketch symbol.
+    /// </summary>
+    /// <remarks>This tool is configured to use a rectangle as the sketch geometry type and supports map-based
+    /// sketches only.  The sketch symbol can be customized by overriding the default symbol provided in the tool
+    /// activation process.</remarks>
     public class SketchTool_WithSymbol : MapTool
     {
       public SketchTool_WithSymbol()
@@ -51,12 +64,17 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Create a tool to the return coordinates of the point clicked in the map
     // cref: ArcGIS.Desktop.Mapping.MapTool.OnToolMouseDown(ArcGIS.Desktop.Mapping.MapViewMouseButtonEventArgs)
     // cref: ArcGIS.Desktop.Mapping.MapViewMouseButtonEventArgs
     // cref: ArcGIS.Desktop.Mapping.MapTool.HandleMouseDownAsync(ArcGIS.Desktop.Mapping.MapViewMouseButtonEventArgs)
     // cref: ArcGIS.Desktop.Mapping.MapViewMouseButtonEventArgs.ClientPoint
     // cref: ArcGIS.Desktop.Mapping.MapView.ClientToMap(System.Windows.Point)
+    #region Create a tool to the return coordinates of the point clicked in the map
+    /// <summary>
+    /// Represents a tool that retrieves the map coordinates of a clicked point.
+    /// </summary>
+    /// <remarks>This tool captures mouse down events and converts the clicked point from client coordinates to map
+    /// coordinates. The map coordinates are then displayed in a message box.</remarks>
     public class GetMapCoordinates : MapTool
     {
       protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
@@ -78,9 +96,16 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Create a tool to identify the features that intersect the sketch geometry
     // cref: ArcGIS.Desktop.Mapping.MapView.GetFeatures(ArcGIS.Core.Geometry.Geometry, bool, bool)
     // cref: ArcGIS.Desktop.Mapping.MapView.FlashFeature(ArcGIS.Desktop.Mapping.SelectionSet)
+    #region Create a tool to identify the features that intersect the sketch geometry
+    /// <summary>
+    /// A custom map tool that identifies and highlights features intersecting a user-defined sketch geometry.
+    /// </summary>
+    /// <remarks>This tool allows users to draw a rectangular sketch on the map, and it identifies all
+    /// features that intersect the sketch geometry. The identified features are then flashed in the active map view.
+    /// The tool operates in screen coordinates, making it suitable for both 2D and 3D interactive selection
+    /// workflows.</remarks>
     public class CustomIdentify : MapTool
     {
       public CustomIdentify()
@@ -118,8 +143,14 @@ namespace ProSnippetsMapExploration
       public static byte[] red_cursor = new byte[256];
     }
 
-    #region Change the cursor of a Tool
     // cref: ArcGIS.Desktop.Framework.Contracts.Tool.Cursor
+    #region Change the cursor of a Tool
+    /// <summary>
+    /// Represents a custom map tool with a unique cursor.
+    /// </summary>
+    /// <remarks>This tool is configured to use a rectangle as the sketch geometry type and supports map-based
+    /// sketches only. The cursor for this tool can be customized by setting the Cursor property
+    /// to a custom cursor file or a built-in system cursor.</remarks>
     public class CustomMapTool : MapTool
     {
       public CustomMapTool()
@@ -148,9 +179,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Tool with an Embeddable Control
     // cref: ArcGIS.Desktop.Mapping.MapTool.ControlID
     // cref: ArcGIS.Desktop.Mapping.MapTool.EmbeddableControl
+    #region Tool with an Embeddable Control
+    /// <summary>
+    /// Tool with an embeddable control
+    /// </summary>
+    /// <remarks>This tool demonstrates how to embed a custom control within a map tool in ArcGIS Pro. The embeddable
+    /// control can be used to provide additional functionality or user interface elements while the tool is active.</remarks>
     public class MapTool_WithControl : MapTool
     {
       // Using the Visual Studio SDK templates, add a MapTool and an EmbeddableControl
@@ -193,9 +229,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Tool with an Overlay Embeddable Control
     // cref: ArcGIS.Desktop.Mapping.MapTool.OverlayControlID
     // cref: ArcGIS.Desktop.Mapping.MapTool.OverlayEmbeddableControl
+    #region Tool with an Overlay Embeddable Control
+    /// <summary>
+    /// Tool with an overlay embeddable control
+    /// </summary>
+    /// <remarks>This tool demonstrates how to embed a custom overlay control within a map tool in ArcGIS Pro. The overlay
+    /// control can be used to provide additional functionality or user interface elements while the tool is active.</remarks>
     public class MapTool_WithOverlayControl : MapTool
     {
       // Using the Visual Studio SDK templates, add a MapTool and an EmbeddableControl

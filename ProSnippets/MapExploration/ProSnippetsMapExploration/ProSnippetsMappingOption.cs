@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   public static class ProSnippetsMappingOption
   {
@@ -26,11 +26,22 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Mapping Options
     #endregion
 
-    #region Get/Set Selection Options
     // cref: ArcGIS.Desktop.Core.ApplicationOptions.SelectionOptions
     // cref: ArcGIS.Desktop.Core.SelectionOptions
     // cref:ArcGIS.Desktop.Mapping.SelectionMethod
     // cref:ArcGIS.Desktop.Mapping.SelectionCombinationMethod
+    #region Get/Set Selection Options
+    /// <summary>
+    /// Configures and modifies the selection options for the application.
+    /// </summary>
+    /// <remarks>This method demonstrates how to access and update various selection-related settings in the
+    /// application, such as selection colors, fill styles, tolerance, and methods. These options control how
+    /// selections are visually represented and how selection operations are performed. The method uses the <see
+    /// cref="ArcGIS.Desktop.Core.ApplicationOptions.SelectionOptions"/> property to retrieve the current selection
+    /// options and applies changes using the provided APIs. Changes include modifying selection colors, enabling or
+    /// disabling selection graphics, and setting selection methods and combination methods. Note: Some selection
+    /// combination methods, such as <see cref="ArcGIS.Desktop.Mapping.SelectionCombinationMethod.XOR"/>, are not
+    /// supported.</remarks>
     public static void SelectionOptions()
     {
       var options = ApplicationOptions.SelectionOptions;
@@ -41,7 +52,6 @@ namespace ProSnippetsMapExploration
 
         var color = options.SelectionColor as CIMRGBColor;
         options.SetSelectionColor(ColorFactory.Instance.CreateRGBColor(255, 0, 0));
-
 
         var defaultFill = options.DefaultSelectionFillColor;
         var fill = options.SelectionFillColor;
@@ -80,6 +90,13 @@ namespace ProSnippetsMapExploration
     // cref: ArcGIS.Desktop.Core.ApplicationOptions.TableOptions
     // cref: ArcGIS.Desktop.Core.TableOptions
     // cref:ArcGIS.Core.CIM.TableRowHeightType
+    /// <summary>
+    /// Configures and modifies table-related application options.
+    /// </summary>
+    /// <remarks>This method demonstrates how to access and update various table options available in the
+    /// application,  such as hiding the "Add New Row" option, toggling selection color overrides, setting font
+    /// properties,  and adjusting row and column header height types. It also shows how to change the highlight color 
+    /// asynchronously using a queued task.</remarks>
     public static void TableOptions()
     {
       var options = ApplicationOptions.TableOptions;
@@ -117,6 +134,5 @@ namespace ProSnippetsMapExploration
       });
     }
     #endregion
-
   }
 }
