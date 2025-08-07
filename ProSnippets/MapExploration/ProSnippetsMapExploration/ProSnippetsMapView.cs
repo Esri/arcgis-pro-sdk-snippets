@@ -145,5 +145,55 @@ namespace MapExploration.ProSnippets
       }
     }
     #endregion
+
+    //cref: ArcGIS.Desktop.Mapping.MapView.CurrentMapTOCContent
+    //cref: ArcGIS.Desktop.Mapping.MapTOCContentType
+    #region Get the Active Map TOC content type
+    /// <summary>
+    /// Retrieves the current Table of Contents (TOC) content type for the active map view.
+    /// </summary>
+    /// <remarks>This method accesses the <see cref="ArcGIS.Desktop.Mapping.MapView.Active"/> instance and
+    /// obtains its <see cref="ArcGIS.Desktop.Mapping.MapView.CurrentMapTOCContent"/> property, which indicates the
+    /// current <see cref="ArcGIS.Desktop.Mapping.MapTOCContentType"/> displayed in the TOC for the active map. This can
+    /// be used to determine what type of content (such as layers, legends, or other supported types) is currently shown
+    /// in the TOC panel.</remarks>
+    public static void GetAndSetMapTOCContentType1()
+    {
+      //Get the current active TOC content type for the map view 
+      var mapTOCContentType = MapView.Active.CurrentMapTOCContent;
+    }
+    #endregion
+
+    //cref: ArcGIS.Desktop.Mapping.MapView.CurrentMapTOCContent
+    //cref: ArcGIS.Desktop.Mapping.MapView.CanSetMapTOCContent(ArcGIS.Desktop.Mapping.MapTOCContentType)
+    //cref: ArcGIS.Desktop.Mapping.MapView.SetMapTOCContentAsync(ArcGIS.Desktop.Mapping.MapTOCContentType)
+    //cref: ArcGIS.Desktop.Mapping.MapTOCContentType
+    #region Set the Active Map TOC content type
+    /// <summary>
+    /// Cycles through the available Table of Contents (TOC) content types for the active map view  and sets the next
+    /// valid content type. If the next content type is not valid, it defaults to  the "Drawing Order" content type.
+    /// </summary>
+    /// <remarks>This method retrieves the current TOC content type for the active map view, increments it to 
+    /// the next type, and attempts to set it. If the next type is not supported, the TOC content type  is reset to
+    /// "Drawing Order". The operation must be performed on the UI thread.</remarks>
+    public static void GetAndSetMapTOCContentType2()
+    {
+      //Get the current active TOC content type for the map view 
+      var mapTOCContentType = (int)MapView.Active.CurrentMapTOCContent;
+      //increment to the next tab whatever it is
+      mapTOCContentType++;
+      //Can we set this type on the TOC?
+      if (MapView.Active.CanSetMapTOCContent((MapTOCContentType)mapTOCContentType))
+        //Set it - must be on the UI! - No QueuedTask
+        MapView.Active.SetMapTOCContentAsync((MapTOCContentType)mapTOCContentType);
+      else
+      {
+        mapTOCContentType = (int)MapTOCContentType.DrawingOrder;
+        //Set it - must be on the UI! - No QueuedTask
+        MapView.Active.SetMapTOCContentAsync((MapTOCContentType)mapTOCContentType);
+      }
+    }
+    #endregion
+
   }
 }
