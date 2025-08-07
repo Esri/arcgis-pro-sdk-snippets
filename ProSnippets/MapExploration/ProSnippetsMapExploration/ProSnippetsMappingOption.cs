@@ -86,10 +86,10 @@ namespace MapExploration.ProSnippets
     }
     #endregion
 
-    #region Get/Set Table Options
     // cref: ArcGIS.Desktop.Core.ApplicationOptions.TableOptions
     // cref: ArcGIS.Desktop.Core.TableOptions
     // cref:ArcGIS.Core.CIM.TableRowHeightType
+    #region Get/Set Table Options
     /// <summary>
     /// Configures and modifies table-related application options.
     /// </summary>
