@@ -89,8 +89,10 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomToFullExtent();
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomToFullExtentAsync(System.Nullable{System.TimeSpan})
+    #region Zoom To Full Extent Async
     /// <summary>
     /// This method asynchronously zooms the active map view to the full extent of the map.
     /// </summary>
@@ -130,8 +132,10 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomInFixed();
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomInFixedAsync(System.Nullable{System.TimeSpan})
+    #region Fixed Zoom In Async
     /// <summary>
     /// This method asynchronously zooms in the active map view by a fixed amount.
     /// </summary>
@@ -146,7 +150,6 @@ namespace MapExploration.ProSnippets
       //Zoom in the map view by a fixed amount.
       return mapView.ZoomInFixedAsync();
     }
-
     #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomOutFixed(System.Nullable{System.TimeSpan})
@@ -168,8 +171,10 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomOutFixed();
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomOutFixedAsync(System.Nullable{System.TimeSpan})
+    #region Fixed Zoom Out Async
     /// <summary>
     /// This method asynchronously zooms out the active map view by a fixed amount.
     /// </summary>
@@ -197,6 +202,8 @@ namespace MapExploration.ProSnippets
     /// <param name="yMax"></param>
     /// <param name="spatialReference"></param>
     /// <returns></returns>
+    /// <remarks>This method retrieves the active map view and zooms to the specified extent. If no active map view is
+    /// available, the method returns <see langword="false"/>.</remarks>
     public static Task<bool> ZoomToExtent(double xMin, double yMin, double xMax, double yMax, ArcGIS.Core.Geometry.SpatialReference spatialReference)
     {
       //Get the active map view.
@@ -210,7 +217,6 @@ namespace MapExploration.ProSnippets
       //Zoom the view to a given extent.
       return mapView.ZoomToAsync(envelope, TimeSpan.FromSeconds(2));
     }
-
     #endregion
 
     // cref: ArcGIS.Desktop.Mapping.Map.SpatialReference
@@ -228,6 +234,10 @@ namespace MapExploration.ProSnippets
     /// <param name="buffer_size">The buffer size, in the same units as the spatial reference, to apply around the point for zooming.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the zoom
     /// operation succeeds; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>This method creates a point at the specified coordinates, buffers it by the given size, and then
+    /// zooms the active map view to that buffered area. If the spatial reference of the buffer polygon does not
+    /// equal the spatial reference of the active map, it projects the polygon to match the map's spatial reference.
+    /// </remarks>
     public static Task<bool> ZoomToPoint(double x, double y, ArcGIS.Core.Geometry.SpatialReference spatialReference, double buffer_size)
     {
       //Get the active map view.
@@ -253,9 +263,7 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomTo(poly, new TimeSpan(0, 0, 0, 3));
       });
     }
-
     #endregion
-
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomToSelected(System.Nullable{System.TimeSpan},System.Boolean)
     #region Zoom To Selected Features with a timespan
@@ -275,8 +283,10 @@ namespace MapExploration.ProSnippets
         mapView.ZoomToSelected(TimeSpan.FromSeconds(3));
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomToSelectedAsync(System.Nullable{System.TimeSpan},System.Boolean)
+    #region Zoom To Selected Features Async with a timespan
     /// <summary>
     /// Zooms the active map view to the currently selected features.
     /// </summary>
@@ -292,7 +302,6 @@ namespace MapExploration.ProSnippets
       mapView.ZoomToSelectedAsync(TimeSpan.FromSeconds(2));
     }
     #endregion
-
 
     // cref: ArcGIS.Desktop.Mapping.Map.GetBookmarks()
     // cref: ArcGIS.Desktop.Mapping.Bookmark
@@ -326,10 +335,12 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomTo(bookmark);
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.Map.GetBookmarks()
     // cref: ArcGIS.Desktop.Mapping.Bookmark
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomToAsync(ArcGIS.Desktop.Mapping.Bookmark,System.Nullable{System.TimeSpan})
+    #region Zoom To Bookmark by name Async
     /// <summary>
     /// This method asynchronously zooms the active map view to the specified bookmark by name.
     /// </summary>
@@ -374,9 +385,16 @@ namespace MapExploration.ProSnippets
     }
     #endregion
 
-    #region Zoom To Selected Layers
     // cref: ArcGIS.Desktop.Mapping.MapView.GetSelectedLayers
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomToAsync(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.Layer},System.Boolean,System.Nullable{System.TimeSpan},System.Boolean)
+    #region Zoom To Selected Layers
+    /// <summary>
+    /// Zooms the active map view to the layers currently selected in the Table of Contents (TOC).
+    /// </summary>
+    /// <remarks>This method operates on the active map view. If no map view is active, the operation does
+    /// nothing and returns <see langword="false"/>.</remarks>
+    /// <returns>A task that represents the asynchronous zoom operation. The task result is <see langword="true"/> if the zoom
+    /// operation was initiated successfully; otherwise, <see langword="false"/>.</returns>
     public static Task<bool> ZoomToTOCSelectedLayersAsync()
     {
       //Get the active map view.
@@ -390,7 +408,6 @@ namespace MapExploration.ProSnippets
     }
     #endregion
 
-
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomTo(ArcGIS.Desktop.Mapping.BasicFeatureLayer,System.Collections.Generic.IEnumerable{System.Int64},System.Nullable{System.TimeSpan},System.Boolean)
     #region Zoom to ObjectIDs
     /// <summary>
@@ -402,6 +419,7 @@ namespace MapExploration.ProSnippets
     /// <param name="objectIDs">A collection of object IDs to which the map view will zoom. This collection must not be null or empty.</param>
     /// <param name="featureLayer">The feature layer containing the objects to zoom to. This parameter must not be null.</param>
     /// <param name="queryFilter">A query filter to refine the search for features. This parameter can be null if no filtering is required.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="objectIDs"/> or <paramref name="featureLayer"/> is null.</exception>
     public static void ZoomToObjectIDs(IEnumerable<long> objectIDs, FeatureLayer featureLayer, QueryFilter queryFilter)
     {
       using (var rowCursor = featureLayer.Search())
@@ -427,11 +445,14 @@ namespace MapExploration.ProSnippets
     /// <summary>
     /// This method pans the active map view to a specified extent defined by the given coordinates and spatial reference.
     /// </summary>
-    /// <param name="xMin"></param>
-    /// <param name="yMin"></param>
-    /// <param name="xMax"></param>
-    /// <param name="yMax"></param>
-    /// <param name="spatialReference"></param>
+    /// <remarks>This method creates an envelope using the specified coordinates and spatial reference, and
+    /// pans the active map view to that extent over a duration of 2 seconds. If no active map view is available, the
+    /// method returns <see langword="false"/> immediately.</remarks>
+    /// <param name="xMin">The minimum X-coordinate of the extent.</param>
+    /// <param name="yMin">The minimum Y-coordinate of the extent.</param>
+    /// <param name="xMax">The maximum X-coordinate of the extent.</param>
+    /// <param name="yMax">The maximum Y-coordinate of the extent.</param>
+    /// <param name="spatialReference">The spatial reference of the specified extent. This must match the spatial reference of the active map view.</param>
     /// <returns></returns>
     public static Task<bool> PanToExtent(double xMin, double yMin, double xMax, double yMax, ArcGIS.Core.Geometry.SpatialReference spatialReference)
     {
@@ -447,8 +468,10 @@ namespace MapExploration.ProSnippets
         return mapView.PanTo(envelope);
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.PanToAsync(ArcGIS.Core.Geometry.Geometry,System.Nullable{System.TimeSpan})
+    #region Pan To an Extent Async
     /// <summary>
     /// Pans the active map view to the specified extent.
     /// </summary>
@@ -499,8 +522,10 @@ namespace MapExploration.ProSnippets
         return mapView.PanToSelected();
       });
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.PanToSelectedAsync(System.Nullable{System.TimeSpan})
+    #region Pan To Selected Features Async
     /// <summary>
     /// Pans the active map view to the currently selected features.
     /// </summary>
@@ -546,7 +571,9 @@ namespace MapExploration.ProSnippets
         return mapView.PanTo(bookmark);
       });
     }
+    #endregion
 
+    #region Pan To Bookmark Async
     /// <summary>
     /// This method asynchronously pans the active map view to the specified bookmark by name.
     /// </summary>
@@ -615,14 +642,13 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.Camera
     // cref: ArcGIS.Desktop.Mapping.Camera.Heading
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomToAsync(ArcGIS.Desktop.Mapping.Camera, System.TimeSpan)
-    // cref: ArcGIS.Desktop.Mapping.MapView.ZoomTo(ArcGIS.Desktop.Mapping.Camera, System.TimeSpan)
-    #region Rotate the map view
+    #region Rotate the map view Async
     /// <summary>
     /// This method rotates the active map view to the specified heading.
     /// </summary>
     /// <param name="heading"></param>
     /// <returns></returns>
-    public static Task<bool> RotateView(double heading)
+    public static Task<bool> RotateViewAsync(double heading)
     {
       //Get the active map view.
       var mapView = MapView.Active;
@@ -634,14 +660,16 @@ namespace MapExploration.ProSnippets
       camera.Heading = heading;
       return mapView.ZoomToAsync(camera, TimeSpan.Zero);
     }
+    #endregion
 
-    // or use the synchronous method
+    // cref: ArcGIS.Desktop.Mapping.MapView.ZoomTo(ArcGIS.Desktop.Mapping.Camera, System.TimeSpan)
+    #region Rotate the map view
     /// <summary>
     /// This method rotates the active map view to the specified heading.
     /// </summary>
     /// <param name="heading"></param>
     /// <returns></returns>
-    public static Task<bool> RotateViewAsync(double heading)
+    public static Task<bool> RotateView(double heading)
     {
       return QueuedTask.Run(() =>
       {
@@ -656,7 +684,6 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomTo(camera, TimeSpan.Zero);
       });
     }
-
     #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapView.ZoomTo(ArcGIS.Core.Geometry.Geometry,System.Nullable{System.TimeSpan},System.Boolean)
@@ -683,7 +710,6 @@ namespace MapExploration.ProSnippets
         return mapView.ZoomTo(newExtent);
       });
     }
-
     #endregion
 
   }
