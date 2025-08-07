@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides utility methods for manipulating and managing time in the active map view.
@@ -18,13 +18,17 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Time
     #endregion
 
-    #region Step forward in time by 1 month
     // cref: ArcGIS.Desktop.Mapping.TimeDelta
     // cref: ArcGIS.Desktop.Mapping.TimeDelta.#ctor(System.Double, ArcGIS.Desktop.Mapping.TimeUnit)
     // cref: ArcGIS.Desktop.Mapping.TimeUnit
     // cref: ArcGIS.Desktop.Mapping.MapView.Time
     // cref: ArcGIS.Desktop.Mapping.TimeRange
     // cref: ArcGIS.Desktop.Mapping.TimeRange.Offset(ArcGIS.Desktop.Mapping.TimeDelta)
+    #region Step forward in time by 1 month
+    /// <summary>
+    /// This method steps the current map time forward by one month.
+    /// </summary>
+    /// <remarks>This method retrieves the active map view and advances its time by one month using a <see cref="ArcGIS.Desktop.Mapping.TimeDelta"/>.</remarks>
     public static void StepMapTime()
     {
       //Get the active view
@@ -38,10 +42,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region  Disable time in the map. 
     // cref: ArcGIS.Desktop.Mapping.MapView.Time
     // cref: ArcGIS.Desktop.Mapping.TimeRange.Start
     // cref: ArcGIS.Desktop.Mapping.TimeRange.End
+    #region  Disable time in the map. 
+    /// <summary>
+    /// This method disables time in the active map view by setting the start and end times to null.
+    /// </summary>
+    /// <remarks>This method demonstrates how to disable time in the active map view.</remarks>
     public static void DisableTime()
     {
       MapView.Active.Time.Start = null;

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides utility methods for interacting with layers in the active map view within the ArcGIS Pro application.
@@ -22,9 +22,14 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Layers
     #endregion
 
-    #region Select all feature layers in TOC
     // cref: ArcGIS.Desktop.Mapping.Map.Layers
     // cref: ArcGIS.Desktop.Mapping.MapView.SelectLayers(System.Collections.Generic.IReadOnlyCollection<ArcGIS.Desktop.Mapping.Layer>)
+    #region Select all feature layers in TOC
+    /// <summary>
+    /// This method selects all feature layers present in the Table of Contents (TOC) of the active map view.
+    /// </summary>
+    /// <remarks>This method demonstrates how to select all feature layers in the TOC of the active map view using
+    /// linq to filter the layers collection.</remarks>
     public static void SelectAllFeatureLayersInTOC()
     {
       //Get the active map view.
@@ -38,9 +43,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Flash selected features
     // cref: ArcGIS.Desktop.Mapping.Map.GetSelection()
     // cref: ArcGIS.Desktop.Mapping.MapView.FlashFeature(ArcGIS.Desktop.Mapping.SelectionSet)
+    #region Flash selected features
+    /// <summary>
+    /// This method flashes the currently selected features in the active map view.
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>This method demonstrates how to flash the selected features in the active map view.</remarks>
     public static Task FlashSelectedFeaturesAsync()
     {
       return QueuedTask.Run(() =>
@@ -59,9 +69,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Check if layer is visible in the current map view
     // cref: ArcGIS.Desktop.Mapping.Layer.IsVisibleInView(ArcGIS.Desktop.Mapping.MapView)
-    private static void CheckLayerVisibilityInView(Layer layer)
+    #region Check if layer is visible in the current map view
+    /// <summary>
+    /// This method checks if a given layer is visible in the current active map view.
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <remarks>This method demonstrates how to check if a layer is visible in the current map view.</remarks>
+    public static void CheckLayerVisibilityInView(Layer layer)
     {
       var mapView = MapView.Active;
       if (mapView == null) return;
@@ -73,9 +88,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Select a layer and open its layer properties page
     // cref: ArcGIS.Desktop.Mapping.MapView.SelectLayers(System.Collections.Generic.IReadOnlyCollection<ArcGIS.Desktop.Mapping.Layer>)
-    private static void GetLayerPropertiesDialog()
+    #region Select a layer and open its layer properties page
+    /// <summary>
+    /// This method selects the first feature layer found in the active map view and opens its Layer Properties dialog.
+    /// </summary>
+    /// <remarks>This method demonstrates how to select a layer in the Table of Contents (TOC) and programmatically open its
+    /// layer properties dialog using the appropriate command.</remarks>
+    public static void GetLayerPropertiesDialog()
     {
       // get the layer you want
       var layer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -97,9 +117,13 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Clear selection for a specific layer
     // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.ClearSelection()
-    private static void ClearSelection()
+    #region Clear selection for a specific layer
+    /// <summary>
+    /// This method clears the selection for the first feature layer found in the active map view.
+    /// </summary>
+    /// <remarks>This method demonstrates how to clear the selection for a specific layer in the active map view.</remarks>
+    public static void ClearSelection()
     {
       var lyr = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
       QueuedTask.Run(() =>
@@ -109,14 +133,20 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Display Table pane for Map Member
     // cref: ArcGIS.Desktop.Core.FrameworkExtender.GetMapTableView(ArcGIS.Desktop.Framework.PaneCollection, ArcGIS.Desktop.Mapping.MapMember)
     // cref: ArcGIS.Core.CIM.CIMTableView.DisplaySubtypeDomainDescriptions
     // cref: ArcGIS.Core.CIM.CIMTableView.SelectionMode
     // cref: ArcGIS.Core.CIM.CIMTableView.ShowOnlyContingentValueFields
     // cref: ArcGIS.Core.CIM.CIMTableView.HighlightInvalidContingentValueFields
     // cref: ArcGIS.Desktop.Core.FrameworkExtender.OpenTablePane(ArcGIS.Desktop.Framework.PaneCollection, ArcGIS.Core.CIM.CIMMapTableView)
-    private static void OpenTablePane()
+    #region Display Table pane for Map Member
+    /// <summary>
+    /// This method opens the Table pane for the first MapMember (layer) in the active map view, configuring the table view with specific settings.
+    /// </summary>
+    /// <remarks>This method retrieves the first MapMember (layer) from the active map view and creates or gets a CIMMapTableView for it.
+    /// The table view is then configured with specific settings before opening the Table pane.
+    /// See https://pro.arcgis.com/en/pro-app/latest/sdk/api-reference/ for more information. </remarks>
+    public static void OpenTablePane()
     {
       var mapMember = MapView.Active.Map.GetLayersAsFlattenedList().OfType<MapMember>().FirstOrDefault();
       //Gets or creates the CIMMapTableView for a MapMember.

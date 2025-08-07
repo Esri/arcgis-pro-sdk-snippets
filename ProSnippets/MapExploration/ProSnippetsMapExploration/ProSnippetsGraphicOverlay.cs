@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides methods and tools for working with graphic overlays in a map view.
@@ -24,10 +24,15 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Graphic overlay
     #endregion
 
-    #region Graphic Overlay
     // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.CIM.CIMGraphic, System.Double)
     // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.Geometry.Geometry, ArcGIS.Core.CIM.CIMSymbolReference, System.Double)
     // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.Geometry.Geometry, ArcGIS.Core.CIM.CIMSymbolReference, System.Double, System.Double)
+    #region Graphic Overlay
+    /// <summary>
+    /// This snippet demonstrates how to add a graphic overlay to the current map view, update it, and then clear it.
+    /// </summary>
+    /// <param name="_graphic"></param>
+    /// <remarks>This method demonstrates how to add a graphic overlay to the current map view, update it, and then clear it.</remarks>
     public static async void GraphicOverlaySnippetTest(IDisposable _graphic)
     {
       // get the current mapview and point
@@ -61,11 +66,17 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Graphic Overlay with CIMPictureGraphic
     // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.CIM.CIMGraphic, System.Double)
     // cref: ArcGIS.Core.CIM.CIMPictureGraphic
     // cref: ArcGIS.Core.CIM.CIMPictureGraphic.PictureURL
     // cref: ArcGIS.Core.CIM.CIMPictureGraphic.Shape
+    #region Graphic Overlay with CIMPictureGraphic
+    /// <summary>
+    /// This snippet demonstrates how to add a picture graphic overlay to the current map view using a CIMPictureGraphic.
+    /// </summary>
+    /// <param name="geometry"></param>
+    /// <param name="envelope"></param>
+    /// <remarks>This method demonstrates how to add a picture graphic overlay to the current map view using a CIMPictureGraphic.</remarks>
     public static void CIMPictureGraphicOverlay(Geometry geometry, ArcGIS.Core.Geometry.Envelope envelope)
     {
       // get the current mapview
@@ -90,9 +101,13 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Add overlay graphic with text
     // cref: ArcGIS.Desktop.Mapping.MapTool.AddOverlayAsync(ArcGIS.Core.Geometry.Geometry, ArcGIS.Core.CIM.CIMSymbolReference, System.Double, System.Double)
     // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.CIM.CIMGraphic, System.Double)
+    #region Add overlay graphic with text
+    /// <summary>
+    /// This tool demonstrates how to add a line graphic overlay to the map view and then add a text graphic overlay at the same geometry location.
+    /// </summary>
+    /// <remarks>This tool demonstrates how to add a line graphic overlay to the map view and then add a text graphic overlay at the same geometry location.</remarks>
     public class AddOverlayWithText : MapTool
     {
       private IDisposable _graphic = null;

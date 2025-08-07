@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides utility methods for working with animations in ArcGIS Pro, including setting animation lengths, scaling
@@ -20,11 +20,15 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Animations
     #endregion
 
-    #region Set Animation Length
     // cref: ArcGIS.Desktop.Mapping.Map.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Duration
     // cref: ArcGIS.Desktop.Mapping.Animation.ScaleDuration(System.Double)
+    #region Set Animation Length
+    /// <summary>
+    /// This method sets the total length of the animation to the specified length by scaling the current duration.
+    /// </summary>
+    /// <param name="length"></param>
     public static void SetAnimationLength(TimeSpan length)
     {
       var mapView = MapView.Active;
@@ -41,11 +45,16 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Scale Animation
     // cref: ArcGIS.Desktop.Mapping.Map.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Duration
     // cref: ArcGIS.Desktop.Mapping.Animation.ScaleDuration(System.TimeSpan,System.TimeSpan,System.Double)
+    #region Scale Animation
+    /// <summary>
+    /// This method scales the animation duration after a specified time by a given length.
+    /// </summary>
+    /// <param name="afterTime"></param>
+    /// <param name="length"></param>
     public static void ScaleAnimationAfterTime(TimeSpan afterTime, TimeSpan length)
     {
       var mapView = MapView.Active;
@@ -62,13 +71,17 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Camera Keyframes
     // cref: ArcGIS.Desktop.Mapping.Map.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Tracks
     // cref: ArcGIS.Desktop.Mapping.CameraTrack
     // cref: ArcGIS.Desktop.Mapping.Track.Keyframes
     // cref: ArcGIS.Desktop.Mapping.CameraKeyframe
+    #region Camera Keyframes
+    /// <summary>
+    /// This method retrieves all camera keyframes from the active map view's animation.
+    /// </summary>
+    /// <returns></returns>
     public static List<CameraKeyframe> GetCameraKeyframes()
     {
       var mapView = MapView.Active;
@@ -81,9 +94,13 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Interpolate Camera
     // cref: ArcGIS.Desktop.Mapping.Animation.NumberOfFrames
     // cref: ArcGIS.Desktop.Mapping.ViewAnimation.GetCameraAtTime(System.TimeSpan)
+    #region Interpolate Camera
+    /// <summary>
+    /// This method retrieves a list of interpolated cameras for each frame in the animation.
+    /// </summary>
+    /// <returns></returns>
     public static Task<List<Camera>> GetInterpolatedCameras()
     {
       //Return the collection representing the camera for each frame in animation.
@@ -111,10 +128,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Interpolate Time
     // cref: ArcGIS.Desktop.Mapping.TimeRange
     // cref: ArcGIS.Desktop.Mapping.Animation.NumberOfFrames
     // cref: ArcGIS.Desktop.Mapping.ViewAnimation.GetCurrentTimeAtTime(System.TimeSpan)
+    #region Interpolate Time
+    /// <summary>
+    /// This method retrieves a list of interpolated time ranges for each frame in the animation.
+    /// </summary>
+    /// <returns></returns>
     public static Task<List<TimeRange>> GetInterpolatedMapTimes()
     {
       //Return the collection representing the map time for each frame in animation.
@@ -142,10 +163,14 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Interpolate Range
     // cref: ArcGIS.Desktop.Mapping.Range
     // cref: ArcGIS.Desktop.Mapping.Animation.NumberOfFrames
     // cref: ArcGIS.Desktop.Mapping.ViewAnimation.GetCurrentRangeAtTime(System.TimeSpan)
+    #region Interpolate Range
+    /// <summary>
+    /// This method retrieves a list of interpolated ranges for each frame in the animation.
+    /// </summary>
+    /// <returns></returns>
     public static Task<List<ArcGIS.Desktop.Mapping.Range>> GetInterpolatedMapRanges()
     {
       //Return the collection representing the map time for each frame in animation.
@@ -173,12 +198,16 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Create Camera Keyframe
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Tracks
     // cref: ArcGIS.Desktop.Mapping.CameraTrack
     // cref: ArcGIS.Desktop.Mapping.CameraTrack.CreateKeyframe(ArcGIS.Desktop.Mapping.Camera,System.TimeSpan,ArcGIS.Core.CIM.AnimationTransition)
     // cref: ArcGIS.Core.CIM.AnimationTransition
+    #region Create Camera Keyframe
+    /// <summary>
+    /// This method creates a camera keyframe at the specified time using the current camera of the active map view.
+    /// </summary>
+    /// <param name="atTime"></param>
     public static void CreateCameraKeyframe(TimeSpan atTime)
     {
       var mapView = MapView.Active;
@@ -191,12 +220,16 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Create Time Keyframe
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Tracks
     // cref: ArcGIS.Desktop.Mapping.TimeTrack
     // cref: ArcGIS.Core.CIM.AnimationTransition
     // cref: ArcGIS.Desktop.Mapping.TimeTrack.CreateKeyframe(ArcGIS.Desktop.Mapping.TimeRange,System.TimeSpan,ArcGIS.Core.CIM.AnimationTransition)
+    #region Create Time Keyframe
+    /// <summary>
+    /// This method creates a time keyframe at the specified time using the current map time of the active map view.
+    /// </summary>
+    /// <param name="atTime"></param>
     public static void CreateTimeKeyframe(TimeSpan atTime)
     {
       var mapView = MapView.Active;
@@ -209,12 +242,17 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Create Range Keyframe
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Tracks
     // cref: ArcGIS.Desktop.Mapping.RangeTrack
     // cref: ArcGIS.Core.CIM.AnimationTransition
     // cref: ArcGIS.Desktop.Mapping.RangeTrack.CreateKeyframe(ArcGIS.Desktop.Mapping.Range,System.TimeSpan,ArcGIS.Core.CIM.AnimationTransition)
+    #region Create Range Keyframe
+    /// <summary>
+    /// This method creates a range keyframe at the specified time using the provided range.
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="atTime"></param>
     public static void CreateRangeKeyframe(ArcGIS.Desktop.Mapping.Range range, TimeSpan atTime)
     {
       var mapView = MapView.Active;
@@ -227,12 +265,18 @@ namespace ProSnippetsMapExploration
     }
     #endregion
 
-    #region Create Layer Keyframe
     // cref: ArcGIS.Desktop.Mapping.Animation
     // cref: ArcGIS.Desktop.Mapping.Animation.Tracks
     // cref: ArcGIS.Desktop.Mapping.LayerTrack
     // cref: ArcGIS.Core.CIM.AnimationTransition
     // cref: ArcGIS.Desktop.Mapping.LayerTrack.CreateKeyframe(ArcGIS.Desktop.Mapping.Layer,System.TimeSpan,System.Boolean,System.Double,ArcGIS.Core.CIM.AnimationTransition)
+    #region Create Layer Keyframe
+    /// <summary>
+    /// This method creates a layer keyframe at the specified time for the given layer, setting its transparency.
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <param name="transparency"></param>
+    /// <param name="atTime"></param>
     public static void CreateLayerKeyframe(Layer layer, double transparency, TimeSpan atTime)
     {
       var mapView = MapView.Active;

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides utility methods for interacting with the active map view in ArcGIS Pro.
@@ -18,13 +18,21 @@ namespace ProSnippetsMapExploration
   /// <remarks>This class contains static methods to retrieve information about the active map view, manipulate map
   /// selections, and manage map view overlays. It is designed to simplify common tasks when working with map views in
   /// ArcGIS Pro.</remarks>
+
+  #region ProSnippet Group: MapView
+  #endregion
+
   public static class ProSnippetsMapView
   {
-    #region Find a MapView by its Caption
     // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Activate
     // cref: ArcGIS.Desktop.Mapping.IMapPane
     // cref: ArcGIS.Desktop.Mapping.MapView
     // cref: ArcGIS.Desktop.Framework.FrameworkApplication.Panes
+    #region Find a MapView by its Caption
+    /// <summary>
+    /// Finds a MapView by its caption.
+    /// </summary>
+    /// <remarks>This method searches through the open panes in the ArcGIS Pro application to find a MapView with a specific caption.
     public static void FindMapViewByCaption()
     {
       string mapPaneCaption = "USNationalParks";
@@ -47,6 +55,14 @@ namespace ProSnippetsMapExploration
     // cref: ArcGIS.Desktop.Mapping.MapView.ViewingMode
     // cref: ArcGIS.Core.CIM.MapViewingMode
     #region Test if the view is 3D
+    /// <summary>
+    /// Determines whether the active map view is in a 3D viewing mode.
+    /// </summary>
+    /// <remarks>This method checks the viewing mode of the currently active map view. If no map view is
+    /// active,  the method returns <see langword="false"/>.</remarks>
+    /// <returns><see langword="true"/> if the active map view is in a 3D viewing mode  (<see
+    /// cref="ArcGIS.Core.CIM.MapViewingMode.SceneLocal"/> or  <see
+    /// cref="ArcGIS.Core.CIM.MapViewingMode.SceneGlobal"/>); otherwise, <see langword="false"/>.</returns>
     public static bool IsView3D()
     {
       //Get the active map view.
@@ -63,6 +79,10 @@ namespace ProSnippetsMapExploration
     // cref: ArcGIS.Desktop.Mapping.MapView.CanSetViewingMode(ArcGIS.Core.CIM.MapViewingMode)
     // cref: ArcGIS.Desktop.Mapping.MapView.SetViewingModeAsync(ArcGIS.Core.CIM.MapViewingMode)
     #region Set ViewingMode
+    /// <summary>
+    /// Sets the viewing mode of the active map view to SceneLocal.
+    /// </summary>
+    /// <remarks>This method checks if the active map view can be set to the SceneLocal viewing mode. If it can, the method
     public static void SetViewingModeToSceneLocal()
     {
       //Get the active map view.
@@ -79,6 +99,10 @@ namespace ProSnippetsMapExploration
     // cref: ArcGIS.Desktop.Mapping.MapView.LinkMode
     // cref: ArcGIS.Desktop.Mapping.LinkMode
     #region Enable View Linking
+    /// <summary>
+    /// Enables view linking for the active map view.
+    /// </summary>
+    /// <remarks>This method sets the view linking mode of the active map view to link both the center and scale.
     public static void EnableViewLinking()
     {
       //Get the active map view.
@@ -95,6 +119,11 @@ namespace ProSnippetsMapExploration
     // cref: ArcGIS.Desktop.Mapping.ExportSceneContentsFormat
     // cref: ArcGIS.Desktop.Mapping.STLExportSceneContentsFormat
     #region Export the contents of a scene to an exchange format such as STL.
+    /// <summary>
+    /// Exports the contents of the active scene to a specified exchange format.
+    /// </summary>
+    /// <remarks>This method exports the 3D objects in the active scene to a stereolithography (STL) file format. It first checks if the
+    /// active view is a local scene before proceeding with the export.</remarks>
     public static void ExportSceneContents()
     {
       // Validate the current active view. Only a local scene can be exported.

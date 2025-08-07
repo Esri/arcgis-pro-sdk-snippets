@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsMapExploration
+namespace MapExploration.ProSnippets
 {
   /// <summary>
   /// Provides functionality for working with advanced Pro Snippets features in ArcGIS Pro.
@@ -19,9 +19,12 @@ namespace ProSnippetsMapExploration
     #region ProSnippet Group: Features
     #endregion
 
-    #region Mask feature
     // cref: ArcGIS.Core.CIM.CIMBaselayer.LayerMasks
-    private static void Masking()
+    #region Mask feature
+    /// <summary>
+    /// This method demonstrates how to apply masking to a feature layer in the active map view using a polygon layer as the mask.
+    /// </summary>
+    public static void Masking()
     {
       QueuedTask.Run(() =>
       {
