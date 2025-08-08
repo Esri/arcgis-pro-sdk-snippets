@@ -27,22 +27,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsEditingOptions
-  {    
+  {
     #region ProSnippet Group: EditingOptions
     #endregion
 
-    public static void EditingOptions()
-    {
-      // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions
-      // cref: ArcGIS.Desktop.Core.UncommitedEditMode
-      // cref: ArcGIS.Desktop.Core.ToolbarPosition
-      // cref: ArcGIS.Desktop.Core.ToolbarSize
-      #region Get/Set Editing Options
+    // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions
+    // cref: ArcGIS.Desktop.Core.UncommitedEditMode
+    // cref: ArcGIS.Desktop.Core.ToolbarPosition
+    // cref: ArcGIS.Desktop.Core.ToolbarSize
+    #region Get/Set Editing Options
 
+    public static void EditingOptionsToggleAndSwitch()
+    {
       //toggle, switch option values
       var options = ApplicationOptions.EditingOptions;
 
@@ -85,14 +85,16 @@ namespace ProSnippetsEditing
       options.ShowDiscardEditsDialog = !options.ShowDiscardEditsDialog;
       options.DeactivateToolOnSaveOrDiscard = !options.DeactivateToolOnSaveOrDiscard;
       options.NewLayersEditable = !options.NewLayersEditable;
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions
-      // cref: ArcGIS.Desktop.Core.AnnotationFollowMode
-      // cref: ArcGIS.Desktop.Core.AnnotationPlacementMode
-      #region Get/Set Editing Annotation Options
+    // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions
+    // cref: ArcGIS.Desktop.Core.AnnotationFollowMode
+    // cref: ArcGIS.Desktop.Core.AnnotationPlacementMode
+    #region Get/Set Editing Annotation Options
+    public static void EditingAnnotationOptions()
+    {
       var eOptions = ApplicationOptions.EditingOptions;
 
       var followLinkedLines = eOptions.AutomaticallyFollowLinkedLineFeatures;
@@ -104,19 +106,18 @@ namespace ProSnippetsEditing
 
       eOptions.AnnotationFollowMode = AnnotationFollowMode.Parallel;
       eOptions.AnnotationPlacementMode = AnnotationPlacementMode.Left;
-      #endregion
     }
+    #endregion
 
-    public static void SymbologyOptions()
+    // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions.GetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType)
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.GetPointSymbol()
+    // cref: ArcGIS.Desktop.Core.VertexSymbolType
+    #region Get Sketch Vertex Symbology Options
+    public static void GetSketchVertexSymbologyOptions()
     {
-      // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions.GetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType)
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.GetPointSymbol()
-      // cref: ArcGIS.Desktop.Core.VertexSymbolType
-      #region Get Sketch Vertex Symbology Options
-
       var options = ApplicationOptions.EditingOptions;
 
       //Must use QueuedTask
@@ -134,17 +135,20 @@ namespace ProSnippetsEditing
         var reg_sel_pt_symbol = reg_select.GetPointSymbol();
         //ditto for reg_unsel, curr_sel, curr_unsel
       });
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions.GetSegmentSymbolOptions()
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.PrimaryColor
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.Width
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.HasSecondaryColor
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.SecondaryColor
-      #region Get Sketch Segment Symbology Options
+    // cref: ArcGIS.Desktop.Core.ApplicationOptions.EditingOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions.GetSegmentSymbolOptions()
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.PrimaryColor
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.Width
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.HasSecondaryColor
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions.SecondaryColor
+    #region Get Sketch Segment Symbology Options
+    public static void GetSketchSegmentSymbologyOptions()
+    {
+      var options = ApplicationOptions.EditingOptions;
 
       //var options = ApplicationOptions.EditingOptions;
       QueuedTask.Run(() =>
@@ -169,18 +173,22 @@ namespace ProSnippetsEditing
           SymbolLayers = layers.ToArray()
         };
       });
-      #endregion
+    }
+    #endregion
 
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
-      // cref: ArcGIS.Desktop.Core.VertexSymbolType
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.#ctor(ArcGIS.Desktop.Core.VertexSymbolType)
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.OutlineColor
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.MarkerType
-      // cref: ArcGIS.Desktop.Core.VertexMarkerType
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.Size
-      // cref: ArcGIS.Desktop.Core.EditingOptions.CanSetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType, ArcGIS.Desktop.Core.VertexSymbolOptions)
-      // cref: ArcGIS.Desktop.Core.EditingOptions.SetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType, ArcGIS.Desktop.Core.VertexSymbolOptions)
-      #region Set Sketch Vertex Symbol Options
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
+    // cref: ArcGIS.Desktop.Core.VertexSymbolType
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.#ctor(ArcGIS.Desktop.Core.VertexSymbolType)
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.OutlineColor
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.MarkerType
+    // cref: ArcGIS.Desktop.Core.VertexMarkerType
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.Size
+    // cref: ArcGIS.Desktop.Core.EditingOptions.CanSetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType, ArcGIS.Desktop.Core.VertexSymbolOptions)
+    // cref: ArcGIS.Desktop.Core.EditingOptions.SetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType, ArcGIS.Desktop.Core.VertexSymbolOptions)
+    #region Set Sketch Vertex Symbol Options
+    public static void SetSketchVertexSymbolOptions()
+    {
+      var options = ApplicationOptions.EditingOptions;
 
       //var options = ApplicationOptions.EditingOptions;
       QueuedTask.Run(() =>
@@ -201,14 +209,17 @@ namespace ProSnippetsEditing
           options.SetVertexSymbolOptions(VertexSymbolType.RegularUnselected, vertexSymbol);
         }
       });
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Core.EditingOptions.GetSegmentSymbolOptions()
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions.CanSetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
-      // cref: ArcGIS.desktop.Core.EditingOptions.SetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
-      #region Set Sketch Segment Symbol Options
+    // cref: ArcGIS.Desktop.Core.EditingOptions.GetSegmentSymbolOptions()
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions.CanSetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
+    // cref: ArcGIS.desktop.Core.EditingOptions.SetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
+    #region Set Sketch Segment Symbol Options
+    public static void SetSketchSegmentSymbolOptions()
+    {
+      var options = ApplicationOptions.EditingOptions;
 
       //var options = ApplicationOptions.EditingOptions;
       QueuedTask.Run(() =>
@@ -226,14 +237,17 @@ namespace ProSnippetsEditing
           options.SetSegmentSymbolOptions(segSymbol);
         }
       });
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Core.VertexSymbolType
-      // cref: ArcGIS.Desktop.Core.EditingOptions.GetDefaultVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType)
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions.SetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType, ArcGIS.Desktop.Core.VertexSymbolOptions)
-      #region Set Sketch Vertex Symbol Back to Default
+    // cref: ArcGIS.Desktop.Core.VertexSymbolType
+    // cref: ArcGIS.Desktop.Core.EditingOptions.GetDefaultVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType)
+    // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions.SetVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType, ArcGIS.Desktop.Core.VertexSymbolOptions)
+    #region Set Sketch Vertex Symbol Back to Default
+    public static void SetSketchVertexSymbolBackToDefault()
+    {
+      var options = ApplicationOptions.EditingOptions;
 
       //var options = ApplicationOptions.EditingOptions;
       QueuedTask.Run(() =>
@@ -245,13 +259,16 @@ namespace ProSnippetsEditing
         options.SetVertexSymbolOptions(
           VertexSymbolType.RegularUnselected, def_reg_unsel);
       });
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Core.EditingOptions.GetDefaultSegmentSymbolOptions
-      // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions.SetSegmentSymbolOptions
-      #region Set Sketch Segment Symbol Back to Default
+    // cref: ArcGIS.Desktop.Core.EditingOptions.GetDefaultSegmentSymbolOptions
+    // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
+    // cref: ArcGIS.Desktop.Core.EditingOptions.SetSegmentSymbolOptions
+    #region Set Sketch Segment Symbol Back to Default
+    public static void SetSketchSegmentSymbolBackToDefault()
+    {
+      var options = ApplicationOptions.EditingOptions;
 
       //var options = ApplicationOptions.EditingOptions;
       QueuedTask.Run(() =>
@@ -259,26 +276,23 @@ namespace ProSnippetsEditing
         var def_seg = options.GetDefaultSegmentSymbolOptions();
         options.SetSegmentSymbolOptions(def_seg);
       });
-
-      #endregion
     }
+    #endregion
 
     #region ProSnippet Group: VersioningOptions
     #endregion
 
-    public static void VersioningOptions()
+    // cref: ArcGIS.Desktop.Core.ApplicationOptions.VersioningOptions
+    // cref: ArcGIS.Desktop.Core.VersioningOptions
+    // cref: ArcGIS.Desktop.Core.VersioningOptions.DefineConflicts
+    // cref: ArcGIS.Desktop.Core.VersioningOptions.ConflictResolution
+    // cref: ArcGIS.Desktop.Core.VersioningOptions.ShowConflictsDialog
+    // cref: ArcGIS.Desktop.Core.VersioningOptions.ShowReconcileDialog
+    // cref: ArcGIS.Core.Data.ConflictDetectionType
+    // cref: ArcGIS.Core.Data.ConflictResolutionType
+    #region Get and Set Versioning Options
+    public static void VersioningOptionsToggleAndSwitch()
     {
-
-      // cref: ArcGIS.Desktop.Core.ApplicationOptions.VersioningOptions
-      // cref: ArcGIS.Desktop.Core.VersioningOptions
-      // cref: ArcGIS.Desktop.Core.VersioningOptions.DefineConflicts
-      // cref: ArcGIS.Desktop.Core.VersioningOptions.ConflictResolution
-      // cref: ArcGIS.Desktop.Core.VersioningOptions.ShowConflictsDialog
-      // cref: ArcGIS.Desktop.Core.VersioningOptions.ShowReconcileDialog
-      // cref: ArcGIS.Core.Data.ConflictDetectionType
-      // cref: ArcGIS.Core.Data.ConflictResolutionType
-      #region Get and Set Versioning Options
-
       var vOptions = ApplicationOptions.VersioningOptions;
 
       vOptions.DefineConflicts = (vOptions.DefineConflicts == ConflictDetectionType.ByRow) ?

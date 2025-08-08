@@ -11,9 +11,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ProSnippetsEditing.ProSnippetsSnapping;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsEditOperation
   {
@@ -129,17 +128,22 @@ namespace ProSnippetsEditing
     /// <summary>
     /// Creates a new feature using the current editing template and the specified geometry.
     /// </summary>
-    /// <remarks>This method uses the current editing template to create a feature. The operation is executed
-    /// synchronously, and the success of the operation can be determined by the internal execution result.</remarks>
-    /// <param name="editingTemplate">The editing template to use for creating the feature. This parameter is not directly used in the method but is
-    /// included for consistency with the editing workflow.</param>
-    /// <param name="geometry">The geometry of the feature to be created. This must be a valid geometry object and cannot be <see
-    /// langword="null"/>.</param>
+    /// <remarks>
+    /// This method retrieves the current editing template and uses it to create a new feature with the provided geometry.
+    /// The operation is executed within a <see cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/> context to ensure thread safety.
+    /// The method checks if the edit operation contains actions before executing, and the result indicates whether the creation was successful.
+    /// </remarks>
+    /// <param name="editingTemplate">
+    /// The editing template to use for creating the feature. This parameter is included for workflow consistency but is not directly used in the method.
+    /// </param>
+    /// <param name="geometry">
+    /// The geometry of the feature to be created. Must be a valid <see cref="ArcGIS.Core.Geometry.Geometry"/> object and cannot be <see langword="null"/>.
+    /// </param>
     public static void CreateFeatureUsingCurrentTemplate(EditingTemplate editingTemplate, Geometry geometry)
     {
       _ = QueuedTask.Run(() =>
       {
-        var myTemplate = ArcGIS.Desktop.Editing.Templates.EditingTemplate.Current;
+        var myTemplate = editingTemplate ?? ArcGIS.Desktop.Editing.Templates.EditingTemplate.Current;
 
         //Create edit operation and execute
         var op = new ArcGIS.Desktop.Editing.EditOperation() { Name = "Create my feature" };
@@ -154,15 +158,25 @@ namespace ProSnippetsEditing
 
     // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, System.Collections.Generic.Dictionary<string, object>)
     #region Create feature from a modified inspector
-    public static void CreateFeatureFromModifiedInspector(FeatureLayer layer, long objectId)
+
+    /// <summary>
+    /// Creates a new feature by copying and optionally modifying the attributes of an existing feature using an inspector.
+    /// </summary>
+    /// <remarks>
+    /// This method loads the attributes of an existing feature into an <see cref="Inspector"/>, allowing for attribute modification before creation.
+    /// It then creates a new feature in the same layer with the inspector's current attribute values.
+    /// The operation is executed within a <see cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/> context to ensure thread safety.
+    /// </remarks>
+    /// <param name="featureLayer">The <see cref="FeatureLayer"/> containing the feature to copy and modify.</param>
+    /// <param name="objectId">The object ID of the feature to be copied.</param>
+    public static void CreateFeatureFromModifiedInspector(FeatureLayer featureLayer, long objectId)
     {
-      //Create an inspector and load a feature
-      //The inspector is used to modify the attributes of the feature
-      //before creating it
-      var insp = new Inspector();
-      insp.Load(layer, objectId);
       _ = QueuedTask.Run(() =>
-      {
+        {      //Create an inspector and load a feature
+        //The inspector is used to modify the attributes of the feature
+        //before creating it
+        var insp = new Inspector();
+        insp.Load(featureLayer, objectId);
         // modify attributes if necessary
         // insp["Field1"] = newValue;
 
@@ -178,9 +192,21 @@ namespace ProSnippetsEditing
       #endregion
     }
 
-
     // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, System.Collections.Generic.Dictionary<string, object>)
     #region Create features from a CSV file
+
+    /// <summary>
+    /// Creates new point features in the specified feature layer using data from a CSV source.
+    /// </summary>
+    /// <remarks>
+    /// This method iterates through a collection of CSV records, creates point geometries from the X and Y coordinates,
+    /// and sets feature attributes such as StopOrder and FacilityID. The shape field name is determined dynamically from the feature layer.
+    /// All feature creation actions are queued and executed within a <see cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/> context for thread safety.
+    /// </remarks>
+    /// <param name="featureLayer">The <see cref="FeatureLayer"/> in which new features will be created.</param>
+    /// <returns>
+    /// <c>true</c> if the feature creation operation was successful; otherwise, <c>false</c>.
+    /// </returns>
     public static void CreateFeaturesFromCSV(FeatureLayer featureLayer)
     {
       var csvData = new List<CSVData>();
@@ -212,7 +238,6 @@ namespace ProSnippetsEditing
           // queue feature creation
           createOperation.Create(featureLayer, atts);
         }
-
         // execute the edit (feature creation) operation
         if (createOperation.IsEmpty)
         {
@@ -221,6 +246,11 @@ namespace ProSnippetsEditing
         else
           return false;
       });
+    }
+
+    public class CSVData
+    {
+      public Double X, Y, StopOrder, FacilityID;
     }
     #endregion
 
@@ -330,9 +360,8 @@ namespace ProSnippetsEditing
       _ = QueuedTask.Run(() =>
       {
         var deleteFeatures = new EditOperation() { Name = "Delete single feature" };
-        var table = MapView.Active.Map.StandaloneTables[0];
         //Delete a row in a standalone table
-        deleteFeatures.Delete(table, objectId);
+        deleteFeatures.Delete(featureLayer, objectId);
         //Execute to execute the operation
         //Must be called within QueuedTask.Run
         if (!deleteFeatures.IsEmpty)
@@ -353,15 +382,13 @@ namespace ProSnippetsEditing
     ///</summary>
     /// <param name="featureLayer">The feature layer containing the feature to duplicate.</param>
     /// <param name="objectId">The ObjectID of the feature to duplicate.</param>
-    /// <param name="polygon">The polygon defining the new geometry for the duplicated feature.</param>
-    public static void DuplicateFeature(FeatureLayer featureLayer, long objectId, Geometry polygon)
+    public static void DuplicateFeature(FeatureLayer featureLayer, long objectId)
     {
       _ = QueuedTask.Run(() =>
       {
         var duplicateFeatures = new EditOperation() { Name = "Duplicate Features" };
 
         //Duplicate with an X and Y offset of 500 map units
-        //At 2.x duplicateFeatures.Duplicate(featureLayer, objectId, 500.0, 500.0, 0.0);
 
         //Execute to execute the operation
         //Must be called within QueuedTask.Run
@@ -402,7 +429,7 @@ namespace ProSnippetsEditing
 
         //Take a multipart and convert it into one feature per part
         //Provide a list of ids to convert multiple
-        explodeFeatures.Explode(featureLayer, new List<long>() { objectId }, true);
+        explodeFeatures.Explode(featureLayer, [objectId], true);
 
         //Execute to execute the operation
         //Must be called within QueuedTask.Run
@@ -421,15 +448,24 @@ namespace ProSnippetsEditing
     // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(EditingRowTemplate,ARCGIS.DESKTOP.MAPPING.Layer,IEnumerable{Int64})
     // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(ARCGIS.DESKTOP.MAPPING.LAYER,IENUMERABLE{INT64},INSPECTOR)
     #region Edit Operation Merge Features
+
     /// <summary>
-    /// Merges features from one layer into another.
+    /// Merges multiple features from a source feature layer into a new feature, optionally using a template or inspector, and supports merging into a destination layer.
     /// </summary>
-    /// <param name="featureLayer"></param>
-    /// <param name="destinationLayer"></param>
-    /// <param name="objectId"></param>
-    /// <param name="polygon"></param>
-    /// <param name="currentTemplate"></param>
-    public static void MergeFeatures(FeatureLayer featureLayer, FeatureLayer destinationLayer, long objectId, Polygon polygon, EditingRowTemplate currentTemplate)
+    /// <remarks>
+    /// This method demonstrates several ways to merge features:
+    /// <list type="bullet">
+    /// <item><description>Using an <see cref="EditingRowTemplate"/> to define default attributes for the new merged feature.</description></item>
+    /// <item><description>Merging features from a source layer into a destination layer.</description></item>
+    /// <item><description>Using an <see cref="Inspector"/> to set custom attributes for the new merged feature.</description></item>
+    /// </list>
+    /// The method executes all merge actions within a <see cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/> context for thread safety.
+    /// </remarks>
+    /// <param name="featureLayer">The source <see cref="FeatureLayer"/> containing the features to merge.</param>
+    /// <param name="destinationLayer">The destination <see cref="FeatureLayer"/> where the merged feature will be created.</param>
+    /// <param name="objectId">The object ID of the feature used to load attributes into the inspector for custom attribute merging.</param>
+    /// <param name="currentTemplate">The <see cref="EditingRowTemplate"/> used to define default attributes for the merged feature.</param>
+    public static void MergeFeatures(FeatureLayer featureLayer, FeatureLayer destinationLayer, long objectId, EditingRowTemplate currentTemplate)
     {
       _ = QueuedTask.Run(() =>
       {
@@ -437,23 +473,20 @@ namespace ProSnippetsEditing
 
         //Merge three features into a new feature using defaults
         //defined in the current template
-        //At 2.x -
-        //mergeFeatures.Merge(this.CurrentTemplate as EditingFeatureTemplate, featureLayer, new List<long>() { 10, 96, 12 });
-        mergeFeatures.Merge(currentTemplate as EditingRowTemplate, featureLayer, new List<long>() { 10, 96, 12 });
+        mergeFeatures.Merge(currentTemplate as EditingRowTemplate, featureLayer, [10, 96, 12]);
 
         //Merge three features into a new feature in the destination layer
-        mergeFeatures.Merge(destinationLayer, featureLayer, new List<long>() { 10, 96, 12 });
+        mergeFeatures.Merge(destinationLayer, featureLayer, [10, 96, 12]);
 
         //Use an inspector to set the new attributes of the merged feature
         var inspector = new Inspector();
         inspector.Load(featureLayer, objectId);//base attributes on an existing feature
-                                               //change attributes for the new feature
         inspector["NAME"] = "New name";
         inspector["DESCRIPTION"] = "New description";
 
         //Merge features into a new feature in the same layer using the
         //defaults set in the inspector
-        mergeFeatures.Merge(featureLayer, new List<long>() { 10, 96, 12 }, inspector);
+        mergeFeatures.Merge(featureLayer, [10, 96, 12], inspector);
 
         //Execute to execute the operation
         //Must be called within QueuedTask.Run
@@ -640,7 +673,7 @@ namespace ProSnippetsEditing
         var planarizeFeatures = new EditOperation() { Name = "Planarize Features" };
 
         //Planarize one or more features
-        planarizeFeatures.Planarize(featureLayer, new List<long>() { objectId });
+        planarizeFeatures.Planarize(featureLayer, [objectId]);
 
         //Execute to execute the operation
         //Must be called within QueuedTask.Run
@@ -712,10 +745,6 @@ namespace ProSnippetsEditing
         reshapeFeatures.Reshape(featureLayer, objectId, modifyLine);
 
         //Reshape a set of features that intersect some geometry....
-
-        //at 2.x - var selFeatures = MapView.Active.GetFeatures(modifyLine).Select(
-        //    k => new KeyValuePair<MapMember, List<long>>(k.Key as MapMember, k.Value));
-        //reshapeFeatures.Reshape(selFeatures, modifyLine);
 
         reshapeFeatures.Reshape(MapView.Active.GetFeatures(modifyLine), modifyLine);
 
@@ -845,7 +874,7 @@ namespace ProSnippetsEditing
         var splitFeatures = new EditOperation() { Name = "Split Features" };
 
         // split using percentage
-        var splitByPercentage = new SplitByPercentage() { Percentage = 33, SplitFromStartPoint = true };
+        var splitByPercentage = new SplitByPercentage() { Percentage = percentage, SplitFromStartPoint = true };
         splitFeatures.Split(featureLayer, objectId, splitByPercentage);
 
         //Execute to execute the operation
@@ -1027,9 +1056,10 @@ namespace ProSnippetsEditing
         var transferAttributes = new EditOperation() { Name = "Transfer Attributes" };
         // transfer attributes using a specified set of field mappings
         //  dictionary key is the field name in the destination layer, dictionary value is the field name in the source layer
-        var fldMapping = new Dictionary<string, string>();
-        fldMapping.Add("NAME", "SURNAME");
-        fldMapping.Add("ADDRESS", "ADDRESS");
+        Dictionary<string, string> fldMapping = new()         {
+          { "NAME", "SURNAME" },
+          { "ADDRESS", "ADDRESS" }
+        };
         transferAttributes.TransferAttributes(featureLayer, objectId, destinationLayer, targetOID, fldMapping);
 
         //Execute to execute the operation
@@ -1247,12 +1277,9 @@ namespace ProSnippetsEditing
     /// it. Since adding an attachment requires the object ID of the newly created feature, the operations must be
     /// executed in sequence. By chaining the operations, they appear as a single undo action in the user
     /// interface.</remarks>
-    /// <param name="featureLayer">The feature layer where the edit operations will be performed.</param>
     /// <param name="currentTemplate">The editing template used to create the new feature.</param>
     /// <param name="polygon">The geometry of the feature to be created.</param>
-    /// <param name="objectId">The object ID of the feature to be edited or referenced.</param>
-    public static void ChainEditOperations(FeatureLayer featureLayer,
-      EditingTemplate currentTemplate, Polygon polygon, long objectId)
+    public static void ChainEditOperations(EditingTemplate currentTemplate, Polygon polygon)
     {
       QueuedTask.Run(() =>
       {
@@ -1307,11 +1334,13 @@ namespace ProSnippetsEditing
     {
       _ = QueuedTask.Run(() =>
       {
-        //ArcGIS Pro 2.5 extends the EditOperation.AddAttachment method to take a RowToken as a parameter.
-        //This allows you to create a feature, using EditOperation.CreateEx, and add an attachment in one transaction.
+        //The EditOperation.AddAttachment method to take a RowToken as a parameter 
+        //allows you to create a feature, using EditOperation.CreateEx, and add an attachment in one transaction.
 
-        var editOpAttach = new EditOperation();
-        editOpAttach.Name = string.Format("Create new polygon with attachment in '{0}'", currentTemplate.Layer.Name);
+        EditOperation editOpAttach = new()
+        {
+          Name = string.Format($@"Create new polygon with attachment in '{currentTemplate.Layer.Name}'")
+        };
 
         var attachRowToken = editOpAttach.Create(currentTemplate, polygon);
         editOpAttach.AddAttachment(attachRowToken, @"c:\temp\image.jpg");
@@ -1325,7 +1354,6 @@ namespace ProSnippetsEditing
       });
     }
     #endregion
-
 
     // cref: ArcGIS.Desktop.Editing.EditOperation
     // cref: ArcGIS.Desktop.Editing.EditOperation.ExecuteMode
@@ -1345,22 +1373,22 @@ namespace ProSnippetsEditing
     public static void ModifyAndSplitFeature(FeatureLayer layer, long objectId, Polyline splitLine, string newName)
     {
       // perform an edit and then a split as one operation.
-      QueuedTask.Run(() =>
+      _= QueuedTask.Run(() =>
       {
         var queryFilter = new QueryFilter() { WhereClause = "OBJECTID = " + objectId.ToString() };
 
         // create an edit operation and name.
-        var op = new EditOperation() { Name = "modify followed by split" };
-        // set the ExecuteMode
-        op.ExecuteMode = ExecuteModeType.Sequential;
+        var op = new EditOperation
+        {
+          Name = "modify followed by split",         // set the ExecuteMode
+          ExecuteMode = ExecuteModeType.Sequential
+        };
         using (var rowCursor = layer.Search(queryFilter))
         {
           while (rowCursor.MoveNext())
           {
-            using (var feature = rowCursor.Current as Feature)
-            {
-              op.Modify(feature, "NAME", newName);
-            }
+            using var feature = rowCursor.Current as Feature;
+            op.Modify(feature, "NAME", newName);
           }
         }
         op.Split(layer, objectId, splitLine);
@@ -1419,7 +1447,7 @@ namespace ProSnippetsEditing
           Debug.WriteLine("Operation is redone");
         });
 
-        updateTestField.SetOnComitted((bool b) => //called on edit session save(true)/discard(false).
+        updateTestField.SetOnComitted(b =>
         {
           // Sets an action that will be called when this edit operation is committed.
           Debug.WriteLine("Operation is committed");
@@ -1459,7 +1487,7 @@ namespace ProSnippetsEditing
           //Each point is converted into a MapPoint and gets added to a list. 
           foreach (var point in line.Points)
           {
-            MapPointBuilderEx mapPointBuilderEx = new MapPointBuilderEx(point);
+            MapPointBuilderEx mapPointBuilderEx = new(point);
             //Changing the vertex 6 and 7 to control points
             if (vertexIndex == 6 || vertexIndex == 7)
             {

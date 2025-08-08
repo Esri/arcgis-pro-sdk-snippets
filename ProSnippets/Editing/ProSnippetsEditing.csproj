@@ -5,7 +5,6 @@
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <NoWarn>CA1416</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ArcGIS.Desktop.Core">

@@ -17,6 +17,7 @@
 
 */
 using ArcGIS.Desktop.Editing;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
@@ -24,32 +25,54 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsUndoRedo
   {
     #region ProSnippet Group: Undo / Redo
     #endregion
-    public static void OpMgr()
+
+    // cref: ArcGIS.Desktop.Framework.OperationManager
+    // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
+    // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
+    #region Undo/Redo Edit Operations
+    /// <summary>
+    /// Executes an edit operation and demonstrates how to undo the operation programmatically.
+    /// </summary>
+    public static void UndoRedoEditOperations()
     {
-      var editOp = new EditOperation();
-      editOp.Name = "My Name";
-      if (!editOp.IsEmpty)
+      _ = QueuedTask.Run(() =>
       {
-        var result = editOp.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not
-      }
+        var editOp = new EditOperation
+        {
+          Name = "My Name"
+        };
+        if (!editOp.IsEmpty)
+        {
+          //Execute and ExecuteAsync will return true if the operation was successful and false if not
+          var result = editOp.Execute();
+          if (result == true)
+          {
+            // If the operation was successful, you can undo it
+            editOp.UndoAsync();
+          }
+        }
+      });
+    }
+    #endregion
 
-      //elsewhere
-      editOp.UndoAsync();
-
-      // cref: ArcGIS.Desktop.Framework.OperationManager
-      // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
-      // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
-      // cref: ArcGIS.Desktop.Framework.OperationManager.CanRedo
-      // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync()
-      // cref: ARCGIS.DESKTOP.MAPPING.MAP.OPERATIONMANAGER
-      #region Undo/Redo the Most Recent Operation
-
+    // cref: ArcGIS.Desktop.Framework.OperationManager
+    // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
+    // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
+    // cref: ArcGIS.Desktop.Framework.OperationManager.CanRedo
+    // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync()
+    // cref: ARCGIS.DESKTOP.MAPPING.MAP.OPERATIONMANAGER
+    #region Undo/Redo the Most Recent Operation
+    /// <summary>
+    /// Demonstrates how to undo and redo the most recent operation using the map's operation manager.
+    /// </summary>
+    public static void UndoRedoMostRecentOperation()
+    {
       //undo
       if (MapView.Active.Map.OperationManager.CanUndo)
         MapView.Active.Map.OperationManager.UndoAsync();//await as needed
@@ -57,9 +80,8 @@ namespace ProSnippetsEditing
       //redo
       if (MapView.Active.Map.OperationManager.CanRedo)
         MapView.Active.Map.OperationManager.RedoAsync();//await as needed
-
-      #endregion
     }
-
+    #endregion
   }
+
 }

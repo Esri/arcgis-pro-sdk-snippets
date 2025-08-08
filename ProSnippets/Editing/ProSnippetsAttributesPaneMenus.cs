@@ -26,17 +26,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public class ProSnippetsAttributesPaneMenus
   {
     #region ProSnippet Group: Attributes Pane Context MenuItems
     #endregion
 
-    protected async void ContextMenuItem()
+    // cref: ArcGIS.Desktop.Framework.FrameworkApplication.ContextMenuDataContextAs<T>
+    #region Retrieve SelectionSet from command added to Attribute Pane Context Menu  
+    /// <summary>
+    /// Retrieves the SelectionSet from a command that was added and executed from the Attribute Pane Context Menu 
+    /// </summary>
+    /// <remarks>This method retrieves the current selection set from the Attributes pane context menu and performs a
+    /// delete operation on the selected features. If no selection is present or the selection set is empty, the method
+    /// exits without performing any action.</remarks>
+    public async void ContextMenuItem()
     {
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.ContextMenuDataContextAs<T>
-      #region Retrieve SelectionSet from command added to Attribute Pane Context Menu  
       await QueuedTask.Run(async () =>
       {
         var selSet = FrameworkApplication.ContextMenuDataContextAs<SelectionSet>();

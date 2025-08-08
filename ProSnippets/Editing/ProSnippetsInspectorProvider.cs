@@ -18,21 +18,27 @@
 */
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Editing.Attributes;
+using ArcGIS.Desktop.Mapping;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsInspectorProvider
-  {    
+  {
     #region ProSnippet Group: Inspector Provider Class
     #endregion
 
     // cref: ArcGIS.Desktop.Editing.InspectorProvider
     #region How to create a custom Feature inspector provider class
-
+    /// <summary>
+    /// Provides a custom implementation of an <see cref="InspectorProvider"/> for feature inspection in ArcGIS Pro.
+    /// </summary>
+    /// <remarks>This class customizes the behavior of the feature inspector by overriding methods to control
+    /// field visibility,  editability, highlighting, validation, and display order. It also provides a unique
+    /// identifier for shared field  column sizes and custom field names for specific attributes.</remarks>
     public class MyProvider : InspectorProvider
     {
       private System.Guid guid = System.Guid.NewGuid();
@@ -112,26 +118,32 @@ namespace ProSnippetsEditing
     }
     #endregion
 
-    public static async void InspectorProviderExample()
+    // cref: ArcGIS.Desktop.Editing.InspectorProvider
+    // cref: ArcGIS.Desktop.Editing.InspectorProvider.Create()
+    #region Using the custom inspector provider class
+    /// <summary>
+    /// Demonstrates the use of a custom <see cref="ArcGIS.Desktop.Editing.InspectorProvider"/> to create and load an
+    /// inspector for a specific feature.
+    /// </summary>
+    /// <remarks>This example shows how to use a custom inspector provider to create an inspector, load a
+    /// feature into it, and access its attributes. The method demonstrates checking attribute visibility and highlight
+    /// status for specific fields.</remarks>
+    /// <param name="featureLayer">The <see cref="FeatureLayer"/> containing the feature to inspect. Cannot be <see langword="null"/>.</param>
+    /// <param name="objectId">The object ID of the feature to load into the inspector.</param>
+    public static async void InspectorProviderExample(FeatureLayer featureLayer, long objectId)
     {
-      int objectId = 1;
-      // cref: ArcGIS.Desktop.Editing.InspectorProvider
-      // cref: ArcGIS.Desktop.Editing.InspectorProvider.Create()
-      #region Using the custom inspector provider class
-      var layer = ArcGIS.Desktop.Mapping.MapView.Active.Map.GetLayersAsFlattenedList().OfType<ArcGIS.Desktop.Mapping.FeatureLayer>().FirstOrDefault();
-
       var provider = new MyProvider();
       Inspector _featureInspector = provider.Create();
       //Create an embeddable control from the inspector class to display on the pane
       var icontrol = _featureInspector.CreateEmbeddableControl();
 
-      await _featureInspector.LoadAsync(layer, objectId);
+      await _featureInspector.LoadAsync(featureLayer, objectId);
       var attribute = _featureInspector.Where(a => a.FieldName == "FontStyle").FirstOrDefault();
       var visibility = attribute.IsVisible; //Will return false
 
       attribute = _featureInspector.Where(a => a.FieldName == "ZOrder").FirstOrDefault();
       var highlighted = attribute.IsHighlighted; //Will return true
-      #endregion
     }
+    #endregion
   }
 }
