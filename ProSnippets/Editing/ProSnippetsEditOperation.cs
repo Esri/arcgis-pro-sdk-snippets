@@ -1,4 +1,22 @@
-﻿using ArcGIS.Core.Data;
+/*
+
+   Copyright 2025 Esri
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+using ArcGIS.Core.Data;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Editing.Attributes;
@@ -527,8 +545,10 @@ namespace Editing.ProSnippets
         modifyFeature.Modify(modifyInspector);
 
         //update geometry and attributes using overload
-        var featureAttributes = new Dictionary<string, object>();
-        featureAttributes["NAME"] = "Updated name";//Update attribute(s)
+        var featureAttributes = new Dictionary<string, object>
+        {
+          ["NAME"] = "Updated name"//Update attribute(s)
+        };
         modifyFeature.Modify(featureLayer, objectId, polygon, featureAttributes);
 
         //Execute to execute the operation
@@ -565,15 +585,16 @@ namespace Editing.ProSnippets
         {
           while (rc.MoveNext())
           {
-            using (var record = rc.Current)
-            {
-              oidSet.Add(record.GetObjectID());
-            }
+            using var record = rc.Current;
+            oidSet.Add(record.GetObjectID());
           }
         }
         //create and execute the edit operation
-        var modifyFeatures = new EditOperation() { Name = "Modify features" };
-        modifyFeatures.ShowProgressor = true;
+        var modifyFeatures = new EditOperation
+        {
+          Name = "Modify features",
+          ShowProgressor = true
+        };
 
         var multipleFeaturesInsp = new Inspector();
         multipleFeaturesInsp.Load(featureLayer, oidSet);
@@ -640,12 +661,12 @@ namespace Editing.ProSnippets
       {
         //Get all of the selected ObjectIDs from the layer.
         var mySelection = featureLayer.GetSelection();
-        var selOid = mySelection.GetObjectIDs().FirstOrDefault();
+        var selOid = mySelection.GetObjectIDs()?[0];
 
         var moveToPoint = new MapPointBuilderEx(xCoordinate, yCoordinate, 0.0, 0.0, featureLayer.GetSpatialReference());
 
         var moveEditOperation = new EditOperation() { Name = "Move features" };
-        moveEditOperation.Modify(featureLayer, selOid, moveToPoint.ToGeometry());  //Modify the feature to the new geometry 
+        moveEditOperation.Modify(featureLayer, selOid ?? -1, moveToPoint.ToGeometry());  //Modify the feature to the new geometry 
         if (!moveEditOperation.IsEmpty)
         {
           var result = moveEditOperation.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not
@@ -696,12 +717,12 @@ namespace Editing.ProSnippets
     /// </summary>
     public static void CreateParallelOffsetFeatures()
     {
-      _ = QueuedTask.Run(() =>
+      _ = QueuedTask.Run(static () =>
       {
         //Create parallel features from the selected features
 
         //find the roads layer
-        var roadsLayer = MapView.Active.Map.FindLayers("Roads").FirstOrDefault();
+        var roadsLayer = MapView.Active.Map.FindLayers("Roads")?[0];
 
         //instantiate parallelOffset builder and set parameters
         var parOffsetBuilder = new ParallelOffset.Builder()
@@ -1361,15 +1382,13 @@ namespace Editing.ProSnippets
     // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Core.Geometry.Geometry)
     #region Order edits sequentially
     /// <summary>
-    /// Modifies the specified feature's attribute and then splits it using the provided geometry as part of a single
-    /// edit operation.
+    /// Modifies the "NAME" attribute of a specified feature and then splits the feature using the provided polyline, all within a single sequential edit operation.
     /// </summary>
-    /// <remarks>This method performs the modification and split as a single sequential edit operation.  The
-    /// operation is executed on the QueuedTask context to ensure thread safety in ArcGIS Pro.</remarks>
     /// <param name="layer">The feature layer containing the feature to be modified and split.</param>
     /// <param name="objectId">The object ID of the feature to be modified and split.</param>
     /// <param name="splitLine">The polyline geometry used to split the feature.</param>
     /// <param name="newName">The new value to assign to the feature's "NAME" attribute.</param>
+    /// <remarks>This method demonstrates how to perform multiple edits in a single operation by chaining them together.</remarks>
     public static void ModifyAndSplitFeature(FeatureLayer layer, long objectId, Polyline splitLine, string newName)
     {
       // perform an edit and then a split as one operation.
