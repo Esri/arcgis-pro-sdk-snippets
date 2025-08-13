@@ -20,19 +20,19 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.MapView.Map
     // cref: ArcGIS.Desktop.Mapping.Map
     #region Get the active map
-/// <summary>
-/// Retrieves the currently active map in the application.
-/// </summary>
-/// <remarks>This method returns the map associated with the active <see cref="ArcGIS.Desktop.Mapping.MapView"/>. If no map view is
-/// active, the method will return <see langword="null"/>.</remarks>
-/// <returns>The active <see cref=Map"/> instance if a map is currently active; otherwise, <see langword="null"/>.</returns>
+    /// <summary>
+    /// Retrieves the currently active map in the application.
+    /// </summary>
+    /// <remarks>This method returns the map associated with the active <see cref="ArcGIS.Desktop.Mapping.MapView"/>. If no map view is
+    /// active, the method will return <see langword="null"/>.</remarks>
+    /// <returns>The active <see cref=Map"/> instance if a map is currently active; otherwise, <see langword="null"/>.</returns>
     public static Map? GetActiveMap()
     {
       //This is how you get the active map
       var map = MapView.Active?.Map;
       return map;
     }
-    
+
     #endregion
     // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateMap(System.String,ArcGIS.Core.CIM.MapType,ArcGIS.Core.CIM.MapViewingMode,ArcGIS.Desktop.Mapping.Basemap)
     // cref: ArcGIS.Desktop.Mapping.Map
@@ -49,8 +49,8 @@ namespace MapAuthoring.ProSnippets
       await QueuedTask.Run(() =>
       {
         var map = MapFactory.Instance.CreateMap(mapName, ArcGIS.Core.CIM.MapType.Map, ArcGIS.Core.CIM.MapViewingMode.Map, Basemap.ProjectDefault);
-          //TODO: use the map...
-      });     
+        //TODO: use the map...
+      });
     }
     #endregion
 
@@ -74,7 +74,7 @@ namespace MapAuthoring.ProSnippets
         //Finding the first project item with name matches with mapName
         MapProjectItem? mpi = project.GetItems<MapProjectItem>()
           .FirstOrDefault(m => m.Name.Equals(mapName, StringComparison.CurrentCultureIgnoreCase));
-        var mapFromItem = mpi?.GetMap();  
+        var mapFromItem = mpi?.GetMap();
         return mapFromItem;
       });
 
@@ -97,7 +97,7 @@ namespace MapAuthoring.ProSnippets
     /// <param name="map"></param>
     /// <returns></returns>
     public static async Task<Map> OpenWebMapAsync(Map map)
-    {     
+    {
       //Assume we get the selected webmap from the Project pane's Portal tab
       if (Project.Current.SelectedItems.Count > 0)
       {
@@ -174,11 +174,11 @@ namespace MapAuthoring.ProSnippets
     public static Task ConvertMapToScene(Map map)
     {
       return QueuedTask.Run(() =>
-      {     
+      {
         //Note: Run within the context of QueuedTask.Run
         bool canConvertMap = MapFactory.Instance.CanConvertMap(map, MapConversionType.SceneLocal);
         if (canConvertMap)
-          MapFactory.Instance.ConvertMap(map, MapConversionType.SceneLocal, true);        
+          MapFactory.Instance.ConvertMap(map, MapConversionType.SceneLocal, true);
       });
     }
     #endregion
@@ -216,7 +216,7 @@ namespace MapAuthoring.ProSnippets
     /// </summary>
     /// <param name="map"></param>
     public static void SaveAsMapX(Map map)
-    {  
+    {
       map.SaveAsFile(@"C:\Data\MyMap.mapx", true);
     }
     #endregion
@@ -227,7 +227,7 @@ namespace MapAuthoring.ProSnippets
     /// </summary>
     /// <param name="map"></param>
     public static void SaveAsWebMapMapFile(Map map)
-    { 
+    {
       //2D maps only
       //Must be on the QueuedTask.Run(...)
       if (map.DefaultViewingMode == MapViewingMode.Map)
@@ -243,7 +243,7 @@ namespace MapAuthoring.ProSnippets
     public static void ClipMap()
     {
       QueuedTask.Run(() =>
-      {       
+      {
         //Run within QueuedTask
         var map = MapView.Active.Map;
         //A layer to use for the clip extent
@@ -255,7 +255,7 @@ namespace MapAuthoring.ProSnippets
         map.SetClipGeometry(polygonForClipping,
               SymbolFactory.Instance.ConstructLineSymbol(
               SymbolFactory.Instance.ConstructStroke(
-                ColorFactory.Instance.BlueRGB, 2.0, SimpleLineStyle.Dash)));        
+                ColorFactory.Instance.BlueRGB, 2.0, SimpleLineStyle.Dash)));
       });
     }
     #endregion
@@ -271,7 +271,7 @@ namespace MapAuthoring.ProSnippets
         var map = MapView.Active.Map;
         //Clear the Map clip.
         //If no clipping is set then this is a no-op.
-        map.ClearClipGeometry();        
+        map.ClearClipGeometry();
       });
     }
     #endregion
@@ -285,7 +285,7 @@ namespace MapAuthoring.ProSnippets
     public static void GetClipMapGeometry()
     {
       QueuedTask.Run(() =>
-      {        
+      {
         var map = MapView.Active.Map;
         //If clipping is set to ArcGIS.Core.CIM.ClippingMode.None or ArcGIS.Core.CIM.ClippingMode.MapSeries null is returned
         //If clipping is set to ArcGIS.Core.CIM.ClippingMode.MapExtent the ArcGIS.Core.CIM.CIMMap.CustomFullExtent is returned.
@@ -301,7 +301,7 @@ namespace MapAuthoring.ProSnippets
           Polygon = poly,
           Symbol = polygonSymbol.MakeSymbolReference()
         };
-        gl.AddElement(cimGraphicElement);        
+        gl.AddElement(cimGraphicElement);
       });
     }
     #endregion
@@ -315,14 +315,14 @@ namespace MapAuthoring.ProSnippets
     /// </summary>
     /// <param name="map"></param>
     public static void GetCurrentMapLocationUnit(Map map)
-    {      
+    {
       //var map = MapView.Active.Map;
       //Must be on the QueuedTask.Run()
 
       //Get the current location unit
       var loc_unit = map.GetLocationUnitFormat();
       var line = $"{loc_unit.DisplayName}, {loc_unit.UnitCode}";
-      System.Diagnostics.Debug.WriteLine(line);      
+      System.Diagnostics.Debug.WriteLine(line);
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.Map.GetAvailableLocationUnitFormats()
@@ -337,11 +337,12 @@ namespace MapAuthoring.ProSnippets
     /// <param name="map">The map for which to retrieve the available location unit formats. Cannot be <see langword="null"/>.</param>
     public static void GetAvailableMapLocationUnits(Map map)
     {
-      QueuedTask.Run(() => {
+      QueuedTask.Run(() =>
+      {
         //Linear location unit formats are not included if the map sr
         //is geographic.
         var loc_units = map.GetAvailableLocationUnitFormats();
-      });           
+      });
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.Map.GetLocationUnitFormat()
@@ -395,7 +396,7 @@ namespace MapAuthoring.ProSnippets
 
         //arbitrarily use the last unit in the list
         map.SetLocationUnitFormat(loc_units.Last());
-      });    
+      });
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.Map.GetElevationUnitFormat()
@@ -411,7 +412,8 @@ namespace MapAuthoring.ProSnippets
     /// cref="ArcGIS.Desktop.Mapping.Map"/>.</param>
     public static void GetMapElevationUnit(Map map)
     {
-      QueuedTask.Run(() => {
+      QueuedTask.Run(() =>
+      {
         var elev_unit = map.GetElevationUnitFormat();
         var line = $"{elev_unit.DisplayName}, {elev_unit.UnitCode}";
         System.Diagnostics.Debug.WriteLine(line);
@@ -429,11 +431,12 @@ namespace MapAuthoring.ProSnippets
     /// <param name="map">The map for which to retrieve the elevation unit formats. Cannot be null.</param>
     public static void GetMapElevationUnits(Map map)
     {
-      QueuedTask.Run( () => {
+      QueuedTask.Run(() =>
+      {
         //If the map is not a scene, the list of current
         //Project distance units will be returned
         var elev_units = map.GetAvailableElevationUnitFormats();
-      });      
+      });
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.Map.GetElevationUnitFormat()
@@ -518,7 +521,7 @@ namespace MapAuthoring.ProSnippets
         {
           //TODO - use status...
         }
-      });      
+      });
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.Offline.GenerateOfflineMap.GetCanGenerateReplicas(ArcGIS.Desktop.Mapping.Map)
