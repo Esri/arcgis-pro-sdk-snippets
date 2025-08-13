@@ -1,5 +1,6 @@
 ﻿using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
+using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MapAuthoring.ProSnippets
 {
-  public static class ProSnippetsLayers
+  public static class ProSnippets2Layers
   {
     #region ProSnippet Group: Create Layer
     #endregion
@@ -142,7 +143,7 @@ namespace MapAuthoring.ProSnippets
     /// Creates a feature layer with a simple renderer and adds it to the active map.
     /// </summary>
     #region Create FeatureLayer with a Renderer
-    private static void CreateFeatureLayerWithRenderer()
+    public static void CreateFeatureLayerWithRenderer()
     {
       QueuedTask.Run(() =>
       {
@@ -1880,7 +1881,1171 @@ namespace MapAuthoring.ProSnippets
         featureLayer.SetDefinition(lyrDefn);
       });
     }
+    #endregion
+    #region ProSnippet Group: Symbol Layer Drawing (SLD)
+    #endregion
 
+    public void SLD1()
+    {
+      FeatureLayer featLayer = null;
+      GroupLayer groupLayer = null;
+
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CanAddSymbolLayerDrawing()
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.AddSymbolLayerDrawing()
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.CanAddSymbolLayerDrawing()
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.AddSymbolLayerDrawing()
+      #region Add SLD
+
+      QueuedTask.Run(() =>
+      {
+        //check if it can be added to the layer
+        if (featLayer.CanAddSymbolLayerDrawing())
+          featLayer.AddSymbolLayerDrawing();
+
+        //ditto for a group layer...must have at least
+        //one child feature layer that can participate
+        if (groupLayer.CanAddSymbolLayerDrawing())
+          groupLayer.AddSymbolLayerDrawing();
+      });
+
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.HasSymbolLayerDrawingAdded()
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.HasSymbolLayerDrawingAdded()
+      #region Determine if a layer has SLD added
+
+      //SLD can be added to feature layers and group layers
+      //For a group layer, SLD controls all child feature layers
+      //that are participating in the SLD
+
+      //var featLayer = ...;//retrieve the feature layer
+      //var groupLayer = ...;//retrieve the group layer
+      QueuedTask.Run(() =>
+      {
+        //Check if the layer has SLD added -returns a tuple
+        var tuple = featLayer.HasSymbolLayerDrawingAdded();
+        if (tuple.addedOnLayer)
+        {
+          //SLD is added on the layer
+        }
+        else if (tuple.addedOnParent)
+        {
+          //SLD is added on the parent (group layer) - 
+          //check parent...this can be recursive
+          var parentLayer = GetParentLayerWithSLD(featLayer.Parent as GroupLayer);
+          /*
+           * 
+         //Recursively get the parent with SLD
+         public GroupLayer GetParentLayerWithSLD(GroupLayer groupLayer) 
+         {
+           if (groupLayer == null)
+             return null;
+           //Must be on QueuedTask
+           var sld_added = groupLayer.HasSymbolLayerDrawingAdded();
+           if (sld_added.addedOnLayer)
+             return groupLayer;
+           else if (sld_added.addedOnParent)
+             return GetParentLayerWithSLD(groupLayer.Parent as GroupLayer);
+           return null;
+         }
+        */
+        }
+      });
+
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.HasSymbolLayerDrawingAdded()
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetUseSymbolLayerDrawing()
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetUseSymbolLayerDrawing(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.HasSymbolLayerDrawingAdded()
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.GetUseSymbolLayerDrawing()
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.SetUseSymbolLayerDrawing(System.Boolean)
+      #region Enable/Disable SLD
+
+      QueuedTask.Run(() =>
+      {
+        //A layer may have SLD added but is not using it
+        //HasSymbolLayerDrawingAdded returns a tuple - to check
+        //the layer has SLD (not its parent) check addedOnLayer
+        if (featLayer.HasSymbolLayerDrawingAdded().addedOnLayer)
+        {
+          //the layer has SLD but is the layer currently using it?
+          //GetUseSymbolLayerDrawing returns a tuple - useOnLayer for 
+          //the layer (and useOnParent for the parent layer)
+          if (!featLayer.GetUseSymbolLayerDrawing().useOnLayer)
+          {
+            //enable it
+            featLayer.SetUseSymbolLayerDrawing(true);
+          }
+        }
+
+        //Enable/Disable SLD on a layer parent
+        if (featLayer.HasSymbolLayerDrawingAdded().addedOnParent)
+        {
+          //check parent...this can be recursive
+          var parent = GetParentLayerWithSLD(featLayer.Parent as GroupLayer);
+          if (parent.GetUseSymbolLayerDrawing().useOnLayer)
+            parent.SetUseSymbolLayerDrawing(true);
+        }
+        /*
+         * 
+         //Recursively get the parent with SLD
+         public GroupLayer GetParentLayerWithSLD(GroupLayer groupLayer) 
+         {
+           if (groupLayer == null)
+             return null;
+           //Must be on QueuedTask
+           var sld_added = groupLayer.HasSymbolLayerDrawingAdded();
+           if (sld_added.addedOnLayer)
+             return groupLayer;
+           else if (sld_added.addedOnParent)
+             return GetParentLayerWithSLD(groupLayer.Parent as GroupLayer);
+           return null;
+         }
+        */
+      });
+
+      #endregion
+    }
+
+    public GroupLayer GetParentLayerWithSLD(GroupLayer groupLayer)
+    {
+      if (groupLayer == null)
+        return null;
+      var sld_added = groupLayer.HasSymbolLayerDrawingAdded();
+      if (sld_added.addedOnLayer)
+        return groupLayer;
+      else if (sld_added.addedOnParent)
+        return GetParentLayerWithSLD(groupLayer.Parent as GroupLayer);
+      return null;
+    }
+
+    #region ProSnippet Group: Elevation Surface Layers
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateScene(System.String, System.Uri, ArcGIS.Core.CIM.MapViewingMode, ArcGIS.Desktop.Mapping.Basemap)
+    #region Create a scene with a ground surface layer
+    /// <summary>
+    /// Creates a new global scene with the specified ground surface layer.
+    /// </summary>
+    /// <remarks>The scene is created with a global viewing mode, suitable for visualizing data on a global scale.
+    /// This method executes asynchronously using a queued task.</remarks>
+    /// <param name="groundSourceUri">The URI of the ground surface layer to be used in the scene. This must point to a valid elevation source.</param>
+    public static void CreateScene(Uri groundSourceUri)
+    {
+      QueuedTask.Run(() => {
+        var scene = MapFactory.Instance.CreateScene("My scene", groundSourceUri, MapViewingMode.SceneGlobal);
+      });
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.ElevationSurfaceLayer
+    // cref: ArcGIS.Desktop.Mapping.ElevationLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.ElevationLayerCreationParams.#ctor(ArcGIS.Core.CIM.CIMDataConnection)
+    // cref: ArcGIS.Desktop.Mapping.Map.GetGroundElevationSurfaceLayer
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory
+    #region Create a New Elevation Surface
+    /// <summary>
+    /// Creates a new elevation surface layer in the active map using a predefined elevation service.
+    /// </summary>
+    /// <remarks>This method adds an elevation surface layer to the active map by connecting to the ArcGIS
+    /// World Elevation service. The elevation surface is created using the "WorldElevation/Terrain" image service.
+    /// Ensure that an active map is available before calling this method.</remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static Task CreateNewElevationSurface()
+    {
+      return ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(() =>
+      {
+        //Define a ServiceConnection to use for the new Elevation surface
+        var serverConnection = new CIMInternetServerConnection
+        {
+          Anonymous = true,
+          HideUserProperty = true,
+          URL = "https://elevation.arcgis.com/arcgis/services"
+        };
+        CIMAGSServiceConnection serviceConnection = new CIMAGSServiceConnection
+        {
+          ObjectName = "WorldElevation/Terrain",
+          ObjectType = "ImageServer",
+          URL = "https://elevation.arcgis.com/arcgis/services/WorldElevation/Terrain/ImageServer",
+          ServerConnection = serverConnection
+        };
+        //Defines a new elevation source set to the CIMAGSServiceConnection defined above
+        //Get the active map
+        var map = MapView.Active.Map;
+        //Get the elevation surfaces defined in the map
+        var listOfElevationSurfaces = map.GetElevationSurfaceLayers();
+        //Add the new elevation surface 
+        var elevationLyrCreationParams = new ElevationLayerCreationParams(serviceConnection);
+        var elevationSurface = LayerFactory.Instance.CreateLayer<ElevationSurfaceLayer>(
+               elevationLyrCreationParams, map);
+      });
+    }
+    #endregion
+    // cref: ArcGIS.Core.CIM.CIMLayerElevationSurface
+    // cref: ArcGIS.Core.CIM.CIMBaseLayer.LayerElevation
+    #region Set a custom elevation surface to a Z-Aware layer
+    /// <summary>
+    /// Sets a custom elevation surface for the specified Z-aware feature layer.
+    /// </summary>
+    /// <remarks>This method assigns a custom elevation surface to the provided feature layer by modifying its
+    /// layer definition. The elevation surface is defined using a URI pointing to an elevation service.</remarks>
+    /// <param name="featureLayer">The feature layer to which the custom elevation surface will be applied.  The layer must support Z-awareness.</param>
+    /// <returns>A task that represents the asynchronous operation of setting the elevation surface.</returns>
+    public static Task SetElevationSurfaceToLayer(FeatureLayer featureLayer)
+    {
+      return QueuedTask.Run(() =>
+      {
+        //Define the custom elevation surface to use
+        var layerElevationSurface = new CIMLayerElevationSurface
+        {
+          ElevationSurfaceLayerURI = "https://elevation3d.arcgis.com/arcgis/services/WorldElevation3D/Terrain3D/ImageServer"
+        };
+        //Get the layer's definition
+        var lyrDefn = featureLayer.GetDefinition() as CIMBasicFeatureLayer;
+        //Set the layer's elevation surface
+        lyrDefn.LayerElevation = layerElevationSurface;
+        //Set the layer's definition
+        featureLayer.SetDefinition(lyrDefn);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.ElevationLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.ElevationLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory
+    #region Add an elevation source to an existing elevation surface layer
+    /// <summary>
+    /// Adds an elevation source to an existing elevation surface layer.
+    /// </summary>
+    /// <remarks>This method creates an elevation source layer using the specified URI and adds it to an
+    /// elevation surface layer. The elevation surface layer can be any existing surface layer, including the ground
+    /// layer.</remarks>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static Task AddSourceToElevationSurfaceLayer()
+    {
+      return QueuedTask.Run(() =>
+      {
+        ElevationSurfaceLayer surfaceLayer = null;
+        // surfaceLayer could also be the ground layer
+        string uri = "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer";
+        var createParams = new ElevationLayerCreationParams(new Uri(uri));
+        createParams.Name = "Terrain 3D";
+        var eleSourceLayer = LayerFactory.Instance.CreateLayer<Layer>(createParams, surfaceLayer);
+      });
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.ElevationSurfaceLayer
+    // cref: ArcGIS.Desktop.Mapping.Map.GetElevationSurfaceLayers
+    // cref: ArcGIS.Desktop.Mapping.Map.GetGroundElevationSurfaceLayer
+    #region Get the elevation surface layers and elevation source layers from a map
+    /// <summary>
+    /// Retrieves elevation surface layers and elevation source layers from the specified map.
+    /// </summary>
+    /// <remarks>This method provides access to the elevation surface layers in the map, including the ground
+    /// elevation surface layer. It also retrieves the number of elevation source layers in the ground elevation surface
+    /// layer and the first elevation source layer, if available.</remarks>
+    /// <param name="map">The map from which elevation surface layers and elevation source layers are retrieved. Cannot be <see
+    /// langword="null"/>.</param>
+    public static void ElevationSurfaceLayers(Map map)
+    {
+      // retrieve the elevation surface layers in the map including the Ground
+      var surfaceLayers = map.GetElevationSurfaceLayers();
+
+      // retrieve the single ground elevation surface layer in the map
+      var groundSurfaceLayer = map.GetGroundElevationSurfaceLayer();
+
+      // determine the number of elevation sources in the ground elevation surface layer
+      int numberGroundSources = groundSurfaceLayer.Layers.Count;
+      // get the first elevation source layer from the ground elevation surface layer
+      var groundSourceLayer = groundSurfaceLayer.Layers.FirstOrDefault();
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.ElevationSurfaceLayer
+    // cref: ArcGIS.Desktop.Mapping.Map.GetElevationSurfaceLayers
+    // cref: ArcGIS.Desktop.Mapping.Map.FindElevationSurfaceLayer(System.String)
+    #region Find an elevation surface layer
+    /// <summary>
+    /// Finds an elevation surface layer within the specified map using its URI.
+    /// </summary>
+    /// <remarks>This method retrieves elevation surface layers from the provided map and searches for a
+    /// specific layer matching the given URI./>.</remarks>
+    /// <param name="map">The map containing the elevation surface layers to search.</param>
+    /// <param name="layerUri">The URI of the elevation surface layer to find. This value cannot be null or empty.</param>
+    public static void FindElevationSurfaceLayer(Map map, string layerUri)
+    {
+      // retrieve the elevation surface layers in the map 
+      var surfaceLayers = map.GetElevationSurfaceLayers();
+      // find a specific elevation surface layer by its URI
+      var surfaceLayer = surfaceLayers.FirstOrDefault(l => l.Name == "Surface2");
+      // or use the FindElevationSurfaceLayer method, passing the layer URI
+      surfaceLayer = map.FindElevationSurfaceLayer(layerUri);
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.Map.ClearElevationSurfaceLayers
+    #region Remove elevation surface layers
+    /// <summary>
+    /// Removes elevation surface layers from the specified map, excluding the ground surface.
+    /// </summary>
+    /// <remarks>This method illustrates various patterns to remove all elevation surface layers from the map, except for the ground surface,
+    /// which cannot be removed. The specified <paramref name="surfaceLayer"/> is also removed if it exists in the
+    /// map.</remarks>
+    /// <param name="map">The map from which elevation surface layers will be removed.</param>
+    /// <param name="surfaceLayer">The specific elevation surface layer to remove. If the layer is not part of the map, no action is taken.</param>
+    public static void RemoveElevationSurfaceLayers(Map map, Layer surfaceLayer)
+    {
+      QueuedTask.Run(() =>
+      {
+        //Ground will not be removed
+        map.ClearElevationSurfaceLayers();
+        //Cannot remove ground
+        map.RemoveLayer(surfaceLayer);
+        //Ground will not be removed
+        map.RemoveLayers(map.GetElevationSurfaceLayers());
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.Map.GetZsFromSurfaceAsync(ArcGIS.Core.Geometry.Geometry)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult
+    #region Get Z values from the default ground surface
+    /// <summary>
+    /// Retrieves the Z-value from the default ground surface at the center of the map's full extent.
+    /// </summary>
+    /// <remarks>This method calculates the center point of the map's full extent and queries the default
+    /// ground surface to obtain the Z-value at that location. The Z-value represents the elevation at the specified
+    /// point.</remarks>
+    /// <returns></returns>
+    public static async Task GetZValue()
+    {
+
+      var mapPoint = await QueuedTask.Run<MapPoint>(() =>
+      {
+        // Get the center of the map's full extent
+        MapPoint mapCentergeometry = MapView.Active.Map.CalculateFullExtent().Center;
+        return mapCentergeometry;
+      });
+      //Pass any Geometry type to GetZsFromSurfaceAsync
+      var surfaceZResult = await MapView.Active.Map.GetZsFromSurfaceAsync(mapPoint);
+      if (surfaceZResult.Status == SurfaceZsResultStatus.Ok)
+      {
+        // cast to a mapPoint
+        var mapPointZ = surfaceZResult.Geometry as MapPoint;
+        var z = mapPointZ.Z;
+      }
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.Map.GetZsFromSurfaceAsync(ArcGIS.Core.Geometry.Geometry)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult
+    #region Get Z values from a specific surface
+    /// <summary>
+    /// Retrieves Z values from a specific elevation surface for the given polyline geometry.
+    /// </summary>
+    /// <remarks>This method uses the elevation surface named "TIN" within the active map to calculate Z
+    /// values for the provided polyline. The resulting geometry with Z values can be accessed and processed
+    /// further.</remarks>
+    /// <param name="polyline">The polyline geometry for which Z values will be retrieved. The polyline must be valid and non-null.</param>
+    public static async void GetZValuesFromSpecificSurface(Polyline polyline)
+    {
+      var eleLayer = MapView.Active.Map.GetElevationSurfaceLayers().FirstOrDefault(l => l.Name == "TIN");
+      //Pass any Geometry type to GetZsFromSurfaceAsync
+      var zResult = await MapView.Active.Map.GetZsFromSurfaceAsync(polyline, eleLayer);
+      if (zResult.Status == SurfaceZsResultStatus.Ok)
+      {
+        var polylineZ = zResult.Geometry as Polyline;
+        // process the polylineZ
+        // For example, you can iterate through the points and access their Z values
+      }
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.Layer.CanGetZs()
+    // cref: ArcGIS.Desktop.Mapping.Layer.GetZs(ArcGIS.Core.Geometry)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult
+    #region Get Z values from a layer
+    /// <summary>
+    /// Retrieves Z values from the specified TIN layer for the given geometry inputs.
+    /// </summary>
+    /// <remarks>This method asynchronously retrieves elevation (Z) values from a <see cref="TinLayer"/> for a
+    /// specified  <see cref="MapPoint"/> and <see cref="Polyline"/>. The Z values are obtained using the layer's
+    /// surface data. Ensure that the <paramref name="tinLayer"/> supports Z value retrieval by calling <see
+    /// cref="TinLayer.CanGetZs"/>  before invoking this method.</remarks>
+    /// <param name="tinLayer">The TIN layer from which Z values will be retrieved. Must support Z value retrieval.</param>
+    /// <param name="mapPoint">The map point for which the Z value will be retrieved.</param>
+    /// <param name="polyline">The polyline for which Z values will be retrieved.</param>
+    public static async void GetZsFromLayer(TinLayer tinLayer, MapPoint mapPoint, Polyline polyline)
+    {
+      await QueuedTask.Run(() =>
+      {
+        if (tinLayer.CanGetZs())
+        {
+          // get z value for a mapPoint
+          var zResult = tinLayer.GetZs(mapPoint);
+          if (zResult.Status == SurfaceZsResultStatus.Ok)
+          {
+            // cast to a mapPoint
+            var mapPointZ = zResult.Geometry as MapPoint;
+            var z = mapPointZ.Z;
+          }
+
+          // get z values for a polyline
+          zResult = tinLayer.GetZs(polyline);
+          if (zResult.Status == SurfaceZsResultStatus.Ok)
+          {
+            // cast to a mapPoint
+            var polylineZ = zResult.Geometry as Polyline;
+          }
+        }
+      });
+    }
+    #endregion
+
+    #region ProSnippet Group: Raster Layers
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.RasterLayer
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer(System.Uri, ArcGIS.Desktop.Mapping.ILayerContainerEdit, System.Int32, System.String)
+    #region Create a raster layer
+    /// <summary>
+    /// Creates a raster layer from a specified file path and adds it to the provided map.
+    /// </summary>
+    /// <remarks>This method creates a raster layer using the file path of a raster image. The raster layer is
+    /// added to the specified map. The raster image file must exist at the provided path, and the path must be
+    /// accessible.  Note: Raster layers can also be created from a URL, project item, or data connection.</remarks>
+    /// <param name="map">The map to which the raster layer will be added. Must not be null.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public static async Task CreateRasterLayers(Map map)
+    {
+      string url = @"C:\Images\Italy.tif";
+      await QueuedTask.Run(() =>
+      {
+        // Create a raster layer using a path to an image.
+        // Note: You can create a raster layer from a url, project item, or data connection.
+        var rasterLayer = LayerFactory.Instance.CreateLayer(new Uri(url), map) as RasterLayer;
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetColorizer()
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.Brightness
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.Contrast
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.ResamplingType
+    // cref: ArcGIS.Core.CIM.RasterResamplingType
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Update the raster colorizer on a raster layer
+    /// <summary>
+    /// Updates the colorizer properties of the specified raster layer.
+    /// </summary>
+    /// <remarks>This method modifies the brightness, contrast, and resampling type of the raster layer's
+    /// colorizer. The changes are applied asynchronously within a queued task to ensure thread safety.</remarks>
+    /// <param name="rasterLayer">The <see cref="RasterLayer"/> whose colorizer properties will be updated.  This parameter cannot be <see
+    /// langword="null"/>.</param>
+    public static async void UpdateRasterColorizer(RasterLayer rasterLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the colorizer from the raster layer.
+        CIMRasterColorizer rasterColorizer = rasterLayer.GetColorizer();
+        // Update raster colorizer properties.
+        rasterColorizer.Brightness = 10;
+        rasterColorizer.Contrast = -5;
+        rasterColorizer.ResamplingType = RasterResamplingType.NearestNeighbor;
+        // Update the raster layer with the changed colorizer.
+        rasterLayer.SetColorizer(rasterColorizer);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetColorizer()
+    // cref: ArcGIS.Core.CIM.CIMRasterRGBColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterRGBColorizer.StretchType
+    // cref: ArcGIS.Core.CIM.RasterStretchType
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Update the RGB colorizer on a raster layer
+    await QueuedTask.Run(() =>
+      {
+      // Get the colorizer from the raster layer.
+      CIMRasterColorizer rColorizer = rasterLayer.GetColorizer();
+      // Check if the colorizer is an RGB colorizer.
+      if (rColorizer is CIMRasterRGBColorizer rasterRGBColorizer)
+      {
+        // Update RGB colorizer properties.
+        rasterRGBColorizer.StretchType = RasterStretchType.ESRI;
+        // Update the raster layer with the changed colorizer.
+        rasterLayer.SetColorizer(rasterRGBColorizer);
+      }
+    });
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+      // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+      #region Check if a certain colorizer can be applied to a raster layer 
+      await QueuedTask.Run(() =>
+      {
+      // Get the list of colorizers that can be applied to the raster layer.
+      IEnumerable<RasterColorizerType> applicableColorizerList = rasterLayer.GetApplicableColorizers();
+      // Check if the RGB colorizer is part of the list.
+      bool isTrue_ContainTheColorizerType =
+  applicableColorizerList.Contains(RasterColorizerType.RGBColorizer);
+    });
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+      // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+      // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+      #region Create a new colorizer based on a default colorizer definition and apply it to the raster layer 
+      await QueuedTask.Run(async () =>
+      {
+      // Check if the Stretch colorizer can be applied to the raster layer.
+      if (rasterLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+      {
+        // Create a new Stretch Colorizer Definition using the default constructor.
+        StretchColorizerDefinition stretchColorizerDef_default = new StretchColorizerDefinition();
+        // Create a new Stretch colorizer using the colorizer definition created above.
+        CIMRasterStretchColorizer newStretchColorizer_default =
+    await rasterLayer.CreateColorizerAsync(stretchColorizerDef_default) as CIMRasterStretchColorizer;
+        // Set the new colorizer on the raster layer.
+        rasterLayer.SetColorizer(newStretchColorizer_default);
+      }
+    });
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+      // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor(System.Int32, ArcGIS.Core.CIM.RasterStretchType, System.Double, ArcGIS.Core.CIM.CIMColorRamp)
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+      // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+      #region Create a new colorizer based on a custom colorizer definition and apply it to the raster layer 
+      await QueuedTask.Run(async () =>
+      {
+      // Check if the Stretch colorizer can be applied to the raster layer.
+      if (rasterLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+      {
+        // Create a new Stretch Colorizer Definition specifying parameters 
+        // for band index, stretch type, gamma and color ramp.
+        StretchColorizerDefinition stretchColorizerDef_custom =
+    new StretchColorizerDefinition(1, RasterStretchType.ESRI, 2, colorRamp);
+        // Create a new stretch colorizer using the colorizer definition created above.
+        CIMRasterStretchColorizer newStretchColorizer_custom =
+    await rasterLayer.CreateColorizerAsync(stretchColorizerDef_custom) as CIMRasterStretchColorizer;
+        // Set the new colorizer on the raster layer.
+        rasterLayer.SetColorizer(newStretchColorizer_custom);
+      }
+    });
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.RasterLayer
+      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+      // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams
+      // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.#ctor(System.Uri)
+      // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.ColorizerDefinition
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory
+      #region Create a raster layer with a new colorizer definition
+    /// <summary>
+    /// Creates a raster layer in the specified map using the provided raster file path and applies a default stretch
+    /// colorizer.
+    /// </summary>
+    /// <remarks>This method creates a raster layer with a stretch colorizer definition, which is useful for
+    /// visualizing raster data  with continuous values. The raster layer is added to the specified map at index
+    /// 0.</remarks>
+    /// <param name="map">The map to which the raster layer will be added. Cannot be null.</param>
+    /// <param name="rasterPath">The file path to the raster data. Must be a valid URI pointing to a raster file.</param>
+    /// <param name="layerName">The name to assign to the raster layer. This name will appear in the map's layer list.</param>
+    public static async void CreateRasterLayerWithColorizer(Map map, string rasterPath, string layerName)
+    {
+      // Create a new stretch colorizer definition using default constructor.
+      StretchColorizerDefinition stretchColorizerDef = new StretchColorizerDefinition();
+      // Create a raster layer creation parameters object with the raster file path.
+      var rasterLayerCreationParams = new RasterLayerCreationParams(new Uri(rasterPath))
+      {
+        ColorizerDefinition = stretchColorizerDef,
+        Name = layerName,
+        MapMemberIndex = 0
+      };
+      await QueuedTask.Run(() =>
+      {
+        // Create a raster layer using the colorizer definition created above.
+        // Note: You can create a raster layer from a url, project item, or data connection.
+        RasterLayer rasterLayerfromURL =
+    LayerFactory.Instance.CreateLayer<RasterLayer>(rasterLayerCreationParams, map);
+      });
+    }
+    #endregion
+
+
+    #region ProSnippet Group: Mosaic Layers
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer(System.Uri, ArcGIS.Desktop.Mapping.ILayerContainerEdit, System.Int32, System.String)
+    #region Create a mosaic layer
+    /// <summary>
+    /// Creates a mosaic layer from a specified mosaic dataset and adds it to the provided map.
+    /// </summary>
+    /// <remarks>This method creates a mosaic layer using the path to a mosaic dataset. Mosaic layers can be created 
+    /// from various sources, including URLs, project items, or data connections. Ensure the provided path  points to a
+    /// valid mosaic dataset.</remarks>
+    /// <param name="map">The map to which the mosaic layer will be added. Must not be null.</param>
+    /// <returns></returns>
+    public static async Task MosaicLayers(Map map)
+    {
+      //Path to mosaic dataset
+      string url = @"C:\Images\countries.gdb\Italy";
+      await QueuedTask.Run(() =>
+      {
+        // Create a mosaic layer using a path to a mosaic dataset.
+        // Note: You can create a mosaic layer from a url, project item, or data connection.
+        var mosaicLayer = LayerFactory.Instance.CreateLayer(new Uri(url), map) as MosaicLayer;
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageMosaicSubLayer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetColorizer()
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.Brightness
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.Contrast
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.ResamplingType
+    // cref: ArcGIS.Core.CIM.RasterResamplingType
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Update the raster colorizer on a mosaic layer
+    /// <summary>
+    /// Updates the raster colorizer properties of the specified mosaic layer.
+    /// </summary>
+    /// <remarks>This method modifies the brightness, contrast, and resampling type of the raster colorizer
+    /// associated with the mosaic layer's image sub-layer. The changes are applied asynchronously within a queued task
+    /// to ensure thread safety when interacting with ArcGIS Pro. <para> The following properties are updated:
+    /// <list type="bullet"> <item><description><see cref="CIMRasterColorizer.Brightness"/> is set to
+    /// 10.</description></item> <item><description><see cref="CIMRasterColorizer.Contrast"/> is set to
+    /// -5.</description></item> <item><description><see cref="CIMRasterColorizer.ResamplingType"/> is set to <see
+    /// cref="RasterResamplingType.NearestNeighbor"/>.</description></item> </list> </para></remarks>
+    /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose raster colorizer properties will be updated.</param>
+    public static async void UpdateColorizerMosaicLayer(MosaicLayer mosaicLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageMosaicSubLayer mosaicImageSubLayer = mosaicLayer.GetImageLayer();
+        // Get the colorizer from the image sub-layer.
+        CIMRasterColorizer rasterColorizer = mosaicImageSubLayer.GetColorizer();
+        // Update raster colorizer properties.
+        rasterColorizer.Brightness = 10;
+        rasterColorizer.Contrast = -5;
+        rasterColorizer.ResamplingType = RasterResamplingType.NearestNeighbor;
+        // Update the image sub-layer with the changed colorizer.
+        mosaicImageSubLayer.SetColorizer(rasterColorizer);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageMosaicSubLayer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetColorizer()
+    // cref: ArcGIS.Core.CIM.CIMRasterRGBColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterRGBColorizer.StretchType
+    // cref: ArcGIS.Core.CIM.RasterStretchType
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Update the RGB colorizer on a mosaic layer
+    /// <summary>
+    /// Updates the RGB colorizer properties of the specified mosaic layer.
+    /// </summary>
+    /// <remarks>This method retrieves the image sub-layer from the provided mosaic layer, checks if its
+    /// colorizer is an RGB colorizer,  and updates its stretch type to <see cref="RasterStretchType.ESRI"/>. The
+    /// updated colorizer is then applied back to the image sub-layer.  This operation is performed asynchronously on
+    /// the ArcGIS Pro QueuedTask thread to ensure thread safety.</remarks>
+    /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose RGB colorizer will be updated.</param>
+    public async static void UpdatrRGBColorizer(MosaicLayer mosaicLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageMosaicSubLayer mosaicImageSubLayer = mosaicLayer.GetImageLayer();
+        // Get the colorizer from the image sub-layer.
+        CIMRasterColorizer rColorizer = mosaicImageSubLayer.GetColorizer();
+        // Check if the colorizer is an RGB colorizer.
+        if (rColorizer is CIMRasterRGBColorizer rasterRGBColorizer)
+        {
+          // Update RGB colorizer properties.
+          rasterRGBColorizer.StretchType = RasterStretchType.ESRI;
+          // Update the image sub-layer with the changed colorizer.
+          mosaicImageSubLayer.SetColorizer(rasterRGBColorizer);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageMosaicSubLayer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    #region Check if a certain colorizer can be applied to a mosaic layer 
+    /// <summary>
+    /// Checks whether the RGB colorizer can be applied to the specified mosaic layer.
+    /// </summary>
+    /// <remarks>This method determines if the RGB colorizer is supported by the image sub-layer of the given
+    /// mosaic layer. It performs the check asynchronously on a background thread using the <see
+    /// cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/> method.</remarks>
+    /// <param name="mosaicLayer">The <see cref="ArcGIS.Desktop.Mapping.MosaicLayer"/> to check for applicable colorizers.</param>
+    public async static void CheckColorizerMosaicLayer(MosaicLayer mosaicLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageMosaicSubLayer mosaicImageSubLayer = mosaicLayer.GetImageLayer();
+        // Get the list of colorizers that can be applied to the image sub-layer.
+        IEnumerable<RasterColorizerType> applicableColorizerList =
+    mosaicImageSubLayer.GetApplicableColorizers();
+        // Check if the RGB colorizer is part of the list.
+        bool isTrue_ContainTheColorizerType =
+    applicableColorizerList.Contains(RasterColorizerType.RGBColorizer);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageMosaicSubLayer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+    // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Create a new colorizer based on a default colorizer definition and apply it to the mosaic layer 
+    /// <summary>
+    /// Creates and applies a default stretch colorizer to the specified mosaic layer.
+    /// </summary>
+    /// <remarks>This method retrieves the image sub-layer from the provided mosaic layer and checks if a
+    /// stretch colorizer can be applied. If applicable, it creates a new stretch colorizer using the default definition
+    /// and applies it to the image sub-layer.</remarks>
+    /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> to which the default stretch colorizer will be applied.</param>
+    public async static void CreateColorizerFromDefault(MosaicLayer mosaicLayer)
+    {
+      await QueuedTask.Run(async () =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageMosaicSubLayer mosaicImageSubLayer = mosaicLayer.GetImageLayer();
+        // Check if the Stretch colorizer can be applied to the image sub-layer.
+        if (mosaicImageSubLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+        {
+          // Create a new Stretch Colorizer Definition using the default constructor.
+          StretchColorizerDefinition stretchColorizerDef_default = new StretchColorizerDefinition();
+          // Create a new Stretch colorizer using the colorizer definition created above.
+          CIMRasterStretchColorizer newStretchColorizer_default =
+      await mosaicImageSubLayer.CreateColorizerAsync(stretchColorizerDef_default) as CIMRasterStretchColorizer;
+          // Set the new colorizer on the image sub-layer.
+          mosaicImageSubLayer.SetColorizer(newStretchColorizer_default);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageMosaicSubLayer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor(System.Int32, ArcGIS.Core.CIM.RasterStretchType, System.Double, ArcGIS.Core.CIM.CIMColorRamp)
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+    // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Create a new colorizer based on a custom colorizer definition and apply it to the mosaic layer 
+    /// <summary>
+    /// Creates and applies a custom stretch colorizer to the specified mosaic layer.
+    /// </summary>
+    /// <remarks>This method retrieves the image sub-layer from the provided mosaic layer and checks if a
+    /// stretch colorizer  can be applied. If applicable, it creates a custom stretch colorizer definition with
+    /// specified parameters  and applies the resulting colorizer to the image sub-layer.</remarks>
+    /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> to which the custom stretch colorizer will be applied.</param>
+    public async static void CreateColorizerFromCustom(MosaicLayer mosaicLayer, CIMColorRamp colorRamp)
+    {
+      await QueuedTask.Run(async () =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageMosaicSubLayer mosaicImageSubLayer = mosaicLayer.GetImageLayer();
+        // Check if the Stretch colorizer can be applied to the image sub-layer.
+        if (mosaicImageSubLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+        {
+          // Create a new Stretch colorizer definition specifying parameters
+          // for band index, stretch type, gamma and color ramp.
+          StretchColorizerDefinition stretchColorizerDef_custom =
+      new StretchColorizerDefinition(1, RasterStretchType.ESRI, 2, colorRamp);
+          // Create a new stretch colorizer using the colorizer definition created above.
+          CIMRasterStretchColorizer newStretchColorizer_custom =
+      await mosaicImageSubLayer.CreateColorizerAsync(stretchColorizerDef_custom) as CIMRasterStretchColorizer;
+          // Set the new colorizer on the image sub-layer.
+          mosaicImageSubLayer.SetColorizer(newStretchColorizer_custom);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.ColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory
+    #region Create a mosaic layer with a new colorizer definition
+    // Create a new colorizer definition using default constructor.
+    public async static void CreateMosaicLayerWithColorizer(Map map, string url, string layerName)
+    {
+      StretchColorizerDefinition stretchColorizerDef = new StretchColorizerDefinition();
+      var rasterLayerCreationParams = new RasterLayerCreationParams(new Uri(url))
+      {
+        Name = layerName,
+        ColorizerDefinition = stretchColorizerDef,
+        MapMemberIndex = 0
+
+      };
+      await QueuedTask.Run(() =>
+      {
+        // Create a mosaic layer using the colorizer definition created above.
+        // Note: You can create a mosaic layer from a url, project item, or data connection.
+        MosaicLayer newMosaicLayer =
+    LayerFactory.Instance.CreateLayer<MosaicLayer>(rasterLayerCreationParams, map);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.GetMosaicRule()
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule.MosaicMethod
+    // cref: ArcGIS.Core.CIM.RasterMosaicMethod
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.SetMosaicRule(ArcGIS.Core.CIM.CIMMosaicRule)
+    #region Update the sort order - mosaic method on a mosaic layer
+    /// <summary>
+    /// Updates the mosaic sort order of the specified <see cref="MosaicLayer"/> by setting its mosaic method to
+    /// "Center."
+    /// </summary>
+    /// <remarks>This method modifies the mosaic rule of the image sub-layer within the provided <see
+    /// cref="MosaicLayer"/>. The mosaic method is set to <see cref="RasterMosaicMethod.Center"/>, which prioritizes
+    /// images closest to the center of the view. The operation is performed asynchronously on a background thread using
+    /// <see cref="QueuedTask.Run(Action)"/>.</remarks>
+    /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose mosaic sort order will be updated. This parameter cannot be null.</param>
+    public async static void UpdateMosaicSortOrder(MosaicLayer mosaicLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageServiceLayer mosaicImageSubLayer = mosaicLayer.GetImageLayer() as ImageServiceLayer;
+        // Get the mosaic rule.
+        CIMMosaicRule mosaicingRule = mosaicImageSubLayer.GetMosaicRule();
+        // Set the Mosaic Method to Center.
+        mosaicingRule.MosaicMethod = RasterMosaicMethod.Center;
+        // Update the mosaic with the changed mosaic rule.
+        mosaicImageSubLayer.SetMosaicRule(mosaicingRule);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.MosaicLayer.GetImageLayer()
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.GetMosaicRule()
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule.MosaicOperatorType
+    // cref: ArcGIS.Core.CIM.RasterMosaicOperatorType
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.SetMosaicRule(ArcGIS.Core.CIM.CIMMosaicRule)
+    #region Update the resolve overlap - mosaic operator on a mosaic layer
+    /// <summary>
+    /// Updates the mosaic operator of the specified <see cref="MosaicLayer"/> to resolve overlap using the mean value.
+    /// </summary>
+    /// <remarks>This method modifies the mosaic rule of the image sub-layer within the provided <see
+    /// cref="MosaicLayer"/> by setting its mosaic operator type to <see cref="RasterMosaicOperatorType.Mean"/>. This
+    /// ensures that overlapping areas in the mosaic are resolved by calculating the mean value of the overlapping
+    /// pixels.</remarks>
+    /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose mosaic operator is to be updated. This layer must contain an image
+    /// sub-layer.</param>
+    public async static void UpdateResolveOverlap(MosaicLayer mosaicLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the image sub-layer from the mosaic layer.
+        ImageServiceLayer mosaicImageSublayer = mosaicLayer.GetImageLayer() as ImageServiceLayer;
+        // Get the mosaic rule.
+        CIMMosaicRule mosaicRule = mosaicImageSublayer.GetMosaicRule();
+        // Set the Mosaic Operator to Mean.
+        mosaicRule.MosaicOperatorType = RasterMosaicOperatorType.Mean;
+        // Update the mosaic with the changed mosaic rule.
+        mosaicImageSublayer.SetMosaicRule(mosaicRule);
+      });
+
+    }
+    #endregion
+
+    #region ProSnippet Group: Image Service Layers
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer(System.Uri, ArcGIS.Desktop.Mapping.ILayerContainerEdit, System.Int32, System.String)
+    #region Create an image service layer
+    /// <summary>
+    /// Creates an image service layer from a specified URL and adds it to the provided map.
+    /// </summary>
+    /// <remarks>This method uses the ArcGIS Image Service URL to create an <see
+    /// cref="ArcGIS.Desktop.Mapping.ImageServiceLayer"/>  and adds it to the specified map. The operation is performed
+    /// asynchronously on the QueuedTask thread.</remarks>
+    /// <param name="map">The map to which the image service layer will be added. Cannot be null.</param>
+    /// <returns></returns>
+    public static async Task ImageServiceLayers(Map map)
+    {
+      string url =
+      @"http://imagery.arcgisonline.com/arcgis/services/LandsatGLS/GLS2010_Enhanced/ImageServer";
+      await QueuedTask.Run(() =>
+      {
+        // Create an image service layer using the url for an image service.
+        var isLayer = LayerFactory.Instance.CreateLayer(new Uri(url), aMap) as ImageServiceLayer;
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetColorizer()
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.Brightness
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.Contrast
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer.ResamplingType
+    // cref: ArcGIS.Core.CIM.RasterResamplingType
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Update the raster colorizer on an image service layer
+    /// <summary>
+    /// Updates the colorizer properties of the specified image service layer.
+    /// </summary>
+    /// <remarks>This method modifies the brightness, contrast, and resampling type of the colorizer
+    /// associated  with the provided image service layer. The changes are applied asynchronously within a queued
+    /// task.</remarks>
+    /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> whose colorizer properties will be updated.</param>
+    public static async void UpdateColorizerISLayer(ImageServiceLayer imageServiceLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the colorizer from the image service layer.
+        CIMRasterColorizer rasterColorizer = imageServiceLayer.GetColorizer();
+        // Update the colorizer properties.
+        rasterColorizer.Brightness = 10;
+        rasterColorizer.Contrast = -5;
+        rasterColorizer.ResamplingType = RasterResamplingType.NearestNeighbor;
+        // Update the image service layer with the changed colorizer.
+        imageServiceLayer.SetColorizer(rasterColorizer);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetColorizer()
+    // cref: ArcGIS.Core.CIM.CIMRasterColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterRGBColorizer
+    // cref: ArcGIS.Core.CIM.CIMRasterRGBColorizer.StretchType
+    // cref: ArcGIS.Core.CIM.RasterStretchType
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Update the RGB colorizer on an image service layer
+    /// <summary>
+    /// Updates the RGB colorizer properties of the specified image service layer.
+    /// </summary>
+    /// <remarks>This method modifies the stretch type of the RGB colorizer to <see
+    /// cref="RasterStretchType.ESRI"/> if the layer's current colorizer is an RGB colorizer. The updated colorizer is
+    /// then applied to the image service layer. This operation is performed asynchronously on a queued task.</remarks>
+    /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> whose RGB colorizer properties will be updated.</param>
+    public static async void UpdateRGBColorizerISLayer(ImageServiceLayer imageServiceLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the colorizer from the image service layer.
+        CIMRasterColorizer rColorizer = imageServiceLayer.GetColorizer();
+        // Check if the colorizer is an RGB colorizer.
+        if (rColorizer is CIMRasterRGBColorizer rasterRGBColorizer)
+        {
+          // Update RGB colorizer properties.
+          rasterRGBColorizer.StretchType = RasterStretchType.ESRI;
+          // Update the image service layer with the changed colorizer.
+          imageServiceLayer.SetColorizer((CIMRasterColorizer)rasterRGBColorizer);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    #region Check if a certain colorizer can be applied to an image service layer 
+    /// <summary>
+    /// Checks whether the RGB colorizer can be applied to the specified image service layer.
+    /// </summary>
+    /// <remarks>This method retrieves the list of applicable colorizers for the given <see
+    /// cref="ImageServiceLayer"/>  and determines if the RGB colorizer is included in the list.</remarks>
+    /// <param name="imageServiceLayer">The image service layer to check for applicable colorizers. Cannot be null.</param>
+    public static async void CheckColorizerISLayer(ImageServiceLayer imageServiceLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the list of colorizers that can be applied to the imager service layer.
+        IEnumerable<RasterColorizerType> applicableColorizerList = imageServiceLayer.GetApplicableColorizers();
+        // Check if the RGB colorizer is part of the list.
+        bool isTrue_ContainTheColorizerType =
+    applicableColorizerList.Contains(RasterColorizerType.RGBColorizer);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+    // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Create a new colorizer based on a default colorizer definition and apply it to the image service layer 
+    /// <summary>
+    /// Applies a default stretch colorizer to the specified image service layer.
+    /// </summary>
+    /// <remarks>This method checks if the stretch colorizer type is applicable to the provided image service
+    /// layer. If applicable, it creates a new stretch colorizer using a default colorizer definition and applies it to
+    /// the layer. The operation is performed asynchronously on a queued task.</remarks>
+    /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> to which the default stretch colorizer will be applied.</param>
+    public static async void CreateDefaultColorizeImageServiceLayer(ImageServiceLayer imageServiceLayer)
+    {
+      await QueuedTask.Run(async () =>
+      {
+        // Check if the Stretch colorizer can be applied to the image service layer.
+        if (imageServiceLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+        {
+          // Create a new Stretch Colorizer Definition using the default constructor.
+          StretchColorizerDefinition stretchColorizerDef_default = new StretchColorizerDefinition();
+          // Create a new Stretch colorizer using the colorizer definition created above.
+          CIMRasterStretchColorizer newStretchColorizer_default =
+      await imageServiceLayer.CreateColorizerAsync(stretchColorizerDef_default) as CIMRasterStretchColorizer;
+          // Set the new colorizer on the image service layer.
+          imageServiceLayer.SetColorizer(newStretchColorizer_default);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor(System.Int32, ArcGIS.Core.CIM.RasterStretchType, System.Double, ArcGIS.Core.CIM.CIMColorRamp)
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+    // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Create a new colorizer based on a custom colorizer definition and apply it to the image service layer 
+    /// <summary>
+    /// Applies a custom stretch colorizer to the specified image service layer using the provided color ramp.
+    /// </summary>
+    /// <remarks>This method checks if the image service layer supports the stretch colorizer type. If
+    /// supported, it creates a  custom stretch colorizer definition using the specified color ramp and applies the
+    /// resulting colorizer to the layer. The method runs asynchronously on a queued task to ensure thread
+    /// safety.</remarks>
+    /// <param name="imageServiceLayer">The image service layer to which the custom colorizer will be applied.</param>
+    /// <param name="colorRamp">The color ramp used to define the appearance of the stretch colorizer.</param>
+    public static async void ApplyCustomColorizerImageServiceLayer(ImageServiceLayer imageServiceLayer, CIMColorRamp colorRamp)
+    {
+      await QueuedTask.Run(async () =>
+      {
+        // Check if the Stretch colorizer can be applied to the image service layer.
+        if (imageServiceLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+        {
+          // Create a new Stretch Colorizer Definition specifying parameters
+          // for band index, stretch type, gamma and color ramp. 
+          StretchColorizerDefinition stretchColorizerDef_custom =
+      new StretchColorizerDefinition(1, RasterStretchType.ESRI, 2, colorRamp);
+          // Create a new stretch colorizer using the colorizer definition created above.
+          CIMRasterStretchColorizer newStretchColorizer_custom =
+      await imageServiceLayer.CreateColorizerAsync(stretchColorizerDef_custom) as CIMRasterStretchColorizer;
+          // Set the new colorizer on the image service layer.
+          imageServiceLayer.SetColorizer(newStretchColorizer_custom);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.ColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory
+    #region Create an image service layer with a new colorizer definition
+    /// <summary>
+    /// Creates an image service layer with a specified colorizer definition and adds it to the given map.
+    /// </summary>
+    /// <remarks>This method creates a new <see cref="StretchColorizerDefinition"/> and applies it to the
+    /// image service layer. The layer is added to the specified map at index 0.</remarks>
+    /// <param name="map">The map to which the image service layer will be added. Cannot be null.</param>
+    /// <param name="url">The URL of the image service. Must be a valid URI.</param>
+    /// <param name="layerName">The name to assign to the created layer. Cannot be null or empty.</param>
+    public static async void CreateImageServiceLayerWithColorizer(Map map, string url, string layerName)
+    {
+      // Create a new colorizer definition using default constructor.
+      StretchColorizerDefinition stretchColorizerDef = new StretchColorizerDefinition();
+      var rasterLayerCreationParams = new RasterLayerCreationParams(new Uri(url))
+      {
+        Name = layerName,
+        ColorizerDefinition = stretchColorizerDef,
+        MapMemberIndex = 0
+      };
+      await QueuedTask.Run(() =>
+      {
+        // Create an image service layer using the colorizer definition created above.
+        ImageServiceLayer imageServiceLayer =
+    LayerFactory.Instance.CreateLayer<ImageServiceLayer>(rasterLayerCreationParams, map);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.GetMosaicRule()
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule.MosaicMethod
+    // cref: ArcGIS.Core.CIM.RasterMosaicMethod
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.SetMosaicRule(ArcGIS.Core.CIM.CIMMosaicRule)
+    #region Update the sort order - mosaic method on an image service layer
+    public static async void UpdateMosaicSortOrderISLayer(ImageServiceLayer imageServiceLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the mosaic rule of the image service.
+        CIMMosaicRule mosaicRule = imageServiceLayer.GetMosaicRule();
+        // Set the Mosaic Method to Center.
+        mosaicRule.MosaicMethod = RasterMosaicMethod.Center;
+        // Update the image service with the changed mosaic rule.
+        imageServiceLayer.SetMosaicRule(mosaicRule);
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.GetMosaicRule()
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule
+    // cref: ArcGIS.Core.CIM.CIMMosaicRule.MosaicOperatorType
+    // cref: ArcGIS.Core.CIM.RasterMosaicOperatorType
+    // cref: ArcGIS.Desktop.Mapping.ImageServiceLayer.SetMosaicRule(ArcGIS.Core.CIM.CIMMosaicRule)
+    #region Update the resolve overlap - mosaic operator on an image service layer
+    /// <summary>
+    /// Updates the mosaic operator of the specified image service layer to resolve overlap using the "Mean" operator.
+    /// </summary>
+    /// <remarks>This method modifies the mosaic rule of the provided image service layer by setting its
+    /// mosaic operator type to  <see cref="RasterMosaicOperatorType.Mean"/>. The "Mean" operator calculates the average
+    /// value of overlapping pixels  in the raster data. This operation is performed asynchronously on the ArcGIS Pro
+    /// QueuedTask thread.</remarks>
+    /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> whose mosaic operator will be updated.</param>
+    public async static void UpdateResolveOverlapImageServiceLayer(ImageServiceLayer imageServiceLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the mosaic rule of the image service.
+        CIMMosaicRule mosaicingRule = imageServiceLayer.GetMosaicRule();
+        // Set the Mosaic Operator to Mean.
+        mosaicingRule.MosaicOperatorType = RasterMosaicOperatorType.Mean;
+        // Update the image service with the changed mosaic rule.
+        imageServiceLayer.SetMosaicRule(mosaicingRule);
+      });
+    }
     #endregion
   }
 }

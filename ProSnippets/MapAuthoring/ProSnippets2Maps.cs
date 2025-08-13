@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MapAuthoring.ProSnippets
 {
-  public static class ProSnippetsMaps
+  public static class ProSnippets1Maps
   {
     #region ProSnippet Group: Maps
     #endregion

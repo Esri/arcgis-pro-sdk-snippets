@@ -13,161 +13,8 @@ using System.Threading.Tasks;
 
 namespace MapAuthoring.ProSnippets
 {
-  public static class ProSnippetsTableMetadataRenderers
+  public static class ProSnippets3TableMetadataRenderers
   {
-    #region ProSnippet Group: Attribute Table - ITablePane
-    #endregion
-
-    // cref: ArcGIS.Desktop.Mapping.ITablePane
-    // cref: ArcGIS.Desktop.Mapping.ITablePane.ZoomLevel
-    // cref: ArcGIS.Desktop.Mapping.ITablePane.SetZoomLevel
-    #region Set zoom level for Attribute Table
-    /// <summary>
-    /// Adjusts the zoom level of the currently active attribute table pane.
-    /// </summary>
-    /// <remarks>This method checks if the active pane is an attribute table pane (<see cref="ArcGIS.Desktop.Mapping.ITablePane">). 
-    /// If it is, the method retrieves the current zoom level, increases it by a fixed amount,  and applies the new zoom
-    /// level to the table pane.</remarks>
-    public static void SetTablePaneZoom()
-    {
-      //Check if the active pane is an ITablePane
-      if (FrameworkApplication.Panes.ActivePane is ITablePane tablePane)
-      {
-        //Get the current zoom level of the table pane
-        var currentZoomLevel = tablePane.ZoomLevel;
-        // Set a new zoom level, for example, increase it by 50
-        var newZoomLevel = currentZoomLevel + 50;
-        // Set the new zoom level to the table pane
-        tablePane.SetZoomLevel(newZoomLevel);
-      }
-    }
-    #endregion
-    // cref: ArcGIS.Desktop.Mapping.ITablePane
-    // cref: ArcGIS.Desktop.Mapping.ITablePane.MapMember
-    // cref: ArcGIS.Desktop.Mapping.ITablePane.ActiveObjectID
-    // cref: ArcGIS.Desktop.Mapping.ITablePane.ActiveColumn
-    #region Retrieve the values of selected cell in the attribute table
-    /// <summary>
-    /// Retrieves the contents of the currently active cell in the attribute table.
-    /// </summary>
-    /// <remarks>This method returns the value of the cell that is currently selected in the attribute table
-    /// pane. The active cell is determined by the active row's object ID and the active column in the table.</remarks>
-    public static void ActiveCellContents()
-    {
-      {
-        if (FrameworkApplication.Panes.ActivePane is ITablePane tablePane)
-        {
-          var mapMember = tablePane.MapMember;
-          //Get the active row's object ID from the table pane
-          var oid = tablePane.ActiveObjectID;
-          if (oid.HasValue && oid.Value != -1 && mapMember != null)
-          {
-            //Get the field of the active column
-            var activeField = tablePane.ActiveColumn;
-            QueuedTask.Run(() =>
-            {
-              // TODO: Use core objects to retrieve record and get value
-            });
-          }
-        }
-      }
-    }
-    #endregion
-    // cref: ArcGIS.Desktop.Mapping.ITablePane
-    // cref: ArcGIS.Desktop.Mapping.ITablePane.BringIntoView
-    #region Move to a particular row
-    /// <summary>
-    /// Scrolls the active attribute table pane to a specific row.
-    /// </summary>
-    /// <remarks>This method checks if the active pane implements <see
-    /// cref="ArcGIS.Desktop.Mapping.ArcGIS.Desktop.Mapping.ITablePane"/> and, if so, moves the view to the specified rows. It demonstrates
-    /// moving to the first row and the sixth row in the table.</remarks>
-    public static void MoveToRow()
-      {
-      // Check if the active pane is an ITablePane  
-      if (FrameworkApplication.Panes.ActivePane is ITablePane tablePane)
-        {
-          // move to first row
-          tablePane.BringIntoView(0);
-
-          // move to sixth row
-          tablePane.BringIntoView(5);
-        }
-      }
-    #endregion
-
-    #region ProSnippet Group: Metadata
-    #endregion
-    // cref: ArcGIS.Desktop.Mapping.Map.GetMetadata()
-    // cref: ArcGIS.Desktop.Mapping.Map.GetCanEditMetadata()
-    // cref: ArcGIS.Desktop.Mapping.Map.SetMetadata(System.String)
-    #region Get and Set Map Metadata
-    /// <summary>
-    /// Retrieves the metadata of the specified map, allows modifications, and updates the map with the modified
-    /// metadata.
-    /// </summary>
-    /// <remarks>This method first retrieves the metadata of the provided map as a string. The caller can
-    /// modify the metadata string as needed. If the map supports metadata editing, the modified metadata is then set
-    /// back to the map.</remarks>
-    /// <param name="map">The map whose metadata is being retrieved and updated. Cannot be <see langword="null"/>.</param>
-    public static void MapLayerMetadata(Map map)
-    {
-      QueuedTask.Run(() => {
-        //Get map's metadata
-        var mapMetadata = map.GetMetadata();
-        //TODO:Make edits to metadata using the retrieved mapMetadata string.
-
-        //Set the modified metadata back to the map.
-        if (map.GetCanEditMetadata())
-          map.SetMetadata(mapMetadata);
-      });
-    }
-    #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.MapMember.GetUseSourceMetadata()
-      // cref: ArcGIS.Desktop.Mapping.MapMember.SetUseSourceMetadata(System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.MapMember.SupportsMetadata
-      // cref: ArcGIS.Desktop.Mapping.MapMember.GetMetadata()
-      // cref: ArcGIS.Desktop.Mapping.MapMember.GetCanEditMetadata()
-      // cref: ArcGIS.Desktop.Mapping.MapMember.SetMetadata(System.String)
-      #region Layer Metadata
-    /// <summary>
-    /// Configures and manages metadata for the layers or tables in the specified map.
-    /// </summary>
-    /// <remarks>This method retrieves the first layer or table from the map and performs various
-    /// metadata-related operations,  such as checking whether the layer uses source metadata, enabling or disabling
-    /// source metadata usage,  retrieving metadata, and updating metadata if supported. All operations requiring access
-    /// to the MapMember  metadata must be executed on the Main CIM Thread (MCT) using <see
-    /// cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/>.</remarks>
-    /// <param name="map">The map containing the layers or tables whose metadata will be managed. Cannot be null.</param>
-    public static void LayerMetadata(Map map)
-    {
-      //Search for only layers/tables here if needed.
-      MapMember mapMember = map.GetLayersAsFlattenedList().FirstOrDefault(); 
-      if (mapMember == null) return;
-      QueuedTask.Run(() => {
-        //Gets whether or not the MapMember stores its own metadata or uses metadata retrieved
-        //from its source. This method must be called on the MCT. Use QueuedTask.Run
-        bool doesUseSourceMetadata = mapMember.GetUseSourceMetadata();
-
-        //Sets whether or not the MapMember will use its own metadata or the metadata from
-        //its underlying source (if it has one). This method must be called on the MCT.
-        //Use QueuedTask.Run
-        mapMember.SetUseSourceMetadata(true);
-
-        //Does the MapMember supports metadata
-        var supportsMetadata = mapMember.SupportsMetadata;
-
-        //Get MapMember metadata
-        var metadatstring = mapMember.GetMetadata();
-        //TODO:Make edits to metadata using the retrieved mapMetadata string.
-
-        //Set the modified metadata back to the mapmember (layer, table..)
-        if (mapMember.GetCanEditMetadata())
-          mapMember.SetMetadata(metadatstring);
-      });
-    }
-    #endregion
     #region ProSnippet Group: Renderers
     #endregion
     // cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition
@@ -194,7 +41,7 @@ namespace MapAuthoring.ProSnippets
         var fields = new List<string> { "Type" };
         //constructing a point symbol as a template symbol
         CIMPointSymbol pointSym = SymbolFactory.Instance.ConstructPointSymbol(
-            ColorFactory.Instance.GreenRGB, 16.0, SimpleMarkerStyle.Pushpin);  
+            ColorFactory.Instance.GreenRGB, 16.0, SimpleMarkerStyle.Pushpin);
         CIMSymbolReference symbolPointTemplate = pointSym.MakeSymbolReference();
 
         //constructing renderer definition for unique value renderer
@@ -291,7 +138,7 @@ namespace MapAuthoring.ProSnippets
         };
         //Set the feature layer's renderer.
         featureLayer.SetRenderer(uvr);
-      });      
+      });
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition
@@ -345,7 +192,7 @@ namespace MapAuthoring.ProSnippets
         CIMHeatMapRenderer heatMapRndr = featureLayer.CreateRenderer(heatMapDef) as CIMHeatMapRenderer;
         featureLayer.SetRenderer(heatMapRndr);
       });
-      
+
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition
@@ -404,7 +251,7 @@ namespace MapAuthoring.ProSnippets
         //Set the renderer to the feature layer
         featureLayer.SetRenderer(cbRndr);
       });
-      
+
     }
     #endregion
     // cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition
@@ -493,5 +340,311 @@ namespace MapAuthoring.ProSnippets
       });
     }
     #endregion
+    #region ProSnippet Group: Attribute Table - ITablePane
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.ITablePane
+    // cref: ArcGIS.Desktop.Mapping.ITablePane.ZoomLevel
+    // cref: ArcGIS.Desktop.Mapping.ITablePane.SetZoomLevel
+    #region Set zoom level for Attribute Table
+    /// <summary>
+    /// Adjusts the zoom level of the currently active attribute table pane.
+    /// </summary>
+    /// <remarks>This method checks if the active pane is an attribute table pane (<see cref="ArcGIS.Desktop.Mapping.ITablePane">). 
+    /// If it is, the method retrieves the current zoom level, increases it by a fixed amount,  and applies the new zoom
+    /// level to the table pane.</remarks>
+    public static void SetTablePaneZoom()
+    {
+      //Check if the active pane is an ITablePane
+      if (FrameworkApplication.Panes.ActivePane is ITablePane tablePane)
+      {
+        //Get the current zoom level of the table pane
+        var currentZoomLevel = tablePane.ZoomLevel;
+        // Set a new zoom level, for example, increase it by 50
+        var newZoomLevel = currentZoomLevel + 50;
+        // Set the new zoom level to the table pane
+        tablePane.SetZoomLevel(newZoomLevel);
+      }
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.ITablePane
+    // cref: ArcGIS.Desktop.Mapping.ITablePane.MapMember
+    // cref: ArcGIS.Desktop.Mapping.ITablePane.ActiveObjectID
+    // cref: ArcGIS.Desktop.Mapping.ITablePane.ActiveColumn
+    #region Retrieve the values of selected cell in the attribute table
+    /// <summary>
+    /// Retrieves the contents of the currently active cell in the attribute table.
+    /// </summary>
+    /// <remarks>This method returns the value of the cell that is currently selected in the attribute table
+    /// pane. The active cell is determined by the active row's object ID and the active column in the table.</remarks>
+    public static void ActiveCellContents()
+    {
+      {
+        if (FrameworkApplication.Panes.ActivePane is ITablePane tablePane)
+        {
+          var mapMember = tablePane.MapMember;
+          //Get the active row's object ID from the table pane
+          var oid = tablePane.ActiveObjectID;
+          if (oid.HasValue && oid.Value != -1 && mapMember != null)
+          {
+            //Get the field of the active column
+            var activeField = tablePane.ActiveColumn;
+            QueuedTask.Run(() =>
+            {
+              // TODO: Use core objects to retrieve record and get value
+            });
+          }
+        }
+      }
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.ITablePane
+    // cref: ArcGIS.Desktop.Mapping.ITablePane.BringIntoView
+    #region Move to a particular row
+    /// <summary>
+    /// Scrolls the active attribute table pane to a specific row.
+    /// </summary>
+    /// <remarks>This method checks if the active pane implements <see
+    /// cref="ArcGIS.Desktop.Mapping.ArcGIS.Desktop.Mapping.ITablePane"/> and, if so, moves the view to the specified rows. It demonstrates
+    /// moving to the first row and the sixth row in the table.</remarks>
+    public static void MoveToRow()
+      {
+      // Check if the active pane is an ITablePane  
+      if (FrameworkApplication.Panes.ActivePane is ITablePane tablePane)
+        {
+          // move to first row
+          tablePane.BringIntoView(0);
+
+          // move to sixth row
+          tablePane.BringIntoView(5);
+        }
+      }
+    #endregion
+
+    #region ProSnippet Group: Working with Standalone Tables
+    #endregion
+
+    public void StandaloneTables1()
+    {
+      // cref: ArcGIS.Desktop.Mapping.StandaloneTableFactory.CreateStandaloneTable(System.Uri, ArcGIS.Desktop.Mapping.IStandaloneTableContainerEdit, System.Int32, System.String)
+      // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams
+      // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams.#ctor(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams.DefinitionQuery
+      // cref: ArcGIS.Desktop.Mapping.StandaloneTableFactory.CreateStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTableCreationParams, ArcGIS.Desktop.Mapping.IStandaloneTableContainerEdit)
+      #region Create a StandaloneTable
+
+      //container can be a map or group layer
+      var container = MapView.Active.Map;
+      //var container =  MapView.Active.Map.GetLayersAsFlattenedList()
+      //                                  .OfType<GroupLayer>().First();
+      QueuedTask.Run(() =>
+      {
+        //use a local path
+        var table = StandaloneTableFactory.Instance.CreateStandaloneTable(
+      new Uri(@"C:\Temp\Data\SDK.gdb\EarthquakeDamage", UriKind.Absolute),
+      container);
+        //use a URI to a feature service table endpoint
+        var table2 = StandaloneTableFactory.Instance.CreateStandaloneTable(
+    new Uri(@"https://bexdog.esri.com/server/rest/services/FeatureServer" + "/2", UriKind.Absolute),
+    container);
+        //Use an item
+        var item = ItemFactory.Instance.Create(@"C:\Temp\Data\SDK.gdb\ParcelOwners");
+        var tableCreationParams = new StandaloneTableCreationParams(item);
+        var table3 = StandaloneTableFactory.Instance.CreateStandaloneTable(tableCreationParams, container);
+
+        //use table creation params
+        var table_params = new StandaloneTableCreationParams(item)
+        {
+          // At 2.x - DefinitionFilter = new CIMDefinitionFilter()
+          //{
+          //  //optional - use a filter
+          //  DefinitionExpression = "LAND_USE = 3"
+          //}
+          DefinitionQuery = new DefinitionQuery(whereClause: "LAND_USE = 3", name: "Landuse")
+        };
+        var table4 = StandaloneTableFactory.Instance.CreateStandaloneTable(table_params,
+                                 container);
+
+      });
+
+      #endregion
+
+    }
+
+    public void StandaloneTables2()
+    {
+      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.Map.FindStandaloneTables(System.String)
+      // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.FindStandaloneTables(System.String)
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.GetStandaloneTablesAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.StandaloneTables
+      // cref: ArcGIS.Desktop.Core.FrameworkExtender.OpenTablePane(ArcGIS.Desktop.Framework.PaneCollection,ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Desktop.Mapping.TableViewMode)
+      #region Retrieve a table from its container
+      var container = MapView.Active.Map;
+
+      //the map standalone table collection
+      var table = container.GetStandaloneTablesAsFlattenedList()
+                              .FirstOrDefault(tbl => tbl.Name == "EarthquakeDamage");
+
+      //or from a group layer
+      var grp_layer = MapView.Active.Map.FindLayers("GroupLayer1").First() as GroupLayer;
+      var table2 = grp_layer.FindStandaloneTables("EarthquakeDamage").First();
+      //or         grp_layer.GetStandaloneTablesAsFlattenedList().First()
+      //or         grp_layer.StandaloneTables.Where(...).First(), etc.
+
+      //show the table in a table view 
+      //use FrameworkApplication.Current.Dispatcher.BeginInvoke if not on the UI thread
+      FrameworkApplication.Panes.OpenTablePane(table2);
+
+      #endregion
+    }
+
+    public void StandaloneTables3()
+    {
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
+      // cref: ArcGIS.Desktop.Mapping.Map.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, ArcGIS.Desktop.Mapping.CompositeLayerWithTables, System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.FindStandaloneTables(System.String)
+      // cref: ArcGIS.Desktop.Mapping.Map.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, System.Int32)
+      #region Move a Standalone table
+
+      //get the first group layer that has at least one table
+      var grp_layer = MapView.Active.Map.GetLayersAsFlattenedList()
+        .OfType<GroupLayer>().First(g => g.StandaloneTables.Count > 0);
+      var map = MapView.Active.Map;//assumes non-null
+      QueuedTask.Run(() =>
+      {
+        //move the first table to the bottom of the container
+        grp_layer.MoveStandaloneTable(grp_layer.StandaloneTables.First(), -1);
+
+        //move the last table in the map standalone tables to a group
+        //layer and place it at position 3. If 3 is invalid, the table
+        //will be placed at the bottom of the target container
+        //assumes the map has at least one standalone table...
+        var table = map.StandaloneTables.Last();
+        map.MoveStandaloneTable(table, grp_layer, 3);
+
+        //move a table from a group layer to the map standalone tables
+        //collection - assumes a table called 'Earthquakes' exists
+        var table2 = grp_layer.FindStandaloneTables("Earthquakes").First();
+        //move to the map container
+        map.MoveStandaloneTable(table2, 0);//will be placed at the top
+      });
+
+      #endregion
+
+    }
+
+    public void StandaloneTables4()
+    {
+      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
+      // cref: ArcGIS.Desktop.Mapping.Map.RemoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable)
+      // cref: ArcGIS.Desktop.Mapping.Map.RemoveStandaloneTables(System.IEnumerable<ArcGIS.Desktop.Mapping.StandaloneTable>)
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.GetStandaloneTablesAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.StandaloneTables
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.RemoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable)
+      // cref: ArcGIS.Desktop.Mapping.GroupLayer.RemoveStandaloneTables(System.IEnumerable<ArcGIS.Desktop.Mapping.StandaloneTable>)
+      #region Remove a Standalone table
+
+      //get the first group layer that has at least one table
+      var grp_layer = MapView.Active.Map.GetLayersAsFlattenedList()
+        .OfType<GroupLayer>().First(g => g.StandaloneTables.Count > 0);
+      var map = MapView.Active.Map;//assumes non-null
+
+      QueuedTask.Run(() =>
+      {
+        //get the tables from the map container
+        var tables = map.GetStandaloneTablesAsFlattenedList();
+        //delete the first...
+        if (tables.Count() > 0)
+        {
+          map.RemoveStandaloneTable(tables.First());
+          //or delete all of them
+          map.RemoveStandaloneTables(tables);
+        }
+
+        //delete a table from a group layer
+        //assumes it has at least one table...
+        grp_layer.RemoveStandaloneTable(grp_layer.StandaloneTables.First());
+      });
+
+      #endregion
+    }
+
+    #region ProSnippet Group: Metadata
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.Map.GetMetadata()
+    // cref: ArcGIS.Desktop.Mapping.Map.GetCanEditMetadata()
+    // cref: ArcGIS.Desktop.Mapping.Map.SetMetadata(System.String)
+    #region Get and Set Map Metadata
+    /// <summary>
+    /// Retrieves the metadata of the specified map, allows modifications, and updates the map with the modified
+    /// metadata.
+    /// </summary>
+    /// <remarks>This method first retrieves the metadata of the provided map as a string. The caller can
+    /// modify the metadata string as needed. If the map supports metadata editing, the modified metadata is then set
+    /// back to the map.</remarks>
+    /// <param name="map">The map whose metadata is being retrieved and updated. Cannot be <see langword="null"/>.</param>
+    public static void MapLayerMetadata(Map map)
+    {
+      QueuedTask.Run(() => {
+        //Get map's metadata
+        var mapMetadata = map.GetMetadata();
+        //TODO:Make edits to metadata using the retrieved mapMetadata string.
+
+        //Set the modified metadata back to the map.
+        if (map.GetCanEditMetadata())
+          map.SetMetadata(mapMetadata);
+      });
+    }
+    #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.MapMember.GetUseSourceMetadata()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.SetUseSourceMetadata(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.MapMember.SupportsMetadata
+      // cref: ArcGIS.Desktop.Mapping.MapMember.GetMetadata()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.GetCanEditMetadata()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.SetMetadata(System.String)
+      #region Layer Metadata
+    /// <summary>
+    /// Configures and manages metadata for the layers or tables in the specified map.
+    /// </summary>
+    /// <remarks>This method retrieves the first layer or table from the map and performs various
+    /// metadata-related operations,  such as checking whether the layer uses source metadata, enabling or disabling
+    /// source metadata usage,  retrieving metadata, and updating metadata if supported. All operations requiring access
+    /// to the MapMember  metadata must be executed on the Main CIM Thread (MCT) using <see
+    /// cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/>.</remarks>
+    /// <param name="map">The map containing the layers or tables whose metadata will be managed. Cannot be null.</param>
+    public static void LayerMetadata(Map map)
+    {
+      //Search for only layers/tables here if needed.
+      MapMember mapMember = map.GetLayersAsFlattenedList().FirstOrDefault(); 
+      if (mapMember == null) return;
+      QueuedTask.Run(() => {
+        //Gets whether or not the MapMember stores its own metadata or uses metadata retrieved
+        //from its source. This method must be called on the MCT. Use QueuedTask.Run
+        bool doesUseSourceMetadata = mapMember.GetUseSourceMetadata();
+
+        //Sets whether or not the MapMember will use its own metadata or the metadata from
+        //its underlying source (if it has one). This method must be called on the MCT.
+        //Use QueuedTask.Run
+        mapMember.SetUseSourceMetadata(true);
+
+        //Does the MapMember supports metadata
+        var supportsMetadata = mapMember.SupportsMetadata;
+
+        //Get MapMember metadata
+        var metadatstring = mapMember.GetMetadata();
+        //TODO:Make edits to metadata using the retrieved mapMetadata string.
+
+        //Set the modified metadata back to the mapmember (layer, table..)
+        if (mapMember.GetCanEditMetadata())
+          mapMember.SetMetadata(metadatstring);
+      });
+    }
+    #endregion
+    
   }
 }
