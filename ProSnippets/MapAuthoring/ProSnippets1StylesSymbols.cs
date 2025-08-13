@@ -28,6 +28,7 @@ using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Windows.Media.Imaging;
 
 
 namespace MapAuthoring.ProSnippets
@@ -37,63 +38,55 @@ namespace MapAuthoring.ProSnippets
     //style management
     #region ProSnippet Group: Style Management
     #endregion
-    public void GetStyleInProjectByName()
+    // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
+    #region How to get a style in project by name
+    public static void GetStyleInProjectByName()
     {
-      // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      #region How to get a style in project by name
-
       //Get all styles in the project
       var ProjectStyles = Project.Current.GetItems<StyleProjectItem>();
 
       //Get a specific style in the project by name
       StyleProjectItem style = ProjectStyles.First(x => x.Name == "NameOfTheStyle");
-      #endregion
+
     }
-
-    public async void CreateNewStyle()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.StyleHelper.CreateStyle(ArcGIS.Desktop.Core.Project,System.String)
+    #region How to create a new style
+    public static async void CreateNewStyle()
     {
-      // cref: ArcGIS.Desktop.Mapping.StyleHelper.CreateStyle(ArcGIS.Desktop.Core.Project,System.String)
-      #region How to create a new style
-
       //Full path for the new style file (.stylx) to be created
       string styleToCreate = @"C:\Temp\NewStyle.stylx";
       await QueuedTask.Run(() => StyleHelper.CreateStyle(Project.Current, styleToCreate));
-      #endregion
     }
-
-    public async void AddStyleToProject()
+    #endregion
+    // cref:ArcGIS.Desktop.Mapping.StyleHelper.AddStyle(ArcGIS.Desktop.Core.Project,System.String)
+    #region How to add a style to project
+    public static async void AddStyleToProject()
     {
-      // cref:ArcGIS.Desktop.Mapping.StyleHelper.AddStyle(ArcGIS.Desktop.Core.Project,System.String)
-      #region How to add a style to project
-
       //For ArcGIS Pro system styles, just pass in the name of the style to add to the project
       await QueuedTask.Run(() => StyleHelper.AddStyle(Project.Current, "3D Vehicles"));
 
       //For custom styles, pass in the full path to the style file on disk
       string customStyleToAdd = @"C:\Temp\CustomStyle.stylx";
       await QueuedTask.Run(() => StyleHelper.AddStyle(Project.Current, customStyleToAdd));
-
-      #endregion
     }
-
-    public async void RemoveStyleFromProject()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.StyleHelper.RemoveStyle(ArcGIS.Desktop.Core.Project,System.String)
+    #region How to remove a style from project
+    public static async void RemoveStyleFromProject()
     {
-      // cref: ArcGIS.Desktop.Mapping.StyleHelper.RemoveStyle(ArcGIS.Desktop.Core.Project,System.String)
-      #region How to remove a style from project
-
       //For ArcGIS Pro system styles, just pass in the name of the style to remove from the project
       await QueuedTask.Run(() => StyleHelper.RemoveStyle(Project.Current, "3D Vehicles"));
 
       //For custom styles, pass in the full path to the style file on disk
       string customStyleToAdd = @"C:\Temp\CustomStyle.stylx";
       await QueuedTask.Run(() => StyleHelper.RemoveStyle(Project.Current, customStyleToAdd));
-
-      #endregion
     }
+    #endregion
 
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.AddItem(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItem)
     #region How to add a style item to a style
-    public Task AddStyleItemAsync(StyleProjectItem style, StyleItem itemToAdd)
+    public static Task AddStyleItemAsync(StyleProjectItem style, StyleItem itemToAdd)
     {
       return QueuedTask.Run(() =>
       {
@@ -108,7 +101,7 @@ namespace MapAuthoring.ProSnippets
 
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.RemoveItem(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItem)
     #region How to remove a style item from a style
-    public Task RemoveStyleItemAsync(StyleProjectItem style, StyleItem itemToRemove)
+    public static Task RemoveStyleItemAsync(StyleProjectItem style, StyleItem itemToRemove)
     {
       return QueuedTask.Run(() =>
       {
@@ -124,7 +117,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem.CanUpgrade
     #region How to determine if a style can be upgraded
     //Pass in the full path to the style file on disk
-    public async Task<bool> CanUpgradeStyleAsync(string stylePath)
+    public static async Task<bool> CanUpgradeStyleAsync(string stylePath)
     {
       //Add the style to the current project
       await QueuedTask.Run(() => StyleHelper.AddStyle(Project.Current, stylePath));
@@ -138,7 +131,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem.IsReadOnly
     #region How to determine if a style is read-only
     //Pass in the full path to the style file on disk
-    public async Task<bool> IsReadOnly(string stylePath)
+    public static async Task<bool> IsReadOnly(string stylePath)
     {
       //Add the style to the current project
       await QueuedTask.Run(() => StyleHelper.AddStyle(Project.Current, stylePath));
@@ -152,7 +145,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem.IsCurrent
     #region How to determine if a style is current
     //Pass in the full path to the style file on disk
-    public async Task<bool> IsCurrent(string stylePath)
+    public static async Task<bool> IsCurrent(string stylePath)
     {
       //Add the style to the current project
       await QueuedTask.Run(() => StyleHelper.AddStyle(Project.Current, stylePath));
@@ -167,7 +160,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.UpgradeStyle(ArcGIS.Desktop.Mapping.StyleProjectItem)
     #region How to upgrade a style
     //Pass in the full path to the style file on disk
-    public async Task<bool> UpgradeStyleAsync(string stylePath)
+    public static async Task<bool> UpgradeStyleAsync(string stylePath)
     {
       bool success = false;
 
@@ -183,76 +176,70 @@ namespace MapAuthoring.ProSnippets
       //return true if style was upgraded
       return success;
     }
-        #endregion
+    #endregion
 
     //construct point symbol
     #region ProSnippet Group: Symbols
     #endregion
-    public async Task ConstructPointSymbol_1()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double)
+    // cref: ArcGIS.Core.CIM.CIMPointSymbol
+    #region How to construct a point symbol of a specific color and size
+    public static async Task ConstructPointSymbolColorSize()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double)
-      // cref: ArcGIS.Core.CIM.CIMPointSymbol
-      #region How to construct a point symbol of a specific color and size
-
       await QueuedTask.Run(() =>
       {
         CIMPointSymbol pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 10.0);
       });
-      #endregion
     }
-
-    public async Task ConstructPointSymbol_2()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+    // cref: ArcGIS.Core.CIM.CIMPointSymbol
+    #region How to construct a point symbol of a specific color, size and shape
+    public static async Task ConstructPointSymbolColorSizeShape()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
-      // cref: ArcGIS.Core.CIM.CIMPointSymbol
-      #region How to construct a point symbol of a specific color, size and shape
-
       await QueuedTask.Run(() =>
       {
         CIMPointSymbol starPointSymbol = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 10.0, SimpleMarkerStyle.Star);
       });
-      #endregion
     }
-
-    public async Task ConstructPointSymbol_3()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
+    // cref: ArcGIS.Core.CIM.CIMMarker
+    // cref: ArcGIS.Core.CIM.CIMPointSymbol
+    #region How to construct a point symbol from a marker
+    public static async Task ConstructPointSymbolMarker()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
-      // cref: ArcGIS.Core.CIM.CIMMarker
-      // cref: ArcGIS.Core.CIM.CIMPointSymbol
-      #region How to construct a point symbol from a marker
-
       await QueuedTask.Run(() =>
       {
         CIMMarker marker = SymbolFactory.Instance.ConstructMarker(ColorFactory.Instance.GreenRGB, 8.0, SimpleMarkerStyle.Pushpin);
         CIMPointSymbol pointSymbolFromMarker = SymbolFactory.Instance.ConstructPointSymbol(marker);
       });
-      #endregion
     }
-
-    public async Task ConstructPointSymbol_4()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarkerFromFile(System.String)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
+    // cref: ArcGIS.Core.CIM.CIMMarker
+    // cref: ArcGIS.Core.CIM.CIMPointSymbol
+    #region How to construct a point symbol from a file on disk
+    public static
+      async Task ConstructPointSymbolFileFromDesk()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarkerFromFile(System.String)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
-      // cref: ArcGIS.Core.CIM.CIMMarker
-      // cref: ArcGIS.Core.CIM.CIMPointSymbol
-      #region How to construct a point symbol from a file on disk
-
       //The following file formats can be used to create the marker: DAE, 3DS, FLT, EMF, JPG, PNG, BMP, GIF
       CIMMarker markerFromFile = await QueuedTask.Run(() => SymbolFactory.Instance.ConstructMarkerFromFile(@"C:\Temp\fileName.dae"));
 
       CIMPointSymbol pointSymbolFromFile = SymbolFactory.Instance.ConstructPointSymbol(markerFromFile);
 
-      #endregion
     }
+    #endregion
 
-    public void ConstructPointSymbolFromMarkerStream()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarkerFromStream(System.IO.Stream)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
+    // cref: ArcGIS.Core.CIM.CIMMarker
+    // cref: ArcGIS.Core.CIM.CIMPointSymbol
+    #region How to construct a point symbol from a in memory graphic
+    public static void ConstructPointSymbolFromMarkerStream()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarkerFromStream(System.IO.Stream)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
-      // cref: ArcGIS.Core.CIM.CIMMarker
-      // cref: ArcGIS.Core.CIM.CIMPointSymbol
-      #region How to construct a point symbol from a in memory graphic
       //Create a stream for the image
       //At 3.0 you need https://www.nuget.org/packages/Microsoft.Windows.Compatibility
       //System.Drawing
@@ -265,208 +252,187 @@ namespace MapAuthoring.ProSnippets
       CIMMarker markerFromStream = SymbolFactory.Instance.ConstructMarkerFromStream(stream);
       //Create the point symbol from the marker
       CIMPointSymbol pointSymbolFromStream = SymbolFactory.Instance.ConstructPointSymbol(markerFromStream);
-      #endregion
     }
+    #endregion
 
-
-    //construct polygon symbol
-    public void ConstructPolygonSymbol_1()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle)
+    // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
+    #region How to construct a polygon symbol of specific color and fill style
+    public static void ConstructPolygonSymbolColorFill()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle)
-      // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
-      #region How to construct a polygon symbol of specific color and fill style
-
       CIMPolygonSymbol polygonSymbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Solid);
-
-      #endregion
     }
-
-    public void ConstructPolygonSymbol_2()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double, ArcGIS.Desktop.Mapping.SimpleLineStyle)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
+    // cref: ArcGIS.Core.CIM.CIMStroke
+    // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
+    #region How to construct a polygon symbol of specific color, fill style and outline
+    public static void ConstructPolygonSymbolColorFillOutline()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double, ArcGIS.Desktop.Mapping.SimpleLineStyle)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
-      // cref: ArcGIS.Core.CIM.CIMStroke
-      // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
-      #region How to construct a polygon symbol of specific color, fill style and outline
-
       CIMStroke outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.BlueRGB, 2.0, SimpleLineStyle.Solid);
       CIMPolygonSymbol fillWithOutline = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Solid, outline);
-
-      #endregion
     }
-
-    public void ConstructPolygonSymbol_3()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
+    // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
+    #region How to construct a polygon symbol without an outline
+    public static void ConstructPolygonSymbolNoOutline()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
-      // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
-      #region How to construct a polygon symbol without an outline
-
       CIMPolygonSymbol fillWithoutOutline = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Solid, null);
-
-      #endregion
     }
+    #endregion
 
-    //construct line symbol
-    public void ConstructLineSymbol_1()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+    // cref: ArcGIS.Core.CIM.CIMLineSymbol
+    #region How to construct a line symbol of specific color, size and line style
+    public static void ConstructLineSymbolColorSizeStyle()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
-      // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      #region How to construct a line symbol of specific color, size and line style
-
       CIMLineSymbol lineSymbol = SymbolFactory.Instance.ConstructLineSymbol(ColorFactory.Instance.BlueRGB, 4.0, SimpleLineStyle.Solid);
-
-      #endregion
     }
-
-    public void ConstructLineSymbol_2()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMStroke)
+    // cref: ArcGIS.Core.CIM.CIMStroke
+    // cref: ArcGIS.Core.CIM.CIMLineSymbol
+    #region How to construct a line symbol from a stroke
+    public static void ConstructLineSymbolFromStroke()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMStroke)
-      // cref: ArcGIS.Core.CIM.CIMStroke
-      // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      #region How to construct a line symbol from a stroke
-
       CIMStroke stroke = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.BlackRGB, 2.0);
       CIMLineSymbol lineSymbolFromStroke = SymbolFactory.Instance.ConstructLineSymbol(stroke);
-
-      #endregion
     }
-
+    #endregion
     //multilayer symbols
-    public void ConstructMultilayerLineSymbol_1()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double, ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+    // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnVertices
+    // cref: ArcGIS.Core.CIM.CIMMarkerStrokePlacement.AngleToLine
+    // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnVertices.PlaceOnEndPoints
+    // cref: ArcGIS.Core.CIM.CIMMarkerStrokePlacement.Offset
+    // cref: ArcGIS.Core.CIM.CIMLineSymbol
+    // cref: ArcGIS.Core.CIM.CIMSymbolLayer
+    #region How to construct a multilayer line symbol with circle markers on the line ends
+    public static void ConstructMultilayerLineSymbolCircleMarkersLineEnds()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double, ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
-      // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnVertices
-      // cref: ArcGIS.Core.CIM.CIMMarkerStrokePlacement.AngleToLine
-      // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnVertices.PlaceOnEndPoints
-      // cref: ArcGIS.Core.CIM.CIMMarkerStrokePlacement.Offset
-      // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      // cref: ArcGIS.Core.CIM.CIMSymbolLayer
-      #region How to construct a multilayer line symbol with circle markers on the line ends
-
-      //These methods must be called within the lambda passed to QueuedTask.Run
-      var lineStrokeRed = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 4.0);
-      var markerCircle = SymbolFactory.Instance.ConstructMarker(ColorFactory.Instance.RedRGB, 12, SimpleMarkerStyle.Circle);
-      markerCircle.MarkerPlacement = new CIMMarkerPlacementOnVertices()
-      {
-        AngleToLine = true,
-        PlaceOnEndPoints = true,
-        Offset = 0
-      };
-      var lineSymbolWithCircles = new CIMLineSymbol()
-      {
-        SymbolLayers = new CIMSymbolLayer[2] { markerCircle, lineStrokeRed }
-      };
-
-      #endregion
+      QueuedTask.Run(() => {
+        var lineStrokeRed = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 4.0);
+        var markerCircle = SymbolFactory.Instance.ConstructMarker(ColorFactory.Instance.RedRGB, 12, SimpleMarkerStyle.Circle);
+        markerCircle.MarkerPlacement = new CIMMarkerPlacementOnVertices()
+        {
+          AngleToLine = true,
+          PlaceOnEndPoints = true,
+          Offset = 0
+        };
+        var lineSymbolWithCircles = new CIMLineSymbol()
+        {
+          SymbolLayers = new CIMSymbolLayer[2] { markerCircle, lineStrokeRed }
+        };
+      });
     }
-
-    public void ConstructMultilayerLineSymbol_2()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double, ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+    // cref: ArcGIS.Core.CIM.CIMMarker.Rotation
+    // cref: ArcGIS.Core.CIM.CIMMarker.MarkerPlacement
+    // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnLine
+    // cref: ArcGIS.Core.CIM.CIMMarkerStrokePlacement.AngleToLine
+    // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnLine.RelativeTo
+    // cref: ArcGIS.Core.CIM.CIMLineSymbol
+    // cref: ArcGIS.Core.CIM.CIMSymbolLayer
+    #region How to construct a multilayer line symbol with an arrow head on the end
+    public static void ConstructMultilayerLineSymbolArrowHeadEnds()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double, ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
-      // cref: ArcGIS.Core.CIM.CIMMarker.Rotation
-      // cref: ArcGIS.Core.CIM.CIMMarker.MarkerPlacement
-      // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnLine
-      // cref: ArcGIS.Core.CIM.CIMMarkerStrokePlacement.AngleToLine
-      // cref: ArcGIS.Core.CIM.CIMMarkerPlacementOnLine.RelativeTo
-      // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      // cref: ArcGIS.Core.CIM.CIMSymbolLayer
-      #region How to construct a multilayer line symbol with an arrow head on the end
+      QueuedTask.Run(() => {
+        var markerTriangle = SymbolFactory.Instance.ConstructMarker(ColorFactory.Instance.RedRGB, 12, SimpleMarkerStyle.Triangle);
+        markerTriangle.Rotation = -90; // or -90
+        markerTriangle.MarkerPlacement = new CIMMarkerPlacementOnLine() { AngleToLine = true, RelativeTo = PlacementOnLineRelativeTo.LineEnd };
 
-      //These methods must be called within the lambda passed to QueuedTask.Run
-      var markerTriangle = SymbolFactory.Instance.ConstructMarker(ColorFactory.Instance.RedRGB, 12, SimpleMarkerStyle.Triangle);
-      markerTriangle.Rotation = -90; // or -90
-      markerTriangle.MarkerPlacement = new CIMMarkerPlacementOnLine() { AngleToLine = true, RelativeTo = PlacementOnLineRelativeTo.LineEnd };
-
-      var lineSymbolWithArrow = new CIMLineSymbol()
-      {
-        SymbolLayers = new CIMSymbolLayer[2] { markerTriangle,
+        var lineSymbolWithArrow = new CIMLineSymbol()
+        {
+          SymbolLayers = new CIMSymbolLayer[2] { markerTriangle,
                     SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 2)
                 }
-      };
-
-      #endregion
+        };
+      });
     }
+    #endregion
 
-    //symbol reference
-    public void GetSymbolReference()
+    // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference(ArcGIS.Core.CIM.CIMSymbol)
+    // cref: ArcGIS.Core.CIM.CIMSymbolReference
+    #region How to get symbol reference from a symbol
+    public static void GetSymbolReference()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference(ArcGIS.Core.CIM.CIMSymbol)
-      // cref: ArcGIS.Core.CIM.CIMSymbolReference
-      #region How to get symbol reference from a symbol
-
       CIMPolygonSymbol symbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB);
 
       //Get symbol reference from the symbol
       CIMSymbolReference symbolReference = symbol.MakeSymbolReference();
-
-      #endregion
     }
-
-
-    private static void GetSymbol()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(System.Int32, system.String, System.String, System.Int32, ArcGIS.Core.CIM.CIMColor)
+    // cref: ArcGIS.Core.CIM.CIMCharacterMarker
+    // cref: ArcGIS.Core.CIM.CIMCharacterMarker.Symbol
+    // cref: ArcGIS.Core.CIM.CIMMultiLayerSymbol.SymbolLayers
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
+    #region Modify a point symbol created from a character marker 
+    public static void GetSymbol()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(System.Int32, system.String, System.String, System.Int32, ArcGIS.Core.CIM.CIMColor)
-      // cref: ArcGIS.Core.CIM.CIMCharacterMarker
-      // cref: ArcGIS.Core.CIM.CIMCharacterMarker.Symbol
-      // cref: ArcGIS.Core.CIM.CIMMultiLayerSymbol.SymbolLayers
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
-      #region Modify a point symbol created from a character marker    
       //create marker from the Font, char index,size,color
       var cimMarker = SymbolFactory.Instance.ConstructMarker(125, "Wingdings 3", "Regular", 6, ColorFactory.Instance.BlueRGB) as CIMCharacterMarker;
-        var polygonMarker = cimMarker.Symbol;
-        //modifying the polygon's outline and fill
-        //This is the outline
-        polygonMarker.SymbolLayers[0] = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.GreenRGB, 2, SimpleLineStyle.Solid);
-        //This is the fill
-        polygonMarker.SymbolLayers[1] = SymbolFactory.Instance.ConstructSolidFill(ColorFactory.Instance.BlueRGB);
-        //create a symbol from the marker 
-        //Note this overload of ConstructPointSymbol does not need to be run within QueuedTask.Run.
-        var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(cimMarker);
-        #endregion
+      var polygonMarker = cimMarker.Symbol;
+      //modifying the polygon's outline and fill
+      //This is the outline
+      polygonMarker.SymbolLayers[0] = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.GreenRGB, 2, SimpleLineStyle.Solid);
+      //This is the fill
+      polygonMarker.SymbolLayers[1] = SymbolFactory.Instance.ConstructSolidFill(ColorFactory.Instance.BlueRGB);
+      //create a symbol from the marker 
+      //Note this overload of ConstructPointSymbol does not need to be run within QueuedTask.Run.
+      var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(cimMarker);
     }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GetAvailableFonts()
+    #region Get a List of Available Fonts
+    public static void GetListOfAvailableFonts()
+    {
+      QueuedTask.Run(() => {
+        //returns a tuple per font: (string fontName, List<string> fontStyles)
+        var fonts = SymbolFactory.Instance.GetAvailableFonts();
+        foreach (var font in fonts)
+        {
+          var styles = string.Join(",", font.fontStyles);
+          System.Diagnostics.Debug.WriteLine($"{font.fontName}, styles: {styles}");
+        }
+      });
+    }
+    #endregion
 
-    private void Fonts()
-		{
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GetAvailableFonts()
-      #region Get a List of Available Fonts
-      //Must use QueuedTask.Run(...)
-      //returns a tuple per font: (string fontName, List<string> fontStyles)
-      var fonts = SymbolFactory.Instance.GetAvailableFonts();
-      foreach(var font in fonts)
-			{
-        var styles = string.Join(",", font.fontStyles);
-        System.Diagnostics.Debug.WriteLine($"{font.fontName}, styles: {styles}");
-			}
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.DefaultFont
+    // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultFont(System.String)
+    // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultFont(System.String, System.String)
+    #region Get/Set Default Font
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.DefaultFont
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultFont(System.String)
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultFont(System.String, System.String)
-      #region Get/Set Default Font
-
-      //Must use QueuedTask.Run(...)
-      var def_font = SymbolFactory.Instance.DefaultFont;
+    public static void GetSetDefaultFont()
+    { 
+      QueuedTask.Run(() => {
+  var def_font = SymbolFactory.Instance.DefaultFont;
       System.Diagnostics.Debug.WriteLine($"{def_font.fontName}, styles: {def_font.styleName}");
 
-      //set default font - set through application options
-      //Must use QueuedTask
-      ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma");
-      ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma","bold");
+        //set default font - set through application options
+        //Must use QueuedTask
+        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma");
+        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma","bold");
+        });
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol()
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor, System.Double)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(System.String)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(System.String, System.STring)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GetAvailableFonts()
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor, System.Double,System.String, System.STring)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMPolygonSymbol, SSystem.Double, System.String)
-      #region Construct a Text Symbol With Options
-
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor, System.Double)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(System.String)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(System.String, System.STring)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GetAvailableFonts()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor, System.Double,System.String, System.STring)
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMPolygonSymbol, SSystem.Double, System.String)
+    #region Construct a Text Symbol With Options
+    public static void ContructTextSymbolWithOptions()
+    {
       QueuedTask.Run(() =>
       {
         //using the default font
@@ -503,20 +469,18 @@ namespace MapAuthoring.ProSnippets
 
       });
 
-
-      #endregion
     }
+    #endregion
 
-		private static Task CreateSymbolSwatch()
+    // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.#ctor
+    // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.Symbol
+    // cref: ArcGIS.Desktop.Mapping.StyleItem.PatchHeight
+    // cref: ArcGIS.Desktop.Mapping.StyleItem.PatchWidth
+    // cref: ArcGIS.Desktop.Mapping.StyleItem.PreviewImage
+    #region Create a Swatch for a given symbol
+    public static Task CreateSymbolSwatch()
     {
         return QueuedTask.Run(() => {
-          // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.#ctor
-          // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.Symbol
-          // cref: ArcGIS.Desktop.Mapping.StyleItem.PatchHeight
-          // cref: ArcGIS.Desktop.Mapping.StyleItem.PatchWidth
-          // cref: ArcGIS.Desktop.Mapping.StyleItem.PreviewImage
-          #region Create a Swatch for a given symbol
-
           //Note: call within QueuedTask.Run()
           CIMSymbol symbol = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.GreenRGB, 1.0, SimpleMarkerStyle.Circle);
             //You can generate a swatch for a text symbols also.
@@ -530,126 +494,123 @@ namespace MapAuthoring.ProSnippets
             #endregion
         });
     }
-
-    private static void CreateImageOfPointSymbol()
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GenerateImage(ArcGIS.Core.CIM.CIMPointSymbol,ArcGIS.Desktop.Mapping.OutputImageFormat,System.Double,System.Boolean,System.Double,System.Int64,System.Int64,ArcGIS.Core.CIM.CIMColor)
+    // cref: ArcGIS.Desktop.Mapping.OutputImageFormat
+    // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.SVG
+    // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.PNG
+    #region Convert Point Symbol to SVG
+    public static void CreateImageOfPointSymbol()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GenerateImage(ArcGIS.Core.CIM.CIMPointSymbol,ArcGIS.Desktop.Mapping.OutputImageFormat,System.Double,System.Boolean,System.Double,System.Int64,System.Int64,ArcGIS.Core.CIM.CIMColor)
-      // cref: ArcGIS.Desktop.Mapping.OutputImageFormat
-      // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.SVG
-      // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.PNG
-      #region Convert Point Symbol to SVG
-      //Note: Run within QueuedTask.Run
-      //Create a point symbol
-      var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(
-        ColorFactory.Instance.RedRGB, 24, SimpleMarkerStyle.RoundedSquare);
+      QueuedTask.Run( () => {
+        //Create a point symbol
+        var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(
+          ColorFactory.Instance.RedRGB, 24, SimpleMarkerStyle.RoundedSquare);
 
-      //Generate image returns a stream
-      //OutputImageFormat specified the format for the image - in this case
-      //we want SVG (an xml-based format)
-      //
-      //output fmt: SVG, scale factor x2, centerAnchorPoint = true
-      //dpi = 300, wd x ht: 100x100px, background: white
-      var mem_strm = SymbolFactory.Instance.GenerateImage(
-        pointSymbol, OutputImageFormat.SVG, 2.0, true, 300, 100, 100,
-        ColorFactory.Instance.WhiteRGB);
+        //Generate image returns a stream
+        //OutputImageFormat specified the format for the image - in this case
+        //we want SVG (an xml-based format)
+        //
+        //output fmt: SVG, scale factor x2, centerAnchorPoint = true
+        //dpi = 300, wd x ht: 100x100px, background: white
+        var mem_strm = SymbolFactory.Instance.GenerateImage(
+          pointSymbol, OutputImageFormat.SVG, 2.0, true, 300, 100, 100,
+          ColorFactory.Instance.WhiteRGB);
 
-      //Set the memory stream position to the beginning
-      mem_strm.Seek(0, SeekOrigin.Begin);
+        //Set the memory stream position to the beginning
+        mem_strm.Seek(0, SeekOrigin.Begin);
 
-      //File path and name for saving the SVG file
-      var fileName = "RoundedSquareSymbol.svg";
-      string path_svg = Path.Combine(Path.GetTempPath() + fileName);
+        //File path and name for saving the SVG file
+        var fileName = "RoundedSquareSymbol.svg";
+        string path_svg = Path.Combine(Path.GetTempPath() + fileName);
 
-      //Write the memory stream to the file
-      System.IO.File.WriteAllBytes(path_svg, mem_strm.ToArray());
+        //Write the memory stream to the file
+        System.IO.File.WriteAllBytes(path_svg, mem_strm.ToArray());
 
-      //////////////////////////////////////////////
-      //Note: to convert SVG to image format, use a 3rd party
-      //e.g. Aspose.SVG for .NET, for example convert SVG to PNG
-      //using (var svg_doc = new Aspose.Svg.SVGDocument(path_svg))
-      //{
-      //  string path_png = Path.Combine(Path.GetTempPath() + "RoundedSquareSymbol.png");
-      //  using (var img_png = new Aspose.Svg.Rendering.Image.ImageDevice(
-      //    new ImageRenderingOptions(ImageFormat.Png), path_png))
-      //  {
-      //    svg_doc.RenderTo(img_png);
-      //  }
-      //  //also: https://docs.aspose.com/imaging/net/convert-svg-to-png/
-      //}
-
-      #endregion
+        //////////////////////////////////////////////
+        //Note: to convert SVG to image format, use a 3rd party
+        //e.g. Aspose.SVG for .NET, for example convert SVG to PNG
+        //using (var svg_doc = new Aspose.Svg.SVGDocument(path_svg))
+        //{
+        //  string path_png = Path.Combine(Path.GetTempPath() + "RoundedSquareSymbol.png");
+        //  using (var img_png = new Aspose.Svg.Rendering.Image.ImageDevice(
+        //    new ImageRenderingOptions(ImageFormat.Png), path_png))
+        //  {
+        //    svg_doc.RenderTo(img_png);
+        //  }
+        //  //also: https://docs.aspose.com/imaging/net/convert-svg-to-png/
+        //}
+      });     
     }
-
-    private static void CreateImageOfPointSymbol2()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GenerateImage(ArcGIS.Core.CIM.CIMPointSymbol,ArcGIS.Desktop.Mapping.OutputImageFormat,System.Double,System.Boolean,System.Double,System.Int64,System.Int64,ArcGIS.Core.CIM.CIMColor)
+    // cref: ArcGIS.Desktop.Mapping.OutputImageFormat
+    // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.PNG
+    #region Convert Point Symbol to PNG
+    public static void ConvertPointSymbolToPNG()
     {
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GenerateImage(ArcGIS.Core.CIM.CIMPointSymbol,ArcGIS.Desktop.Mapping.OutputImageFormat,System.Double,System.Boolean,System.Double,System.Int64,System.Int64,ArcGIS.Core.CIM.CIMColor)
-      // cref: ArcGIS.Desktop.Mapping.OutputImageFormat
-      // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.PNG
-      #region Convert Point Symbol to PNG
-      //Note: Run within QueuedTask.Run
-      //Create a point symbol
-      var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(
-        ColorFactory.Instance.RedRGB, 24, SimpleMarkerStyle.RoundedSquare);
+      QueuedTask.Run(() => {  //Create a point symbol
+        var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(
+          ColorFactory.Instance.RedRGB, 24, SimpleMarkerStyle.RoundedSquare);
 
-      //Generate image returns a stream
-      //OutputImageFormat specified the format for the image - in this case
-      //we want PNG
-      //
-      //output fmt: PNG, scale factor x2, centerAnchorPoint = true
-      //dpi = 300, wd x ht: 100x100px, background: white
-      var mem_strm = SymbolFactory.Instance.GenerateImage(
-        pointSymbol, OutputImageFormat.PNG, 2.0, true, 300, 100, 100,
-        ColorFactory.Instance.WhiteRGB);
+        //Generate image returns a stream
+        //OutputImageFormat specified the format for the image - in this case
+        //we want PNG
+        //
+        //output fmt: PNG, scale factor x2, centerAnchorPoint = true
+        //dpi = 300, wd x ht: 100x100px, background: white
+        var mem_strm = SymbolFactory.Instance.GenerateImage(
+          pointSymbol, OutputImageFormat.PNG, 2.0, true, 300, 100, 100,
+          ColorFactory.Instance.WhiteRGB);
 
-      //Set the memory stream position to the beginning
-      mem_strm.Seek(0, SeekOrigin.Begin);
+        //Set the memory stream position to the beginning
+        mem_strm.Seek(0, SeekOrigin.Begin);
 
-      //Write the stream to a bit map
-      var bitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+        //Write the stream to a bit map
+        var bitmapImage = new System.Windows.Media.Imaging.BitmapImage();
 
-      bitmapImage.BeginInit();
-      bitmapImage.StreamSource = mem_strm;
-      bitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-      bitmapImage.EndInit();
-      bitmapImage.Freeze();
+        bitmapImage.BeginInit();
+        bitmapImage.StreamSource = mem_strm;
+        bitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+        bitmapImage.EndInit();
+        bitmapImage.Freeze();
 
-      //Write the bit map out to a file
-      //File path and name for saving the PNG file
-      var fileName = "RoundedSquareSymbol.png";
-      string path_png = Path.Combine(Path.GetTempPath() + fileName);
+        //Write the bit map out to a file
+        //File path and name for saving the PNG file
+        var fileName = "RoundedSquareSymbol.png";
+        string path_png = Path.Combine(Path.GetTempPath() + fileName);
 
-      BitmapEncoder encoder = new PngBitmapEncoder();
-      encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+        BitmapEncoder encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
 
-      using (var fileStream = new System.IO.FileStream(
-        path_png, System.IO.FileMode.Create))
-      {
-        encoder.Save(fileStream);
-      }
-
-      #endregion
+        using (var fileStream = new System.IO.FileStream(
+          path_png, System.IO.FileMode.Create))
+        {
+          encoder.Save(fileStream);
+        }
+      });
     }
-    private static void SymbolLookup(FeatureLayer featureLayer)
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CanLookupSymbol()
+    // cref: ArcGIS.Desktop.Mapping.FeatureLayer.LookupSymbol(System.Int64, ArcGIS.Desktop.Mapping.MapView)
+    #region Lookup Symbol
+
+    public static void SymbolLookup(FeatureLayer featureLayer)
     {
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CanLookupSymbol()
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.LookupSymbol(System.Int64, ArcGIS.Desktop.Mapping.MapView)
-      #region Lookup Symbol
-      //Note: Run within QueuedTask.Run
-      //Get the selection
-      var selection = featureLayer.GetSelection();
+      QueuedTask.Run(() => {//Get the selection
+        var selection = featureLayer.GetSelection();
         //Get the first Object ID
         var firstOID = selection.GetObjectIDs().FirstOrDefault();
         //Determine whether the layer's renderer type supports symbol lookup.
         if (featureLayer.CanLookupSymbol())
         {
-            //Looks up the symbol for the corresponding feature identified by the object id.
-            var symbol = featureLayer.LookupSymbol(firstOID, MapView.Active);
-            var jSon = symbol.ToJson(); //Create a JSON encoding of the symbol
-            //Do something with symbol
+          //Looks up the symbol for the corresponding feature identified by the object id.
+          var symbol = featureLayer.LookupSymbol(firstOID, MapView.Active);
+          var jSon = symbol.ToJson(); //Create a JSON encoding of the symbol
+                                      //Do something with symbol
         }
-        #endregion
+      });
     }
-
+    #endregion
 
     #region ProSnippet Group: Symbol Search
     #endregion
@@ -657,7 +618,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.LookupItem(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for a specific item in a style
-    public Task<SymbolStyleItem> GetSymbolFromStyleAsync(StyleProjectItem style, string key)
+    public static Task<SymbolStyleItem> GetSymbolFromStyleAsync(StyleProjectItem style, string key)
     {
       return QueuedTask.Run(() =>
       {
@@ -674,7 +635,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for point symbols in a style
-    public Task<IList<SymbolStyleItem>> GetPointSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<SymbolStyleItem>> GetPointSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -687,7 +648,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for line symbols in a style
-    public Task<IList<SymbolStyleItem>> GetLineSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<SymbolStyleItem>> GetLineSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -700,7 +661,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for polygon symbols in a style
-    public async Task<IList<SymbolStyleItem>> GetPolygonSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static async Task<IList<SymbolStyleItem>> GetPolygonSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -713,7 +674,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchColors(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.ColorStyleItem
     #region How to search for colors in a style
-    public async Task<IList<ColorStyleItem>> GetColorsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static async Task<IList<ColorStyleItem>> GetColorsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -726,7 +687,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchColorRamps(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem
     #region How to search for color ramps in a style
-    public async Task<IList<ColorRampStyleItem>> GetColorRampsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static async Task<IList<ColorRampStyleItem>> GetColorRampsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       //StyleProjectItem can be "ColorBrewer Schemes (RGB)", "ArcGIS 2D"...
       if (style == null)
@@ -741,7 +702,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchNorthArrows(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.NorthArrowStyleItem
     #region How to search for north arrows in a style
-    public Task<IList<NorthArrowStyleItem>> GetNorthArrowsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<NorthArrowStyleItem>> GetNorthArrowsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -754,7 +715,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchScaleBars(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.ScaleBarStyleItem
     #region How to search for scale bars in a style
-    public Task<IList<ScaleBarStyleItem>> GetScaleBarsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<ScaleBarStyleItem>> GetScaleBarsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -767,7 +728,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchLabelPlacements(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.LabelPlacementStyleItem
     #region How to search for label placements in a style
-    public Task<IList<LabelPlacementStyleItem>> GetLabelPlacementsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<LabelPlacementStyleItem>> GetLabelPlacementsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -780,7 +741,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchLegends(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.LegendStyleItem
     #region How to search for legends in a style
-    public Task<IList<LegendStyleItem>> GetLegendFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<LegendStyleItem>> GetLegendFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -792,7 +753,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchLegendItems(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.LegendItemStyleItem
     #region How to search for legend items in a style
-    public Task<IList<LegendItemStyleItem>> GetLegendItemsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<LegendItemStyleItem>> GetLegendItemsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -804,7 +765,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchGrids(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.GridStyleItem
     #region How to search for grids in a style
-    public Task<IList<GridStyleItem>> GetGridsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<GridStyleItem>> GetGridsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -816,7 +777,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchMapSurrounds(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.MapSurroundStyleItem
     #region How to search for map surrounds in a style
-    public Task<IList<MapSurroundStyleItem>> GetMapSurroundsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<MapSurroundStyleItem>> GetMapSurroundsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -828,7 +789,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchTableFrames(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.TableFrameStyleItem
     #region How to search for table frames in a style
-    public Task<IList<TableFrameStyleItem>> GetTableFramesFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<TableFrameStyleItem>> GetTableFramesFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -840,7 +801,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchTableFrameFields(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.TableFrameFieldStyleItem
     #region How to search for table frame fields in a style
-    public Task<IList<TableFrameFieldStyleItem>> GetTableFrameFieldsFromStyleAsync(StyleProjectItem style, string searchString)
+    public static Task<IList<TableFrameFieldStyleItem>> GetTableFrameFieldsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
         throw new System.ArgumentNullException();
@@ -859,7 +820,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMSimpleRenderer
     #region How to set symbol for a feature layer symbolized with simple renderer
 
-    public Task SetFeatureLayerSymbolAsync(FeatureLayer ftrLayer, CIMSymbol symbolToApply)
+    public static Task SetFeatureLayerSymbolAsync(FeatureLayer ftrLayer, CIMSymbol symbolToApply)
     {
       if (ftrLayer == null || symbolToApply == null)
         throw new System.ArgumentNullException();
@@ -894,7 +855,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetRealWorldUnits
     #region How to apply a symbol from style to a feature layer
 
-    public Task SetFeatureLayerSymbolFromStyleItemAsync(
+    public static Task SetFeatureLayerSymbolFromStyleItemAsync(
                FeatureLayer ftrLayer, SymbolStyleItem symbolItem)
     {
       if (ftrLayer == null || symbolItem == null)
@@ -930,17 +891,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetRealWorldUnits
     #region How to apply a point symbol from a style to a feature layer
-
-    // var map = MapView.Active.Map;
-    // if (map == null)
-    //        return;
-    // var pointFeatureLayer =
-    //       map.GetLayersAsFlattenedList()
-    //          .OfType<FeatureLayer>()
-    //         .Where(fl => fl.ShapeType == esriGeometryType.esriGeometryPoint);
-    //   await ApplySymbolToFeatureLayerAsync(pointFeatureLayer.FirstOrDefault(), "Fire Station");
-
-    public Task ApplySymbolToFeatureLayerAsync(FeatureLayer featureLayer, string symbolName)
+    public static Task ApplySymbolToFeatureLayerAsync(FeatureLayer featureLayer, string symbolName)
     {
       return QueuedTask.Run(async () =>
       {
@@ -982,7 +933,7 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetRealWorldUnits
     #region How to apply a color ramp from a style to a feature layer
 
-    public async Task ApplyColorRampAsync(FeatureLayer featureLayer, List<string> fields)
+    public static async Task ApplyColorRampAsync(FeatureLayer featureLayer, List<string> fields)
     {
 
         StyleProjectItem style =
@@ -1004,6 +955,5 @@ namespace MapAuthoring.ProSnippets
 
     }
     #endregion
-
     }
 }
