@@ -244,10 +244,6 @@ namespace Carto_SDK_Examples
     /// Creates a new <see cref="StyleItem"/> and initializes its properties based on an existing <see
     /// cref="StyleItem"/>.
     /// </summary>
-    /// <remarks>The new <see cref="StyleItem"/> will have its object set using the <see
-    /// cref="StyleItem.GetObject"/> method of the  <paramref name="existingItem"/>. However, the <c>Key</c>,
-    /// <c>Name</c>, <c>Tags</c>, and <c>Category</c> properties  of the new item must be explicitly set, as they are
-    /// not populated from the object passed to <see cref="StyleItem.SetObject"/>.</remarks>
     /// <param name="existingItem">The existing <see cref="StyleItem"/> from which the new item's properties will be derived.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the newly created <see
     /// cref="StyleItem"/>.</returns>

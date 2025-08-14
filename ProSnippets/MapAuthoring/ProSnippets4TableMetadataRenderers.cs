@@ -26,10 +26,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Sets a unique value renderer for the specified feature layer.
     /// </summary>
-    /// <remarks>This method assigns a unique value renderer to the feature layer based on the "Type" field. 
-    /// The renderer uses a green pushpin symbol as the template symbol for unique values.  The operation is performed
-    /// asynchronously on the QueuedTask thread to ensure thread safety  when interacting with the ArcGIS Pro
-    /// API.</remarks>
     /// <param name="featureLayer">The feature layer to which the unique value renderer will be applied.  This layer must be part of the active map
     /// and cannot be null.</param>
     /// <returns></returns>
@@ -78,11 +74,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies a unique value renderer to the specified feature layer.
     /// </summary>
-    /// <remarks>This method constructs a <see cref="ArcGIS.Core.CIM.CIMUniqueValueRenderer"/> to assign
-    /// specific symbols to features based on their attribute values. For example, it can be used to apply distinct
-    /// symbols to features representing different states, while using a default symbol for all other values.  The
-    /// renderer is configured with unique value classes, groups, and fields, and is then applied to the provided
-    /// feature layer. The method runs asynchronously on a queued task.</remarks>
     /// <param name="featureLayer">The feature layer to which the unique value renderer will be applied. This parameter cannot be null.</param>
     /// <returns>A task representing the asynchronous operation of creating and applying the renderer.</returns>
     public static Task UniqueValueRenderer(FeatureLayer featureLayer)
@@ -155,12 +146,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies a heatmap renderer to the specified feature layer.
     /// </summary>
-    /// <remarks>This method defines a heatmap renderer using the "Population" field as the weight field  and
-    /// applies it to the provided feature layer. The renderer uses a predefined color ramp  ("Heat Map 4 -
-    /// Semitransparent") from the "ArcGIS Colors" style and sets rendering quality,  radius, and labels for high and
-    /// low density values.  The method performs asynchronous operations to retrieve the color ramp and apply the
-    /// renderer. Ensure that the feature layer is properly initialized and contains the required field before  calling
-    /// this method.</remarks>
     /// <param name="featureLayer">The feature layer to which the heatmap renderer will be applied.  This layer must contain a valid field for
     /// weighting the heatmap values.</param>
     public static async void CreateHeatMapRenderer(FeatureLayer featureLayer)
@@ -206,13 +191,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies an unclassed colors renderer to the specified feature layer.
     /// </summary>
-    /// <remarks>This method configures an unclassed colors renderer for the given feature layer using a
-    /// specified  color ramp and symbol template. The renderer maps feature values to colors based on a continuous 
-    /// range, with custom upper and lower stops. Features with null values are displayed using a separate  symbol and
-    /// label.  The method uses the "ArcGIS Colors" style and the "Heat Map 4 - Semitransparent" color ramp to  define
-    /// the renderer. Features with values greater than or equal to 5,000,000 are drawn using the  upper color of the
-    /// ramp, while features with values less than or equal to 50,000 are drawn using  the lower color of the
-    /// ramp.</remarks>
     /// <param name="featureLayer">The feature layer to which the unclassed colors renderer will be applied. This parameter cannot be null.</param>
     public static async void CreateUnclassedRenderer(FeatureLayer featureLayer)
     {
@@ -306,10 +284,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies a proportional renderer to the specified feature layer.
     /// </summary>
-    /// <remarks>This method configures a proportional renderer where the size of the symbol is directly
-    /// proportional  to the value of a specified field in the feature layer. The renderer is applied asynchronously to
-    /// the  feature layer. The method uses a predefined color ramp and a point symbol template to define the
-    /// renderer.</remarks>
     /// <param name="featureLayer">The feature layer to which the proportional renderer will be applied.  This parameter cannot be null.</param>
     public static async void CreateTrueProportionalRenderer(FeatureLayer featureLayer)
     {
@@ -350,9 +324,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Adjusts the zoom level of the currently active attribute table pane.
     /// </summary>
-    /// <remarks>This method checks if the active pane is an attribute table pane (<see cref="ArcGIS.Desktop.Mapping.ITablePane">). 
-    /// If it is, the method retrieves the current zoom level, increases it by a fixed amount,  and applies the new zoom
-    /// level to the table pane.</remarks>
     public static void SetTablePaneZoom()
     {
       //Check if the active pane is an ITablePane
@@ -375,8 +346,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the contents of the currently active cell in the attribute table.
     /// </summary>
-    /// <remarks>This method returns the value of the cell that is currently selected in the attribute table
-    /// pane. The active cell is determined by the active row's object ID and the active column in the table.</remarks>
     public static void ActiveCellContents()
     {
       {
@@ -404,9 +373,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Scrolls the active attribute table pane to a specific row.
     /// </summary>
-    /// <remarks>This method checks if the active pane implements <see
-    /// cref="ArcGIS.Desktop.Mapping.ArcGIS.Desktop.Mapping.ITablePane"/> and, if so, moves the view to the specified rows. It demonstrates
-    /// moving to the first row and the sixth row in the table.</remarks>
     public static void MoveToRow()
       {
       // Check if the active pane is an ITablePane  
@@ -583,9 +549,6 @@ namespace MapAuthoring.ProSnippets
     /// Retrieves the metadata of the specified map, allows modifications, and updates the map with the modified
     /// metadata.
     /// </summary>
-    /// <remarks>This method first retrieves the metadata of the provided map as a string. The caller can
-    /// modify the metadata string as needed. If the map supports metadata editing, the modified metadata is then set
-    /// back to the map.</remarks>
     /// <param name="map">The map whose metadata is being retrieved and updated. Cannot be <see langword="null"/>.</param>
     public static void MapLayerMetadata(Map map)
     {
@@ -611,11 +574,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Configures and manages metadata for the layers or tables in the specified map.
     /// </summary>
-    /// <remarks>This method retrieves the first layer or table from the map and performs various
-    /// metadata-related operations,  such as checking whether the layer uses source metadata, enabling or disabling
-    /// source metadata usage,  retrieving metadata, and updating metadata if supported. All operations requiring access
-    /// to the MapMember  metadata must be executed on the Main CIM Thread (MCT) using <see
-    /// cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/>.</remarks>
     /// <param name="map">The map containing the layers or tables whose metadata will be managed. Cannot be null.</param>
     public static void LayerMetadata(Map map)
     {

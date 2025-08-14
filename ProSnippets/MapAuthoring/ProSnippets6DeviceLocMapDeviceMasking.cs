@@ -28,11 +28,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Establishes a connection to a device location source such as GPS/GNSS device using a COM port.
     /// </summary>
-    /// <remarks>This method initializes a <see cref="SerialPortDeviceLocationSource"/> with predefined
-    /// settings,  including the COM port, baud rate, and antenna height, and configures location properties such as 
-    /// accuracy threshold. It then opens the device location source on a background thread using the  <see
-    /// cref="DeviceLocationService"/>. <para> This method is asynchronous and should be awaited to ensure the
-    /// connection is established  before proceeding with location-based operations. </para></remarks>
     /// <returns>A task representing the asynchronous operation of connecting to the device location source.</returns>
     public static async Task ConnectToDeviceLocationSource()
     {
@@ -60,8 +55,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the current device location source used by the application.
     /// </summary>
-    /// <remarks>This method accesses the <see cref="DeviceLocationService"/> to determine the active source
-    /// for device location data. If no source is currently available, the method will return <c>null</c>.</remarks>
     public static void GetCurrentDeviceLocationSource()
     {
       var source = DeviceLocationService.Instance.GetSource();
@@ -78,8 +71,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Closes the current device location source if one is active.
     /// </summary>
-    /// <remarks>This method checks whether a device location source is currently active and, if so, closes it
-    /// asynchronously. </remarks>
     /// <returns>A task that represents the asynchronous operation of closing the device location source.</returns>
     public static async Task CloseCurrentDeviceLocationSource()
     {
@@ -106,10 +97,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the current device location source and its associated properties.
     /// </summary>
-    /// <remarks>This method checks if a device is connected and retrieves the current location source and
-    /// properties. If the source is a <see cref="ArcGIS.Desktop.Core.DeviceLocation.SerialPortDeviceLocationSource"/>, 
-    /// additional details such as communication port, antenna height, and spatial reference are obtained. The method
-    /// also retrieves the device location properties, including the accuracy threshold.</remarks>
     public async static void GetCurrentDeviceLocationSourceAndProperties()
     {
       // Check if a device is connected
@@ -150,9 +137,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the properties of the current device location source.
     /// </summary>
-    /// <remarks>This method retrieves the current device location properties, modifies the accuracy
-    /// threshold,  and applies the updated properties to the device location source. The accuracy threshold is set  to
-    /// 22.5 meters.</remarks>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async static Task UpdateDeviceLocationProperties()
     {
@@ -231,9 +215,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Toggles the current device location source for the map between enabled and disabled states.
     /// </summary>
-    /// <remarks>This method checks whether the device location source is currently enabled for the map and
-    /// switches its state. If the device location source is enabled, it will be disabled; if it is disabled, it will be
-    /// enabled.</remarks>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task EnableDisableDeviceLocationSourceFromMap()
     {
@@ -257,9 +238,6 @@ namespace MapAuthoring.ProSnippets
     /// Retrieves the current device location options used by the <see
     /// cref="ArcGIS.Desktop.Mapping.DeviceLocation.MapDeviceLocationService"/>.
     /// </summary>
-    /// <remarks>This method provides access to the configuration settings for device location visualization
-    /// and navigation on the map. The options include visibility, navigation mode, tracking behavior, and accuracy
-    /// buffer display.</remarks>
     public static void GetCurrentMapDeviceLocationOptions()
     {
       //Gets the current device location options used by the MapDeviceLocationService
@@ -279,8 +257,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Checks whether the current device location source is enabled on the map.
     /// </summary>
-    /// <remarks>This method determines if the device location functionality is active for the map. It does
-    /// not modify any settings or state; it only performs a check.</remarks>
     public static void CheckIfDeviceLocationIsEnabledOnMap()
     {
       //Checks if the current device location source is enabled on the map
@@ -298,10 +274,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Configures the current map to use specific device location options.
     /// </summary>
-    /// <remarks>This method sets the device location options for the active map view, enabling device
-    /// location visibility,  setting the navigation mode to keep the device location at the center, and enabling
-    /// track-up navigation. The method must be called when a valid device location source is available and device
-    /// location is enabled.</remarks>
     public static void SetMapDeviceLocationOptions()
     {
       QueuedTask.Run(() =>
@@ -332,8 +304,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Zooms or pans the map to the most recent device location.
     /// </summary>
-    /// <remarks>This method requires that device location services are enabled. If device location services
-    /// are not enabled,  calling this method will result in an <see cref="InvalidOperationException"/>.</remarks>
     public static void ZoomOrPanToCurrentLocation()
     {
       QueuedTask.Run(() =>
@@ -354,9 +324,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Adds the most recent device location to the specified graphics layer as a graphic.
     /// </summary>
-    /// <remarks>This method retrieves the latest location snapshot from the device location service and adds
-    /// it to the provided graphics layer as a triangle-shaped point graphic. If no location snapshot is available, no
-    /// graphic is added.</remarks>
     /// <param name="graphicsLayer">The graphics layer to which the most recent location will be added. This parameter cannot be null.</param>
     public static void AddMostRecentLocationToGraphicsLayer(GraphicsLayer graphicsLayer)
     {
@@ -387,9 +354,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Configures the map view to always center on the device's current location.
     /// </summary>
-    /// <remarks>This method updates the device location visibility and navigation mode settings to ensure
-    /// that the  device's location remains visible and centered on the map. It uses the <see
-    /// cref="MapDeviceLocationService"/>  to retrieve and modify the current device location options.</remarks>
     public async static void SetMapViewToBeCenteredOnDeviceLocation()
     {
       // Get the MapDeviceLocationOptions currently used by the MapDeviceLocationService
@@ -425,9 +389,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Subscribes to the SnapshotChangedEvent to receive notifications when a new location snapshot is available.
     /// </summary>
-    /// <remarks>This method registers a callback to handle snapshot change events. The callback processes the
-    /// snapshot data,  which includes information such as position, altitude, timestamp, and accuracy metrics. Use this
-    /// method to monitor location updates and respond to changes in device location snapshots.</remarks>
     public static void SubscribeToSnapshotEvents()
     {
       SnapshotChangedEvent.Subscribe(OnSnapshotChanged);
@@ -435,9 +396,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Handles changes to a snapshot by processing the provided snapshot data.
     /// </summary>
-    /// <remarks>This method processes the snapshot asynchronously using <see cref="QueuedTask.Run"/>.  If the
-    /// snapshot contains valid position data, additional properties such as altitude, date/time, and DOP values are
-    /// accessed for further use.</remarks>
     /// <param name="args">The event arguments containing the snapshot data to process.  If <paramref name="args"/> is <see
     /// langword="null"/> or the snapshot is not of type <see cref="NMEASnapshot"/>, the method exits without performing
     /// any action.</param>
@@ -476,10 +434,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the mask geometry for a feature in the active map view.
     /// </summary>
-    /// <remarks>This method identifies the first feature in the active map's first available <see
-    /// cref="ArcGIS.Desktop.Mapping.BasicFeatureLayer"/>  and calculates its mask geometry using the <see
-    /// cref="ArcGIS.Desktop.Mapping.DrawingOutlineType.Exact"/> outline type. The mask geometry is returned in the
-    /// spatial reference of the map.</remarks>
     public static void GetMaskGeometryForFeature()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList()

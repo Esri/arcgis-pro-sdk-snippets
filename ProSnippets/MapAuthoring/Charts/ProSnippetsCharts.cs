@@ -43,10 +43,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a scatter plot chart for the specified feature layer using predefined fields.
     /// </summary>
-    /// <remarks>This method generates a scatter plot chart based on the fields "minimum_nights" and "price" in
-    /// the provided <see cref="FeatureLayer"/>. The chart includes a trend line and is added to the layer's existing list
-    /// of charts, if any exist.  The chart's title is automatically set to "<c>minimum_nights vs. price</c>", and the X
-    /// and Y axes correspond to the "minimum_nights" and "price" fields, respectively.</remarks>
     /// <param name="featureLayer">The feature layer to which the scatter plot chart will be added. This parameter cannot be null.</param>
     public static void CreateScatterPlotChart(FeatureLayer featureLayer)
     {
@@ -170,8 +166,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a bar chart for the specified feature layer using predefined fields for the X-axis and Y-axis.
     /// </summary>
-    /// <remarks>This method generates a bar chart with a custom title and green fill symbols for the bars. 
-    /// The chart is added to the feature layer's existing list of charts, if any exist.</remarks>
     /// <param name="featureLayer">The feature layer to which the bar chart will be added. This parameter cannot be null.</param>
     public static void CreateBarChart(FeatureLayer featureLayer)
     {
@@ -222,10 +216,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates histogram charts for all fields of type <see cref="FieldType.Double"/> in the specified feature layer.
     /// </summary>
-    /// <remarks>This method generates a histogram chart for each field of type <see cref="FieldType.Double"/>
-    /// in the provided  <paramref name="featureLayer"/>. Each histogram is configured with a default bin count of 15
-    /// and is added to the  layer's chart definition. If the layer already contains charts, the new histograms are
-    /// appended to the existing list.</remarks>
     /// <param name="featureLayer">The feature layer for which histograms will be created. Must not be <see langword="null"/>.</param>
     public static void CreateHistogramForDoubleFields(FeatureLayer featureLayer)
     {// For more information on the chart CIM specification:
@@ -285,9 +275,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a multi-series bar chart for the specified feature layer.
     /// </summary>
-    /// <remarks>This method generates a bar chart where each series represents a unique value from a
-    /// specified field. The chart groups data by a category field and aggregates the count of features for each group.
-    /// The chart is added to the feature layer's definition.</remarks>
     /// <param name="featureLayer">The feature layer to which the bar chart will be added. This layer must contain the fields used for
     /// categorization and grouping.</param>
     public static void CreateMultiSeriesBarChart(FeatureLayer featureLayer)
@@ -369,9 +356,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a pie chart with custom legend formatting and adds it to the specified feature layer.
     /// </summary>
-    /// <remarks>The pie chart is configured to use the "neighbourhood_group" field as the category field. 
-    /// The legend text properties are customized to include a specific font color and size. This method modifies the
-    /// feature layer's chart definitions by appending the new pie chart.</remarks>
     /// <param name="featureLayer">The feature layer to which the pie chart will be added. This layer must support chart definitions.</param>
     public static void CreatePieChartWithCustomLegendFormatting(FeatureLayer featureLayer)
     { // For more information on the chart CIM specification:

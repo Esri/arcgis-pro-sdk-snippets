@@ -23,8 +23,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the currently active map in the application.
     /// </summary>
-    /// <remarks>This method returns the map associated with the active <see cref="ArcGIS.Desktop.Mapping.MapView"/>. If no map view is
-    /// active, the method will return <see langword="null"/>.</remarks>
     /// <returns>The active <see cref=Map"/> instance if a map is currently active; otherwise, <see langword="null"/>.</returns>
     public static Map? GetActiveMap()
     {
@@ -40,8 +38,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a new map with the specified name and a default basemap layer.
     /// </summary>
-    /// <remarks>The map is created using the project default basemap. This method must be called within the context
-    /// of a queued task.</remarks>
     /// <param name="mapName">The name of the map to create. This value cannot be <see langword="null"/> or empty.</param>
     /// <returns>A task that represents the asynchronous operation of creating the map.</returns>
     public static async void CreateMapAsync(string mapName)
@@ -62,8 +58,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Opens an existing map in the specified project by its name.
     /// </summary>
-    /// <remarks>If a map with the specified name is not found in the project, no action is taken. Ensure the
-    /// map name is correct and exists in the project before calling this method.</remarks>
     /// <param name="project">The ArcGIS Pro project containing the map to open. Cannot be <see langword="null"/>.</param>
     /// <param name="mapName">The name of the map to open. The comparison is case-insensitive and uses the current culture.</param>
     /// <returns>A task that represents the asynchronous operation. The task completes when the map is opened in a map view.</returns>
@@ -331,9 +325,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the list of available location unit formats for the specified map.
     /// </summary>
-    /// <remarks>This method must be called within the context of a <see cref="QueuedTask.Run"/> operation.
-    /// The available location unit formats depend on the spatial reference of the map. For example, linear location
-    /// unit formats are excluded if the map's spatial reference is geographic.</remarks>
     /// <param name="map">The map for which to retrieve the available location unit formats. Cannot be <see langword="null"/>.</param>
     public static void GetAvailableMapLocationUnits(Map map)
     {
@@ -352,9 +343,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Formats the current camera location of the specified map view using the map's location unit format.
     /// </summary>
-    /// <remarks>This method retrieves the current camera location of the map view, formats it using the map's
-    /// location unit format,  and outputs the formatted location string to the debug console. The formatting is
-    /// performed asynchronously on a queued task.</remarks>
     /// <param name="ArcGIS.Desktop.Mapping.MapView">The map view whose camera location will be formatted.</param>
     public static void FormatALocationUsingMapLocationUnit(MapView mapView)
     {
@@ -380,9 +368,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Sets the location unit format for the specified map to the last available unit format.
     /// </summary>
-    /// <remarks>This method retrieves the list of available location unit formats for the map associated with
-    /// the provided <paramref name="mapView"/>  and sets the location unit format to the last unit in the list. The
-    /// operation is performed asynchronously using a queued task.</remarks>
     /// <param name="mapView">The <see cref="ArcGIS.Desktop.Mapping.MapView"/> instance representing the map view whose location unit format is to be set.</param>
     public static void SetLocationUnitForMap(MapView mapView)
     {
@@ -405,9 +390,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the elevation unit format for the specified map.
     /// </summary>
-    /// <remarks>This method returns the elevation unit format associated with the provided map. If the map is
-    /// not a scene,  the default project distance unit will be returned. The elevation unit format includes details
-    /// such as the  display name and unit code.</remarks>
     /// <param name="map">The map for which to retrieve the elevation unit format. Must be a valid instance of <see
     /// cref="ArcGIS.Desktop.Mapping.Map"/>.</param>
     public static void GetMapElevationUnit(Map map)
@@ -426,8 +408,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the available elevation unit formats for the specified map.
     /// </summary>
-    /// <remarks>If the specified map is not a scene, the method returns the list of current project distance
-    /// units. This method must be called within the context of a queued task.</remarks>
     /// <param name="map">The map for which to retrieve the elevation unit formats. Cannot be null.</param>
     public static void GetMapElevationUnits(Map map)
     {
@@ -446,9 +426,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Formats the elevation of the map view's camera using the current map elevation unit.
     /// </summary>
-    /// <remarks>This method retrieves the elevation unit format for the specified map and formats the
-    /// camera's elevation value accordingly. If the map is not a scene, the default project distance unit is used. The
-    /// formatted elevation is written to the debug output.</remarks>
     /// <param name="mapView">The <see cref="ArcGIS.Desktop.Mapping.MapView"/> instance whose camera elevation will be formatted.</param>
     public static void FormatElevationUsingMapUnit(MapView mapView)
     {
@@ -474,10 +451,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Sets the elevation unit format for the specified map.
     /// </summary>
-    /// <remarks>This method sets the elevation unit format for the provided map. It is only applicable to
-    /// maps that are scenes. Attempting to set the elevation unit format on a map that is not a scene will result in an
-    /// <see cref="InvalidOperationException" />. The elevation unit format is chosen arbitrarily from the list of
-    /// available formats for the map.</remarks>
     /// <param name="map">The map for which the elevation unit format will be set. Must be a scene.</param>
     public static void SetElevationUnitForMap(Map map)
     {
@@ -505,9 +478,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Checks whether the active map contains sync-enabled content that can be used for offline workflows.
     /// </summary>
-    /// <remarks>This method evaluates the active map to determine if it contains content that supports
-    /// synchronization for offline use. It performs the check asynchronously on a background thread using the ArcGIS
-    /// Pro QueuedTask framework.</remarks>
     public static void CheckMapHasSyncEnabledContent()
     {
       //namespace ArcGIS.Desktop.Mapping.Offline
@@ -534,11 +504,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Generates replicas for sync-enabled content in the active map, allowing the content to be taken offline.
     /// </summary>
-    /// <remarks>This method checks whether the active map contains sync-enabled content that can be taken
-    /// offline.  If such content exists, it generates replicas and stores the offline content locally in a SQLite
-    /// database. The spatial reference of the extent must match the spatial reference of the map. The destination
-    /// folder for the offline content can be specified, but if left blank, it defaults to the project's offline maps
-    /// location.</remarks>
     public static void GenerateReplicasSyncEnabledContent()
     {
       //namespace ArcGIS.Desktop.Mapping.Offline
@@ -575,10 +540,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Determines whether the active map contains local content that can be synchronized with replicas.
     /// </summary>
-    /// <remarks>This method checks the synchronization capability of the currently active map in the
-    /// application. It uses the <see
-    /// cref="ArcGIS.Desktop.Mapping.Offline.GenerateOfflineMap.GetCanSynchronizeReplicas(ArcGIS.Desktop.Mapping.Map)"/>
-    /// method to evaluate whether the map has local syncable content.</remarks>
     public static void CheckMapHasLocalSyncableContent()
     {
 
@@ -603,10 +564,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Performs a bi-directional sync between all replica content in the map.
     /// </summary>
-    /// <remarks>This method checks whether the active map contains local syncable content and, if so,
-    /// synchronizes the replicas. Synchronization involves pushing changes made locally to the parent replica and
-    /// pulling changes from the parent replica to the local replica. Note that unsaved edits are not included in the
-    /// synchronization process.</remarks>
     public static void SynchronizeReplicas()
     {
       //namespace ArcGIS.Desktop.Mapping.Offline
@@ -633,10 +590,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Removes all replicas from the map content.
     /// </summary>
-    /// <remarks>This method checks whether the active map contains local syncable content and, if so, removes
-    /// the replicas. Any unsynchronized changes will be lost during this operation. To preserve changes, synchronize
-    /// the replicas  before calling this method. After removal, local syncable content is re-sourced to point to the
-    /// original service.</remarks>
     public static void RemoveReplicas()
     {
       //namespace ArcGIS.Desktop.Mapping.Offline
@@ -674,12 +627,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Exports raster tile cache content for the active map to a specified location.
     /// </summary>
-    /// <remarks>This method checks if the active map contains exportable raster content and, if so, exports
-    /// the raster tile cache  using the specified extent and a user-defined maximum scale level. The export destination
-    /// folder can be configured  in the export parameters; if not set, the output defaults to the offline maps location
-    /// specified in the project  properties or the current project folder.  Exporting raster tile cache content can be
-    /// a time-consuming operation depending on the extent and scale level  selected, as well as network speed. Ensure
-    /// that the active map and extent are properly configured before calling  this method.</remarks>
     public static void ExportMapRasterTileCacheContent()
     {
       //namespace ArcGIS.Desktop.Mapping.Offline
@@ -729,13 +676,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Exports the vector tile cache for the active map to a specified location.
     /// </summary>
-    /// <remarks>This method checks if the active map contains exportable vector tile content and, if so,
-    /// exports the vector tile cache using the specified extent and level of detail (LOD) scale. The export operation
-    /// can take significant time depending on the size of the requested area and the maximum user-defined scale.  The
-    /// exported tile cache is saved to the destination folder specified in the export parameters. If no destination
-    /// folder is set, the output defaults to the offline maps location configured in the project properties, or the
-    /// current project folder if no offline maps location is configured.  Ensure that the active map and its extent are
-    /// properly configured before calling this method.</remarks>
     public static void ExportMapVectorTileCache()
     {
 

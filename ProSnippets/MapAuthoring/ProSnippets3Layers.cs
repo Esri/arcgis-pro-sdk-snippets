@@ -55,10 +55,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a feature layer in the specified map using predefined creation parameters.
     /// </summary>
-    /// <remarks>This method demonstrates how to create a feature layer with specific properties, such as
-    /// visibility, scale range,  definition query, and renderer definition. The layer is created using the <see
-    /// cref="ArcGIS.Desktop.Mapping.LayerFactory"/>  with a <see
-    /// cref="ArcGIS.Desktop.Mapping.FeatureLayerCreationParams"/> object that defines these properties.</remarks>
     /// <param name="map">The map in which the feature layer will be created. Must not be <see langword="null"/>.</param>
     public static void CreateLayerWithCreateParams(Map map)
     {
@@ -92,11 +88,6 @@ namespace MapAuthoring.ProSnippets
    /// <summary>
    /// Creates a feature layer from a layer file (.lyrx) and adds it to the active map.
    /// </summary>
-   /// <remarks>This method uses a layer file to create a <see cref="ArcGIS.Desktop.Mapping.FeatureLayer"/> 
-   /// and adds it to the active map. The layer file is read to obtain a  <see
-   /// cref="ArcGIS.Core.CIM.CIMLayerDocument"/>, which is then used to initialize  <see
-   /// cref="ArcGIS.Desktop.Mapping.LayerCreationParams"/>. The layer is created on a  background thread using <see
-   /// cref="ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer{T}"/>.</remarks>
     public static void CreateLayerWithParams()
     {
       QueuedTask.Run(() => {
@@ -224,9 +215,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates multiple layers in the active map using BulkLayerCreationParams.
     /// </summary>
-    /// <remarks>
-    /// BulkLayerCreationParams allows you to specify additional properties such as the index and visibility of the layers.
-    /// </remarks>
     public static void CreateMultipleLayersWithBulkLayerCreationParams()
     {
       QueuedTask.Run(() => {
@@ -256,9 +244,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Adds a GeoPackage to the active map by creating layers from its spatial data and tables.
     /// </summary>
-    /// <remarks>
-    /// By using the <see cref="ArcGIS.Desktop.Mapping.BulkLayerCreationParams"/>, this method efficiently adds all spatial data layers from the GeoPackage to the map.
-    /// </remarks>
+
     public static void AddAGeoPackageToMap()
     {
       QueuedTask.Run(() => {      
@@ -302,9 +288,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a Topology layer from a Topology dataset and adds it to the active map.
     /// </summary>
-    ///  <remarks>
-    ///  TopologyLayerCreationParams is used to specify the properties of the Topology layer, such as its name and whether to add associated layers.
-    ///  </remarks>
+
     public static void CreateTopologyLayerFromTopologyDataset()
     {
       QueuedTask.Run(() =>
@@ -432,9 +416,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies symbology from an existing layer in the TOC to a new feature layer created from a geodatabase.
     /// </summary>
-    /// <remarks
-    /// Gets an existing feature layer from the map, retrieves its renderer, and applies that renderer to a new feature layer created from a geodatabase.
-    /// </remarks>
+
     public static void ApplySymbologyFromALayer()
     {
       //Note: Call within QueuedTask.Run()
@@ -560,10 +542,7 @@ namespace MapAuthoring.ProSnippets
     /// <param name="featureLayers"></param>
     /// <param name="layerFile"></param>
     /// <returns></returns>
-    /// <remarks
-    /// The CIMLayerDocument is obtained from the layer file, and the renderer is extracted from the first layer definition.
-    /// SetRenderer is then called on each feature layer to apply the renderer from the layer file.
-    /// </remarks>
+
     public static async Task ModifyLayerSymbologyFromLyrFileAsync(IEnumerable<FeatureLayer> featureLayers, string layerFile)
     {
       await QueuedTask.Run(() =>
@@ -926,9 +905,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the specified map's basemap layers to use the predefined "Gray" basemap.
     /// </summary>
-    /// <remarks>This method sets the basemap layers of the provided map to the "Gray" basemap, which is a
-    /// predefined basemap in ArcGIS. The "Gray" basemap provides a neutral background suitable for emphasizing thematic
-    /// data.</remarks>
     /// <param name="aMap">The map instance whose basemap layers will be updated. Cannot be <see langword="null"/>.</param>
     #region Update a map's basemap layer
     public static void BaseMap(Map aMap)
@@ -942,8 +918,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Removes the basemap layer from the specified map.
     /// </summary>
-    /// <remarks>This method sets the basemap of the provided map to <see cref="Basemap.None"/>, effectively
-    /// removing any existing basemap layers.</remarks>
+
     /// <param name="aMap">The map from which the basemap layer will be removed. Cannot be null.</param>
     public static void RemoveBaseMap(Map aMap) 
     { 
@@ -958,8 +933,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves all layers of a specified type from the given map.
     /// </summary>
-    /// <remarks>This method filters the layers in the map to include only those of the specified type. The
-    /// layers are returned as a flattened list.</remarks>
     /// <param name="aMap">The map from which layers will be retrieved. Cannot be null.</param>
     public static void GetLayersOfType(Map aMap)
     {
@@ -973,9 +946,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the first feature layer from the active map that matches the specified geometry type.
     /// </summary>
-    /// <remarks>This method searches through all layers in the active map and returns the first feature layer
-    /// with a geometry type of <see cref="ArcGIS.Core.CIM.esriGeometryType.esriGeometryPoint"/>. If no matching layer
-    /// is found, the result will be <see langword="null"/>.</remarks>
+
     public static void GetLayersOfSpecifiedGeometryType()
     {
       //Get an existing Layer. This layer has a symbol you want to use in a new layer.
@@ -993,11 +964,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Finds layers within the specified map based on their name or URI.
     /// </summary>
-    /// <remarks>This method demonstrates how to locate layers in a map using various approaches: - By name:
-    /// Retrieves a read-only list of layers matching the specified name. - By URI: Searches for a specific layer using
-    /// its unique URI. - Using LINQ: Queries the flattened list of layers to check for the existence of a layer with a
-    /// specific name.  Use this method to understand how to interact with layers in a map, whether by name, URI, or
-    /// custom queries.</remarks>
     /// <param name="map">The map in which to search for layers. Cannot be null.</param>
     public static void FindLayer(Map map)
     {
@@ -1021,9 +987,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Finds standalone tables within the specified map based on predefined criteria.
     /// </summary>
-    /// <remarks>This method demonstrates how to locate standalone tables in a map, whether they are direct
-    /// children of the map or nested within group layers. It utilizes various approaches to search for tables,
-    /// including by name or path.</remarks>
     /// <param name="map">The map instance in which to search for standalone tables. Cannot be <see langword="null"/>.</param>
     public static void FindStandaloneTable(Map map)
     {
@@ -1041,8 +1004,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Searches for layers in the active map whose names contain the specified partial name.
     /// </summary>
-    /// <remarks>This method retrieves all layers in the active map and filters them based on whether their
-    /// names  contain the specified partial name. The results are logged to the debug output.</remarks>
     /// <param name="partialName">The partial name to search for. The search is case-insensitive and uses the current culture.</param>
     public static void FindLayersWithPartialName(string partialName)
     {
@@ -1065,10 +1026,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Modifies the specified layer's properties to ensure it is visible, editable, and snappable.
     /// </summary>
-    /// <remarks>This method sets the visibility of the provided <see cref="ArcGIS.Desktop.Mapping.Layer"/> to <see langword="true"/>
-    /// if it is not already visible. If the layer is a <see cref="ArcGIS.Desktop.Mapping.FeatureLayer"/>, it also ensures that the layer is
-    /// editable and snappable by setting the respective properties to <see langword="true"/> if they are not already
-    /// enabled.</remarks>
     /// <param name="layer">The layer whose properties will be modified. Must be a valid <see cref="ArcGIS.Desktop.Mapping.Layer"/> instance.</param>
     public static void ChangeProperties(Layer layer)
     {
@@ -1092,8 +1049,6 @@ namespace MapAuthoring.ProSnippets
 /// <summary>
 /// Creates a .lyrx file for the specified layer.
 /// </summary>
-/// <remarks>The .lyrx file is saved to the path <c>c:\Data\MyLayerDocument.lyrx</c>. Ensure that the application 
-/// has write permissions to the specified directory.</remarks>
 /// <param name="layer">The layer for which the .lyrx file will be created. This parameter cannot be null.</param>
     public static void CreateLyrx(Layer layer)
     {
@@ -1106,8 +1061,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Counts the number of features currently selected in the first feature layer of the specified map.
     /// </summary>
-    /// <remarks>This method retrieves the first feature layer in the specified map and determines the count
-    /// of selected features. If no feature layer is found, the selection count will not be calculated.</remarks>
     /// <param name="map">The map containing the layers to check for selected features.</param>
     public static void CountSelectedFeatures(Map map)
     {
@@ -1125,9 +1078,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the display field for the first feature layer in the active map.
     /// </summary>
-    /// <remarks>The display field is the field used as the label to represent rows in the underlying source
-    /// table of the feature layer. This method accesses the display field by obtaining the CIM definition of the
-    /// feature layer and its associated feature table.</remarks>
     public static void AccessDisplayField()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -1148,8 +1098,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Toggles the label visibility for the specified feature layer.
     /// </summary>
-    /// <remarks>This method switches the label visibility state of the provided feature layer.  If labels are
-    /// currently visible, they will be hidden; if labels are hidden, they will be made visible.</remarks>
     /// <param name="featureLayer">The feature layer whose label visibility is to be toggled. Cannot be <see langword="null"/>.</param>
     public static void EnableLabeling(FeatureLayer featureLayer)
     {
@@ -1173,16 +1121,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Sets the elevation mode for the first feature layer in the active map.
     /// </summary>
-    /// <remarks>This method retrieves the first <see cref="FeatureLayer"/> from the active map and modifies
-    /// its elevation mode. The elevation mode is set using an <see cref="ElevationTypeDefinition"/> object, which
-    /// specifies properties such as the elevation type, cartographic offset, and vertical exaggeration. The method
-    /// ensures that the elevation type definition can be applied to the layer before setting it.  The elevation type
-    /// can be one of the following: <list type="bullet"> <item><see cref="LayerElevationType.OnGround"/></item>
-    /// <item><see cref="ArcGIS.Desktop.Mapping.LayerElevationType.RelativeToGround"/></item> <item><see
-    /// cref="ArcGIS.Desktop.Mapping.LayerElevationType.RelativeToScene"/></item> <item><see
-    /// cref="ArcGIS.Desktop.Mapping.LayerElevationType.AtAbsoluteHeight"/></item> </list> Optional properties such as <see
-    /// cref="ArcGIS.Desktop.Mapping.ElevationTypeDefinition.CartographicOffset"/> and  <see
-    /// cref="ArcGIS.Desktop.Mapping.ElevationTypeDefinition.VerticalExaggeration"/> can also be specified.</remarks>
     public static void SetElevationMode()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -1208,9 +1146,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Moves a feature layer from the 2D group to the 3D group in a local scene.
     /// </summary>
-    /// <remarks>This method identifies the first feature layer in the active map's flattened layer list and
-    /// updates its definition  to move it to the 3D group in a local scene. The operation is performed asynchronously
-    /// using a queued task.</remarks>
     public static void MoveLayerTo3D()
     {
       //The layer in the 2D group to move to the 3D Group in a Local Scene
@@ -1234,9 +1169,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Resets the data connection of a feature service layer to use a new connection string.
     /// </summary>
-    /// <remarks>This method updates the workspace connection string of the specified feature service layer.
-    /// Ensure that <paramref name="dataConnectionLayer"/> is a valid feature service layer before calling this
-    /// method.</remarks>
     /// <param name="dataConnectionLayer">The <see cref="ArcGIS.Desktop.Mapping.Layer"/> whose data connection will be updated. Must be a feature service layer.</param>
     /// <param name="newConnectionString">The new connection string to set for the feature service layer's workspace.</param>
     public static void ResetDataConnectionFeatureService(Layer dataConnectionLayer, string newConnectionString)
@@ -1252,11 +1184,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Replaces the underlying data source of the first feature layer in the active map with a new workspace path.
     /// </summary>
-    /// <remarks>This method retrieves the first feature layer in the active map and updates its data source
-    /// to a new workspace path. The replacement is performed asynchronously using a queued task. The new workspace path
-    /// must point to a valid  dataset with the same name as the original dataset unless the <paramref name="validate"/>
-    /// parameter of  <see cref="ArcGIS.Desktop.Mapping.Layer.FindAndReplaceWorkspacePath"/> is set to <see
-    /// langword="false"/>.</remarks>
     public static void ReplaceDataSource()
     {
       //This is the existing layer for which we want to switch the underlying datasource
@@ -1278,10 +1205,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Changes the geodatabase version of all layers in the active map to a different version.
     /// </summary>
-    /// <remarks>This method retrieves the current geodatabase version from the first feature layer in the
-    /// active map and switches all layers to a different version, if available. The method assumes that at least one
-    /// other version exists in the geodatabase. If no alternate version is found, no changes are made.</remarks>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task ChangeGDBVersion2Async()
     {
       await QueuedTask.Run(() =>
@@ -1323,8 +1246,6 @@ namespace MapAuthoring.ProSnippets
     /// Executes a query on the first selected feature layer in the active map view and retrieves the count of features
     /// that match the specified criteria.
     /// </summary>
-    /// <remarks>This method uses a query filter with a predefined where clause to search for features in the
-    /// selected feature layer. The count of matching features is calculated and logged to the debug output.</remarks>
     public static async void SearchAndGetFeatureCount()
     {
       var count = await QueuedTask.Run(() =>
@@ -1361,12 +1282,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies a spatial filter to a feature layer based on the geometry of selected features in another feature layer.
     /// </summary>
-    /// <remarks>This method creates a definition query for the specified <paramref name="layerToQuery"/>
-    /// using the spatial geometry of selected features in <paramref name="spatialDefnLayer"/> and an optional SQL where
-    /// clause. The spatial filter geometry is derived from the selected features in <paramref
-    /// name="spatialDefnLayer"/>. The definition query is then applied to <paramref name="layerToQuery"/> and set as
-    /// the active query.
-    /// For example, you can create a Definition Query on a National Parks layer(layerToQuery) with a SQL WhereClause set to find parks with more 500,000 annual visitors. To this DefinitionQuery, you can apply a spatial definition derived from the USA States layer - where the selected feature is California.</remarks>
     /// <param name="layerToQuery">The feature layer to which the spatial filter and definition query will be applied. Cannot be null.</param>
     /// <param name="spatialDefnLayer">The feature layer whose selected features will provide the spatial filter geometry. Cannot be null.</param>
     /// <param name="whereClause">An optional SQL where clause to further refine the definition query. Can be empty or null.</param>
@@ -1413,11 +1328,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies a definition query filter to a feature layer within the specified map.
     /// </summary>
-    /// <remarks>This method retrieves the "USNationalParks" feature layer from the provided map and applies a
-    /// definition query to filter features based on the specified criteria. The definition query is named
-    /// "CaliforniaParks" and filters features where the "STATE_ABBR" attribute equals "CA". The query is then set as
-    /// the active definition query for the layer. <para> If the feature layer does not exist or is not named
-    /// "USNationalParks", the method will throw an exception. </para></remarks>
     /// <param name="map">The map containing the feature layers to which the definition query will be applied.</param>
     public static void ApplyDefinitionQueryToFeatureLayer(Map map)
     {
@@ -1449,11 +1359,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies a definition query with a filter geometry to the "Great Lakes" feature layer.
     /// </summary>
-    /// <remarks>This method demonstrates how to create and apply a definition query to filter features in a
-    /// feature layer. The query filters the "Great Lakes" layer to include only specific features based on their names
-    /// and intersects the layer's geometry with a filter geometry derived from the "US_States" layer. The filter
-    /// geometry is created using the visible features of the "US_States" layer.  The definition query is applied to the
-    /// "Great Lakes" layer and set as the active query.</remarks>
     /// <param name="mapView">The <see cref="ArcGIS.Desktop.Mapping.MapView"/> instance representing the current map view. This parameter cannot be <see
     /// langword="null"/>.</param>
     public static void ApplyDefintionQueryWithFilterGeometry (MapView mapView)
@@ -1501,8 +1406,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies a definition query to the "USNationalParks" feature layer within the specified map.
     /// </summary>
-    /// <remarks>This method filters the "USNationalParks" feature layer to include only features where the
-    /// "STATE_ABBR" field equals "CA". The definition query is applied asynchronously using a queued task.</remarks>
     /// <param name="map">The map containing the feature layers to which the definition query will be applied.</param>
     public static void ApplyDefinitionQueryToFeatureLayerOption2(Map map)
     {
@@ -1527,9 +1430,6 @@ namespace MapAuthoring.ProSnippets
 /// <summary>
 /// Retrieves and logs the definition query filters for a feature layer named "USNationalParks" in the specified map.
 /// </summary>
-/// <remarks>This method enumerates the definition queries associated with the "USNationalParks" feature layer, if
-/// any exist,  and logs their properties, including the name, where clause, geometry URI, spatial reference, and filter
-/// geometry type. The operation is performed asynchronously using a queued task.</remarks>
 /// <param name="map">The map containing the feature layers to search for the "USNationalParks" layer.</param>
     public static void RetrieveDefinitionQueryFilters(Map map)
     { 
@@ -1563,10 +1463,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves feature outlines from the "Great Lakes" feature layer in the specified map view.
     /// </summary>
-    /// <remarks>This method demonstrates how to obtain feature outlines for all features, selected features,
-    /// or visible features within the "Great Lakes" feature layer. The outlines are retrieved using the <see
-    /// cref="FeatureOutlineType"/> enumeration. The method requires a valid <see cref="MapView"/> instance and operates
-    /// asynchronously using the <see cref="QueuedTask.Run"/> method.</remarks>
     /// <param name="mapView">The map view containing the "Great Lakes" feature layer. Cannot be <see langword="null"/>.</param>
     public static void GetLayerFeatureOutline(MapView mapView)
     {
@@ -1609,9 +1505,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the rotation field used by the renderer of the first feature layer in the active map.
     /// </summary>
-    /// <remarks>This method identifies the first feature layer in the active map and retrieves the rotation
-    /// field associated with its renderer, if available. The rotation field is determined by evaluating the Arcade
-    /// expression stored in the visual variable for the Z dimension.</remarks>
     public static void GetRotationFieldOfRenderer()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -1633,9 +1526,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Identifies the attribute field connected to the rotation visual variable in the active map's feature layer.
     /// </summary>
-    /// <remarks>This method retrieves the first feature layer in the active map and examines its renderer to
-    /// find the rotation visual variable. The rotation visual variable is used to describe heading rotation, and the
-    /// method extracts the associated field name from the visual variable's Z-direction expression.</remarks>
     public static void FindConnectedAttribute()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -1657,9 +1547,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Enables the scaling of symbols in the first feature layer based on the map's reference scale.
     /// </summary>
-    /// <remarks>This method retrieves the first feature layer in the active map and modifies its
-    /// configuration to scale symbols according to the map's reference scale. This setting ensures that symbols adjust
-    /// their size dynamically when the map's reference scale is set.</remarks>
     public static void ScaleSymbols()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -1679,9 +1566,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Configures the display cache settings for the first feature layer in the active map.
     /// </summary>
-    /// <remarks>This method retrieves the first <see cref="ArcGIS.Desktop.Mapping.FeatureLayer"/> from the active map and sets its
-    /// display cache  maximum age to 2 minutes. The display cache controls how long cached data is retained for
-    /// rendering purposes.</remarks>
     public static void SetLayerCache()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -1699,9 +1583,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Changes the selection color of the first visible feature layer in the active map to red.
     /// </summary>
-    /// <remarks>This method retrieves the first feature layer in the active map, modifies its selection color
-    /// to red, disables the default selection symbol, and ensures the layer is visible. It then performs a selection
-    /// operation using the current map extent.</remarks>
     public static void ChangeSelectionColor()
     {
 
@@ -1731,10 +1612,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Removes all layers from the active map that are not visible, including both individual layers and group layers.
     /// </summary>
-    /// <remarks>This method iterates through the layers in the active map and removes those that are
-    /// unchecked (i.e., not visible).  It handles both individual layers and group layers, ensuring that empty and
-    /// unchecked group layers are also removed. The operation is performed asynchronously using queued tasks to ensure
-    /// thread safety.</remarks>
     public static async void RemoveAllUncheckedLayers()
     {
       var map = MapView.Active.Map;
@@ -1774,9 +1651,6 @@ namespace MapAuthoring.ProSnippets
 /// <summary>
 /// Removes all empty group layers from the specified map.
 /// </summary>
-/// <remarks>This method iterates through all group layers in the provided map and removes any group layer  that
-/// does not contain any child layers. The operation is performed asynchronously on the  ArcGIS Pro QueuedTask to ensure
-/// thread safety.</remarks>
 /// <param name="map">The map from which empty group layers will be removed. Cannot be null.</param>
     public static async void RemoveEmptyGroups(Map map)
     {
@@ -1807,10 +1681,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies a Maplex abbreviation dictionary to the active map's labeling engine.
     /// </summary>
-    /// <remarks>This method defines a collection of abbreviation rules and associates them with the Maplex
-    /// labeling engine  of the active map. The abbreviation dictionary specifies how certain text strings should be
-    /// abbreviated  when labels are generated. The dictionary is applied to the map's definition, enabling consistent
-    /// labeling  behavior across layers.</remarks>
     public static void CreateDictionary()
     {
       //Get the map's definition
@@ -1853,10 +1723,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies an abbreviation dictionary to the labeling properties of the first feature layer in the active map.
     /// </summary>
-    /// <remarks>This method modifies the labeling properties of the first feature layer in the active map to
-    /// use a predefined abbreviation dictionary. It enables label abbreviation, disables label stacking, and updates
-    /// the layer's definition accordingly. The method must be called within the context of an active map and requires
-    /// at least one feature layer to be present.</remarks>
     public static void ApplyDictionary()
     {
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().First();
@@ -2028,8 +1894,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a new global scene with the specified ground surface layer.
     /// </summary>
-    /// <remarks>The scene is created with a global viewing mode, suitable for visualizing data on a global scale.
-    /// This method executes asynchronously using a queued task.</remarks>
     /// <param name="groundSourceUri">The URI of the ground surface layer to be used in the scene. This must point to a valid elevation source.</param>
     public static void CreateScene(Uri groundSourceUri)
     {
@@ -2048,9 +1912,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a new elevation surface layer in the active map using a predefined elevation service.
     /// </summary>
-    /// <remarks>This method adds an elevation surface layer to the active map by connecting to the ArcGIS
-    /// World Elevation service. The elevation surface is created using the "WorldElevation/Terrain" image service.
-    /// Ensure that an active map is available before calling this method.</remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static Task CreateNewElevationSurface()
     {
@@ -2088,8 +1949,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Sets a custom elevation surface for the specified Z-aware feature layer.
     /// </summary>
-    /// <remarks>This method assigns a custom elevation surface to the provided feature layer by modifying its
-    /// layer definition. The elevation surface is defined using a URI pointing to an elevation service.</remarks>
     /// <param name="featureLayer">The feature layer to which the custom elevation surface will be applied.  The layer must support Z-awareness.</param>
     /// <returns>A task that represents the asynchronous operation of setting the elevation surface.</returns>
     public static Task SetElevationSurfaceToLayer(FeatureLayer featureLayer)
@@ -2119,9 +1978,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Adds an elevation source to an existing elevation surface layer.
     /// </summary>
-    /// <remarks>This method creates an elevation source layer using the specified URI and adds it to an
-    /// elevation surface layer. The elevation surface layer can be any existing surface layer, including the ground
-    /// layer.</remarks>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static Task AddSourceToElevationSurfaceLayer()
     {
@@ -2143,9 +1999,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves elevation surface layers and elevation source layers from the specified map.
     /// </summary>
-    /// <remarks>This method provides access to the elevation surface layers in the map, including the ground
-    /// elevation surface layer. It also retrieves the number of elevation source layers in the ground elevation surface
-    /// layer and the first elevation source layer, if available.</remarks>
     /// <param name="map">The map from which elevation surface layers and elevation source layers are retrieved. Cannot be <see
     /// langword="null"/>.</param>
     public static void ElevationSurfaceLayers(Map map)
@@ -2170,8 +2023,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Finds an elevation surface layer within the specified map using its URI.
     /// </summary>
-    /// <remarks>This method retrieves elevation surface layers from the provided map and searches for a
-    /// specific layer matching the given URI./>.</remarks>
     /// <param name="map">The map containing the elevation surface layers to search.</param>
     /// <param name="layerUri">The URI of the elevation surface layer to find. This value cannot be null or empty.</param>
     public static void FindElevationSurfaceLayer(Map map, string layerUri)
@@ -2189,9 +2040,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Removes elevation surface layers from the specified map, excluding the ground surface.
     /// </summary>
-    /// <remarks>This method illustrates various patterns to remove all elevation surface layers from the map, except for the ground surface,
-    /// which cannot be removed. The specified <paramref name="surfaceLayer"/> is also removed if it exists in the
-    /// map.</remarks>
     /// <param name="map">The map from which elevation surface layers will be removed.</param>
     /// <param name="surfaceLayer">The specific elevation surface layer to remove. If the layer is not part of the map, no action is taken.</param>
     public static void RemoveElevationSurfaceLayers(Map map, Layer surfaceLayer)
@@ -2214,9 +2062,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves the Z-value from the default ground surface at the center of the map's full extent.
     /// </summary>
-    /// <remarks>This method calculates the center point of the map's full extent and queries the default
-    /// ground surface to obtain the Z-value at that location. The Z-value represents the elevation at the specified
-    /// point.</remarks>
     /// <returns></returns>
     public static async Task GetZValue()
     {
@@ -2243,9 +2088,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves Z values from a specific elevation surface for the given polyline geometry.
     /// </summary>
-    /// <remarks>This method uses the elevation surface named "TIN" within the active map to calculate Z
-    /// values for the provided polyline. The resulting geometry with Z values can be accessed and processed
-    /// further.</remarks>
     /// <param name="polyline">The polyline geometry for which Z values will be retrieved. The polyline must be valid and non-null.</param>
     public static async void GetZValuesFromSpecificSurface(Polyline polyline)
     {
@@ -2268,10 +2110,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Retrieves Z values from the specified TIN layer for the given geometry inputs.
     /// </summary>
-    /// <remarks>This method asynchronously retrieves elevation (Z) values from a <see cref="TinLayer"/> for a
-    /// specified  <see cref="MapPoint"/> and <see cref="Polyline"/>. The Z values are obtained using the layer's
-    /// surface data. Ensure that the <paramref name="tinLayer"/> supports Z value retrieval by calling <see
-    /// cref="TinLayer.CanGetZs"/>  before invoking this method.</remarks>
     /// <param name="tinLayer">The TIN layer from which Z values will be retrieved. Must support Z value retrieval.</param>
     /// <param name="mapPoint">The map point for which the Z value will be retrieved.</param>
     /// <param name="polyline">The polyline for which Z values will be retrieved.</param>
@@ -2311,9 +2149,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a raster layer from a specified file path and adds it to the provided map.
     /// </summary>
-    /// <remarks>This method creates a raster layer using the file path of a raster image. The raster layer is
-    /// added to the specified map. The raster image file must exist at the provided path, and the path must be
-    /// accessible.  Note: Raster layers can also be created from a URL, project item, or data connection.</remarks>
     /// <param name="map">The map to which the raster layer will be added. Must not be null.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public static async Task CreateRasterLayers(Map map)
@@ -2339,8 +2174,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the colorizer properties of the specified raster layer.
     /// </summary>
-    /// <remarks>This method modifies the brightness, contrast, and resampling type of the raster layer's
-    /// colorizer. The changes are applied asynchronously within a queued task to ensure thread safety.</remarks>
     /// <param name="rasterLayer">The <see cref="RasterLayer"/> whose colorizer properties will be updated.  This parameter cannot be <see
     /// langword="null"/>.</param>
     public static async void UpdateRasterColorizer(RasterLayer rasterLayer)
@@ -2455,9 +2288,6 @@ namespace MapAuthoring.ProSnippets
     /// Creates a raster layer in the specified map using the provided raster file path and applies a default stretch
     /// colorizer.
     /// </summary>
-    /// <remarks>This method creates a raster layer with a stretch colorizer definition, which is useful for
-    /// visualizing raster data  with continuous values. The raster layer is added to the specified map at index
-    /// 0.</remarks>
     /// <param name="map">The map to which the raster layer will be added. Cannot be null.</param>
     /// <param name="rasterPath">The file path to the raster data. Must be a valid URI pointing to a raster file.</param>
     /// <param name="layerName">The name to assign to the raster layer. This name will appear in the map's layer list.</param>
@@ -2491,9 +2321,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a mosaic layer from a specified mosaic dataset and adds it to the provided map.
     /// </summary>
-    /// <remarks>This method creates a mosaic layer using the path to a mosaic dataset. Mosaic layers can be created 
-    /// from various sources, including URLs, project items, or data connections. Ensure the provided path  points to a
-    /// valid mosaic dataset.</remarks>
     /// <param name="map">The map to which the mosaic layer will be added. Must not be null.</param>
     /// <returns></returns>
     public static async Task MosaicLayers(Map map)
@@ -2522,13 +2349,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the raster colorizer properties of the specified mosaic layer.
     /// </summary>
-    /// <remarks>This method modifies the brightness, contrast, and resampling type of the raster colorizer
-    /// associated with the mosaic layer's image sub-layer. The changes are applied asynchronously within a queued task
-    /// to ensure thread safety when interacting with ArcGIS Pro. <para> The following properties are updated:
-    /// <list type="bullet"> <item><description><see cref="CIMRasterColorizer.Brightness"/> is set to
-    /// 10.</description></item> <item><description><see cref="CIMRasterColorizer.Contrast"/> is set to
-    /// -5.</description></item> <item><description><see cref="CIMRasterColorizer.ResamplingType"/> is set to <see
-    /// cref="RasterResamplingType.NearestNeighbor"/>.</description></item> </list> </para></remarks>
     /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose raster colorizer properties will be updated.</param>
     public static async void UpdateColorizerMosaicLayer(MosaicLayer mosaicLayer)
     {
@@ -2559,10 +2379,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the RGB colorizer properties of the specified mosaic layer.
     /// </summary>
-    /// <remarks>This method retrieves the image sub-layer from the provided mosaic layer, checks if its
-    /// colorizer is an RGB colorizer,  and updates its stretch type to <see cref="RasterStretchType.ESRI"/>. The
-    /// updated colorizer is then applied back to the image sub-layer.  This operation is performed asynchronously on
-    /// the ArcGIS Pro QueuedTask thread to ensure thread safety.</remarks>
     /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose RGB colorizer will be updated.</param>
     public async static void UpdatrRGBColorizer(MosaicLayer mosaicLayer)
     {
@@ -2592,9 +2408,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Checks whether the RGB colorizer can be applied to the specified mosaic layer.
     /// </summary>
-    /// <remarks>This method determines if the RGB colorizer is supported by the image sub-layer of the given
-    /// mosaic layer. It performs the check asynchronously on a background thread using the <see
-    /// cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/> method.</remarks>
     /// <param name="mosaicLayer">The <see cref="ArcGIS.Desktop.Mapping.MosaicLayer"/> to check for applicable colorizers.</param>
     public async static void CheckColorizerMosaicLayer(MosaicLayer mosaicLayer)
     {
@@ -2625,9 +2438,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies a default stretch colorizer to the specified mosaic layer.
     /// </summary>
-    /// <remarks>This method retrieves the image sub-layer from the provided mosaic layer and checks if a
-    /// stretch colorizer can be applied. If applicable, it creates a new stretch colorizer using the default definition
-    /// and applies it to the image sub-layer.</remarks>
     /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> to which the default stretch colorizer will be applied.</param>
     public async static void CreateColorizerFromDefault(MosaicLayer mosaicLayer)
     {
@@ -2663,9 +2473,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates and applies a custom stretch colorizer to the specified mosaic layer.
     /// </summary>
-    /// <remarks>This method retrieves the image sub-layer from the provided mosaic layer and checks if a
-    /// stretch colorizer  can be applied. If applicable, it creates a custom stretch colorizer definition with
-    /// specified parameters  and applies the resulting colorizer to the image sub-layer.</remarks>
     /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> to which the custom stretch colorizer will be applied.</param>
     public async static void CreateColorizerFromCustom(MosaicLayer mosaicLayer, CIMColorRamp colorRamp)
     {
@@ -2730,10 +2537,6 @@ namespace MapAuthoring.ProSnippets
     /// Updates the mosaic sort order of the specified <see cref="MosaicLayer"/> by setting its mosaic method to
     /// "Center."
     /// </summary>
-    /// <remarks>This method modifies the mosaic rule of the image sub-layer within the provided <see
-    /// cref="MosaicLayer"/>. The mosaic method is set to <see cref="RasterMosaicMethod.Center"/>, which prioritizes
-    /// images closest to the center of the view. The operation is performed asynchronously on a background thread using
-    /// <see cref="QueuedTask.Run(Action)"/>.</remarks>
     /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose mosaic sort order will be updated. This parameter cannot be null.</param>
     public async static void UpdateMosaicSortOrder(MosaicLayer mosaicLayer)
     {
@@ -2761,10 +2564,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the mosaic operator of the specified <see cref="MosaicLayer"/> to resolve overlap using the mean value.
     /// </summary>
-    /// <remarks>This method modifies the mosaic rule of the image sub-layer within the provided <see
-    /// cref="MosaicLayer"/> by setting its mosaic operator type to <see cref="RasterMosaicOperatorType.Mean"/>. This
-    /// ensures that overlapping areas in the mosaic are resolved by calculating the mean value of the overlapping
-    /// pixels.</remarks>
     /// <param name="mosaicLayer">The <see cref="MosaicLayer"/> whose mosaic operator is to be updated. This layer must contain an image
     /// sub-layer.</param>
     public async static void UpdateResolveOverlap(MosaicLayer mosaicLayer)
@@ -2792,9 +2591,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates an image service layer from a specified URL and adds it to the provided map.
     /// </summary>
-    /// <remarks>This method uses the ArcGIS Image Service URL to create an <see
-    /// cref="ArcGIS.Desktop.Mapping.ImageServiceLayer"/>  and adds it to the specified map. The operation is performed
-    /// asynchronously on the QueuedTask thread.</remarks>
     /// <param name="map">The map to which the image service layer will be added. Cannot be null.</param>
     /// <returns></returns>
     public static async Task ImageServiceLayers(Map map)
@@ -2820,9 +2616,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the colorizer properties of the specified image service layer.
     /// </summary>
-    /// <remarks>This method modifies the brightness, contrast, and resampling type of the colorizer
-    /// associated  with the provided image service layer. The changes are applied asynchronously within a queued
-    /// task.</remarks>
     /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> whose colorizer properties will be updated.</param>
     public static async void UpdateColorizerISLayer(ImageServiceLayer imageServiceLayer)
     {
@@ -2850,9 +2643,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the RGB colorizer properties of the specified image service layer.
     /// </summary>
-    /// <remarks>This method modifies the stretch type of the RGB colorizer to <see
-    /// cref="RasterStretchType.ESRI"/> if the layer's current colorizer is an RGB colorizer. The updated colorizer is
-    /// then applied to the image service layer. This operation is performed asynchronously on a queued task.</remarks>
     /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> whose RGB colorizer properties will be updated.</param>
     public static async void UpdateRGBColorizerISLayer(ImageServiceLayer imageServiceLayer)
     {
@@ -2878,8 +2668,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Checks whether the RGB colorizer can be applied to the specified image service layer.
     /// </summary>
-    /// <remarks>This method retrieves the list of applicable colorizers for the given <see
-    /// cref="ImageServiceLayer"/>  and determines if the RGB colorizer is included in the list.</remarks>
     /// <param name="imageServiceLayer">The image service layer to check for applicable colorizers. Cannot be null.</param>
     public static async void CheckColorizerISLayer(ImageServiceLayer imageServiceLayer)
     {
@@ -2905,9 +2693,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies a default stretch colorizer to the specified image service layer.
     /// </summary>
-    /// <remarks>This method checks if the stretch colorizer type is applicable to the provided image service
-    /// layer. If applicable, it creates a new stretch colorizer using a default colorizer definition and applies it to
-    /// the layer. The operation is performed asynchronously on a queued task.</remarks>
     /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> to which the default stretch colorizer will be applied.</param>
     public static async void CreateDefaultColorizeImageServiceLayer(ImageServiceLayer imageServiceLayer)
     {
@@ -2939,10 +2724,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Applies a custom stretch colorizer to the specified image service layer using the provided color ramp.
     /// </summary>
-    /// <remarks>This method checks if the image service layer supports the stretch colorizer type. If
-    /// supported, it creates a  custom stretch colorizer definition using the specified color ramp and applies the
-    /// resulting colorizer to the layer. The method runs asynchronously on a queued task to ensure thread
-    /// safety.</remarks>
     /// <param name="imageServiceLayer">The image service layer to which the custom colorizer will be applied.</param>
     /// <param name="colorRamp">The color ramp used to define the appearance of the stretch colorizer.</param>
     public static async void ApplyCustomColorizerImageServiceLayer(ImageServiceLayer imageServiceLayer, CIMColorRamp colorRamp)
@@ -2976,8 +2757,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates an image service layer with a specified colorizer definition and adds it to the given map.
     /// </summary>
-    /// <remarks>This method creates a new <see cref="StretchColorizerDefinition"/> and applies it to the
-    /// image service layer. The layer is added to the specified map at index 0.</remarks>
     /// <param name="map">The map to which the image service layer will be added. Cannot be null.</param>
     /// <param name="url">The URL of the image service. Must be a valid URI.</param>
     /// <param name="layerName">The name to assign to the created layer. Cannot be null or empty.</param>
@@ -3029,10 +2808,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Updates the mosaic operator of the specified image service layer to resolve overlap using the "Mean" operator.
     /// </summary>
-    /// <remarks>This method modifies the mosaic rule of the provided image service layer by setting its
-    /// mosaic operator type to  <see cref="RasterMosaicOperatorType.Mean"/>. The "Mean" operator calculates the average
-    /// value of overlapping pixels  in the raster data. This operation is performed asynchronously on the ArcGIS Pro
-    /// QueuedTask thread.</remarks>
     /// <param name="imageServiceLayer">The <see cref="ImageServiceLayer"/> whose mosaic operator will be updated.</param>
     public async static void UpdateResolveOverlapImageServiceLayer(ImageServiceLayer imageServiceLayer)
     {

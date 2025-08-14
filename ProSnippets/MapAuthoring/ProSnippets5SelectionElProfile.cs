@@ -407,9 +407,6 @@ namespace MapAuthoring.ProSnippets
     /// Subscribes to the <see cref="MapView.ElevationProfileGraphAdded"/> and  <see
     /// cref="MapView.ElevationProfileGraphRemoved"/> events for the specified <see cref="MapView"/>.
     /// </summary>
-    /// <remarks>This method allows you to monitor when elevation profile graphs are added to or removed from
-    /// the  specified <see cref="MapView"/>. Use this to handle changes in elevation profile graphs
-    /// dynamically.</remarks>
     /// <param name="mapView">The <see cref="MapView"/> instance to subscribe to elevation profile graph events.</param>
     public static void SubscribeToAddedRemovedEventsElevationProfileGraph(MapView mapView)
     {
@@ -429,9 +426,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Handles the event triggered when an elevation profile graph is added to the active map view.
     /// </summary>
-    /// <remarks>This method retrieves the elevation profile graph associated with the active map view and
-    /// subscribes  to its <see cref="ContentLoaded"/> event. The elevation profile graph is guaranteed to be non-null 
-    /// when this method is invoked.</remarks>
     /// <param name="sender">The source of the event. Typically, the object that raised the event.</param>
     /// <param name="e">An <see cref="EventArgs"/> instance containing the event data.</param>
     public static void Mv_ElevationProfileGraphAdded(object sender, EventArgs e)
@@ -447,9 +441,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Handles the event triggered when the elevation profile graph content is loaded.
     /// </summary>
-    /// <remarks>This method processes the elevation profile graph by accessing its geometry and elevation
-    /// profile statistics. Ensure that <paramref name="sender"/> is of type <see
-    /// cref="ArcGIS.Desktop.Mapping.ElevationProfileGraph"/>  before invoking this method.</remarks>
     /// <param name="sender">The source of the event, expected to be an instance of <see
     /// cref="ArcGIS.Desktop.Mapping.ElevationProfileGraph"/>.</param>
     /// <param name="e">An <see cref="EventArgs"/> object containing no event data.</param>
@@ -503,9 +494,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Exports the currently displayed elevation profile graph to an image and a CSV file.
     /// </summary>
-    /// <remarks>This method retrieves the active elevation profile graph from the current map view and
-    /// exports it  to both an image file and a CSV file if the graph is available and exportable. The files are saved 
-    /// to the directory "C:\temp\" with predefined names.</remarks>
     public static void ExportElevationProfileGraph()
     {
 
@@ -530,10 +518,6 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Customizes the display options for the elevation profile graph in exploratory analysis.
     /// </summary>
-    /// <remarks>This method allows you to modify the appearance and behavior of the elevation profile graph
-    /// by  setting custom options, such as line color and visibility of slope information. It also provides  the
-    /// ability to reset the graph display to its default settings.</remarks>
-    /// <returns></returns>
     public static async Task CustomizeElevationProfileGraphDisplay()
     {
       // customize the elevation profile graph options

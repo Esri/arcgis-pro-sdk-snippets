@@ -52,9 +52,6 @@ namespace MapAuthoring.ProSnippets
       /// <summary>
       /// Callback when the sketch operation is complete.
       /// </summary>
-      /// <remarks>This method processes the provided geometry to create an annotation feature using the current template. If
-      /// the geometry is a  single point, it is converted into a two-point polyline to meet the requirements for
-      /// annotation placement.</remarks>
       /// <param name="geometry">The geometry resulting from the sketch operation. Must not be <see langword="null"/>.</param>
       /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the feature
       /// creation  operation succeeds; otherwise, <see langword="false"/>.</returns>
@@ -82,8 +79,6 @@ namespace MapAuthoring.ProSnippets
 			/// <summary>
 			/// Creates a polyline starting from the specified map point, with an additional point offset by the given tolerance.
 			/// </summary>
-			/// <remarks>The polyline is created using the spatial reference of the provided <paramref name="pt"/>. The
-			/// second point is offset horizontally by the specified <paramref name="tolerance"/>.</remarks>
 			/// <param name="pt">The starting <see cref="MapPoint"/> for the polyline.</param>
 			/// <param name="tolerance">The distance, in the same spatial reference units as <paramref name="pt"/>, used to calculate the offset for the
 			/// second point.</param>
@@ -110,10 +105,6 @@ namespace MapAuthoring.ProSnippets
 		/// <summary>
 		/// Updates the text string attribute of an annotation feature in the specified layer.
 		/// </summary>
-		/// <remarks>This method modifies the "TEXTSTRING" attribute of an annotation feature with a predefined object
-		/// ID. The attribute must exist in the schema of the provided annotation layer; otherwise, the operation will not
-		/// proceed. If the "TEXTSTRING" attribute is missing, consider using an alternative approach, such as changing the
-		/// annotation text graphic.</remarks>
 		/// <param name="annoLayer">The annotation layer containing the feature to be updated. This must be a valid <see cref="BasicFeatureLayer"/>
 		/// representing an annotation layer.</param>
 		public static async void UpdateTextString(AnnotationLayer annoLayer)
@@ -162,10 +153,6 @@ namespace MapAuthoring.ProSnippets
 		/// <summary>
 		/// Rotates or moves an annotation feature within the specified annotation layer.
 		/// </summary>
-		/// <remarks>This method performs operations on an annotation feature by rotating its baseline geometry 90
-		/// degrees or moving it by a specified offset. The annotation feature is identified using a query filter with a
-		/// predefined OBJECTID value. The method uses asynchronous execution to perform the operation on a background
-		/// thread.</remarks>
 		/// <param name="annoLayer">The annotation layer containing the annotation feature to be modified. This must be a valid <see
 		/// cref="ArcGIS.Core.Data.Mapping.BasicFeatureLayer"/> representing an annotation layer.</param>
 		public async static void RotateOrMoveAnnotation(AnnotationLayer annoLayer)
@@ -223,9 +210,6 @@ namespace MapAuthoring.ProSnippets
 		/// <summary>
 		/// Retrieves the text graphic representation of an annotation feature from the specified annotation layer.
 		/// </summary>
-		/// <remarks>This method accesses the annotation features in the provided <see cref="BasicFeatureLayer"/> and
-		/// retrieves the text graphic associated with the first feature. The text graphic can be used for further processing
-		/// or visualization.</remarks>
 		/// <param name="annoLayer">The annotation layer from which the text graphic will be retrieved. This must be a valid <see
 		/// cref="BasicFeatureLayer"/> containing annotation features.</param>
 		public async static void GetAnnotationTextGraphic(AnnotationLayer annoLayer)
@@ -259,9 +243,6 @@ namespace MapAuthoring.ProSnippets
 		/// <summary>
 		/// Retrieves the outline geometry of the first annotation feature in the specified annotation layer.
 		/// </summary>
-		/// <remarks>This method accesses the first annotation feature in the provided <see cref="AnnotationLayer"/>
-		/// and retrieves its graphic outline geometry. The outline geometry can be used for further processing or
-		/// visualization. If the annotation layer is null, the method returns without performing any action.</remarks>
 		/// <param name="annoLayer">The annotation layer from which the outline geometry of the first annotation feature will be retrieved. Cannot be
 		/// null.</param>
     public static void GetOutlineGeometryOfAnnotation(AnnotationLayer annoLayer)
@@ -299,11 +280,6 @@ namespace MapAuthoring.ProSnippets
 		/// <summary>
 		/// Retrieves the mask geometry for an annotation feature in the specified annotation layer.
 		/// </summary>
-		/// <remarks>This method retrieves the mask geometry for the first annotation feature in the provided  <see
-		/// cref="AnnotationLayer"/>. The mask geometry is constructed using the annotation class's  reference scale and is
-		/// returned in the spatial reference of the active map.  The mask geometry is obtained using the <see
-		/// cref="DrawingOutlineType.Exact"/> outline type,  which provides an exact representation of the annotation
-		/// feature's geometry.</remarks>
 		/// <param name="annoLayer">The annotation layer from which the mask geometry is to be retrieved.  This parameter cannot be <see
 		/// langword="null"/>.</param>
     public static void GetMaskGeometryOfAnnotation(AnnotationLayer annoLayer)
