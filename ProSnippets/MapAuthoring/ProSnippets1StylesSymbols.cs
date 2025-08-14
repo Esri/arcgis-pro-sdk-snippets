@@ -40,6 +40,9 @@ namespace MapAuthoring.ProSnippets
     #endregion
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
     #region How to get a style in project by name
+    /// <summary>
+    /// Retrieves a specific style from the current project by its name.
+    /// </summary>
     public static void GetStyleInProjectByName()
     {
       //Get all styles in the project
@@ -52,6 +55,9 @@ namespace MapAuthoring.ProSnippets
     #endregion
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.CreateStyle(ArcGIS.Desktop.Core.Project,System.String)
     #region How to create a new style
+    /// <summary>
+    /// Creates a new style file (.stylx) at the specified location.
+    /// </summary>
     public static async void CreateNewStyle()
     {
       //Full path for the new style file (.stylx) to be created
@@ -61,6 +67,10 @@ namespace MapAuthoring.ProSnippets
     #endregion
     // cref:ArcGIS.Desktop.Mapping.StyleHelper.AddStyle(ArcGIS.Desktop.Core.Project,System.String)
     #region How to add a style to project
+    /// <summary>
+    /// Adds ArcGIS Pro system styles and custom styles to the current ArcGIS Pro project.
+    /// </summary>
+
     public static async void AddStyleToProject()
     {
       //For ArcGIS Pro system styles, just pass in the name of the style to add to the project
@@ -73,6 +83,10 @@ namespace MapAuthoring.ProSnippets
     #endregion
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.RemoveStyle(ArcGIS.Desktop.Core.Project,System.String)
     #region How to remove a style from project
+    /// <summary>
+    /// Removes a style from the current ArcGIS Pro project.
+    /// </summary>
+
     public static async void RemoveStyleFromProject()
     {
       //For ArcGIS Pro system styles, just pass in the name of the style to remove from the project
@@ -86,6 +100,13 @@ namespace MapAuthoring.ProSnippets
 
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.AddItem(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItem)
     #region How to add a style item to a style
+    /// <summary>
+    /// Adds a style item to the specified style asynchronously.
+    /// </summary>
+    /// <param name="style">The style project item to which the style item will be added. Cannot be <see langword="null"/>.</param>
+    /// <param name="itemToAdd">The style item to add to the style. Cannot be <see langword="null"/>.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> or <paramref name="itemToAdd"/> is <see langword="null"/>.</exception>
     public static Task AddStyleItemAsync(StyleProjectItem style, StyleItem itemToAdd)
     {
       return QueuedTask.Run(() =>
@@ -101,6 +122,13 @@ namespace MapAuthoring.ProSnippets
 
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.RemoveItem(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItem)
     #region How to remove a style item from a style
+    /// <summary>
+    /// Removes a specified style item from a given style asynchronously.
+    /// </summary>
+    /// <param name="style">The style project item from which the style item will be removed. Cannot be <see langword="null"/>.</param>
+    /// <param name="itemToRemove">The style item to remove from the specified style. Cannot be <see langword="null"/>.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> or <paramref name="itemToRemove"/> is <see langword="null"/>.</exception>
     public static Task RemoveStyleItemAsync(StyleProjectItem style, StyleItem itemToRemove)
     {
       return QueuedTask.Run(() =>
@@ -116,7 +144,13 @@ namespace MapAuthoring.ProSnippets
 
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem.CanUpgrade
     #region How to determine if a style can be upgraded
-    //Pass in the full path to the style file on disk
+
+    /// <summary>
+    /// Determines whether the specified style file can be upgraded.
+    /// </summary>
+    /// <param name="stylePath">The full path to the style file on disk.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the style can be
+    /// upgraded;  otherwise, <see langword="false"/>.</returns>
     public static async Task<bool> CanUpgradeStyleAsync(string stylePath)
     {
       //Add the style to the current project
@@ -131,6 +165,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem.IsReadOnly
     #region How to determine if a style is read-only
     //Pass in the full path to the style file on disk
+    /// <summary>
+    /// Determines whether the specified style file is read-only.
+    /// </summary>
+    /// <param name="stylePath">The full path to the style file on disk.</param>
+    /// <returns>A <see langword="true"/> value if the style file is read-only; otherwise, <see langword="false"/>.</returns>
     public static async Task<bool> IsReadOnly(string stylePath)
     {
       //Add the style to the current project
@@ -145,6 +184,12 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleProjectItem.IsCurrent
     #region How to determine if a style is current
     //Pass in the full path to the style file on disk
+    /// <summary>
+    /// Determines whether the specified style file is compatible with the current version of ArcGIS Pro.
+    /// </summary>
+    /// <param name="stylePath">The full path to the style file on disk.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the style file
+    /// matches the current version of ArcGIS Pro; otherwise, <see langword="false"/>.</returns>
     public static async Task<bool> IsCurrent(string stylePath)
     {
       //Add the style to the current project
@@ -160,6 +205,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.UpgradeStyle(ArcGIS.Desktop.Mapping.StyleProjectItem)
     #region How to upgrade a style
     //Pass in the full path to the style file on disk
+    /// <summary>
+    /// Upgrades a style file to the latest format if it is eligible for an upgrade.
+    /// </summary>
+    /// <param name="stylePath">The full path to the style file on disk.</param>
+    /// <returns><see langword="true"/> if the style file was successfully upgraded; otherwise, <see langword="false"/>. </returns>
     public static async Task<bool> UpgradeStyleAsync(string stylePath)
     {
       bool success = false;
@@ -184,6 +234,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double)
     // cref: ArcGIS.Core.CIM.CIMPointSymbol
     #region How to construct a point symbol of a specific color and size
+    /// <summary>
+    /// Constructs a point symbol with a specified color and size.
+    /// </summary>
+    /// <returns></returns>
     public static async Task ConstructPointSymbolColorSize()
     {
       await QueuedTask.Run(() =>
@@ -195,6 +249,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
     // cref: ArcGIS.Core.CIM.CIMPointSymbol
     #region How to construct a point symbol of a specific color, size and shape
+    /// <summary>
+    /// Constructs a point symbol with a specified color, size, and shape.
+    /// </summary>
+    /// <returns></returns>
     public static async Task ConstructPointSymbolColorSizeShape()
     {
       await QueuedTask.Run(() =>
@@ -208,6 +266,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMMarker
     // cref: ArcGIS.Core.CIM.CIMPointSymbol
     #region How to construct a point symbol from a marker
+    /// <summary>
+    /// Constructs a point symbol using a marker with predefined attributes.
+    /// </summary>
+    /// <returns></returns>
     public static async Task ConstructPointSymbolMarker()
     {
       await QueuedTask.Run(() =>
@@ -222,8 +284,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMMarker
     // cref: ArcGIS.Core.CIM.CIMPointSymbol
     #region How to construct a point symbol from a file on disk
-    public static
-      async Task ConstructPointSymbolFileFromDesk()
+    /// <summary>
+    /// How to construct a point symbol from a file on disk.
+    /// </summary>
+    /// <returns></returns>
+    public static async Task ConstructPointSymbolFileFromDesk()
     {
       //The following file formats can be used to create the marker: DAE, 3DS, FLT, EMF, JPG, PNG, BMP, GIF
       CIMMarker markerFromFile = await QueuedTask.Run(() => SymbolFactory.Instance.ConstructMarkerFromFile(@"C:\Temp\fileName.dae"));
@@ -238,6 +303,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMMarker
     // cref: ArcGIS.Core.CIM.CIMPointSymbol
     #region How to construct a point symbol from a in memory graphic
+    /// <summary>
+    /// How to construct a point symbol from an in-memory graphic.
+    /// </summary>
     public static void ConstructPointSymbolFromMarkerStream()
     {
       //Create a stream for the image
@@ -258,6 +326,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle)
     // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
     #region How to construct a polygon symbol of specific color and fill style
+    /// <summary>
+    /// Constructs a polygon symbol with a specified color and fill style.
+    /// </summary>
     public static void ConstructPolygonSymbolColorFill()
     {
       CIMPolygonSymbol polygonSymbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Solid);
@@ -268,6 +339,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMStroke
     // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
     #region How to construct a polygon symbol of specific color, fill style and outline
+    /// <summary>
+    /// Constructs a polygon symbol with a specified fill color, fill style, and outline.
+    /// </summary>
     public static void ConstructPolygonSymbolColorFillOutline()
     {
       CIMStroke outline = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.BlueRGB, 2.0, SimpleLineStyle.Solid);
@@ -277,6 +351,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
     // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
     #region How to construct a polygon symbol without an outline
+    /// <summary>
+    /// Constructs a polygon symbol with a solid fill and no outline.
+    /// </summary>
+
     public static void ConstructPolygonSymbolNoOutline()
     {
       CIMPolygonSymbol fillWithoutOutline = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB, SimpleFillStyle.Solid, null);
@@ -286,6 +364,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
     // cref: ArcGIS.Core.CIM.CIMLineSymbol
     #region How to construct a line symbol of specific color, size and line style
+    /// <summary>
+    /// Demonstrates how to construct a line symbol with a specific color, size, and style.
+    /// </summary>
     public static void ConstructLineSymbolColorSizeStyle()
     {
       CIMLineSymbol lineSymbol = SymbolFactory.Instance.ConstructLineSymbol(ColorFactory.Instance.BlueRGB, 4.0, SimpleLineStyle.Solid);
@@ -296,6 +377,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMStroke
     // cref: ArcGIS.Core.CIM.CIMLineSymbol
     #region How to construct a line symbol from a stroke
+    /// <summary>
+    /// Demonstrates how to construct a line symbol from a stroke using the ArcGIS Pro SDK.
+    /// </summary>
     public static void ConstructLineSymbolFromStroke()
     {
       CIMStroke stroke = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.BlackRGB, 2.0);
@@ -312,6 +396,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMLineSymbol
     // cref: ArcGIS.Core.CIM.CIMSymbolLayer
     #region How to construct a multilayer line symbol with circle markers on the line ends
+    /// <summary>
+    /// How to construct a multilayer line symbol with circle markers on the line ends.
+    /// </summary>
     public static void ConstructMultilayerLineSymbolCircleMarkersLineEnds()
     {
       QueuedTask.Run(() => {
@@ -339,6 +426,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMLineSymbol
     // cref: ArcGIS.Core.CIM.CIMSymbolLayer
     #region How to construct a multilayer line symbol with an arrow head on the end
+    /// <summary>
+    /// Constructs a multilayer line symbol with an arrowhead at the end of the line.
+    /// </summary>
+
     public static void ConstructMultilayerLineSymbolArrowHeadEnds()
     {
       QueuedTask.Run(() => {
@@ -359,6 +450,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference(ArcGIS.Core.CIM.CIMSymbol)
     // cref: ArcGIS.Core.CIM.CIMSymbolReference
     #region How to get symbol reference from a symbol
+    /// <summary>
+    /// Demonstrates how to create a symbol reference from a polygon symbol.
+    /// </summary>
     public static void GetSymbolReference()
     {
       CIMPolygonSymbol symbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.RedRGB);
@@ -373,6 +467,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.CIMMultiLayerSymbol.SymbolLayers
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
     #region Modify a point symbol created from a character marker 
+    /// <summary>
+    /// Creates and modifies a point symbol based on a character marker.
+    /// </summary>
     public static void GetSymbol()
     {
       //create marker from the Font, char index,size,color
@@ -390,6 +487,10 @@ namespace MapAuthoring.ProSnippets
     #endregion
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.GetAvailableFonts()
     #region Get a List of Available Fonts
+    /// <summary>
+    /// Retrieves a list of available fonts and their associated styles.
+    /// </summary>
+
     public static void GetListOfAvailableFonts()
     {
       QueuedTask.Run(() => {
@@ -408,7 +509,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultFont(System.String)
     // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultFont(System.String, System.String)
     #region Get/Set Default Font
-
+    /// <summary>
+    /// Retrieves the current default font used by the application and sets a new default font.
+    /// </summary>
     public static void GetSetDefaultFont()
     { 
       QueuedTask.Run(() => {
@@ -431,6 +534,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor, System.Double,System.String, System.STring)
     // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMPolygonSymbol, SSystem.Double, System.String)
     #region Construct a Text Symbol With Options
+    /// <summary>
+    /// Demonstrates various ways to construct text symbols using the <see cref="ArcGIS.Desktop.Mapping.SymbolFactory"/>
+    /// class.
+    /// </summary>
+
     public static void ContructTextSymbolWithOptions()
     {
       QueuedTask.Run(() =>
@@ -478,6 +586,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleItem.PatchWidth
     // cref: ArcGIS.Desktop.Mapping.StyleItem.PreviewImage
     #region Create a Swatch for a given symbol
+    /// <summary>
+    /// Creates a swatch image for a given symbol.
+    /// </summary>
+
     public static Task CreateSymbolSwatch()
     {
         return QueuedTask.Run(() => {
@@ -499,6 +611,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.SVG
     // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.PNG
     #region Convert Point Symbol to SVG
+    /// <summary>
+    /// Creates an SVG image representation of a point symbol and saves it to a temporary file.
+    /// </summary>
+
     public static void CreateImageOfPointSymbol()
     {
       QueuedTask.Run( () => {
@@ -546,6 +662,9 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.OutputImageFormat
     // cref: ArcGIS.Desktop.Mapping.OutputImageFormat.PNG
     #region Convert Point Symbol to PNG
+    /// <summary>
+    /// Converts a point symbol to a PNG image and saves it to a file.
+    /// </summary>
     public static void ConvertPointSymbolToPNG()
     {
       QueuedTask.Run(() => {  //Create a point symbol
@@ -593,7 +712,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CanLookupSymbol()
     // cref: ArcGIS.Desktop.Mapping.FeatureLayer.LookupSymbol(System.Int64, ArcGIS.Desktop.Mapping.MapView)
     #region Lookup Symbol
-
+    /// <summary>
+    /// Performs a symbol lookup for the first selected feature in the specified feature layer.
+    /// </summary>
+    /// <param name="featureLayer">The feature layer from which the selection and symbol lookup will be performed. Cannot be null.</param>
     public static void SymbolLookup(FeatureLayer featureLayer)
     {
       QueuedTask.Run(() => {//Get the selection
@@ -618,6 +740,12 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.LookupItem(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for a specific item in a style
+    /// <summary>
+    ///  How to search for a specific point symbol in a style. 
+    /// </summary>
+    /// <param name="style"></param>
+    /// <param name="key"></param>
+    /// <exception cref="System.ArgumentNullException"></exception>
     public static Task<SymbolStyleItem> GetSymbolFromStyleAsync(StyleProjectItem style, string key)
     {
       return QueuedTask.Run(() =>
@@ -635,6 +763,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for point symbols in a style
+    /// <summary>
+    /// Searches for point symbols in the specified style based on the provided search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter point symbols. If <see langword="null"/> or empty, all point symbols are
+    /// returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="ArcGIS.Desktop.Mapping.SymbolStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<SymbolStyleItem>> GetPointSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -661,6 +798,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
     #region How to search for polygon symbols in a style
+    /// <summary>
+    /// Asynchronously retrieves a list of polygon symbols from the specified style based on a search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter polygon symbols. If <see langword="null"/> or empty, all polygon symbols are
+    /// returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="SymbolStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static async Task<IList<SymbolStyleItem>> GetPolygonSymbolsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -674,6 +820,16 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchColors(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.ColorStyleItem
     #region How to search for colors in a style
+    /// <summary>
+    /// Asynchronously retrieves a list of color style items from the specified style project item that match the given
+    /// search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The string used to filter color style items. If <paramref name="searchString"/> is empty or <see
+    /// langword="null"/>,  all color style items in the style project item are returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of  <see
+    /// cref="ArcGIS.Desktop.Mapping.ColorStyleItem"/> objects that match the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static async Task<IList<ColorStyleItem>> GetColorsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -687,6 +843,18 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchColorRamps(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem
     #region How to search for color ramps in a style
+    /// <summary>
+    /// Asynchronously retrieves a list of color ramp style items from the specified style project item that match the
+    /// given search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. This can represent predefined styles such as  "ColorBrewer Schemes
+    /// (RGB)" or "ArcGIS 2D".</param>
+    /// <param name="searchString">The search string used to filter color ramp style items. Examples include  "Spectral (7 Classes)", "Pastel 1 (3
+    /// Classes)", or "Red-Gray (10 Classes)".</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of  <see
+    /// cref="ArcGIS.Desktop.Mapping.ColorRampStyleItem"/> objects that match the search criteria. If no matching items
+    /// are found, the list will be empty.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static async Task<IList<ColorRampStyleItem>> GetColorRampsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       //StyleProjectItem can be "ColorBrewer Schemes (RGB)", "ArcGIS 2D"...
@@ -702,6 +870,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchNorthArrows(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.NorthArrowStyleItem
     #region How to search for north arrows in a style
+    /// <summary>
+    /// Retrieves a list of north arrow style items from the specified style based on a search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter north arrow style items. If <see langword="null"/> or empty, all north arrow
+    /// items are returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="NorthArrowStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<NorthArrowStyleItem>> GetNorthArrowsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -715,6 +892,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchScaleBars(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.ScaleBarStyleItem
     #region How to search for scale bars in a style
+    /// <summary>
+    /// Retrieves a list of scale bar style items from the specified style based on the provided search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter scale bar style items. If <see langword="null"/> or empty, all scale bar items
+    /// are returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="ScaleBarStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<ScaleBarStyleItem>> GetScaleBarsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -728,6 +914,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchLabelPlacements(ArcGIS.Desktop.Mapping.StyleProjectItem,ArcGIS.Desktop.Mapping.StyleItemType,System.String)
     // cref: ArcGIS.Desktop.Mapping.LabelPlacementStyleItem
     #region How to search for label placements in a style
+    /// <summary>
+    /// Searches for label placement style items in the specified style project item that match the given search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter label placement style items. If <see langword="null"/> or empty, all label
+    /// placements are returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="LabelPlacementStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<LabelPlacementStyleItem>> GetLabelPlacementsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -741,6 +936,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchLegends(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.LegendStyleItem
     #region How to search for legends in a style
+    /// <summary>
+    /// Searches for legend style items in the specified style project item that match the given search string.
+    /// </summary>
+    /// <param name="style">The style project item to search within. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The string used to filter legend style items. If <see langword="null"/> or empty, all legend style items are
+    /// returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="LegendStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<LegendStyleItem>> GetLegendFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -753,6 +957,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchLegendItems(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.LegendItemStyleItem
     #region How to search for legend items in a style
+    /// <summary>
+    /// Asynchronously retrieves a list of legend items from the specified style based on a search string.
+    /// </summary>
+    /// <param name="style">The style project item to search for legend items. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter legend items. If <see langword="null"/> or empty, all legend items are
+    /// returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="ArcGIS.Desktop.Mapping.LegendItemStyleItem"/> objects matching the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<LegendItemStyleItem>> GetLegendItemsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -765,6 +978,16 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchGrids(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.GridStyleItem
     #region How to search for grids in a style
+    /// <summary>
+    /// Asynchronously retrieves a list of grid style items from the specified style project item that match the given
+    /// search string.
+    /// </summary>
+    /// <param name="style">The style project item to search for grid style items. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter grid style items. If <see langword="null"/> or empty, all grid style items are
+    /// returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="GridStyleItem"/> objects that match the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<GridStyleItem>> GetGridsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -777,6 +1000,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchMapSurrounds(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.MapSurroundStyleItem
     #region How to search for map surrounds in a style
+    /// <summary>
+    /// Searches for map surround style items in the specified style project item that match the given search string.
+    /// </summary>
+    /// <param name="style">The style project item to search. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter map surround style items. If <see langword="null"/> or empty, all items are
+    /// returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="MapSurroundStyleItem"/> objects that match the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<MapSurroundStyleItem>> GetMapSurroundsFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -789,6 +1021,15 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchTableFrames(ArcGIS.Desktop.Mapping.StyleProjectItem,System.String)
     // cref: ArcGIS.Desktop.Mapping.TableFrameStyleItem
     #region How to search for table frames in a style
+    /// <summary>
+    /// Searches for table frame style items within the specified style project item that match the given search string.
+    /// </summary>
+    /// <param name="style">The style project item to search. Cannot be <see langword="null"/>.</param>
+    /// <param name="searchString">The search string used to filter table frame style items. If <see langword="null"/> or empty, all table frame
+    /// style items are returned.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see
+    /// cref="TableFrameStyleItem"/> objects that match the search criteria.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="style"/> is <see langword="null"/>.</exception>
     public static Task<IList<TableFrameStyleItem>> GetTableFramesFromStyleAsync(StyleProjectItem style, string searchString)
     {
       if (style == null)
@@ -819,7 +1060,13 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.FeatureLayer.UsesRealWorldSymbolSizes
     // cref: ArcGIS.Core.CIM.CIMSimpleRenderer
     #region How to set symbol for a feature layer symbolized with simple renderer
-
+    /// <summary>
+    /// Updates the symbology of a feature layer by applying a specified symbol to its simple renderer.
+    /// </summary>
+    /// <param name="ftrLayer">The feature layer whose symbology will be updated. Cannot be <see langword="null"/>.</param>
+    /// <param name="symbolToApply">The symbol to apply to the feature layer's simple renderer. Cannot be <see langword="null"/>.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="ftrLayer"/> or <paramref name="symbolToApply"/> is <see langword="null"/>.</exception>
     public static Task SetFeatureLayerSymbolAsync(FeatureLayer ftrLayer, CIMSymbol symbolToApply)
     {
       if (ftrLayer == null || symbolToApply == null)
@@ -854,7 +1101,13 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetRealWorldUnits
     #region How to apply a symbol from style to a feature layer
-
+    /// <summary>
+    /// Updates the symbol of a feature layer using a specified symbol from a style item.
+    /// </summary>
+    /// <param name="ftrLayer">The feature layer whose symbol will be updated. Cannot be <see langword="null"/>.</param>
+    /// <param name="symbolItem">The symbol style item containing the symbol to apply. Cannot be <see langword="null"/>.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="ftrLayer"/> or <paramref name="symbolItem"/> is <see langword="null"/>.</exception>
     public static Task SetFeatureLayerSymbolFromStyleItemAsync(
                FeatureLayer ftrLayer, SymbolStyleItem symbolItem)
     {
@@ -891,6 +1144,12 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetRealWorldUnits
     #region How to apply a point symbol from a style to a feature layer
+    /// <summary>
+    /// Applies a point symbol from a style to the specified feature layer.
+    /// </summary>
+    /// <param name="featureLayer">The feature layer to which the symbol will be applied. Must be a point feature layer.</param>
+    /// <param name="symbolName">The name of the symbol to search for and apply. Cannot be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public static Task ApplySymbolToFeatureLayerAsync(FeatureLayer featureLayer, string symbolName)
     {
       return QueuedTask.Run(async () =>
@@ -932,7 +1191,13 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference
     // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetRealWorldUnits
     #region How to apply a color ramp from a style to a feature layer
-
+    /// <summary>
+    /// Applies a specified color ramp from a style to a feature layer using the provided fields.
+    /// </summary>
+    /// <param name="featureLayer">The feature layer to which the color ramp will be applied. Must not be null.</param>
+    /// <param name="fields">A list of field names used to define unique values for the renderer. Must not be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation. The task completes when the color ramp is applied to the
+    /// feature layer.</returns>
     public static async Task ApplyColorRampAsync(FeatureLayer featureLayer, List<string> fields)
     {
 
@@ -952,7 +1217,6 @@ namespace MapAuthoring.ProSnippets
             renderer = featureLayer?.CreateRenderer(rendererDef);
             featureLayer?.SetRenderer(renderer);
         });
-
     }
     #endregion
     }
