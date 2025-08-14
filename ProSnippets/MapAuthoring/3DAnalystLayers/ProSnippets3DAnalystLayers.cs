@@ -18,10 +18,12 @@
 */
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data.Analyst3D;
+using ArcGIS.Core.Data.UtilityNetwork.Trace;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,19 +32,20 @@ using System.Threading.Tasks;
 
 namespace MapAuthoring.ProSnippets
 {
-  internal class ProSnippets3DAnalystLayers
+  public static class ProSnippets3DAnalystLayers
   {
     #region ProSnippet Group: Layer Methods for TIN, Terrain, LasDataset
     #endregion
-
-    public void GetLayers()
+    // cref: ArcGIS.Desktop.Mapping.TinLayer
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayer
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer
+    #region Retrieve layers
+    /// <summary>
+    /// Retrieves the first TIN, Terrain, and LAS dataset layers from the active map.
+    /// </summary>
+    public static void GetLayers()
     {
-      // cref: ArcGIS.Desktop.Mapping.TinLayer
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayer
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer
-      #region Retrieve layers
-
       // find the first TIN layer
       var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
 
@@ -54,115 +57,134 @@ namespace MapAuthoring.ProSnippets
 
       // find the set of surface layers
       var surfacelayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<SurfaceLayer>();
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TinLayer.GetTinDataset
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition.GetExtent
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition.GetSpatialReference
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.GetTerrain
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetExtent
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetSpatialReference
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.GetLasDataset
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition.GetExtent
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition.GetSpatialReference
-      #region Retrieve dataset objects
-
-      //Must be on the QueuedTask.Run()
-
-      Envelope extent;
-      SpatialReference sr;
-      using (var tin = tinLayer.GetTinDataset())
-      {
-        using (var tinDef = tin.GetDefinition())
-        {
-          extent = tinDef.GetExtent();
-          sr = tinDef.GetSpatialReference();
-        }
-      }
-
-      using (var terrain = terrainLayer.GetTerrain())
-      {
-        using (var terrainDef = terrain.GetDefinition())
-        {
-          extent = terrainDef.GetExtent();
-          sr = terrainDef.GetSpatialReference();
-        }
-      }
-
-      using (var lasDataset = lasDatasetLayer.GetLasDataset())
-      {
-        using (var lasDatasetDef = lasDataset.GetDefinition())
-        {
-          extent = lasDatasetDef.GetExtent();
-          sr = lasDatasetDef.GetSpatialReference();
-        }
-      }
-      #endregion
     }
+    #endregion
 
-    public void SurfaceLayerCreation()
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.GetTinDataset
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetDefinition
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition.GetExtent
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition.GetSpatialReference
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayer.GetTerrain
+    // cref: ArcGIS.Core.Data.Analyst3D.Terrain
+    // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDefinition
+    // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition
+    // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetExtent
+    // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetSpatialReference
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.GetLasDataset
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetDefinition
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition.GetExtent
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition.GetSpatialReference
+    #region Retrieve dataset objects
+    /// <summary>
+    /// Retrieves the dataset, the extent and spatial reference, from the specified 3D layers.
+    /// </summary>
+    /// <param name="tinLayer">The <see cref="TinLayer"/> from which the spatial extent and spatial reference will be retrieved.</param>
+    /// <param name="terrainLayer">The <see cref="TerrainLayer"/> from which the spatial extent and spatial reference will be retrieved.</param>
+    /// <param name="lasDatasetLayer">The <see cref="LasDatasetLayer"/> from which the spatial extent and spatial reference will be retrieved.</param>
+    public static void GetDatasetObjects(TinLayer tinLayer, TerrainLayer terrainLayer, LasDatasetLayer lasDatasetLayer)
     {
-      Map map = null;
+      QueuedTask.Run(() =>
+      {
+        using (var tin = tinLayer.GetTinDataset())
+        {
+          using (var tinDef = tin.GetDefinition())
+          {
+            Envelope extent = tinDef.GetExtent();
+            SpatialReference sr = tinDef.GetSpatialReference();
+          }
+        }
 
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.#ctor(System.Uri)
-      // cref: ArcGIS.Desktop.Mapping.TinLayer
-      #region Create a TinLayer
-      //Must be on the QueuedTask.Run()
+        using (var terrain = terrainLayer.GetTerrain())
+        {
+          using (var terrainDef = terrain.GetDefinition())
+          {
+            Envelope extent = terrainDef.GetExtent();
+            SpatialReference sr = terrainDef.GetSpatialReference();
+          }
+        }
 
+        using (var lasDataset = lasDatasetLayer.GetLasDataset())
+        {
+          using (var lasDatasetDef = lasDataset.GetDefinition())
+          {
+            Envelope extent = lasDatasetDef.GetExtent();
+            SpatialReference sr = lasDatasetDef.GetSpatialReference();
+          }
+        }
+      });
+    }
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.TinLayer
+    #region Create a TinLayer
+    /// <summary>
+    /// Creates a TIN (Triangulated Irregular Network) layer and adds it to the specified map.
+    /// </summary>
+    /// <param name="map">The map to which the TIN layer will be added. Cannot be null.</param>
+    public static void SurfaceLayerCreation(Map map)
+    {
       string tinPath = @"d:\Data\Tin\TinDataset";
       var tinURI = new Uri(tinPath);
 
       var tinCP = new TinLayerCreationParams(tinURI);
       tinCP.Name = "My TIN Layer";
       tinCP.IsVisible = false;
+      QueuedTask.Run(() =>
+      {
+        //Create the layer to the TIN
+        var tinLayer = LayerFactory.Instance.CreateLayer<TinLayer>(tinCP, map);
+      });
+    }
+    #endregion
 
-      //Create the layer to the TIN
-      var tinLayer = LayerFactory.Instance.CreateLayer<TinLayer>(tinCP, map);
-      #endregion
 
-      ArcGIS.Core.Data.Analyst3D.TinDataset tinDataset = null;
-
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
-      // cref: ArcGIS.Desktop.Mapping.TinLayer
-      #region Create a TinLayer from a dataset
-      //Must be on the QueuedTask.Run()
-
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
+    // cref: ArcGIS.Desktop.Mapping.TinLayer
+    #region Create a TinLayer from a dataset
+    /// <summary>
+    /// Creates a TIN layer from the specified TIN dataset and adds it to the given map.
+    /// </summary>
+    /// <param name="map">The map to which the TIN layer will be added. Cannot be null.</param>
+    /// <param name="tinDataset">The TIN dataset used to create the TIN layer. Cannot be null.</param>
+    public static void CreateTinLayerFromDataset(Map map, ArcGIS.Core.Data.Analyst3D.TinDataset tinDataset)
+    {
       var tinCP_ds = new TinLayerCreationParams(tinDataset);
       tinCP_ds.Name = "My TIN Layer";
       tinCP_ds.IsVisible = false;
 
       //Create the layer to the TIN
+      QueuedTask.Run(() => { var tinLayer_ds = LayerFactory.Instance.CreateLayer<TinLayer>(tinCP_ds, map); });
+    }
 
-      var tinLayer_ds = LayerFactory.Instance.CreateLayer<TinLayer>(tinCP_ds, map);
-      #endregion
 
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
-      // cref: ArcGIS.Desktop.Mapping.TinLayer
-      // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.RendererDefinitions
-      // cref: ArcGIS.Desktop.Mapping.TinRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.ClassificationMethod
-      #region Create a TinLayer with renderers
-      //Must be on the QueuedTask.Run()
+    #endregion
 
+    // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
+    // cref: ArcGIS.Desktop.Mapping.TinLayer
+    // cref: ArcGIS.Desktop.Mapping.TinLayerCreationParams.RendererDefinitions
+    // cref: ArcGIS.Desktop.Mapping.TinRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.ClassificationMethod
+    #region Create a TinLayer with renderers
+    /// <summary>
+    /// Creates a TIN (Triangulated Irregular Network) layer with specified renderers and adds it to the active map.
+    /// </summary>
+    /// <param name="tinDataset">The TIN dataset used to create the layer. This dataset must be valid and accessible.</param>
+    public static void CreateTinLayerWithRenderer(ArcGIS.Core.Data.Analyst3D.TinDataset tinDataset)
+    {
       var tinCP_renderers = new TinLayerCreationParams(tinDataset);
       tinCP_renderers.Name = "My TIN layer";
       tinCP_renderers.IsVisible = true;
@@ -182,64 +204,87 @@ namespace MapAuthoring.ProSnippets
 
       // assign the dictionary to the creation params
       tinCP_renderers.RendererDefinitions = rendererDict;
+      QueuedTask.Run(() =>
+      {       // create the layer
+        var tinLayer_rd = LayerFactory.Instance.CreateLayer<TinLayer>(tinCP_renderers, MapView.Active.Map);
+      });
+    }
+    #endregion
 
-      // create the layer
-      var tinLayer_rd = LayerFactory.Instance.CreateLayer<TinLayer>(tinCP_renderers, MapView.Active.Map);
-      #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayer
+    #region Create a TerrainLayer
+    /// <summary>
+    /// Creates a terrain layer in the specified map using predefined parameters.
+    /// </summary>
+    /// <param name="map">The map to which the terrain layer will be added. Cannot be null.</param>
+    public static void CreateTerrainLayer(Map map)
+    {
+      QueuedTask.Run(() =>
+      {
+        string terrainPath = @"d:\Data\Terrain\filegdb_Containing_A_Terrain.gdb\FeatureDataset\Terrain_name";
+        var terrainURI = new Uri(terrainPath);
+
+        var terrainCP = new TerrainLayerCreationParams(terrainURI);
+        terrainCP.Name = "My Terrain Layer";
+        terrainCP.IsVisible = false;
+        QueuedTask.Run(() =>
+        {
+          //Create the layer to the terrain
+          var terrainLayer = LayerFactory.Instance.CreateLayer<TerrainLayer>(terrainCP, map);
+        });
+      });
+    }
+    #endregion
 
 
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.#ctor(System.Uri)
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayer
-      #region Create a TerrainLayer
-      //Must be on the QueuedTask.Run()
-
-      string terrainPath = @"d:\Data\Terrain\filegdb_Containing_A_Terrain.gdb\FeatureDataset\Terrain_name";
-      var terrainURI = new Uri(terrainPath);
-
-      var terrainCP = new TerrainLayerCreationParams(terrainURI);
-      terrainCP.Name = "My Terrain Layer";
-      terrainCP.IsVisible = false;
-
-      //Create the layer to the terrain
-      var terrainLayer = LayerFactory.Instance.CreateLayer<TerrainLayer>(terrainCP, map);
-
-      #endregion
-
-      ArcGIS.Core.Data.Analyst3D.Terrain terrain = null;
-
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.Terrain)
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayer
-      #region Create a TerrainLayer from a dataset
-      //Must be on the QueuedTask.Run()
-
+    // cref: ArcGIS.Core.Data.Analyst3D.Terrain
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.Terrain)
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayer
+    #region Create a TerrainLayer from a dataset
+    /// <summary>
+    /// Creates a terrain layer from the specified terrain dataset.
+    /// </summary>
+    /// <param name="terrain">The terrain dataset used to create the terrain layer. Cannot be null.</param>
+    public static void CreateTerrainLayerFromDataset(ArcGIS.Core.Data.Analyst3D.Terrain terrain, Map map)
+    {
       var terrainCP_ds = new TerrainLayerCreationParams(terrain);
       terrainCP_ds.Name = "My Terrain Layer";
       terrainCP_ds.IsVisible = true;
 
       //Create the layer to the terrain
-      var terrainLayer_ds = LayerFactory.Instance.CreateLayer<TerrainLayer>(terrainCP_ds, map);
-      #endregion
+      QueuedTask.Run(() =>
+      {
+        var terrainLayer_ds = LayerFactory.Instance.CreateLayer<TerrainLayer>(terrainCP_ds, map);
+      });
+    }
+    #endregion
 
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.Terrain)
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayer
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.RendererDefinitions
-      // cref: ArcGIS.Desktop.Mapping.TinRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.ClassificationMethod
-      // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition.#ctor
-      #region Create a TerrainLayer with renderers
-      //Must be on the QueuedTask.Run()
-
+    // cref: ArcGIS.Core.Data.Analyst3D.Terrain
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.Terrain)
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayer
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayerCreationParams.RendererDefinitions
+    // cref: ArcGIS.Desktop.Mapping.TinRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.ClassificationMethod
+    // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition.#ctor
+    #region Create a TerrainLayer with renderers
+    /// <summary>
+    /// Creates a terrain layer with predefined renderers and adds it to the specified map.
+    /// </summary>
+    /// <param name="terrain">The terrain data source used to create the terrain layer.</param>
+    /// <param name="map">The map to which the terrain layer will be added.</param>
+    public static void CreateTerrainaLayerWithRenderers(ArcGIS.Core.Data.Analyst3D.Terrain terrain, Map map)
+    {
       var terrainCP_renderers = new TerrainLayerCreationParams(terrain);
       terrainCP_renderers.Name = "My LAS Layer";
       terrainCP_renderers.IsVisible = true;
@@ -263,63 +308,81 @@ namespace MapAuthoring.ProSnippets
 
       // assign dictionary to creation params
       terrainCP_renderers.RendererDefinitions = t_dict;
+      QueuedTask.Run(() =>
+      {
+        //Create the layer to the terrain
+        var terrainLayer_rd = LayerFactory.Instance.CreateLayer<TerrainLayer>(terrainCP_renderers, map);
+      });
+    }
+    #endregion
 
-      //Create the layer to the terrain
-      var terrainLayer_rd = LayerFactory.Instance.CreateLayer<TerrainLayer>(terrainCP_renderers, map);
-      #endregion
 
-
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.#ctor(System.Uri)
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
-      #region Create a LasDatasetLayer
-      //Must be on the QueuedTask.Run()
-
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
+    #region Create a LasDatasetLayer
+    /// <summary>
+    /// Creates a LAS dataset layer and adds it to the specified map.
+    /// </summary>
+    /// <param name="map">The map to which the LAS dataset layer will be added. Cannot be null.</param>
+    public static void CreateLasDatasetLayer(Map map)
+    {
       string lasPath = @"d:\Data\LASDataset.lasd";
       var lasURI = new Uri(lasPath);
 
       var lasCP = new LasDatasetLayerCreationParams(lasURI);
       lasCP.Name = "My LAS Layer";
       lasCP.IsVisible = false;
+      QueuedTask.Run(() =>
+      {
+        //Create the layer to the LAS dataset
+        var lasDatasetLayer = LayerFactory.Instance.CreateLayer<LasDatasetLayer>(lasCP, map);
+      });
+    }
+    #endregion
 
-      //Create the layer to the LAS dataset
-      var lasDatasetLayer = LayerFactory.Instance.CreateLayer<LasDatasetLayer>(lasCP, map);
-
-      #endregion
-
-      ArcGIS.Core.Data.Analyst3D.LasDataset lasDataset = null;
-
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.LasDataset)
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
-      #region Create a LasDatasetLayer from a LasDataset
-      //Must be on the QueuedTask.Run()
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.LasDataset)
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
+    #region Create a LasDatasetLayer from a LasDataset
+    /// <summary>
+    /// Creates a new LAS dataset layer from the specified LAS dataset and adds it to the given map.
+    /// </summary>
+    /// <param name="map">The map to which the LAS dataset layer will be added. Cannot be null.</param>
+    /// <param name="lasDataset">The LAS dataset used to create the layer. Cannot be null.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="lasDataset"/> is null.</exception>
+    public static void CreateLasDatasetLayerFromDataset(Map map, ArcGIS.Core.Data.Analyst3D.LasDataset lasDataset)
+    {
+      if (lasDataset == null)
+        throw new ArgumentNullException(nameof(lasDataset));
 
       var lasCP_ds = new LasDatasetLayerCreationParams(lasDataset);
       lasCP_ds.Name = "My LAS Layer";
       lasCP_ds.IsVisible = false;
+      QueuedTask.Run(() =>
+      {
+        //Create the layer to the LAS dataset
+        var lasDatasetLayer_ds = LayerFactory.Instance.CreateLayer<LasDatasetLayer>(lasCP_ds, map);
+      });
+    }
+    #endregion
 
-      //Create the layer to the LAS dataset
-      var lasDatasetLayer_ds = LayerFactory.Instance.CreateLayer<LasDatasetLayer>(lasCP_ds, map);
 
-      #endregion
-
-
-      // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.LasDataset)
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.RendererDefinitions
-      // cref: ArcGIS.Desktop.Mapping.TinRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion
-      // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion.#ctor
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
-      #region Create a LasDatasetLayer with renderers
-      //Must be on the QueuedTask.Run()
-
+    // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.#ctor(ArcGIS.Core.Data.Analyst3D.LasDataset)
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayerCreationParams.RendererDefinitions
+    // cref: ArcGIS.Desktop.Mapping.TinRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion
+    // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion.#ctor
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
+    #region Create a LasDatasetLayer with renderers
+    public static void CreateLasDatasetLayerWithRenderers(ArcGIS.Core.Data.Analyst3D.LasDataset lasDataset, Map map)
+    {
       var lasCP_renderers = new LasDatasetLayerCreationParams(lasDataset);
       lasCP_renderers.Name = "My LAS Layer";
       lasCP_renderers.IsVisible = false;
@@ -339,176 +402,213 @@ namespace MapAuthoring.ProSnippets
 
       // assign dictionary to creation params
       lasCP_renderers.RendererDefinitions = l_dict;
-
-      //Create the layer to the LAS dataset
-      var lasDatasetLayer_rd = LayerFactory.Instance.CreateLayer<LasDatasetLayer>(lasCP_renderers, map);
-
-      #endregion
+      QueuedTask.Run(() =>
+      {
+        //Create the layer to the LAS dataset
+        var lasDatasetLayer_rd = LayerFactory.Instance.CreateLayer<LasDatasetLayer>(lasCP_renderers, map);
+      });
     }
+    #endregion
 
     #region ProSnippet Group: Renderers for TinLayer, TerrainLayer, LasDatasetLayer
     #endregion
-
-    public void SurfaceLayerRenderers()
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.GetRenderers
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.GetRenderersAsDictionary
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Get Renderers
+    /// <summary>
+    /// Retrieves the renderers associated with the specified <see cref="SurfaceLayer"/>.
+    /// </summary>
+    /// <param name="surfaceLayer">The <see cref="SurfaceLayer"/> for which the renderers are to be retrieved.  This parameter cannot be <see
+    /// langword="null"/>.</param>
+    public static void GetRenderers(SurfaceLayer surfaceLayer)
     {
-      SurfaceLayer surfaceLayer = null;
+      QueuedTask.Run(() => {
+        // get the list of renderers
+        IReadOnlyList<CIMTinRenderer> renderers = surfaceLayer.GetRenderers();
 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.GetRenderers
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.GetRenderersAsDictionary
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Get Renderers
-      // get the list of renderers
-      IReadOnlyList<CIMTinRenderer> renderers = surfaceLayer.GetRenderers();
+        // get the renderers as a dictionary
+        Dictionary<SurfaceRendererTarget, CIMTinRenderer> dict = surfaceLayer.GetRenderersAsDictionary();
+      });
+    }
+    #endregion
 
-      // get the renderers as a dictionary
-      Dictionary<SurfaceRendererTarget, CIMTinRenderer> dict = surfaceLayer.GetRenderersAsDictionary();
-      #endregion
-
-      CIMPointSymbol nodeSymbol = null;
-      // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Label
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Description
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinNodeRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      // cref: ArcGIS.Desktop.Mapping.TinLayer
-      #region Simple Node Renderer
+    // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinNodeRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Label
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Description
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinNodeRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    // cref: ArcGIS.Desktop.Mapping.TinLayer
+    #region Simple Node Renderer
+    /// <summary>
+    /// Creates and applies a simple node renderer to the first TIN layer in the active map.
+    /// </summary>
+    /// <param name="nodeSymbol">The <see cref="CIMPointSymbol"/> used to define the appearance of the nodes in the renderer.</param>
+    public static void CreateSimpleNodeRenderer(TinLayer tinLayer, CIMPointSymbol nodeSymbol)
+    {
       // applies to TIN layers only
-
       var nodeRendererDef = new TinNodeRendererDefinition();
       nodeRendererDef.Description = "Nodes";
       nodeRendererDef.Label = "Nodes";
       nodeRendererDef.SymbolTemplate = nodeSymbol.MakeSymbolReference();
 
-      var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
-      if (tinLayer == null)
-        return;
+      QueuedTask.Run(() => {
+        if (tinLayer.CanCreateRenderer(nodeRendererDef))
+        {
+          CIMTinRenderer renderer = tinLayer.CreateRenderer(nodeRendererDef);
+          if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
+            tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
+        }
+      });
+    }
+    #endregion
 
-      if (tinLayer.CanCreateRenderer(nodeRendererDef))
-      {
-        CIMTinRenderer renderer = tinLayer.CreateRenderer(nodeRendererDef);
-        if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
-          tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.BreakCount
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinNodeElevationRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Elevation Node Renderer - Equal Breaks
+    // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.BreakCount
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinNodeElevationRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Elevation Node Renderer - Equal Breaks
+    /// <summary>
+    /// Configures and applies an elevation node renderer with equal breaks to the specified TIN layer.
+    /// </summary>
+    /// <param name="tinLayer">The <see cref="TinLayer"> to which the renderer will be applied. Must be a valid TIN layer.</param>
+    /// <param name="nodeSymbol">The <see cref="CIMPointSymbol"> used to symbolize the nodes in the renderer. Cannot be <see langword="null"/>.</param>
+    public static void CreateEqualBreaksNodeRenderer(TinLayer tinLayer, CIMPointSymbol nodeSymbol)
+    {
       // applies to TIN layers only
-
       var equalBreaksNodeRendererDef = new TinNodeClassBreaksRendererDefinition();
       equalBreaksNodeRendererDef.BreakCount = 7;
+      QueuedTask.Run(() => {
+        if (tinLayer.CanCreateRenderer(equalBreaksNodeRendererDef))
+        {
+          CIMTinRenderer renderer = tinLayer.CreateRenderer(equalBreaksNodeRendererDef);
+          if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
+            tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
+        }
+      });
+    }
+    #endregion
 
-      if (tinLayer.CanCreateRenderer(equalBreaksNodeRendererDef))
-      {
-        CIMTinRenderer renderer = tinLayer.CreateRenderer(equalBreaksNodeRendererDef);
-        if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
-          tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
-      }
-
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition
-      // cref: ArcGIS.Core.CIM.ClassificationMethod
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinNodeElevationRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Elevation Node Renderer - Defined Interval
+    // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition
+    // cref: ArcGIS.Core.CIM.ClassificationMethod
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinNodeElevationRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Elevation Node Renderer - Defined Interval
+    /// <summary>
+    /// Configures and applies a defined interval node renderer to the specified TIN layer.
+    /// </summary>
+    /// <param name="tinLayer">The TIN layer to which the renderer will be applied. Must support the creation and application of the specified
+    /// renderer.</param>
+    /// <param name="nodeSymbol">The symbol template used for rendering nodes. This symbol defines the visual appearance of the nodes in the
+    /// renderer.</param>
+    public static void CreateDefinedIntervalNodeRenderer(TinLayer tinLayer, CIMPointSymbol nodeSymbol)
+    {
       // applies to TIN layers only
-
       var defiendIntervalNodeRendererDef = new TinNodeClassBreaksRendererDefinition();
       defiendIntervalNodeRendererDef.ClassificationMethod = ClassificationMethod.DefinedInterval;
       defiendIntervalNodeRendererDef.IntervalSize = 4;
       defiendIntervalNodeRendererDef.SymbolTemplate = nodeSymbol.MakeSymbolReference();
+      QueuedTask.Run( () => {
+        if (tinLayer.CanCreateRenderer(defiendIntervalNodeRendererDef))
+        {
+          CIMTinRenderer renderer = tinLayer.CreateRenderer(defiendIntervalNodeRendererDef);
+          if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
+            tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
+        }
+      });
+    }
+    #endregion
 
-      if (tinLayer.CanCreateRenderer(defiendIntervalNodeRendererDef))
-      {
-        CIMTinRenderer renderer = tinLayer.CreateRenderer(defiendIntervalNodeRendererDef);
-        if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
-          tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition
-      // cref: ArcGIS.Core.CIM.ClassificationMethod
-      // cref: ArcGIS.Desktop.Mapping.StandardDeviationInterval
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinNodeElevationRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Elevation Node Renderer - Standard Deviation
+    // cref: ArcGIS.Desktop.Mapping.TinNodeClassBreaksRendererDefinition
+    // cref: ArcGIS.Core.CIM.ClassificationMethod
+    // cref: ArcGIS.Desktop.Mapping.StandardDeviationInterval
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinNodeElevationRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Elevation Node Renderer - Standard Deviation
+    /// <summary>
+    /// Configures and applies a standard deviation-based elevation node renderer to the specified TIN layer.
+    /// </summary>
+    /// <param name="tinLayer">The TIN layer to which the standard deviation node renderer will be applied. Must be a valid TIN layer.</param>
+    public static void CreateStandardDeviationNodeRenderer(TinLayer tinLayer)
+    {
       // applies to TIN layers only
-
       var stdDevNodeRendererDef = new TinNodeClassBreaksRendererDefinition();
       stdDevNodeRendererDef.ClassificationMethod = ClassificationMethod.StandardDeviation;
       stdDevNodeRendererDef.DeviationInterval = StandardDeviationInterval.OneHalf;
       stdDevNodeRendererDef.ColorRamp = ColorFactory.Instance.GetColorRamp("Cyan to Purple");
+      QueuedTask.Run(() => {
+        if (tinLayer.CanCreateRenderer(stdDevNodeRendererDef))
+        {
+          CIMTinRenderer renderer = tinLayer.CreateRenderer(stdDevNodeRendererDef);
+          if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
+            tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
+        }
+      });
+    }
+    #endregion
 
-      if (tinLayer.CanCreateRenderer(stdDevNodeRendererDef))
-      {
-        CIMTinRenderer renderer = tinLayer.CreateRenderer(stdDevNodeRendererDef);
-        if (tinLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
-          tinLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
-      }
-
-      #endregion
-
-      CIMLineSymbol lineSymbol = null;
-      // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion
-      // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Description
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Label
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinEdgeRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Simple Edge Renderer
+    // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion
+    // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Description
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.Label
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinEdgeRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Simple Edge Renderer
+    /// <summary>
+    /// Configures and applies a simple edge renderer to the specified surface layer.
+    /// </summary>
+    /// <param name="surfaceLayer">The surface layer to which the edge renderer will be applied. Must be a TIN or LAS dataset layer.</param>
+    /// <param name="lineSymbol">The line symbol used to define the appearance of the edges in the renderer.</param>
+    public static void CreateSimpleEdgeRenderer(SurfaceLayer surfaceLayer, CIMLineSymbol lineSymbol)
+    {
       // applies to TIN or LAS dataset layers only
-
       var edgeRendererDef = new TinEdgeRendererDefintion();
       edgeRendererDef.Description = "Edges";
       edgeRendererDef.Label = "Edges";
       edgeRendererDef.SymbolTemplate = lineSymbol.MakeSymbolReference();
-
-      if (surfaceLayer.CanCreateRenderer(edgeRendererDef))
+      QueuedTask.Run(() =>
       {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(edgeRendererDef);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
-      }
-      #endregion
+        if (surfaceLayer.CanCreateRenderer(edgeRendererDef))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(edgeRendererDef);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
+        }
+      });
+    }
+     #endregion
 
-      CIMLineSymbol hardEdgeSymbol = null;
-      CIMLineSymbol softEdgeSymbol = null;
-      CIMLineSymbol outsideEdgeSymbol = null;
       // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition
       // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.#ctor
       // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.HardEdgeSymbol
@@ -523,40 +623,56 @@ namespace MapAuthoring.ProSnippets
       // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
       // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
       #region Edge Type Renderer
+    /// <summary>
+    /// Configures and applies an edge type renderer to the specified <see cref="SurfaceLayer"/>.
+    /// </summary>
+    /// <param name="surfaceLayer">The surface layer to which the edge type renderer will be applied. Cannot be null.</param>
+    /// <param name="hardEdgeSymbol">The symbol used to represent hard edges in the renderer. Cannot be null.</param>
+    /// <param name="softEdgeSymbol">The symbol used to represent soft edges in the renderer. Cannot be null.</param>
+    /// <param name="outsideEdgeSymbol">The symbol used to represent outside edges in the renderer. Cannot be null.</param>
+    public static void CreateEdgeTypeRenderer(SurfaceLayer surfaceLayer, CIMLineSymbol hardEdgeSymbol, CIMLineSymbol softEdgeSymbol, CIMLineSymbol outsideEdgeSymbol)
+    {
       var breaklineRendererDef = new TinBreaklineRendererDefinition();
       // use default symbol for regular edge but specific symbols for hard,soft,outside
       breaklineRendererDef.HardEdgeSymbol = hardEdgeSymbol.MakeSymbolReference();
       breaklineRendererDef.SoftEdgeSymbol = softEdgeSymbol.MakeSymbolReference();
       breaklineRendererDef.OutsideEdgeSymbol = outsideEdgeSymbol.MakeSymbolReference();
+      QueuedTask.Run(() => {
+        if (surfaceLayer.CanCreateRenderer(breaklineRendererDef))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(breaklineRendererDef);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
+        }
+      });
+    }
+    #endregion
 
-      if (surfaceLayer.CanCreateRenderer(breaklineRendererDef))
-      {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(breaklineRendererDef);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Edges))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Edges);
-      }
-      #endregion
-
-      CIMLineSymbol contourLineSymbol = null;
-      CIMLineSymbol indexLineSymbol = null;
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.Label
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.SymbolTemplate
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.ContourInterval
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.IndexLabel
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.IndexSymbolTemplate
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.ContourFactor
-      // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.ReferenceHeight
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinContourRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Contour Renderer
-
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.Label
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.SymbolTemplate
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.ContourInterval
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.IndexLabel
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.IndexSymbolTemplate
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.ContourFactor
+    // cref: ArcGIS.Desktop.Mapping.TinContourRendererDefinition.ReferenceHeight
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinContourRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Contour Renderer
+    /// <summary>
+    /// Creates and applies a contour renderer to the specified surface layer using the provided line symbols.
+    /// </summary>
+    /// <param name="surfaceLayer">The surface layer to which the contour renderer will be applied. Must support contour rendering.</param>
+    /// <param name="contourLineSymbol">The line symbol used to render standard contour lines. Cannot be null.</param>
+    /// <param name="indexLineSymbol">The line symbol used to render index contour lines. Cannot be null.</param>
+    public static void CreateContourRenderer(SurfaceLayer surfaceLayer, CIMLineSymbol contourLineSymbol, CIMLineSymbol indexLineSymbol)
+    {
       var contourDef = new TinContourRendererDefinition();
 
       // now customize with a symbol
@@ -568,17 +684,17 @@ namespace MapAuthoring.ProSnippets
       contourDef.IndexSymbolTemplate = indexLineSymbol.MakeSymbolReference();
       contourDef.ContourFactor = 4;
       contourDef.ReferenceHeight = 7;
-
-      if (surfaceLayer.CanCreateRenderer(contourDef))
-      {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(contourDef);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Contours))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Contours);
-      }
-
+      QueuedTask.Run( () => {
+        if (surfaceLayer.CanCreateRenderer(contourDef))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(contourDef);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Contours))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Contours);
+        }
+      });      
+    }
       #endregion
 
-      CIMPolygonSymbol polySymbol = null;
       // cref: ArcGIS.Desktop.Mapping.TinFaceRendererDefinition
       // cref: ArcGIS.Desktop.Mapping.TinFaceRendererDefinition.#ctor
       // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
@@ -590,103 +706,148 @@ namespace MapAuthoring.ProSnippets
       // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
       // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
       #region Simple Face Renderer
+    /// <summary>
+    /// Creates and applies a simple face renderer to the specified surface layer using the provided polygon symbol.
+    /// </summary>
+    /// <param name="surfaceLayer">The surface layer to which the renderer will be applied. Must not be <see langword="null"/>.</param>
+    /// <param name="polySymbol">The polygon symbol used to define the appearance of the renderer. Must not be <see langword="null"/>.</param>
+    public static void CreateSimpleFaceRenderer(SurfaceLayer surfaceLayer, CIMPolygonSymbol polySymbol)
+    {
       var simpleFaceRendererDef = new TinFaceRendererDefinition();
       simpleFaceRendererDef.SymbolTemplate = polySymbol.MakeSymbolReference();
+      QueuedTask.Run(() => {
+        if (surfaceLayer.CanCreateRenderer(simpleFaceRendererDef))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(simpleFaceRendererDef);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
+        }
+      });      
+    }
+    #endregion
 
-      if (surfaceLayer.CanCreateRenderer(simpleFaceRendererDef))
-      {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(simpleFaceRendererDef);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksAspectRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksAspectRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksAspectRendererDefinition.SymbolTemplate
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Aspect Face Renderer 
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksAspectRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksAspectRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksAspectRendererDefinition.SymbolTemplate
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Aspect Face Renderer 
+    /// <summary>
+    /// Configures and applies an aspect face renderer to the specified surface layer.
+    /// </summary>
+    /// <param name="surfaceLayer">The <see cref="ArcGIS.Desktop.Mapping.SurfaceLayer"/> to which the aspect face renderer will be applied.</param>
+    /// <param name="polygonSymbol">The <see cref="ArcGIS.Core.CIM.CIMPolygonSymbol"/> used as the symbol template for the renderer.</param>
+    public static void CreateAspectFaceRenderer(SurfaceLayer surfaceLayer, CIMPolygonSymbol polygonSymbol)
+    {
       var aspectFaceRendererDef = new TinFaceClassBreaksAspectRendererDefinition();
-      aspectFaceRendererDef.SymbolTemplate = polySymbol.MakeSymbolReference();
+      aspectFaceRendererDef.SymbolTemplate = polygonSymbol.MakeSymbolReference();
       // accept default color ramp
 
-      if (surfaceLayer.CanCreateRenderer(aspectFaceRendererDef))
+      QueuedTask.Run(() =>
       {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(aspectFaceRendererDef);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
-      }
-      #endregion
+        if (surfaceLayer.CanCreateRenderer(aspectFaceRendererDef))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(aspectFaceRendererDef);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
+        }
+      });
+    }
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition.#ctor(ArcGIS.Core.CIM.TerrainDrawCursorType, ArcGIS.Core.CIM.ClassificationMethod, System.Int32, ArcGIS.Core.CIM.CIMSymbolReference, ArcGIS.Core.CIM.CIMColorRamp)
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Slope Face Renderer - Equal Interval
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition.#ctor(ArcGIS.Core.CIM.TerrainDrawCursorType, ArcGIS.Core.CIM.ClassificationMethod, System.Int32, ArcGIS.Core.CIM.CIMSymbolReference, ArcGIS.Core.CIM.CIMColorRamp)
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Slope Face Renderer - Equal Interval
+    /// <summary>
+    /// Configures and applies a slope face renderer to the specified surface layer.
+    /// </summary>
+    /// <param name="surfaceLayer">The <see cref="SurfaceLayer"/> to which the slope face renderer will be applied.</param>
+    public static void CreateSlopeFaceRenderer(SurfaceLayer surfaceLayer)
+    {
       var slopeFaceClassBreaksEqual = new TinFaceClassBreaksRendererDefinition(TerrainDrawCursorType.FaceSlope);
       // accept default breakCount, symbolTemplate, color ramp
+      QueuedTask.Run(() => {
+        if (surfaceLayer.CanCreateRenderer(slopeFaceClassBreaksEqual))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(slopeFaceClassBreaksEqual);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
+        }
+      });
+    }
+    #endregion
 
-      if (surfaceLayer.CanCreateRenderer(slopeFaceClassBreaksEqual))
-      {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(slopeFaceClassBreaksEqual);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
-      // cref: ArcGIS.Core.CIM.TerrainDrawCursorType
-      // cref: ArcGIS.Core.CIM.ClassificationMethod
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Slope Face Renderer - Quantile
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
+    // cref: ArcGIS.Core.CIM.TerrainDrawCursorType
+    // cref: ArcGIS.Core.CIM.ClassificationMethod
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Slope Face Renderer - Quantile
+    /// <summary>
+    /// Configures and applies a slope face renderer to the specified surface layer using a quantile classification
+    /// method.
+    /// </summary>
+    /// <param name="surfaceLayer">The surface layer to which the renderer will be applied. Must not be <see langword="null"/>.</param>
+    public static void CreateSlidersFaceRenderer(SurfaceLayer surfaceLayer) {
       var slopeFaceClassBreaksQuantile = new TinFaceClassBreaksRendererDefinition(TerrainDrawCursorType.FaceSlope);
       slopeFaceClassBreaksQuantile.ClassificationMethod = ClassificationMethod.Quantile;
       // accept default breakCount, symbolTemplate, color ramp
-
-      if (surfaceLayer.CanCreateRenderer(slopeFaceClassBreaksQuantile))
+      QueuedTask.Run(() =>
       {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(slopeFaceClassBreaksQuantile);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
-      }
-      #endregion
+        if (surfaceLayer.CanCreateRenderer(slopeFaceClassBreaksQuantile))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(slopeFaceClassBreaksQuantile);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
+        }
+      });
+    }
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Elevation Face Renderer - Equal Interval
+    // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Elevation Face Renderer - Equal Interval
+    /// <summary>
+    /// Creates and applies an elevation face renderer to the specified surface layer using an equal interval
+    /// classification.
+    /// </summary>
+    /// <param name="surfaceLayer">The surface layer to which the elevation face renderer will be applied. Cannot be null.</param>
+    public static void CreateElevationFaceRenderer(SurfaceLayer surfaceLayer) {
 
       var elevFaceClassBreaksEqual = new TinFaceClassBreaksRendererDefinition();
       // accept default breakCount, symbolTemplate, color ramp
-
-      if (surfaceLayer.CanCreateRenderer(slopeFaceClassBreaksEqual))
-      {
-        CIMTinRenderer renderer = surfaceLayer.CreateRenderer(slopeFaceClassBreaksEqual);
-        if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
-          surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
-      }
+      QueuedTask.Run(() => {
+        if (surfaceLayer.CanCreateRenderer(elevFaceClassBreaksEqual))
+        {
+          CIMTinRenderer renderer = surfaceLayer.CreateRenderer(elevFaceClassBreaksEqual);
+          if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
+            surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
+        }
+      });     
+    }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition
@@ -889,7 +1050,7 @@ namespace MapAuthoring.ProSnippets
     #region ProSnippet Group: TIN Layer Searching
     #endregion
 
-    public void TinLayer_Search()
+    public static void TinLayer_Search()
     {
       TinLayer tinLayer = null;
       Envelope envelope = null;
@@ -1016,7 +1177,7 @@ namespace MapAuthoring.ProSnippets
     #region ProSnippet Group: LAS Dataset Layer Display Filter
     #endregion
 
-    public void SetLasDisplayFilter()
+    public static void SetLasDisplayFilter()
     {
       LasDatasetLayer lasDatasetLayer = null;
 
@@ -1090,7 +1251,7 @@ namespace MapAuthoring.ProSnippets
     #region ProSnippet Group: LAS Dataset Layer Searching
     #endregion
 
-    public void LasDatasetLayer_Search()
+    public static void LasDatasetLayer_Search()
     {
       LasDatasetLayer lasDatasetLayer = null;
       Envelope envelope = null;
@@ -1194,7 +1355,7 @@ namespace MapAuthoring.ProSnippets
     #region ProSnippet Group: LAS Dataset Layer Eye Dome Lighting
     #endregion
 
-    public void LasDatasetLayer_EDL()
+    public static void LasDatasetLayer_EDL()
     {
       LasDatasetLayer lasDatasetLayer = null;
 
@@ -1223,7 +1384,7 @@ namespace MapAuthoring.ProSnippets
 
     #region ProSnippet Group: Line of Sight
     #endregion
-    public void GetLineOfSight()
+    public static void GetLineOfSight()
     {
       TinLayer tinLayer = null;
       MapPoint observerPoint = null;
@@ -1296,7 +1457,7 @@ namespace MapAuthoring.ProSnippets
     #region ProSnippet Group: TIN Layer Functionalities
     #endregion
 
-    public async Task GetSurfaceValues()
+    public static async Task GetSurfaceValues()
     {
       MapPoint mapPoint = null;
 
@@ -1324,7 +1485,7 @@ namespace MapAuthoring.ProSnippets
       });
       #endregion
     }
-    public async void GetZValues()
+    public static async void GetZValues()
     {
       MapPoint mapPoint = null;
       Polyline polyline = null;
@@ -1362,7 +1523,7 @@ namespace MapAuthoring.ProSnippets
       #endregion
     }
 
-    public async void Interpolation()
+    public static async void Interpolation()
     {
       MapPoint pt = null;
       Polyline polyline = null;
