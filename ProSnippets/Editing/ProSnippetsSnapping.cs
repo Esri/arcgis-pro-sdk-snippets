@@ -25,7 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsSnapping
   {
@@ -35,38 +35,32 @@ namespace ProSnippetsEditing
       #region ProSnippet Group: Snapping
       #endregion
 
-
-      private async void Snapping()
+      // cref: ArcGIS.Desktop.Mapping.Snapping.IsEnabled
+      #region Configure Snapping - Turn Snapping on or off
+      public static void EnableDisableSnapping(bool enableSnapping)
       {
-        Map myMap = null;
-        FeatureLayer fLayer = null;
-        IEnumerable<FeatureLayer> layerList = null;
+        //enable/disable snapping
+        ArcGIS.Desktop.Mapping.Snapping.IsEnabled = enableSnapping;
+      }
+      #endregion
 
-        // cref: ArcGIS.Desktop.Mapping.Snapping.IsEnabled
-        #region Configure Snapping - Turn Snapping on or off
-
-        //enable snapping
-        ArcGIS.Desktop.Mapping.Snapping.IsEnabled = true;
-
-        // disable snapping
-        ArcGIS.Desktop.Mapping.Snapping.IsEnabled = false;
-        #endregion
-
-        // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapModes(System.Collections.Generic.IEnumerable<ArcGIS.Desktop.Mapping.SnapMode>)
-        // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
-        // cref: ArcGIS.Desktop.Mapping.Snapping.SnapModes
-        // cref: ArcGIS.Desktop.Mapping.Snapping.GetSnapMode(ArcGIS.Desktop.Mapping.SnapMode)
-        #region Configure Snapping - Application SnapModes
-
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapModes(System.Collections.Generic.IEnumerable<ArcGIS.Desktop.Mapping.SnapMode>)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SnapModes
+      // cref: ArcGIS.Desktop.Mapping.Snapping.GetSnapMode(ArcGIS.Desktop.Mapping.SnapMode)
+      #region Configure Snapping - Application SnapModes
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="fLayer"></param>
+      public static void ConfigureSnappingModesAsync(FeatureLayer fLayer)
+      {
         // set only Point and Edge snapping modes, clear everything else
-        //At 2.x - ArcGIS.Desktop.Mapping.Snapping.SetSnapModes(SnapMode.Point, SnapMode.Edge);
         ArcGIS.Desktop.Mapping.Snapping.SetSnapModes(
           new List<SnapMode>() { SnapMode.Point, SnapMode.Edge });
 
         // clear all snap modes
-        //At 2.x - ArcGIS.Desktop.Mapping.Snapping.SetSnapModes();
         ArcGIS.Desktop.Mapping.Snapping.SetSnapModes(null);
-
 
         // set snap modes one at a time
         ArcGIS.Desktop.Mapping.Snapping.SetSnapMode(SnapMode.Edge, true);
@@ -78,22 +72,24 @@ namespace ProSnippetsEditing
 
         // get state of a specific snap mode
         bool isOn = ArcGIS.Desktop.Mapping.Snapping.GetSnapMode(SnapMode.Vertex);
+      }
+      #endregion
 
-        #endregion
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.IsSnappable
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetSnappable(System.Boolean)
+      // cref: ARCGIS.CORE.CIM.CIMGEOFEATURELAYERBASE.SNAPPABLE
+      #region Configure Snapping - Layer Snappability
 
-        // cref: ArcGIS.Desktop.Mapping.FeatureLayer.IsSnappable
-        // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetSnappable(System.Boolean)
-        // cref: ARCGIS.CORE.CIM.CIMGEOFEATURELAYERBASE.SNAPPABLE
-        #region Configure Snapping - Layer Snappability
-
+      public static async Task ConfigureLayerSnappingAsync(FeatureLayer featureLayer)
+      {
         // is the layer snappable?
-        bool isSnappable = fLayer.IsSnappable;
+        bool isSnappable = featureLayer.IsSnappable;
 
         // set snappability for a specific layer - needs to run on the MCT
         await QueuedTask.Run(() =>
         {
           // use an extension method
-          fLayer.SetSnappable(true);
+          featureLayer.SetSnappable(true);
 
           // or use the CIM directly
           //var layerDef = fLayer.GetDefinition() as ArcGIS.Core.CIM.CIMGeoFeatureLayerBase;
@@ -101,9 +97,8 @@ namespace ProSnippetsEditing
           //fLayer.SetDefinition(layerDef);
         });
 
-
         // turn all layers snappability off
-        layerList = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>();
+        var layerList = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>();
         await QueuedTask.Run(() =>
         {
           foreach (var layer in layerList)
@@ -111,28 +106,29 @@ namespace ProSnippetsEditing
             layer.SetSnappable(false);
           }
         });
-        #endregion
+      }
+      #endregion
 
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.GetSnapMode(ArcGIS.Desktop.Mapping.SnapMode)
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Edge
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.End
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.#ctor(System.Boolean)
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Vertex
-        // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(ArcGIS.Desktop.Mapping.Layer)
-        // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(IEnumerable{Layer})
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,Boolean)
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IEnumerable{Layer},Boolean)
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,LayerSnapModes)
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,SnapMode,Boolean)
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IEnumerable{Layer},LayerSnapModes)
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IDictionary{Layer,LayerSnapModes},Boolean)      
-        // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Intersection
-        #region Configure Snapping - LayerSnapModes
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.GetSnapMode(ArcGIS.Desktop.Mapping.SnapMode)
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Edge
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.End
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.#ctor(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Vertex
+      // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(ArcGIS.Desktop.Mapping.Layer)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(IEnumerable{Layer})
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,Boolean)
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IEnumerable{Layer},Boolean)
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,LayerSnapModes)
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,SnapMode,Boolean)
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IEnumerable{Layer},LayerSnapModes)
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IDictionary{Layer,LayerSnapModes},Boolean)      
+      // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Intersection
+      #region Configure Snapping - LayerSnapModes
 
-        layerList = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>();
-
+      public static void ConfigureLayerSnapModes(List<FeatureLayer> layerList)
+      {
         // configure by layer
         foreach (var layer in layerList)
         {
@@ -159,18 +155,13 @@ namespace ProSnippetsEditing
           // and set back to the layer
           ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(layer, lsm);
 
-
           // assign a single snap mode at once
           ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(layer, SnapMode.Vertex, false);
-
-
           // turn ALL snapModes on
           ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(layer, true);
           // turn ALL snapModes off
           ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(layer, false);
         }
-
-
         // configure for a set of layers
 
         // set Vertex, edge, end on for a set of layers, other snapModes false
@@ -181,8 +172,6 @@ namespace ProSnippetsEditing
           End = true
         };
         ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(layerList, vee);
-
-
         // ensure intersection is on for a set of layers without changing any other snapModes
 
         // get the layer snapModes for the set of layers
@@ -194,19 +183,19 @@ namespace ProSnippetsEditing
         }
         ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(dictLSM);
 
-
         // set all snapModes off for a list of layers
         ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(layerList, false);
 
+      }
+      #endregion
 
-        #endregion
-
-        // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapModes
-        // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
-        // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IDictionary{Layer,LayerSnapModes},Boolean)      
-        // cref: ARCGIS.DESKTOP.MAPPING.FEATURELAYER.SETSNAPPABLE
-        #region Configure Snapping - Combined Example
-
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapModes
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
+      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IDictionary{Layer,LayerSnapModes},Boolean)      
+      // cref: ARCGIS.DESKTOP.MAPPING.FEATURELAYER.SETSNAPPABLE
+      #region Configure Snapping - Combined Example
+      public static async Task ConfigureSnappingCompleteAsync(FeatureLayer featureLayer)
+      {
         // interested in only snapping to the vertices of a specific layer of interest and not the vertices of other layers
         //  all other snapModes should be off.
 
@@ -214,7 +203,6 @@ namespace ProSnippetsEditing
         ArcGIS.Desktop.Mapping.Snapping.IsEnabled = true;
 
         // turn all application snapModes off
-        //At 2.x - ArcGIS.Desktop.Mapping.Snapping.SetSnapModes();
         ArcGIS.Desktop.Mapping.Snapping.SetSnapModes(null);
 
         // set application snapMode vertex on 
@@ -223,7 +211,7 @@ namespace ProSnippetsEditing
         // ensure layer snapping is on
         await QueuedTask.Run(() =>
         {
-          fLayer.SetSnappable(true);
+          featureLayer.SetSnappable(true);
         });
 
         // set vertex snapping only
@@ -231,29 +219,29 @@ namespace ProSnippetsEditing
 
         // set vertex only for the specific layer, clearing all others
         var dict = new Dictionary<Layer, LayerSnapModes>();
-        dict.Add(fLayer, vertexOnly);
+        dict.Add(featureLayer, vertexOnly);
         ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(dict, true);  // true = reset other layers
-        #endregion
+      }
+      #endregion
 
-        // cref: ArcGIS.Desktop.Mapping.Snapping.GetOptions(ArcGIS.Desktop.Mapping.Map)
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions
-        // cref: ArcGIS.Desktop.Mapping.Snapping.SetOptions(ArcGIS.Desktop.Mapping.Map, ArcGIS.Desktop.Mapping.Snapping.SnappingOptions)
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.IsSnapToSketchEnabled
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.XYTolerance
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.IsZToleranceEnabled
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.ZTolerance
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.SnapTipDisplayParts
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.SnapTipColor
-        // cref: ArcGIS.Core.CIM.SnapTipDisplayPart
-        // cref: ArcGIS.Desktop.Mapping.SnappingOptions.SnapTipDisplayParts
-        #region Snap Options
-
+      // cref: ArcGIS.Desktop.Mapping.Snapping.GetOptions(ArcGIS.Desktop.Mapping.Map)
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetOptions(ArcGIS.Desktop.Mapping.Map, ArcGIS.Desktop.Mapping.Snapping.SnappingOptions)
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.IsSnapToSketchEnabled
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.XYTolerance
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.IsZToleranceEnabled
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.ZTolerance
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.SnapTipDisplayParts
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.SnapTipColor
+      // cref: ArcGIS.Core.CIM.SnapTipDisplayPart
+      // cref: ArcGIS.Desktop.Mapping.SnappingOptions.SnapTipDisplayParts
+      #region Snap Options
+      public static void ConfigureSnappingOptions(Map myMap)
+      {
         //Set snapping options via get/set options
         var snapOptions = ArcGIS.Desktop.Mapping.Snapping.GetOptions(myMap);
-        //At 2.x - snapOptions.SnapToSketchEnabled = true;
         snapOptions.IsSnapToSketchEnabled = true;
         snapOptions.XYTolerance = 100;
-        //At 2.x - snapOptions.ZToleranceEnabled = true;
         snapOptions.IsZToleranceEnabled = true;
         snapOptions.ZTolerance = 0.6;
 
@@ -266,19 +254,11 @@ namespace ProSnippetsEditing
         //turn on layer display only
         //snapOptions.SnapTipDisplayParts = (int)SnapTipDisplayPart.SnapTipDisplayLayer;
 
-        //At 2.x - snapOptions.GeometricFeedbackColor = ColorFactory.Instance.RedRGB;
         snapOptions.SnapTipColor = ColorFactory.Instance.RedRGB;
 
         ArcGIS.Desktop.Mapping.Snapping.SetOptions(myMap, snapOptions);
-
-        #endregion
       }
-
-    }
-
-    public class CSVData
-    {
-      public Double X, Y, StopOrder, FacilityID;
+      #endregion
     }
   }
 }

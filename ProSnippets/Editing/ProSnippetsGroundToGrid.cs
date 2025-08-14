@@ -24,25 +24,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsGroundToGrid
   {
     #region ProSnippet Group: Ground to Grid
     #endregion
 
-    public static void G2G()
+
+    // cref: ArcGIS.Core.CIM.CIMGroundToGridCorrection
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.IsCorrecting(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDirectionOffset(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetDirectionOffset(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDistanceFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingElevationMode(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingConstantScaleFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetConstantScaleFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+    #region G2G Settings
+    /// <summary>
+    /// Configures and evaluates the settings of a ground-to-grid correction.
+    /// </summary>
+    /// <remarks>This method evaluates various properties of the provided ground-to-grid correction, such as
+    /// whether corrections are enabled, whether direction offsets or distance factors are being used, and retrieves
+    /// associated values like direction offsets and scale factors. It is intended to help analyze and work with
+    /// ground-to-grid correction configurations in editing workflows.</remarks>
+    /// <param name="correction">The <see cref="CIMGroundToGridCorrection"/> object representing the ground-to-grid correction settings. This
+    /// parameter must not be <see langword="null"/> and should be properly initialized.</param>
+     public static void GroundToGridSettings(CIMGroundToGridCorrection correction)
     {
-      // cref: ArcGIS.Core.CIM.CIMGroundToGridCorrection
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.IsCorrecting(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDirectionOffset(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetDirectionOffset(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDistanceFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingElevationMode(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingConstantScaleFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetConstantScaleFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      #region G2G Settings
-      CIMGroundToGridCorrection correction = null;
       bool isCorecting = correction.IsCorrecting();   // equivalent to correction != null && correction.Enabled;
       bool UsingOffset = correction.UsingDirectionOffset();   // equivalent to correction.IsCorrecting() && correction.UseDirection;
       double dOffset = correction.GetDirectionOffset(); // equivalent to correction.UsingDirectionOffset() ? correction.Direction : DefaultDirectionOffset;
@@ -50,8 +59,8 @@ namespace ProSnippetsEditing
       bool usingElevation = correction.UsingElevationMode(); // equivalent to correction.UsingDistanceFactor() && c.ScaleType == GroundToGridScaleType.ComputeUsingElevation;
       bool usingSFactor = correction.UsingConstantScaleFactor();  //; equivalent to correction.UsingDistanceFactor() && correction.ScaleType == GroundToGridScaleType.ConstantFactor;
       double dSFactor = correction.GetConstantScaleFactor(); // equivalent to correctionc.UsingDistanceFactor() ? correction.ConstantScaleFactor : DefaultConstantScaleFactor;
-      #endregion
     }
+    #endregion
 
   }
 }

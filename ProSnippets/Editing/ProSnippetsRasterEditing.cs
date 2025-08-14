@@ -25,17 +25,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProSnippetsEditing
+namespace Editing.ProSnippets
 {
   public static class ProSnippetsRasterEditing
   {
     #region ProSnippet Group: Accessing Raster Fields
     #endregion
 
+    // cref: ARCGIS.DESKTOP.EDITING.ATTRIBUTES.INSPECTOR.LOAD(MAPMEMBER,INT64)
+    #region Read from a raster field
+
+/// <summary>
+/// Reads a raster image from a raster field in the currently selected feature and loads it as an <see
+/// cref="System.Windows.Interop.InteropBitmap"/>.
+/// </summary>
+/// <remarks>The method retrieves the raster data from the "Photo" field of the first selected feature in the
+/// active map view. The resulting <see cref="System.Windows.Interop.InteropBitmap"/> can be used as an image source in
+/// WPF applications or saved to disk. This method must be called on the main thread; the raster reading operation is
+/// performed asynchronously using <see cref="ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run"/>.</remarks>
     public static void ReadFromRasterField()
     {
-      // cref: ARCGIS.DESKTOP.EDITING.ATTRIBUTES.INSPECTOR.LOAD(MAPMEMBER,INT64)
-      #region Read from a raster field
       QueuedTask.Run(() =>
       {
         var sel = MapView.Active.Map.GetSelection();
@@ -46,13 +55,20 @@ namespace ProSnippetsEditing
         insp.Load(sel.ToDictionary().Keys.First(), sel.ToDictionary().Values.First());
         var ibmp = insp["Photo"] as System.Windows.Interop.InteropBitmap;
       });
-      #endregion
     }
+    #endregion
 
+    // cref: ARCGIS.DESKTOP.EDITING.ATTRIBUTES.INSPECTOR.LOAD(MAPMEMBER,INT64)
+    #region Write an image to a raster field
+
+    /// <summary>
+    /// Writes an image file to the "Photo" raster field of the first selected feature in the active map.
+    /// </summary>
+    /// <remarks>The image is inserted without compression. The method operates asynchronously and modifies
+    /// the raster field of the selected feature using the editing inspector. If no features are selected, the operation
+    /// will not be performed.</remarks>
     public static void WriteImageToRasterField()
     {
-      // cref: ARCGIS.DESKTOP.EDITING.ATTRIBUTES.INSPECTOR.LOAD(MAPMEMBER,INT64)
-      #region Write an image to a raster field
       QueuedTask.Run(() =>
       {
         var sel = MapView.Active.Map.GetSelection();
@@ -70,19 +86,28 @@ namespace ProSnippetsEditing
           var result = op.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not
         }
       });
-      #endregion
     }
+    #endregion
 
+    // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor
+    // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor()
+    // cref: ARCGIS.CORE.DATA.RASTER.RASTERSTORAGEDEF.SETCOMPRESSIONTYPE
+    // cref: ARCGIS.CORE.DATA.RASTER.RASTERSTORAGEDEF.SETCOMPRESSIONQUALITY
+    // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.MODIFY(INSPECTOR)
+    // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterStorageDef
+    // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterDataset
+    #region Write a compressed image to a raster field
+
+    /// <summary>
+    /// Writes a compressed image to a raster field in the selected feature using JPEG compression.
+    /// </summary>
+    /// <remarks>This method demonstrates how to create a compressed raster value from an image file and
+    /// assign it to a raster field within a feature in the active map selection. The raster value is configured with
+    /// JPEG compression and a specified quality level before being inserted into the field using an edit operation.
+    /// <para> The method requires an active map view with a valid selection and assumes the raster field is named
+    /// "Photo". The operation is performed asynchronously on the QueuedTask scheduler. </para></remarks>
     public static void WriteCompImageToRasterField()
     {
-      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor
-      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor()
-      // cref: ARCGIS.CORE.DATA.RASTER.RASTERSTORAGEDEF.SETCOMPRESSIONTYPE
-      // cref: ARCGIS.CORE.DATA.RASTER.RASTERSTORAGEDEF.SETCOMPRESSIONQUALITY
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.MODIFY(INSPECTOR)
-      // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterStorageDef
-      // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterDataset
-      #region Write a compressed image to a raster field
       QueuedTask.Run(() =>
       {
         //Open the raster dataset on disk and create a compressed raster value dataset object
@@ -112,7 +137,7 @@ namespace ProSnippetsEditing
           }
         }
       });
-      #endregion
     }
+    #endregion
   }
 }
