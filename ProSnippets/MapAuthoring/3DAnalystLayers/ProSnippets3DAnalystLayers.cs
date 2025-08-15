@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -527,7 +528,7 @@ namespace MapAuthoring.ProSnippets
       defiendIntervalNodeRendererDef.ClassificationMethod = ClassificationMethod.DefinedInterval;
       defiendIntervalNodeRendererDef.IntervalSize = 4;
       defiendIntervalNodeRendererDef.SymbolTemplate = nodeSymbol.MakeSymbolReference();
-      QueuedTask.Run( () => {
+      QueuedTask.Run(() => {
         if (tinLayer.CanCreateRenderer(defiendIntervalNodeRendererDef))
         {
           CIMTinRenderer renderer = tinLayer.CreateRenderer(defiendIntervalNodeRendererDef);
@@ -607,22 +608,22 @@ namespace MapAuthoring.ProSnippets
         }
       });
     }
-     #endregion
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.HardEdgeSymbol
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.SoftEdgeSymbol
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.OutsideEdgeSymbol
-      // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.RegularEdgeSymbol
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinBreaklineRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Edge Type Renderer
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.HardEdgeSymbol
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.SoftEdgeSymbol
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.OutsideEdgeSymbol
+    // cref: ArcGIS.Desktop.Mapping.TinBreaklineRendererDefinition.RegularEdgeSymbol
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinBreaklineRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Edge Type Renderer
     /// <summary>
     /// Configures and applies an edge type renderer to the specified <see cref="SurfaceLayer"/>.
     /// </summary>
@@ -684,28 +685,28 @@ namespace MapAuthoring.ProSnippets
       contourDef.IndexSymbolTemplate = indexLineSymbol.MakeSymbolReference();
       contourDef.ContourFactor = 4;
       contourDef.ReferenceHeight = 7;
-      QueuedTask.Run( () => {
+      QueuedTask.Run(() => {
         if (surfaceLayer.CanCreateRenderer(contourDef))
         {
           CIMTinRenderer renderer = surfaceLayer.CreateRenderer(contourDef);
           if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Contours))
             surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Contours);
         }
-      });      
+      });
     }
-      #endregion
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.TinFaceRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TinFaceRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTinFaceRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Simple Face Renderer
+    // cref: ArcGIS.Desktop.Mapping.TinFaceRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TinFaceRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinSimpleRendererDefinition.SymbolTemplate
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTinFaceRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Simple Face Renderer
     /// <summary>
     /// Creates and applies a simple face renderer to the specified surface layer using the provided polygon symbol.
     /// </summary>
@@ -722,7 +723,7 @@ namespace MapAuthoring.ProSnippets
           if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
             surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
         }
-      });      
+      });
     }
     #endregion
 
@@ -846,59 +847,65 @@ namespace MapAuthoring.ProSnippets
           if (surfaceLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Surface))
             surfaceLayer.SetRenderer(renderer, SurfaceRendererTarget.Surface);
         }
-      });     
+      });
     }
-      #endregion
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition.#ctor
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTerrainDirtyAreaRenderer
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      // cref: ArcGIS.Desktop.Mapping.TerrainLayer
-      #region Dirty Area Renderer 
-      // applies to Terrain layers only
+    // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TerrainDirtyAreaRendererDefinition.#ctor
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTerrainDirtyAreaRenderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    // cref: ArcGIS.Desktop.Mapping.TerrainLayer
+    #region Dirty Area Renderer 
+    public static void CreateDirtyAreaRenderer(TerrainLayer terrainLayer)
+    {
+    var dirtyAreaRendererDef = new TerrainDirtyAreaRendererDefinition();
+    // accept default labels, symbolTemplate
 
-      var dirtyAreaRendererDef = new TerrainDirtyAreaRendererDefinition();
-      // accept default labels, symbolTemplate
-
-      var terrainLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TerrainLayer>().FirstOrDefault();
       if (terrainLayer == null)
         return;
+      QueuedTask.Run(() => {
+        if (terrainLayer.CanCreateRenderer(dirtyAreaRendererDef))
+        {
+          CIMTinRenderer renderer = terrainLayer.CreateRenderer(dirtyAreaRendererDef);
+          if (terrainLayer.CanSetRenderer(renderer, SurfaceRendererTarget.DirtyArea))
+            terrainLayer.SetRenderer(renderer, SurfaceRendererTarget.DirtyArea);
+        }
+      });
+     
+   }
+    #endregion
 
-      if (terrainLayer.CanCreateRenderer(dirtyAreaRendererDef))
-      {
-        CIMTinRenderer renderer = terrainLayer.CreateRenderer(dirtyAreaRendererDef);
-        if (terrainLayer.CanSetRenderer(renderer, SurfaceRendererTarget.DirtyArea))
-          terrainLayer.SetRenderer(renderer, SurfaceRendererTarget.DirtyArea);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.TerrainPointClassBreaksRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.TerrainPointClassBreaksRendererDefinition.#ctor
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMTerrainPointElevationRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region Terrain Point Class Breaks Renderer
-      // applies to Terrain layers only
-
+    // cref: ArcGIS.Desktop.Mapping.TerrainPointClassBreaksRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.TerrainPointClassBreaksRendererDefinition.#ctor
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMTerrainPointElevationRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Terrain Point Class Breaks Renderer
+    // applies to Terrain layers only
+    public static void CreateTerrainPointClassBreaksRenderer(TerrainLayer terrainLayer)
+    {
       var terrainPointClassBreaks = new TerrainPointClassBreaksRendererDefinition();
       // accept defaults
-
-      if (terrainLayer.CanCreateRenderer(terrainPointClassBreaks))
-      {
-        CIMTinRenderer renderer = terrainLayer.CreateRenderer(terrainPointClassBreaks);
-        if (terrainLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
-          terrainLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
-      }
+      QueuedTask.Run(() => {
+        if (terrainLayer.CanCreateRenderer(terrainPointClassBreaks))
+        {
+          CIMTinRenderer renderer = terrainLayer.CreateRenderer(terrainPointClassBreaks);
+          if (terrainLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
+            terrainLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
+        }
+      });
+      
+    }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition
@@ -914,66 +921,73 @@ namespace MapAuthoring.ProSnippets
       // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
       #region LAS Points Classification Unique Value Renderer
       // applies to LAS dataset layers only
-
+      public static void CreateLASPointsClassificationUVR(LasDatasetLayer lasDatasetLayer)
+    {
       var lasPointsClassificationRendererDef = new LasUniqueValueRendererDefinition(LasAttributeType.Classification);
       // accept the defaults for color ramp, symbolTemplate, symbol scale factor
 
-      var lasDatasetLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<LasDatasetLayer>().FirstOrDefault();
       if (lasDatasetLayer == null)
         return;
+      QueuedTask.Run(() => {
+        if (lasDatasetLayer.CanCreateRenderer(lasPointsClassificationRendererDef))
+        {
+          CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(lasPointsClassificationRendererDef);
+          if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
+            lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
+        }
+      });
+      
+    }
+    #endregion
 
-      if (lasDatasetLayer.CanCreateRenderer(lasPointsClassificationRendererDef))
-      {
-        CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(lasPointsClassificationRendererDef);
-        if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
-          lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition.#ctor(ArcGIS.Desktop.Mapping.LasAttributeType,System.Boolean,ArcGIS.Core.CIM.CIMSymbolReference,System.Double,ArcGIS.Core.CIM.CIMColorRamp)
-      // cref: ArcGIS.Desktop.Mapping.LasAttributeType
-      // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition.ModulateUsingIntensity
-      // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition.SymbolScaleFactor
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMLASUniqueValueRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region LAS Points Returns Unique Value Renderer
-      // applies to LAS dataset layers only
-
+    // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition.#ctor(ArcGIS.Desktop.Mapping.LasAttributeType,System.Boolean,ArcGIS.Core.CIM.CIMSymbolReference,System.Double,ArcGIS.Core.CIM.CIMColorRamp)
+    // cref: ArcGIS.Desktop.Mapping.LasAttributeType
+    // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition.ModulateUsingIntensity
+    // cref: ArcGIS.Desktop.Mapping.LasUniqueValueRendererDefinition.SymbolScaleFactor
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMLASUniqueValueRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region LAS Points Returns Unique Value Renderer
+    // applies to LAS dataset layers only
+    public static void CreateLASPointsReturnsUVR(LasDatasetLayer lasDatasetLayer)
+    {
       var lasPointsReturnsRendererDef = new LasUniqueValueRendererDefinition(LasAttributeType.ReturnNumber);
       lasPointsReturnsRendererDef.ModulateUsingIntensity = true;
       lasPointsReturnsRendererDef.SymbolScaleFactor = 1.0;
       // accept the defaults for color ramp, symbolTemplate
+      QueuedTask.Run(() => {
+        if (lasDatasetLayer.CanCreateRenderer(lasPointsReturnsRendererDef))
+        {
+          CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(lasPointsReturnsRendererDef);
+          if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
+            lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
+        }
+      });
+    }
+    #endregion
 
-      if (lasDatasetLayer.CanCreateRenderer(lasPointsReturnsRendererDef))
-      {
-        CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(lasPointsReturnsRendererDef);
-        if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
-          lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.#ctor(ArcGIS.Core.CIM.LASStretchAttribute,ArcGIS.Core.CIM.LASStretchType,System.Double,ArcGIS.Core.CIM.CIMColorRamp)
-      // cref: ArcGIS.Core.CIM.LASStretchAttribute
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMLASStretchRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.StretchType
-      // cref: ArcGIS.Core.CIM.LASStretchType
-      // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.NumberOfStandardDeviations
-      #region LAS Points Elevation Stretch Renderer
-      // applies to LAS dataset layers only
-
+    // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.#ctor(ArcGIS.Core.CIM.LASStretchAttribute,ArcGIS.Core.CIM.LASStretchType,System.Double,ArcGIS.Core.CIM.CIMColorRamp)
+    // cref: ArcGIS.Core.CIM.LASStretchAttribute
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMLASStretchRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.StretchType
+    // cref: ArcGIS.Core.CIM.LASStretchType
+    // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.NumberOfStandardDeviations
+    #region LAS Points Elevation Stretch Renderer
+    // applies to LAS dataset layers only
+    public static void CreateLASPointsElevationStretchRenderer(LasDatasetLayer lasDatasetLayer)
+    {
       var elevLasStretchRendererDef = new LasStretchRendererDefinition(ArcGIS.Core.CIM.LASStretchAttribute.Elevation);
       // accept the defaults for color ramp, etc
 
@@ -983,224 +997,217 @@ namespace MapAuthoring.ProSnippets
         if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
           lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
       }
-
-
       // OR use a stretch renderer with stretchType standard Deviations
       var elevLasStretchStdDevRendererDef = new LasStretchRendererDefinition(ArcGIS.Core.CIM.LASStretchAttribute.Elevation);
       elevLasStretchStdDevRendererDef.StretchType = LASStretchType.StandardDeviations;
       elevLasStretchStdDevRendererDef.NumberOfStandardDeviations = 2;
       // accept the defaults for color ramp,  etc
+      QueuedTask.Run(() => {
+        if (lasDatasetLayer.CanCreateRenderer(elevLasStretchStdDevRendererDef))
+        {
+          CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(elevLasStretchStdDevRendererDef);
+          if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
+            lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
+        }
+      });
+      
+    }
+    #endregion
 
-      if (lasDatasetLayer.CanCreateRenderer(elevLasStretchStdDevRendererDef))
-      {
-        CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(elevLasStretchStdDevRendererDef);
-        if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
-          lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.ClassificationMethod
-      // cref: ArcGIS.Core.CIM.ClassificationMethod
-      // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition.ModulateUsingIntensity
-      // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition.SymbolScaleFactor
-      // cref: ArcGIS.Core.CIM.CIMTinRenderer
-      // cref: ArcGIS.Core.CIM.CIMLASPointElevationRenderer 
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-      #region LAS Points Classified Elevation Renderer
-      // applies to LAS dataset layers only
-
+    // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition
+    // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.TinColorRampRendererDefinition.ClassificationMethod
+    // cref: ArcGIS.Core.CIM.ClassificationMethod
+    // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition.ModulateUsingIntensity
+    // cref: ArcGIS.Desktop.Mapping.LasPointClassBreaksRendererDefinition.SymbolScaleFactor
+    // cref: ArcGIS.Core.CIM.CIMTinRenderer
+    // cref: ArcGIS.Core.CIM.CIMLASPointElevationRenderer 
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanSetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region LAS Points Classified Elevation Renderer
+    // applies to LAS dataset layers only
+    public static void CreateLASPointsClassifiedElevationRenderer(LasDatasetLayer lasDatasetLayer)
+    {
       var lasPointsClassBreaksRendererDef = new LasPointClassBreaksRendererDefinition();
       lasPointsClassBreaksRendererDef.ClassificationMethod = ClassificationMethod.NaturalBreaks;
       lasPointsClassBreaksRendererDef.ModulateUsingIntensity = true;
       // increase the symbol size by a factor
       lasPointsClassBreaksRendererDef.SymbolScaleFactor = 1.0;
-
-      if (lasDatasetLayer.CanCreateRenderer(lasPointsClassBreaksRendererDef))
-      {
-        CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(lasPointsClassBreaksRendererDef);
-        if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
-          lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
-      }
+      QueuedTask.Run(() => {
+        if (lasDatasetLayer.CanCreateRenderer(lasPointsClassBreaksRendererDef))
+        {
+          CIMTinRenderer renderer = lasDatasetLayer.CreateRenderer(lasPointsClassBreaksRendererDef);
+          if (lasDatasetLayer.CanSetRenderer(renderer, SurfaceRendererTarget.Points))
+            lasDatasetLayer.SetRenderer(renderer, SurfaceRendererTarget.Points);
+        }
+      });
+    }
       #endregion
-
-      {
         // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.RemoveRenderer(ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
         // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
         #region Remove an edge renderer
-        var layer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<SurfaceLayer>().FirstOrDefault();
-        if (layer == null)
-          return;
+    public static void RemoveEdgeRenderer()
+    {
+      var layer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<SurfaceLayer>().FirstOrDefault();
+      if (layer == null)
+        return;
 
-        QueuedTask.Run(() =>
-        {
-          layer.RemoveRenderer(SurfaceRendererTarget.Edges);
-        });
-
-        #endregion
-      }
+      QueuedTask.Run(() =>
+      {
+        layer.RemoveRenderer(SurfaceRendererTarget.Edges);
+      });
     }
+    #endregion
+
 
 
     #region ProSnippet Group: TIN Layer Searching
     #endregion
-
-    public static void TinLayer_Search()
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.SearchNodes
+    // cref: ArcGIS.Core.Data.Analyst3D.TinNodeCursor
+    // cref: ArcGIS.Core.Data.Analyst3D.TinNode
+    // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter
+    // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter.#ctor
+    // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
+    // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
+    // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter.SuperNode
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.SearchEdges
+    // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeCursor
+    // cref: ArcGIS.Core.Data.Analyst3D.TinEdge
+    // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter
+    // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.#ctor
+    // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
+    // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
+    // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.FilterByEdgeType
+    // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.EdgeType
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.SearchTriangles
+    // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleCursor
+    // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle
+    // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleFilter
+    // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleFilter.#ctor
+    // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
+    // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
+    #region Seach for TIN Nodes, Edges, Triangles
+    public static void TinLayer_Search(TinLayer tinLayer, Envelope envelope)
     {
-      TinLayer tinLayer = null;
-      Envelope envelope = null;
-      ArcGIS.Core.Data.Analyst3D.TinDataset tinDataset = null;
-
-      // cref: ArcGIS.Desktop.Mapping.TinLayer.SearchNodes
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeCursor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNode
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter.#ctor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
-      // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter.SuperNode
-      // cref: ArcGIS.Desktop.Mapping.TinLayer.SearchEdges
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeCursor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.#ctor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
-      // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.FilterByEdgeType
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.EdgeType
-      // cref: ArcGIS.Desktop.Mapping.TinLayer.SearchTriangles
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleCursor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleFilter.#ctor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
-      // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
-      #region Seach for TIN Nodes, Edges, Triangles
-      // search all "inside" nodes
-      using (ArcGIS.Core.Data.Analyst3D.TinNodeCursor nodeCursor = tinLayer.SearchNodes(null))
+      QueuedTask.Run( () =>
       {
-        while (nodeCursor.MoveNext())
+        // search all "inside" nodes
+        using (ArcGIS.Core.Data.Analyst3D.TinNodeCursor nodeCursor = tinLayer.SearchNodes(null))
         {
-          using (ArcGIS.Core.Data.Analyst3D.TinNode node = nodeCursor.Current)
+          while (nodeCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.TinNode node = nodeCursor.Current)
+            {
+              //Use the node
+            }
           }
         }
-      }
 
-      // search "inside" nodes with an extent
-      ArcGIS.Core.Data.Analyst3D.TinNodeFilter nodeFilter = new ArcGIS.Core.Data.Analyst3D.TinNodeFilter();
-      nodeFilter.FilterEnvelope = envelope;
-      using (ArcGIS.Core.Data.Analyst3D.TinNodeCursor nodeCursor = tinLayer.SearchNodes(nodeFilter))
-      {
-        while (nodeCursor.MoveNext())
+        // search "inside" nodes with an extent
+        ArcGIS.Core.Data.Analyst3D.TinNodeFilter nodeFilter = new ArcGIS.Core.Data.Analyst3D.TinNodeFilter();
+        nodeFilter.FilterEnvelope = envelope;
+        using (ArcGIS.Core.Data.Analyst3D.TinNodeCursor nodeCursor = tinLayer.SearchNodes(nodeFilter))
         {
-          using (ArcGIS.Core.Data.Analyst3D.TinNode node = nodeCursor.Current)
+          while (nodeCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.TinNode node = nodeCursor.Current)
+            {
+              //use the node
+            }
           }
         }
-      }
 
-      // search for super nodes only
-      var supernodeFilter = new ArcGIS.Core.Data.Analyst3D.TinNodeFilter();
-      supernodeFilter.FilterEnvelope = tinDataset.GetSuperNodeExtent();
-      supernodeFilter.DataElementsOnly = false;
-      supernodeFilter.SuperNode = true;
-      using (ArcGIS.Core.Data.Analyst3D.TinNodeCursor nodeCursor = tinLayer.SearchNodes(nodeFilter))
-      {
-        while (nodeCursor.MoveNext())
+        // search for super nodes only
+        var supernodeFilter = new ArcGIS.Core.Data.Analyst3D.TinNodeFilter();
+        supernodeFilter.FilterEnvelope = tinLayer.GetTinDataset().GetSuperNodeExtent();
+        supernodeFilter.DataElementsOnly = false;
+        supernodeFilter.SuperNode = true;
+        using (ArcGIS.Core.Data.Analyst3D.TinNodeCursor nodeCursor = tinLayer.SearchNodes(nodeFilter))
         {
-          using (ArcGIS.Core.Data.Analyst3D.TinNode node = nodeCursor.Current)
+          while (nodeCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.TinNode node = nodeCursor.Current)
+            {
+              //Use the node
+            }
           }
         }
-      }
 
-
-      // search all edges within an extent
-      //    this could include outside or edges attached to super nodes depending upon the extent
-      ArcGIS.Core.Data.Analyst3D.TinEdgeFilter edgeFilterAll = new ArcGIS.Core.Data.Analyst3D.TinEdgeFilter();
-      edgeFilterAll.FilterEnvelope = envelope;
-      edgeFilterAll.DataElementsOnly = false;
-      using (ArcGIS.Core.Data.Analyst3D.TinEdgeCursor edgeCursor = tinLayer.SearchEdges(edgeFilterAll))
-      {
-        while (edgeCursor.MoveNext())
+        // search all edges within an extent
+        //    this could include outside or edges attached to super nodes depending upon the extent
+        ArcGIS.Core.Data.Analyst3D.TinEdgeFilter edgeFilterAll = new ArcGIS.Core.Data.Analyst3D.TinEdgeFilter();
+        edgeFilterAll.FilterEnvelope = envelope;
+        edgeFilterAll.DataElementsOnly = false;
+        using (ArcGIS.Core.Data.Analyst3D.TinEdgeCursor edgeCursor = tinLayer.SearchEdges(edgeFilterAll))
         {
-          using (ArcGIS.Core.Data.Analyst3D.TinEdge edge = edgeCursor.Current)
+          while (edgeCursor.MoveNext())
           {
+            using (ArcGIS.Core.Data.Analyst3D.TinEdge edge = edgeCursor.Current)
+            {
+              //Use the edge
+            }
           }
         }
-      }
 
-
-      // search for hard edges in the TIN
-      var edgeFilter = new ArcGIS.Core.Data.Analyst3D.TinEdgeFilter();
-      edgeFilter.FilterByEdgeType = true;
-      edgeFilter.EdgeType = ArcGIS.Core.Data.Analyst3D.TinEdgeType.HardEdge;
-      using (ArcGIS.Core.Data.Analyst3D.TinEdgeCursor edgeCursor = tinLayer.SearchEdges(edgeFilter))
-      {
-        while (edgeCursor.MoveNext())
+        // search for hard edges in the TIN
+        var edgeFilter = new ArcGIS.Core.Data.Analyst3D.TinEdgeFilter();
+        edgeFilter.FilterByEdgeType = true;
+        edgeFilter.EdgeType = ArcGIS.Core.Data.Analyst3D.TinEdgeType.HardEdge;
+        using (ArcGIS.Core.Data.Analyst3D.TinEdgeCursor edgeCursor = tinLayer.SearchEdges(edgeFilter))
         {
-          using (ArcGIS.Core.Data.Analyst3D.TinEdge edge = edgeCursor.Current)
+          while (edgeCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.TinEdge edge = edgeCursor.Current)
+            {
+              //Use the edge
+            }
           }
         }
-      }
 
-
-      // search for "inside" triangles in an extent
-      ArcGIS.Core.Data.Analyst3D.TinTriangleFilter triangleFilter = new ArcGIS.Core.Data.Analyst3D.TinTriangleFilter();
-      triangleFilter.FilterEnvelope = envelope;
-      triangleFilter.DataElementsOnly = true;
-      using (ArcGIS.Core.Data.Analyst3D.TinTriangleCursor triangleCursor = tinLayer.SearchTriangles(triangleFilter))
-      {
-        while (triangleCursor.MoveNext())
+        // search for "inside" triangles in an extent
+        ArcGIS.Core.Data.Analyst3D.TinTriangleFilter triangleFilter = new ArcGIS.Core.Data.Analyst3D.TinTriangleFilter();
+        triangleFilter.FilterEnvelope = envelope;
+        triangleFilter.DataElementsOnly = true;
+        using (ArcGIS.Core.Data.Analyst3D.TinTriangleCursor triangleCursor = tinLayer.SearchTriangles(triangleFilter))
         {
-          using (ArcGIS.Core.Data.Analyst3D.TinTriangle triangle = triangleCursor.Current)
+          while (triangleCursor.MoveNext())
           {
+            using (ArcGIS.Core.Data.Analyst3D.TinTriangle triangle = triangleCursor.Current)
+            {
+              //use the triangle
+            }
           }
         }
-      }
-      #endregion
-
+      });     
     }
-
+    #endregion
 
     #region ProSnippet Group: LAS Dataset Layer Display Filter
     #endregion
-
-    public static void SetLasDisplayFilter()
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.GetDisplayFilter
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(ArcGIS.Desktop.Mapping.LasPointDisplayFilterType)
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilterType
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(List<System.Int32>)
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(List<ArcGIS.Core.Data.Analyst3D.LasReturnType>)
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.#ctor
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.Returns
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.ClassCodes
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.KeyPoints
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.SyntheticPoints
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.NotFlagged
+    // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.WithheldPoints
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(ArcGIS.Desktop.Mapping.LasPointDisplayFilter)
+    #region Get and Set Display Filter
+    public static void SetLasDisplayFilter(LasDatasetLayer lasDatasetLayer)
     {
-      LasDatasetLayer lasDatasetLayer = null;
-
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.GetDisplayFilter
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(ArcGIS.Desktop.Mapping.LasPointDisplayFilterType)
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilterType
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(List<System.Int32>)
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(List<ArcGIS.Core.Data.Analyst3D.LasReturnType>)
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.#ctor
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.Returns
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.ClassCodes
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.KeyPoints
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.SyntheticPoints
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.NotFlagged
-      // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.WithheldPoints
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(ArcGIS.Desktop.Mapping.LasPointDisplayFilter)
-      #region Get and Set Display Filter
-
+      QueuedTask.Run(() => { 
       // get the current display filter
       LasPointDisplayFilter ptFilter = lasDatasetLayer.GetDisplayFilter();
-
-
       // display only ground points
       lasDatasetLayer.SetDisplayFilter(LasPointDisplayFilterType.Ground);
 
@@ -1226,113 +1233,118 @@ namespace MapAuthoring.ProSnippets
       newDisplayFilter.SyntheticPoints = false;
       newDisplayFilter.NotFlagged = false;
       lasDatasetLayer.SetDisplayFilter(returns);
-
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.GetActiveSurfaceConstraints 
-      // cref: ArcGIS.Core.Data.Analyst3D.SurfaceConstraint
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetActiveSurfaceConstraints(List<System.String>) 
-      #region Active Surface Constraints
-      var activeSurfaceConstraints = lasDatasetLayer.GetActiveSurfaceConstraints();
-
-      // clear all surface constraints (i.e. none are active)
-      lasDatasetLayer.SetActiveSurfaceConstraints(null);
-
-      // set all surface constraints active
-      using (var lasDataset = lasDatasetLayer.GetLasDataset())
-      {
-        var surfaceConstraints = lasDataset.GetSurfaceConstraints();
-        var names = surfaceConstraints.Select(sc => sc.DataSourceName).ToList();
-        lasDatasetLayer.SetActiveSurfaceConstraints(names);
-      }
-      #endregion
+      });
     }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.GetActiveSurfaceConstraints 
+    // cref: ArcGIS.Core.Data.Analyst3D.SurfaceConstraint
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetActiveSurfaceConstraints(List<System.String>) 
+    #region Active Surface Constraints
+    public static void SetActiveSurfaceContraints(LasDatasetLayer lasDatasetLayer)
+    {
+      QueuedTask.Run(() => {
+        var activeSurfaceConstraints = lasDatasetLayer.GetActiveSurfaceConstraints();
+
+        // clear all surface constraints (i.e. none are active)
+        lasDatasetLayer.SetActiveSurfaceConstraints(null);
+
+        // set all surface constraints active
+        using (var lasDataset = lasDatasetLayer.GetLasDataset())
+        {
+          var surfaceConstraints = lasDataset.GetSurfaceConstraints();
+          var names = surfaceConstraints.Select(sc => sc.DataSourceName).ToList();
+          lasDatasetLayer.SetActiveSurfaceConstraints(names);
+        }
+      });
+    }
+    #endregion
+
 
     #region ProSnippet Group: LAS Dataset Layer Searching
     #endregion
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SearchPoints(LasPointFilter)
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.ClassCodes
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNext
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.Current
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPoint
+    #region Search for LAS Points
 
-    public static void LasDatasetLayer_Search()
+    public static void LasDatasetLayer_Search(LasDatasetLayer lasDatasetLayer, Envelope envelope)
     {
-      LasDatasetLayer lasDatasetLayer = null;
-      Envelope envelope = null;
-
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SearchPoints(LasPointFilter)
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.ClassCodes
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNext
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.Current
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPoint
-      #region Search for LAS Points
-
-      // searching on the LasDatasetLayer will honor any LasPointDisplayFilter
-
-      // search all points
-      using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(null))
-      {
-        while (ptCursor.MoveNext())
+      QueuedTask.Run(() => {
+        // searching on the LasDatasetLayer will honor any LasPointDisplayFilter
+        // search all points
+        using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(null))
         {
-          using (ArcGIS.Core.Data.Analyst3D.LasPoint point = ptCursor.Current)
+          while (ptCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.LasPoint point = ptCursor.Current)
+            {
+              //Use the point
+            }
           }
         }
-      }
 
-      // search within an extent
-      ArcGIS.Core.Data.Analyst3D.LasPointFilter pointFilter = new ArcGIS.Core.Data.Analyst3D.LasPointFilter();
-      pointFilter.FilterGeometry = envelope;
-      using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(pointFilter))
-      {
-        while (ptCursor.MoveNext())
+        // search within an extent
+        ArcGIS.Core.Data.Analyst3D.LasPointFilter pointFilter = new ArcGIS.Core.Data.Analyst3D.LasPointFilter();
+        pointFilter.FilterGeometry = envelope;
+        using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(pointFilter))
         {
-          using (ArcGIS.Core.Data.Analyst3D.LasPoint point = ptCursor.Current)
+          while (ptCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.LasPoint point = ptCursor.Current)
+            {
+              //Use the point
+            }
           }
         }
-      }
 
-      // search within an extent and limited to specific classification codes
-      pointFilter = new ArcGIS.Core.Data.Analyst3D.LasPointFilter();
-      pointFilter.FilterGeometry = envelope;
-      pointFilter.ClassCodes = new List<int> { 4, 5 };
-      using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(pointFilter))
-      {
-        while (ptCursor.MoveNext())
+        // search within an extent and limited to specific classification codes
+        pointFilter = new ArcGIS.Core.Data.Analyst3D.LasPointFilter();
+        pointFilter.FilterGeometry = envelope;
+        pointFilter.ClassCodes = new List<int> { 4, 5 };
+        using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(pointFilter))
         {
-          using (ArcGIS.Core.Data.Analyst3D.LasPoint point = ptCursor.Current)
+          while (ptCursor.MoveNext())
           {
-
+            using (ArcGIS.Core.Data.Analyst3D.LasPoint point = ptCursor.Current)
+            {
+              //Use the point
+            }
           }
         }
-      }
+      });
+    }
+    #endregion
 
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SearchPoints(LasPointFilter)
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNextArray
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
-      // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
-      #region Search using pre initialized arrays
-
-      // search all points and process with a set size of array retrieving only coordinates
-      using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(null))
-      {
-        int count;
-        Coordinate3D[] lasPointsRetrieved = new Coordinate3D[10000];
-        while (ptCursor.MoveNextArray(lasPointsRetrieved, null, null, null, out count))
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SearchPoints(LasPointFilter)
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNextArray
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
+    // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
+    #region Search using pre initialized arrays
+    public static void SearchUsingPreInitializedArrays(LasDatasetLayer lasDatasetLayer, Envelope envelope)
+    {
+      QueuedTask.Run(() => {
+        // search all points and process with a set size of array retrieving only coordinates
+        using (ArcGIS.Core.Data.Analyst3D.LasPointCursor ptCursor = lasDatasetLayer.SearchPoints(null))
         {
-          var points = lasPointsRetrieved.ToList();
+          int count;
+          Coordinate3D[] lasPointsRetrieved = new Coordinate3D[10000];
+          while (ptCursor.MoveNextArray(lasPointsRetrieved, null, null, null, out count))
+          {
+            var points = lasPointsRetrieved.ToList();
 
-          // ...
+            // Use the points
+          }
         }
-      }
-
+      
       // search within an extent
       // use MoveNextArray retrieving coordinates, fileIndex and pointIds
       ArcGIS.Core.Data.Analyst3D.LasPointFilter filter = new ArcGIS.Core.Data.Analyst3D.LasPointFilter();
@@ -1346,44 +1358,58 @@ namespace MapAuthoring.ProSnippets
         while (ptCursor.MoveNextArray(lasPointsRetrieved, null, fileIndexes, pointIds, out count))
         {
           var points = lasPointsRetrieved.ToList();
-
+          //Use the points
         }
       }
-      #endregion
+      });
     }
+    #endregion
+
 
     #region ProSnippet Group: LAS Dataset Layer Eye Dome Lighting
     #endregion
-
-    public static void LasDatasetLayer_EDL()
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.IsEyeDomeLightingEnabled
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.EyeDomeLightingRadius
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.EyeDomeLightingStrength
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingEnabled(System.Boolean)
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingStrength(System.Double)
+    // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingRadius(System.Double)
+    #region Eye Dome Lighting
+    public static void LasDatasetLayer_EDL(LasDatasetLayer lasDatasetLayer)
     {
-      LasDatasetLayer lasDatasetLayer = null;
+      QueuedTask.Run(() =>
+      {
+        // get current EDL settings
+        bool isEnabled = lasDatasetLayer.IsEyeDomeLightingEnabled;
+        var radius = lasDatasetLayer.EyeDomeLightingRadius;
+        var strength = lasDatasetLayer.EyeDomeLightingStrength;
 
-
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.IsEyeDomeLightingEnabled
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.EyeDomeLightingRadius
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.EyeDomeLightingStrength
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingEnabled(System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingStrength(System.Double)
-      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingRadius(System.Double)
-      #region Eye Dome Lighting
-
-      // get current EDL settings
-      bool isEnabled = lasDatasetLayer.IsEyeDomeLightingEnabled;
-      var radius = lasDatasetLayer.EyeDomeLightingRadius;
-      var strength = lasDatasetLayer.EyeDomeLightingStrength;
-
-      // set EDL values
-      lasDatasetLayer.SetEyeDomeLightingEnabled(true);
-      lasDatasetLayer.SetEyeDomeLightingStrength(65.0);
-      lasDatasetLayer.SetEyeDomeLightingRadius(2.0);
-
-      #endregion
-
+        // set EDL values
+        lasDatasetLayer.SetEyeDomeLightingEnabled(true);
+        lasDatasetLayer.SetEyeDomeLightingStrength(65.0);
+        lasDatasetLayer.SetEyeDomeLightingRadius(2.0);
+      });
     }
+    #endregion
 
     #region ProSnippet Group: Line of Sight
     #endregion
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.#ctor
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.ObserverPoint
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.TargetPoint
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.ObserverHeightOffset
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.TargetHeightOffset
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.ObstructionsMultipatchFeatureClass
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.OutputSpatialReference
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanGetLineOfSight(ArcGIS.Desktop.Mapping.LineOfSightParams)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.GetLineOfSight(ArcGIS.Desktop.Mapping.LineOfSightParams)
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightResult
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.IsTargetVisibleFromObserverPoint
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.VisibleLine
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.InvisibleLine
+    // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.ObstructionPoint
+    #region Get Line of Sight
     public static void GetLineOfSight()
     {
       TinLayer tinLayer = null;
@@ -1393,22 +1419,6 @@ namespace MapAuthoring.ProSnippets
       CIMLineSymbol visibleLineSymbol = null;
       CIMLineSymbol invisibleLineSymbol = null;
 
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.#ctor
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.ObserverPoint
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.TargetPoint
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.ObserverHeightOffset
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.TargetHeightOffset
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.ObstructionsMultipatchFeatureClass
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightParams.OutputSpatialReference
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanGetLineOfSight(ArcGIS.Desktop.Mapping.LineOfSightParams)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.GetLineOfSight(ArcGIS.Desktop.Mapping.LineOfSightParams)
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightResult
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.IsTargetVisibleFromObserverPoint
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.VisibleLine
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.InvisibleLine
-      // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.ObstructionPoint
-      #region Get Line of Sight
       var losParams = new LineOfSightParams();
       losParams.ObserverPoint = observerPoint;
       losParams.TargetPoint = targetPoint;
@@ -1426,8 +1436,10 @@ namespace MapAuthoring.ProSnippets
       LineOfSightResult results = null;
       try
       {
-        if (tinLayer.CanGetLineOfSight(losParams))
-          results = tinLayer.GetLineOfSight(losParams);
+        QueuedTask.Run(() => {
+          if (tinLayer.CanGetLineOfSight(losParams))
+            results = tinLayer.GetLineOfSight(losParams);
+        });       
       }
       catch (Exception ex)
       {
@@ -1441,37 +1453,30 @@ namespace MapAuthoring.ProSnippets
         // results.IsTargetVisibleFromVisibleLine;
         // results.IsTargetVisibleFromInvisibleLine;
 
-
         if (results.VisibleLine != null)
           MapView.Active.AddOverlay(results.VisibleLine, visibleLineSymbol.MakeSymbolReference());
         if (results.InvisibleLine != null)
           MapView.Active.AddOverlay(results.VisibleLine, invisibleLineSymbol.MakeSymbolReference());
         if (results.ObstructionPoint != null)
           MapView.Active.AddOverlay(results.ObstructionPoint, obstructionPointSymbol.MakeSymbolReference());
-      }
-      #endregion
-
+      }      
     }
-
+    #endregion
 
     #region ProSnippet Group: TIN Layer Functionalities
     #endregion
 
-    public static async Task GetSurfaceValues()
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.GetSurfaceValues(ArcGIS.Core.Geometry.MapPoint)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Elevation
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Slope
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues.SlopeDegrees
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues.SlopePercent
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Aspect
+    // cref: ArcGIS.Desktop.Mapping.SurfaceValues.AspectDegrees
+    #region Get Elevation, Slope, Aspect from TIN layer at a location
+    public static async Task GetElevationSlopeAspectFromTIN(TinLayer tinLayer, MapPoint mapPoint)
     {
-      MapPoint mapPoint = null;
-
-      // cref: ArcGIS.Desktop.Mapping.TinLayer.GetSurfaceValues(ArcGIS.Core.Geometry.MapPoint)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Elevation
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Slope
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues.SlopeDegrees
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues.SlopePercent
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Aspect
-      // cref: ArcGIS.Desktop.Mapping.SurfaceValues.AspectDegrees
-      #region Get Elevation, Slope, Aspect from TIN layer at a location
-
-      var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
       await QueuedTask.Run(() =>
       {
         // get elevation, slope and aspect values
@@ -1483,21 +1488,17 @@ namespace MapAuthoring.ProSnippets
         var aspectRadians = values.Aspect;
         var aspectDegrees = values.AspectDegrees;
       });
-      #endregion
     }
-    public static async void GetZValues()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.Layer.CanGetZs()
+    // cref: ArcGIS.Desktop.Mapping.Layer.GetZs(ArcGIS.Core.Geometry.Geometry)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult.Status
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult.Geometry
+    // cref: ArcGIS.Desktop.Mapping.SurfaceZsResultStatus
+    #region Get Z values from a TIN Layer
+    public static async void GetZValues(TinLayer tinLayer, MapPoint mapPoint, Polyline polyline)
     {
-      MapPoint mapPoint = null;
-      Polyline polyline = null;
-
-      // cref: ArcGIS.Desktop.Mapping.Layer.CanGetZs()
-      // cref: ArcGIS.Desktop.Mapping.Layer.GetZs(ArcGIS.Core.Geometry.Geometry)
-      // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult
-      // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult.Status
-      // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult.Geometry
-      // cref: ArcGIS.Desktop.Mapping.SurfaceZsResultStatus
-      #region Get Z values from a TIN Layer
-      var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
       await QueuedTask.Run(() =>
       {
         if (tinLayer.CanGetZs())
@@ -1520,23 +1521,14 @@ namespace MapAuthoring.ProSnippets
           }
         }
       });
-      #endregion
     }
-
-    public static async void Interpolation()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.CanInterpolateShape
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
+    #region Interpolate Shape
+    public static async void Interpolation(TinLayer tinLayer, MapPoint mapPoint, Polyline polyline, Polygon polygon)
     {
-      MapPoint pt = null;
-      Polyline polyline = null;
-      Polygon polygon = null;
-      double x = 0;
-      double y = 0;
-
-      {
-        // cref: ArcGIS.Desktop.Mapping.TinLayer.CanInterpolateShape
-        // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
-        // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
-        #region Interpolate Shape
-        var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
         await QueuedTask.Run(() =>
         {
           Geometry output = null;
@@ -1560,15 +1552,15 @@ namespace MapAuthoring.ProSnippets
           }
 
         });
-        #endregion
-      }
+    }
+    #endregion
 
-      {
+      
         // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShapeVertices(ArcGIS.Core.Geometry.Multipart, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
         // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
         #region Interpolate Shape Verticies
-
-        var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
+    public async static void InterpolateShapeVertices(TinLayer tinLayer, Polyline polyline)
+    {
         await QueuedTask.Run(() =>
         {
           // interpolate z values at the geometry vertices only
@@ -1581,15 +1573,15 @@ namespace MapAuthoring.ProSnippets
           // or use a different interpolation method
           output = tinLayer.InterpolateShapeVertices(polyline, SurfaceInterpolationMethod.Linear);
         });
-        #endregion
-      }
+    }
+    #endregion
 
-      {
+      
         // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateZ(System.Double, System.Double, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
         // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
         #region Interpolate Z at an x,y location
-
-        var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
+    public async static void InterpolateZAtLocation(TinLayer tinLayer, double x, double y)
+    {
         await QueuedTask.Run(() =>
         {
           // interpolate values at the specified x,y location
@@ -1598,17 +1590,16 @@ namespace MapAuthoring.ProSnippets
           // or use a different interpolation method
           z = tinLayer.InterpolateZ(x, y, SurfaceInterpolationMethod.Linear);
         });
-        #endregion
-      }
+    }
+    #endregion
 
-
-      {
+      
         // cref: ArcGIS.Desktop.Mapping.TinLayer.GetSurfaceLength(ArcGIS.Core.Geometry.Multipart,ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
         // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
         // cref: ArcGIS.Desktop.Mapping.TinLayer.GetSurfaceLength(ArcGIS.Core.Geometry.Multipart,ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod,System.Double,System.Double)
         #region Get 3D length of multipart by interpolating heights
-
-        var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
+    public async static void Get3DLengthOfMultipart(TinLayer tinLayer, Polygon polygon, Polyline polyline)
+    {
         await QueuedTask.Run(() =>
         {
           // interpolate heights and calculate the sum of 3D distances between the vertices
@@ -1621,11 +1612,11 @@ namespace MapAuthoring.ProSnippets
           // densify the shape before interpolating
           length3d = tinLayer.GetSurfaceLength(polygon, SurfaceInterpolationMethod.NaturalNeighbor, 0.01, 0);
         });
-        #endregion
       }
-    }
+    #endregion
   }
 }
+
 
 
 
