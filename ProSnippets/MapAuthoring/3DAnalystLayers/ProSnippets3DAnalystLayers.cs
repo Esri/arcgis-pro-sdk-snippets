@@ -126,7 +126,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a TIN (Triangulated Irregular Network) layer and adds it to the specified map.
     /// </summary>
-    /// <param name="map">The map to which the TIN layer will be added. Cannot be null.</param>
+    /// <param name="map">The map to which the TIN layer will be added.</param>
     public static void SurfaceLayerCreation(Map map)
     {
       string tinPath = @"d:\Data\Tin\TinDataset";
@@ -152,8 +152,8 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a TIN layer from the specified TIN dataset and adds it to the given map.
     /// </summary>
-    /// <param name="map">The map to which the TIN layer will be added. Cannot be null.</param>
-    /// <param name="tinDataset">The TIN dataset used to create the TIN layer. Cannot be null.</param>
+    /// <param name="map">The map to which the TIN layer will be added.</param>
+    /// <param name="tinDataset">The TIN dataset used to create the TIN layer.</param>
     public static void CreateTinLayerFromDataset(Map map, ArcGIS.Core.Data.Analyst3D.TinDataset tinDataset)
     {
       var tinCP_ds = new TinLayerCreationParams(tinDataset);
@@ -220,7 +220,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a terrain layer in the specified map using predefined parameters.
     /// </summary>
-    /// <param name="map">The map to which the terrain layer will be added. Cannot be null.</param>
+    /// <param name="map">The map to which the terrain layer will be added.</param>
     public static void CreateTerrainLayer(Map map)
     {
       QueuedTask.Run(() =>
@@ -325,7 +325,7 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a LAS dataset layer and adds it to the specified map.
     /// </summary>
-    /// <param name="map">The map to which the LAS dataset layer will be added. Cannot be null.</param>
+    /// <param name="map">The map to which the LAS dataset layer will be added.</param>
     public static void CreateLasDatasetLayer(Map map)
     {
       string lasPath = @"d:\Data\LASDataset.lasd";
@@ -350,8 +350,8 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Creates a new LAS dataset layer from the specified LAS dataset and adds it to the given map.
     /// </summary>
-    /// <param name="map">The map to which the LAS dataset layer will be added. Cannot be null.</param>
-    /// <param name="lasDataset">The LAS dataset used to create the layer. Cannot be null.</param>
+    /// <param name="map">The map to which the LAS dataset layer will be added.</param>
+    /// <param name="lasDataset">The LAS dataset used to create the layer.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="lasDataset"/> is null.</exception>
     public static void CreateLasDatasetLayerFromDataset(Map map, ArcGIS.Core.Data.Analyst3D.LasDataset lasDataset)
     {
@@ -382,6 +382,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TinEdgeRendererDefintion.#ctor
     // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
     #region Create a LasDatasetLayer with renderers
+    /// <summary>
+    /// Creates a LAS dataset layer with specified renderers and adds it to the provided map.
+    /// </summary>
+    /// <param name="lasDataset">The LAS dataset to be used for creating the layer. Cannot be null.</param>
+    /// <param name="map">The map to which the LAS dataset layer will be added. Cannot be null.</param>
     public static void CreateLasDatasetLayerWithRenderers(ArcGIS.Core.Data.Analyst3D.LasDataset lasDataset, Map map)
     {
       var lasCP_renderers = new LasDatasetLayerCreationParams(lasDataset);
@@ -517,10 +522,8 @@ namespace MapAuthoring.ProSnippets
     /// <summary>
     /// Configures and applies a defined interval node renderer to the specified TIN layer.
     /// </summary>
-    /// <param name="tinLayer">The TIN layer to which the renderer will be applied. Must support the creation and application of the specified
-    /// renderer.</param>
-    /// <param name="nodeSymbol">The symbol template used for rendering nodes. This symbol defines the visual appearance of the nodes in the
-    /// renderer.</param>
+    /// <param name="tinLayer">The <see cref="TinLayer"> to which the renderer will be applied. Must be a valid TIN layer.</param>
+    /// <param name="nodeSymbol">The <see cref="CIMPointSymbol"> used to symbolize the nodes in the renderer. Cannot be <see langword="null"/>.</param>
     public static void CreateDefinedIntervalNodeRenderer(TinLayer tinLayer, CIMPointSymbol nodeSymbol)
     {
       // applies to TIN layers only
@@ -823,6 +826,8 @@ namespace MapAuthoring.ProSnippets
     #endregion
 
     // cref: ArcGIS.Desktop.Mapping.TinFaceClassBreaksRendererDefinition
+    // cref: ArcGIS.Core.CIM.ClassificationMethod
+    // cref: ArcGIS.Desktop.Mapping.StandardDeviationInterval
     // cref: ArcGIS.Core.CIM.CIMTinRenderer
     // cref: ArcGIS.Core.CIM.CIMTinFaceClassBreaksRenderer 
     // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CanCreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
@@ -835,7 +840,7 @@ namespace MapAuthoring.ProSnippets
     /// Creates and applies an elevation face renderer to the specified surface layer using an equal interval
     /// classification.
     /// </summary>
-    /// <param name="surfaceLayer">The surface layer to which the elevation face renderer will be applied. Cannot be null.</param>
+    /// <param name="surfaceLayer">The surface layer to which the elevation face renderer will be applied. Must not be <see langword="null"/>.</param>
     public static void CreateElevationFaceRenderer(SurfaceLayer surfaceLayer) {
 
       var elevFaceClassBreaksEqual = new TinFaceClassBreaksRendererDefinition();
@@ -860,8 +865,12 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.CreateRenderer(ArcGIS.Desktop.Mapping.TinRendererDefinition)
     // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.SetRenderer(ArcGIS.Core.CIM.CIMTinRenderer, ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
     // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-    // cref: ArcGIS.Desktop.Mapping.TerrainLayer
     #region Dirty Area Renderer 
+    /// <summary>
+    /// Configures and applies a dirty area renderer to the specified terrain layer.
+    /// </summary>
+    /// <param name="terrainLayer">The <see cref="TerrainLayer"/> to which the dirty area renderer will be applied. Must not be <see
+    /// langword="null"/>.</param>
     public static void CreateDirtyAreaRenderer(TerrainLayer terrainLayer)
     {
     var dirtyAreaRendererDef = new TerrainDirtyAreaRendererDefinition();
@@ -892,6 +901,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
     #region Terrain Point Class Breaks Renderer
     // applies to Terrain layers only
+    /// <summary>
+    /// Creates and applies a terrain point class breaks renderer to the specified terrain layer.
+    /// </summary>
+    /// <param name="terrainLayer">The terrain layer to which the renderer will be applied. Must be a valid terrain layer.</param>
     public static void CreateTerrainPointClassBreaksRenderer(TerrainLayer terrainLayer)
     {
       var terrainPointClassBreaks = new TerrainPointClassBreaksRendererDefinition();
@@ -921,6 +934,10 @@ namespace MapAuthoring.ProSnippets
       // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer
       #region LAS Points Classification Unique Value Renderer
       // applies to LAS dataset layers only
+      /// <summary>
+      /// Configures a LAS dataset layer to use a unique value renderer based on point classifications.
+      /// </summary>
+      /// <param name="lasDatasetLayer">The LAS dataset layer to apply the renderer to. Must not be <see langword="null"/>.</param>
       public static void CreateLASPointsClassificationUVR(LasDatasetLayer lasDatasetLayer)
     {
       var lasPointsClassificationRendererDef = new LasUniqueValueRendererDefinition(LasAttributeType.Classification);
@@ -954,6 +971,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
     #region LAS Points Returns Unique Value Renderer
     // applies to LAS dataset layers only
+    /// <summary>
+    /// Configures a LAS dataset layer to use a unique value renderer based on return numbers.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The LAS dataset layer to which the unique value renderer will be applied. This parameter cannot be null.</param>
     public static void CreateLASPointsReturnsUVR(LasDatasetLayer lasDatasetLayer)
     {
       var lasPointsReturnsRendererDef = new LasUniqueValueRendererDefinition(LasAttributeType.ReturnNumber);
@@ -986,6 +1007,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.LasStretchRendererDefinition.NumberOfStandardDeviations
     #region LAS Points Elevation Stretch Renderer
     // applies to LAS dataset layers only
+    /// <summary>
+    /// Configures and applies an elevation-based stretch renderer to a LAS dataset layer.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The <see cref="LasDatasetLayer"/> to which the elevation stretch renderer will be applied.</param>
     public static void CreateLASPointsElevationStretchRenderer(LasDatasetLayer lasDatasetLayer)
     {
       var elevLasStretchRendererDef = new LasStretchRendererDefinition(ArcGIS.Core.CIM.LASStretchAttribute.Elevation);
@@ -1029,6 +1054,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
     #region LAS Points Classified Elevation Renderer
     // applies to LAS dataset layers only
+    /// <summary>
+    /// Configures and applies a classified elevation renderer to a LAS dataset layer.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The LAS dataset layer to which the classified elevation renderer will be applied.</param>
     public static void CreateLASPointsClassifiedElevationRenderer(LasDatasetLayer lasDatasetLayer)
     {
       var lasPointsClassBreaksRendererDef = new LasPointClassBreaksRendererDefinition();
@@ -1046,9 +1075,12 @@ namespace MapAuthoring.ProSnippets
       });
     }
       #endregion
-        // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.RemoveRenderer(ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
-        // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
-        #region Remove an edge renderer
+    // cref: ArcGIS.Desktop.Mapping.SurfaceLayer.RemoveRenderer(ArcGIS.Desktop.Mapping.SurfaceRendererTarget)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceRendererTarget
+    #region Remove an edge renderer
+    /// <summary>
+    /// Removes the edge renderer from the first <see cref="SurfaceLayer"/> in the active map.
+    /// </summary>
     public static void RemoveEdgeRenderer()
     {
       var layer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<SurfaceLayer>().FirstOrDefault();
@@ -1091,6 +1123,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
     // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.DataElementsOnly
     #region Seach for TIN Nodes, Edges, Triangles
+    /// <summary>
+    /// Searches for TIN nodes, edges, and triangles within the specified envelope.
+    /// </summary>
+    /// <param name="tinLayer">The TIN layer to search.</param>
+    /// <param name="envelope">The envelope used for filtering search results.</param>
     public static void TinLayer_Search(TinLayer tinLayer, Envelope envelope)
     {
       QueuedTask.Run( () =>
@@ -1203,6 +1240,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.LasPointDisplayFilter.WithheldPoints
     // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetDisplayFilter(ArcGIS.Desktop.Mapping.LasPointDisplayFilter)
     #region Get and Set Display Filter
+    /// <summary>
+    /// Configures the display filter for a LAS dataset layer to control which points are visible based on specific
+    /// criteria.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The <see cref="LasDatasetLayer"/> instance for which the display filter is being set.</param>
     public static void SetLasDisplayFilter(LasDatasetLayer lasDatasetLayer)
     {
       QueuedTask.Run(() => { 
@@ -1241,6 +1283,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.Data.Analyst3D.SurfaceConstraint
     // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetActiveSurfaceConstraints(List<System.String>) 
     #region Active Surface Constraints
+    /// <summary>
+    /// Activates all surface constraints for the specified LAS dataset layer.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The <see cref="LasDatasetLayer"/> for which all surface constraints will be activated.</param>
     public static void SetActiveSurfaceContraints(LasDatasetLayer lasDatasetLayer)
     {
       QueuedTask.Run(() => {
@@ -1273,7 +1319,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.Current
     // cref: ArcGIS.Core.Data.Analyst3D.LasPoint
     #region Search for LAS Points
-
+    /// <summary>
+    /// Searches for LAS points within a specified <see cref="LasDatasetLayer"/>.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The LAS dataset layer to search. Cannot be <c>null</c>.</param>
+    /// <param name="envelope">The spatial extent used to filter the search. If <c>null</c>, all points in the layer are searched.</param>
     public static void LasDatasetLayer_Search(LasDatasetLayer lasDatasetLayer, Envelope envelope)
     {
       QueuedTask.Run(() => {
@@ -1329,6 +1379,11 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
     // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
     #region Search using pre initialized arrays
+    /// <summary>
+    /// Searches for LAS points in a LAS dataset layer using pre-initialized arrays for efficient data retrieval.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The <see cref="LasDatasetLayer"/> representing the LAS dataset to search.</param>
+    /// <param name="envelope">The <see cref="Envelope"/> defining the spatial extent for the filtered search.</param>
     public static void SearchUsingPreInitializedArrays(LasDatasetLayer lasDatasetLayer, Envelope envelope)
     {
       QueuedTask.Run(() => {
@@ -1375,6 +1430,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingStrength(System.Double)
     // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.SetEyeDomeLightingRadius(System.Double)
     #region Eye Dome Lighting
+    /// <summary>
+    /// Configures Eye Dome Lighting (EDL) settings for the specified LAS dataset layer.
+    /// </summary>
+    /// <param name="lasDatasetLayer">The <see cref="LasDatasetLayer"/> instance for which Eye Dome Lighting settings will be configured.</param>
     public static void LasDatasetLayer_EDL(LasDatasetLayer lasDatasetLayer)
     {
       QueuedTask.Run(() =>
@@ -1410,6 +1469,10 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.InvisibleLine
     // cref: ArcGIS.Desktop.Mapping.LineOfSightResult.ObstructionPoint
     #region Get Line of Sight
+    /// <summary>
+    /// Calculates the line of sight between an observer point and a target point, determining visibility and
+    /// obstructions.
+    /// </summary>
     public static void GetLineOfSight()
     {
       TinLayer tinLayer = null;
@@ -1475,6 +1538,12 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SurfaceValues.Aspect
     // cref: ArcGIS.Desktop.Mapping.SurfaceValues.AspectDegrees
     #region Get Elevation, Slope, Aspect from TIN layer at a location
+    /// <summary>
+    /// Gets elevation, slope, and aspect values from a TIN layer at a specified location.
+    /// </summary>
+    /// <param name="tinLayer">The TIN layer to query.</param>
+    /// <param name="mapPoint">The location to retrieve surface values from.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public static async Task GetElevationSlopeAspectFromTIN(TinLayer tinLayer, MapPoint mapPoint)
     {
       await QueuedTask.Run(() =>
@@ -1497,6 +1566,12 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.SurfaceZsResult.Geometry
     // cref: ArcGIS.Desktop.Mapping.SurfaceZsResultStatus
     #region Get Z values from a TIN Layer
+    /// <summary>
+    /// Gets Z values from a TIN layer for a map point and polyline.
+    /// </summary>
+    /// <param name="tinLayer">The TIN layer to query.</param>
+    /// <param name="mapPoint">The map point to retrieve Z value for.</param>
+    /// <param name="polyline">The polyline to retrieve Z values for.</param>
     public static async void GetZValues(TinLayer tinLayer, MapPoint mapPoint, Polyline polyline)
     {
       await QueuedTask.Run(() =>
@@ -1527,6 +1602,13 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
     // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
     #region Interpolate Shape
+    /// <summary>
+    /// Interpolates Z values for the specified geometry using a TIN layer.
+    /// </summary>
+    /// <param name="tinLayer">The TIN layer to use for interpolation.</param>
+    /// <param name="mapPoint">The map point to interpolate.</param>
+    /// <param name="polyline">The polyline to interpolate.</param>
+    /// <param name="polygon">The polygon to interpolate.</param>
     public static async void Interpolation(TinLayer tinLayer, MapPoint mapPoint, Polyline polyline, Polygon polygon)
     {
         await QueuedTask.Run(() =>
@@ -1555,10 +1637,16 @@ namespace MapAuthoring.ProSnippets
     }
     #endregion
 
-      
-        // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShapeVertices(ArcGIS.Core.Geometry.Multipart, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
-        // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
-        #region Interpolate Shape Verticies
+
+    // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShapeVertices(ArcGIS.Core.Geometry.Multipart, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
+    // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
+    #region Interpolate Shape vertices
+    /// <summary>
+    /// Interpolates the Z-values of the vertices in the specified polyline using the given TIN surface.
+    /// </summary>
+    /// <param name="tinLayer">The TIN surface layer used for interpolation. Must not be null.</param>
+    /// <param name="polyline">The polyline whose vertex Z-values will be interpolated. Must not be null.</param>
+
     public async static void InterpolateShapeVertices(TinLayer tinLayer, Polyline polyline)
     {
         await QueuedTask.Run(() =>
@@ -1580,6 +1668,12 @@ namespace MapAuthoring.ProSnippets
         // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateZ(System.Double, System.Double, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
         // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
         #region Interpolate Z at an x,y location
+    /// <summary>
+    /// Interpolates the Z value at a specified X, Y location using the given <see cref="TinLayer"/>.
+    /// </summary>
+    /// <param name="tinLayer">The <see cref="TinLayer"/> used for interpolation. Must not be null.</param>
+    /// <param name="x">The X coordinate of the location where the Z value is interpolated.</param>
+    /// <param name="y">The Y coordinate of the location where the Z value is interpolated.</param>
     public async static void InterpolateZAtLocation(TinLayer tinLayer, double x, double y)
     {
         await QueuedTask.Run(() =>
@@ -1598,6 +1692,13 @@ namespace MapAuthoring.ProSnippets
         // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
         // cref: ArcGIS.Desktop.Mapping.TinLayer.GetSurfaceLength(ArcGIS.Core.Geometry.Multipart,ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod,System.Double,System.Double)
         #region Get 3D length of multipart by interpolating heights
+    /// <summary>
+    /// Calculates the 3D length of a multipart geometry by interpolating heights using a specified surface
+    /// interpolation method.
+    /// </summary>
+    /// <param name="tinLayer">The <see cref="TinLayer"/> used for surface interpolation and 3D length calculation. Cannot be null.</param>
+    /// <param name="polygon">The <see cref="Polygon"/> geometry for which the 3D length is calculated. Cannot be null.</param>
+    /// <param name="polyline">The <see cref="Polyline"/> geometry for which the 3D length is calculated. Cannot be null.</param>
     public async static void Get3DLengthOfMultipart(TinLayer tinLayer, Polygon polygon, Polyline polyline)
     {
         await QueuedTask.Run(() =>
@@ -1616,6 +1717,7 @@ namespace MapAuthoring.ProSnippets
     #endregion
   }
 }
+
 
 
 
