@@ -811,14 +811,6 @@ namespace Framework.Snippets
     #region Prevent ArcGIS Pro from Closing
 
     // Called by Framework when ArcGIS Pro is closing
-    /// <summary>
-    /// Determines whether the application can safely unload.
-    /// </summary>
-    /// <remarks>This method is invoked by the framework when ArcGIS Pro is closing.  Returning <see
-    /// langword="false"/> prevents the application from closing. Override this method to implement custom logic for
-    /// determining whether  the application should be allowed to close.</remarks>
-    /// <returns><see langword="true"/> if the application can proceed with unloading;  otherwise, <see langword="false"/> to
-    /// cancel the unload operation.</returns>
     protected override bool CanUnload()
     {
       //return false to ~cancel~ Application close
