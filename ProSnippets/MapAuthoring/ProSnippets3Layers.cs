@@ -1751,7 +1751,7 @@ namespace MapAuthoring.ProSnippets
     #region ProSnippet Group: Symbol Layer Drawing (SLD)
     #endregion
 
-    public void SLD1()
+    public static void SLD1()
     {
       FeatureLayer featLayer = null;
       GroupLayer groupLayer = null;
@@ -1874,7 +1874,7 @@ namespace MapAuthoring.ProSnippets
       #endregion
     }
 
-    public GroupLayer GetParentLayerWithSLD(GroupLayer groupLayer)
+    public static GroupLayer GetParentLayerWithSLD(GroupLayer groupLayer)
     {
       if (groupLayer == null)
         return null;
@@ -2198,32 +2198,46 @@ namespace MapAuthoring.ProSnippets
     // cref: ArcGIS.Core.CIM.RasterStretchType
     // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
     #region Update the RGB colorizer on a raster layer
-    await QueuedTask.Run(() =>
-      {
-      // Get the colorizer from the raster layer.
-      CIMRasterColorizer rColorizer = rasterLayer.GetColorizer();
-      // Check if the colorizer is an RGB colorizer.
-      if (rColorizer is CIMRasterRGBColorizer rasterRGBColorizer)
-      {
-        // Update RGB colorizer properties.
-        rasterRGBColorizer.StretchType = RasterStretchType.ESRI;
-        // Update the raster layer with the changed colorizer.
-        rasterLayer.SetColorizer(rasterRGBColorizer);
-      }
-    });
-      #endregion
-
-      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
-      // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
-      #region Check if a certain colorizer can be applied to a raster layer 
+    /// <summary>
+    /// Updates the RGB colorizer properties of the specified raster layer.
+    /// </summary>
+    /// <param name="rasterLayer"></param>
+    public async static void UpdateRGBColizer(RasterLayer rasterLayer)
+   {
       await QueuedTask.Run(() =>
       {
-      // Get the list of colorizers that can be applied to the raster layer.
-      IEnumerable<RasterColorizerType> applicableColorizerList = rasterLayer.GetApplicableColorizers();
-      // Check if the RGB colorizer is part of the list.
-      bool isTrue_ContainTheColorizerType =
-  applicableColorizerList.Contains(RasterColorizerType.RGBColorizer);
-    });
+        // Get the colorizer from the raster layer.
+        CIMRasterColorizer rColorizer = rasterLayer.GetColorizer();
+        // Check if the colorizer is an RGB colorizer.
+        if (rColorizer is CIMRasterRGBColorizer rasterRGBColorizer)
+        {
+          // Update RGB colorizer properties.
+          rasterRGBColorizer.StretchType = RasterStretchType.ESRI;
+          // Update the raster layer with the changed colorizer.
+          rasterLayer.SetColorizer(rasterRGBColorizer);
+        }
+      });
+    }
+    #endregion
+
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    #region Check if a certain colorizer can be applied to a raster layer 
+    /// <summary>
+    /// Checks if the RGB colorizer type is applicable to the specified raster layer.
+    /// </summary>
+    /// <param name="rasterLayer"></param>
+    public static async void CheckColorizerType(RasterLayer rasterLayer)
+    {
+      await QueuedTask.Run(() =>
+      {
+        // Get the list of colorizers that can be applied to the raster layer.
+        IEnumerable<RasterColorizerType> applicableColorizerList = rasterLayer.GetApplicableColorizers();
+        // Check if the RGB colorizer is part of the list.
+        bool isTrue_ContainTheColorizerType =
+    applicableColorizerList.Contains(RasterColorizerType.RGBColorizer);
+      });
+    }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
@@ -2234,56 +2248,70 @@ namespace MapAuthoring.ProSnippets
       // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
       // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
       #region Create a new colorizer based on a default colorizer definition and apply it to the raster layer 
+    /// <summary>
+    /// Creates and applies a new stretch colorizer to the specified raster layer.
+    /// </summary>
+    /// <param name="rasterLayer">The raster layer to which the new stretch colorizer will be applied.  Must not be <see langword="null"/>.</param>
+    public async static void CreateNewColorizer(RasterLayer rasterLayer)  
+{
       await QueuedTask.Run(async () =>
       {
-      // Check if the Stretch colorizer can be applied to the raster layer.
-      if (rasterLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
-      {
-        // Create a new Stretch Colorizer Definition using the default constructor.
-        StretchColorizerDefinition stretchColorizerDef_default = new StretchColorizerDefinition();
-        // Create a new Stretch colorizer using the colorizer definition created above.
-        CIMRasterStretchColorizer newStretchColorizer_default =
-    await rasterLayer.CreateColorizerAsync(stretchColorizerDef_default) as CIMRasterStretchColorizer;
-        // Set the new colorizer on the raster layer.
-        rasterLayer.SetColorizer(newStretchColorizer_default);
-      }
-    });
-      #endregion
+        // Check if the Stretch colorizer can be applied to the raster layer.
+        if (rasterLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+        {
+          // Create a new Stretch Colorizer Definition using the default constructor.
+          StretchColorizerDefinition stretchColorizerDef_default = new StretchColorizerDefinition();
+          // Create a new Stretch colorizer using the colorizer definition created above.
+          CIMRasterStretchColorizer newStretchColorizer_default =
+      await rasterLayer.CreateColorizerAsync(stretchColorizerDef_default) as CIMRasterStretchColorizer;
+          // Set the new colorizer on the raster layer.
+          rasterLayer.SetColorizer(newStretchColorizer_default);
+        }
+      });
+    }
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
-      // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
-      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
-      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor(System.Int32, ArcGIS.Core.CIM.RasterStretchType, System.Double, ArcGIS.Core.CIM.CIMColorRamp)
-      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
-      // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
-      // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
-      #region Create a new colorizer based on a custom colorizer definition and apply it to the raster layer 
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetApplicableColorizers()
+    // cref: ArcGIS.Desktop.Mapping.RasterColorizerType
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor(System.Int32, ArcGIS.Core.CIM.RasterStretchType, System.Double, ArcGIS.Core.CIM.CIMColorRamp)
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.CreateColorizerAsync(ArcGIS.Desktop.Mapping.RasterColorizerDefinition)
+    // cref: ArcGIS.core.CIM.CIMRasterStretchColorizer
+    // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.SetColorizer(ArcGIS.Core.CIM.CIMRasterColorizer)
+    #region Create a new colorizer based on a custom colorizer definition and apply it to the raster layer 
+    /// <summary>
+    /// Create a new colorizer based on a custom colorizer definition and apply it to the raster layer
+    /// </summary>
+    /// <param name="rasterLayer"></param>
+    public async static void CreateCustomColorizerFromDefinition(RasterLayer rasterLayer, CIMColorRamp colorRamp)
+    {
       await QueuedTask.Run(async () =>
       {
-      // Check if the Stretch colorizer can be applied to the raster layer.
-      if (rasterLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
-      {
-        // Create a new Stretch Colorizer Definition specifying parameters 
-        // for band index, stretch type, gamma and color ramp.
-        StretchColorizerDefinition stretchColorizerDef_custom =
-    new StretchColorizerDefinition(1, RasterStretchType.ESRI, 2, colorRamp);
-        // Create a new stretch colorizer using the colorizer definition created above.
-        CIMRasterStretchColorizer newStretchColorizer_custom =
-    await rasterLayer.CreateColorizerAsync(stretchColorizerDef_custom) as CIMRasterStretchColorizer;
-        // Set the new colorizer on the raster layer.
-        rasterLayer.SetColorizer(newStretchColorizer_custom);
-      }
-    });
-      #endregion
+        // Check if the Stretch colorizer can be applied to the raster layer.
+        if (rasterLayer.GetApplicableColorizers().Contains(RasterColorizerType.StretchColorizer))
+        {
+          // Create a new Stretch Colorizer Definition specifying parameters 
+          // for band index, stretch type, gamma and color ramp.
+          StretchColorizerDefinition stretchColorizerDef_custom =
+      new StretchColorizerDefinition(1, RasterStretchType.ESRI, 2, colorRamp);
+          // Create a new stretch colorizer using the colorizer definition created above.
+          CIMRasterStretchColorizer newStretchColorizer_custom =
+      await rasterLayer.CreateColorizerAsync(stretchColorizerDef_custom) as CIMRasterStretchColorizer;
+          // Set the new colorizer on the raster layer.
+          rasterLayer.SetColorizer(newStretchColorizer_custom);
+        }
+      });
+    }
+    #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.RasterLayer
-      // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
-      // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.#ctor(System.Uri)
-      // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.ColorizerDefinition
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory
-      #region Create a raster layer with a new colorizer definition
+    // cref: ArcGIS.Desktop.Mapping.RasterLayer
+    // cref: ArcGIS.Desktop.Mapping.StretchColorizerDefinition.#ctor
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.#ctor(System.Uri)
+    // cref: ArcGIS.Desktop.Mapping.RasterLayerCreationParams.ColorizerDefinition
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams, ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+    // cref: ArcGIS.Desktop.Mapping.LayerFactory
+    #region Create a raster layer with a new colorizer definition
     /// <summary>
     /// Creates a raster layer in the specified map using the provided raster file path and applies a default stretch
     /// colorizer.
@@ -2600,7 +2628,7 @@ namespace MapAuthoring.ProSnippets
       await QueuedTask.Run(() =>
       {
         // Create an image service layer using the url for an image service.
-        var isLayer = LayerFactory.Instance.CreateLayer(new Uri(url), aMap) as ImageServiceLayer;
+        var isLayer = LayerFactory.Instance.CreateLayer(new Uri(url), map) as ImageServiceLayer;
       });
     }
     #endregion

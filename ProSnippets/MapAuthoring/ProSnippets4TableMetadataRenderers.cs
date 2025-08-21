@@ -242,7 +242,6 @@ namespace MapAuthoring.ProSnippets
     #region Create a Proportion Renderer with max and min symbol size capped
     public static async void CreateProportionalRenderer(FeatureLayer featureLayer)
     {
-
       string colorBrewerSchemesName = "ArcGIS Colors";
       //Get the style project item that contains the color ramps
       StyleProjectItem style = Project.Current.GetItems<StyleProjectItem>().First(s => s.Name == colorBrewerSchemesName);
@@ -389,16 +388,17 @@ namespace MapAuthoring.ProSnippets
 
     #region ProSnippet Group: Working with Standalone Tables
     #endregion
-
-    public void StandaloneTables1()
+    // cref: ArcGIS.Desktop.Mapping.StandaloneTableFactory.CreateStandaloneTable(System.Uri, ArcGIS.Desktop.Mapping.IStandaloneTableContainerEdit, System.Int32, System.String)
+    // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams
+    // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams.#ctor(ArcGIS.Desktop.Core.Item)
+    // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams.DefinitionQuery
+    // cref: ArcGIS.Desktop.Mapping.StandaloneTableFactory.CreateStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTableCreationParams, ArcGIS.Desktop.Mapping.IStandaloneTableContainerEdit)
+    #region Create a StandaloneTable
+    /// <summary>
+    /// Creates a standalone table in the specified container, which can be a map or a group layer.
+    /// </summary>
+    public static void  CreateStandaloneTable()
     {
-      // cref: ArcGIS.Desktop.Mapping.StandaloneTableFactory.CreateStandaloneTable(System.Uri, ArcGIS.Desktop.Mapping.IStandaloneTableContainerEdit, System.Int32, System.String)
-      // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams
-      // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams.#ctor(ArcGIS.Desktop.Core.Item)
-      // cref: ArcGIS.Desktop.Mapping.StandaloneTableCreationParams.DefinitionQuery
-      // cref: ArcGIS.Desktop.Mapping.StandaloneTableFactory.CreateStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTableCreationParams, ArcGIS.Desktop.Mapping.IStandaloneTableContainerEdit)
-      #region Create a StandaloneTable
-
       //container can be a map or group layer
       var container = MapView.Active.Map;
       //var container =  MapView.Active.Map.GetLayersAsFlattenedList()
@@ -421,32 +421,26 @@ namespace MapAuthoring.ProSnippets
         //use table creation params
         var table_params = new StandaloneTableCreationParams(item)
         {
-          // At 2.x - DefinitionFilter = new CIMDefinitionFilter()
-          //{
-          //  //optional - use a filter
-          //  DefinitionExpression = "LAND_USE = 3"
-          //}
           DefinitionQuery = new DefinitionQuery(whereClause: "LAND_USE = 3", name: "Landuse")
         };
         var table4 = StandaloneTableFactory.Instance.CreateStandaloneTable(table_params,
                                  container);
-
       });
-
-      #endregion
-
     }
-
-    public void StandaloneTables2()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
+    // cref: ArcGIS.Desktop.Mapping.Map.FindStandaloneTables(System.String)
+    // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
+    // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.FindStandaloneTables(System.String)
+    // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.GetStandaloneTablesAsFlattenedList()
+    // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.StandaloneTables
+    // cref: ArcGIS.Desktop.Core.FrameworkExtender.OpenTablePane(ArcGIS.Desktop.Framework.PaneCollection,ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Desktop.Mapping.TableViewMode)
+    #region Retrieve a table from its container
+    /// <summary>
+    /// Retrieves a standalone table from its container
+    /// </summary>
+    public static void RetrieveStandaloneTableFromContainer()
     {
-      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
-      // cref: ArcGIS.Desktop.Mapping.Map.FindStandaloneTables(System.String)
-      // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
-      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.FindStandaloneTables(System.String)
-      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.GetStandaloneTablesAsFlattenedList()
-      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.StandaloneTables
-      // cref: ArcGIS.Desktop.Core.FrameworkExtender.OpenTablePane(ArcGIS.Desktop.Framework.PaneCollection,ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Desktop.Mapping.TableViewMode)
-      #region Retrieve a table from its container
       var container = MapView.Active.Map;
 
       //the map standalone table collection
@@ -462,19 +456,20 @@ namespace MapAuthoring.ProSnippets
       //show the table in a table view 
       //use FrameworkApplication.Current.Dispatcher.BeginInvoke if not on the UI thread
       FrameworkApplication.Panes.OpenTablePane(table2);
-
-      #endregion
+      
     }
-
-    public void StandaloneTables3()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.GroupLayer.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, System.Int32)
+    // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
+    // cref: ArcGIS.Desktop.Mapping.Map.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, ArcGIS.Desktop.Mapping.CompositeLayerWithTables, System.Int32)
+    // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.FindStandaloneTables(System.String)
+    // cref: ArcGIS.Desktop.Mapping.Map.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, System.Int32)
+    #region Move a Standalone table
+    /// <summary>
+    /// Moves a standalone table within its container or between containers.
+    /// </summary>
+    public static void MoveStandaloneTable()
     {
-      // cref: ArcGIS.Desktop.Mapping.GroupLayer.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, System.Int32)
-      // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
-      // cref: ArcGIS.Desktop.Mapping.Map.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, ArcGIS.Desktop.Mapping.CompositeLayerWithTables, System.Int32)
-      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.FindStandaloneTables(System.String)
-      // cref: ArcGIS.Desktop.Mapping.Map.MoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable, System.Int32)
-      #region Move a Standalone table
-
       //get the first group layer that has at least one table
       var grp_layer = MapView.Active.Map.GetLayersAsFlattenedList()
         .OfType<GroupLayer>().First(g => g.StandaloneTables.Count > 0);
@@ -497,23 +492,22 @@ namespace MapAuthoring.ProSnippets
         //move to the map container
         map.MoveStandaloneTable(table2, 0);//will be placed at the top
       });
-
-      #endregion
-
     }
-
-    public void StandaloneTables4()
+    #endregion
+    // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
+    // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
+    // cref: ArcGIS.Desktop.Mapping.Map.RemoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable)
+    // cref: ArcGIS.Desktop.Mapping.Map.RemoveStandaloneTables(System.IEnumerable<ArcGIS.Desktop.Mapping.StandaloneTable>)
+    // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.GetStandaloneTablesAsFlattenedList()
+    // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.StandaloneTables
+    // cref: ArcGIS.Desktop.Mapping.GroupLayer.RemoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable)
+    // cref: ArcGIS.Desktop.Mapping.GroupLayer.RemoveStandaloneTables(System.IEnumerable<ArcGIS.Desktop.Mapping.StandaloneTable>)
+    #region Remove a Standalone table
+    /// <summary>
+    /// Removes a standalone table from its container or from the map.
+    /// </summary>
+    public static void RemoveStandaloneTable()
     {
-      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
-      // cref: ArcGIS.Desktop.Mapping.Map.StandaloneTables
-      // cref: ArcGIS.Desktop.Mapping.Map.RemoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable)
-      // cref: ArcGIS.Desktop.Mapping.Map.RemoveStandaloneTables(System.IEnumerable<ArcGIS.Desktop.Mapping.StandaloneTable>)
-      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.GetStandaloneTablesAsFlattenedList()
-      // cref: ArcGIS.Desktop.Mapping.CompositeLayerWithTables.StandaloneTables
-      // cref: ArcGIS.Desktop.Mapping.GroupLayer.RemoveStandaloneTable(ArcGIS.Desktop.Mapping.StandaloneTable)
-      // cref: ArcGIS.Desktop.Mapping.GroupLayer.RemoveStandaloneTables(System.IEnumerable<ArcGIS.Desktop.Mapping.StandaloneTable>)
-      #region Remove a Standalone table
-
       //get the first group layer that has at least one table
       var grp_layer = MapView.Active.Map.GetLayersAsFlattenedList()
         .OfType<GroupLayer>().First(g => g.StandaloneTables.Count > 0);
@@ -535,9 +529,8 @@ namespace MapAuthoring.ProSnippets
         //assumes it has at least one table...
         grp_layer.RemoveStandaloneTable(grp_layer.StandaloneTables.First());
       });
-
-      #endregion
     }
+    #endregion
 
     #region ProSnippet Group: Metadata
     #endregion
@@ -603,6 +596,5 @@ namespace MapAuthoring.ProSnippets
       });
     }
     #endregion
-    
   }
 }

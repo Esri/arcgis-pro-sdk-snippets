@@ -157,8 +157,8 @@ namespace MapAuthoring.ProSnippets
 		/// cref="ArcGIS.Core.Data.Mapping.BasicFeatureLayer"/> representing an annotation layer.</param>
 		public async static void RotateOrMoveAnnotation(AnnotationLayer annoLayer)
 		{
-
-			await QueuedTask.Run(() =>
+			var oid = 1; //ObjectID of the annotation feature to modify
+      await QueuedTask.Run(() =>
 			{
 				//Don't use 'Shape'....Shape is the bounding box of the annotation text. This is NOT what you want...
 				//
