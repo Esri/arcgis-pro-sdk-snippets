@@ -1,4 +1,22 @@
-﻿using ArcGIS.Core.CIM;
+/*
+
+   Copyright 2025 Esri
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Controls;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
@@ -16,29 +34,16 @@ using System.Windows.Input;
 
 namespace MapExploration.ProSnippets
 {
-  /// <summary>
-  /// Provides a collection of tools and utilities for working with ArcGIS Pro, including custom map tools, sketch
-  /// tools, and tools with embeddable controls.
-  /// </summary>
-  /// <remarks>The <see cref="ProSnippetsTool"/> class contains various examples of custom tools that extend the
-  /// functionality of ArcGIS Pro. These tools demonstrate how to implement features such as custom sketch symbols,
-  /// retrieving map coordinates, identifying features, and embedding controls within tools. Each tool is designed to
-  /// showcase a specific capability and can be used as a reference for creating similar tools in your own
-  /// applications.</remarks>
   public static class ProSnippetsTool
   {
-
     #region ProSnippet Group: Tools
     #endregion
 
     // cref: ArcGIS.Desktop.Mapping.MapTool.SketchSymbol
     #region Change symbol for a sketch tool
     /// <summary>
-    /// Represents a sketch tool that allows users to draw geometries on the map using a custom sketch symbol.
+    /// Represents a map tool that allows users to sketch a rectangle geometry on the map with a customizable symbol.
     /// </summary>
-    /// <remarks>This tool is configured to use a rectangle as the sketch geometry type and supports map-based
-    /// sketches only.  The sketch symbol can be customized by overriding the default symbol provided in the tool
-    /// activation process.</remarks>
     public class SketchTool_WithSymbol : MapTool
     {
       public SketchTool_WithSymbol()
@@ -71,10 +76,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.MapView.ClientToMap(System.Windows.Point)
     #region Create a tool to the return coordinates of the point clicked in the map
     /// <summary>
-    /// Represents a tool that retrieves the map coordinates of a clicked point.
+    /// A map tool that retrieves the map coordinates of a point clicked on the map.
     /// </summary>
-    /// <remarks>This tool captures mouse down events and converts the clicked point from client coordinates to map
-    /// coordinates. The map coordinates are then displayed in a message box.</remarks>
     public class GetMapCoordinates : MapTool
     {
       protected override void OnToolMouseDown(MapViewMouseButtonEventArgs e)
@@ -100,12 +103,9 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.MapView.FlashFeature(ArcGIS.Desktop.Mapping.SelectionSet)
     #region Create a tool to identify the features that intersect the sketch geometry
     /// <summary>
-    /// A custom map tool that identifies and highlights features intersecting a user-defined sketch geometry.
+    /// Represents a custom map tool that identifies and highlights features intersecting a user-defined sketch
+    /// geometry.
     /// </summary>
-    /// <remarks>This tool allows users to draw a rectangular sketch on the map, and it identifies all
-    /// features that intersect the sketch geometry. The identified features are then flashed in the active map view.
-    /// The tool operates in screen coordinates, making it suitable for both 2D and 3D interactive selection
-    /// workflows.</remarks>
     public class CustomIdentify : MapTool
     {
       public CustomIdentify()
@@ -146,11 +146,9 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Framework.Contracts.Tool.Cursor
     #region Change the cursor of a Tool
     /// <summary>
-    /// Represents a custom map tool with a unique cursor.
+    /// Represents a custom map tool that allows users to sketch a rectangle on the map and provides the ability to
+    /// customize the tool's cursor.
     /// </summary>
-    /// <remarks>This tool is configured to use a rectangle as the sketch geometry type and supports map-based
-    /// sketches only. The cursor for this tool can be customized by setting the Cursor property
-    /// to a custom cursor file or a built-in system cursor.</remarks>
     public class CustomMapTool : MapTool
     {
       public CustomMapTool()
@@ -183,10 +181,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.MapTool.EmbeddableControl
     #region Tool with an Embeddable Control
     /// <summary>
-    /// Tool with an embeddable control
+    /// Represents a map tool with an embeddable control that can handle mouse interactions on a map view.
     /// </summary>
-    /// <remarks>This tool demonstrates how to embed a custom control within a map tool in ArcGIS Pro. The embeddable
-    /// control can be used to provide additional functionality or user interface elements while the tool is active.</remarks>
     public class MapTool_WithControl : MapTool
     {
       // Using the Visual Studio SDK templates, add a MapTool and an EmbeddableControl
@@ -233,10 +229,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.MapTool.OverlayEmbeddableControl
     #region Tool with an Overlay Embeddable Control
     /// <summary>
-    /// Tool with an overlay embeddable control
+    /// Represents a map tool that integrates an overlay embeddable control for enhanced user interaction.
     /// </summary>
-    /// <remarks>This tool demonstrates how to embed a custom overlay control within a map tool in ArcGIS Pro. The overlay
-    /// control can be used to provide additional functionality or user interface elements while the tool is active.</remarks>
     public class MapTool_WithOverlayControl : MapTool
     {
       // Using the Visual Studio SDK templates, add a MapTool and an EmbeddableControl

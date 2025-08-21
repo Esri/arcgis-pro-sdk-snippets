@@ -1,4 +1,22 @@
-﻿using ArcGIS.Core.Geometry;
+/*
+
+   Copyright 2025 Esri
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using System;
@@ -13,25 +31,24 @@ namespace MapExploration.ProSnippets
   /// <summary>
   /// Provides utility methods for interacting with the active map in ArcGIS Pro.
   /// </summary>
-  /// <remarks>This class contains static methods to retrieve information about the active map, manipulate map
+  /// <remarks>This class contains static methods to retrieve information about the active map,  manipulate map
   /// selections, and manage map view overlays. It is designed to simplify  common tasks when working with maps in
   /// ArcGIS Pro.</remarks>
   public static class ProSnippetsMap
   {
-    #region ProSnippet Group: Maps
-    #endregion
+		#region ProSnippet Group: Maps
+		#endregion
 
-    // cref: ArcGIS.Desktop.Mapping.MapView
-    // cref: ArcGIS.Desktop.Mapping.MapView.Active
-    // cref: ArcGIS.Desktop.Mapping.MapView.Map
-    // cref: ArcGIS.Desktop.Mapping.Map.Name
-    #region Get the active map's name
-    /// <summary>
-    /// This method retrieves the name of the currently active map in ArcGIS Pro.
-    /// </summary>
-    /// <returns></returns>
-    /// <remarks>This method demonstrates how to retrieve the name of the currently active map in ArcGIS Pro.</remarks>
-    public static string GetActiveMapName()
+		// cref: ArcGIS.Desktop.Mapping.MapView
+		// cref: ArcGIS.Desktop.Mapping.MapView.Active
+		// cref: ArcGIS.Desktop.Mapping.MapView.Map
+		// cref: ArcGIS.Desktop.Mapping.Map.Name
+		#region Get the active map's name
+		/// <summary>
+		/// Retrieves the name of the currently active map in ArcGIS Pro.
+		/// </summary>
+		/// <returns>The name of the active map, or null if no map is active.</returns>
+		public static string GetActiveMapName()
     {
       //Get the active map view.
       var mapView = MapView.Active;
@@ -41,15 +58,13 @@ namespace MapExploration.ProSnippets
       //Return the name of the map currently displayed in the active map view.
       return mapView.Map.Name;
     }
-    #endregion
+		#endregion
 
-    // cref: ArcGIS.Desktop.Mapping.Map.SetSelection(ArcGIS.Desktop.Mapping.SelectionSet, ArcGIS.Desktop.Mapping.SelectionCombinationMethod)
-    #region Clear all selection in an Active map
-    /// <summary>
-    /// This method clears all selections in the active map.
+		// cref: ArcGIS.Desktop.Mapping.Map.SetSelection(ArcGIS.Desktop.Mapping.SelectionSet, ArcGIS.Desktop.Mapping.SelectionCombinationMethod)
+		#region Clear all selection in an Active map
+		/// <summary>
+    /// Clears all selections in the active map.
     /// </summary>
-    /// <remarks>This method demonstrates how to use the <see cref="ArcGIS.Desktop.Mapping.Map.SetSelection"/> method
-    /// to clear all selections in the active map. If there is no active map, the method performs no action.</remarks>
     public static void ClearSelectionMap()
     {
       QueuedTask.Run(() =>
@@ -60,17 +75,16 @@ namespace MapExploration.ProSnippets
         }
       });
     }
-    #endregion
+		#endregion
 
-    // cref: ArcGIS.Desktop.Mapping.SelectionEnvironment.SelectionTolerance
-    // cref: ArcGIS.Desktop.Mapping.Map.GetDefaultExtent()
-    // cref: ArcGIS.Desktop.Mapping.MapView.MapToScreen(ArcGIS.Core.Geometry.MapPoint)
-    // cref: ArcGIS.Desktop.Mapping.MapView.ScreenToMap(System.Windows.Point)
-    #region Calculate Selection tolerance in map units
-    /// <summary>
-    /// This method calculates the selection tolerance in map units based on the current map view's selection tolerance in pixels.
+		// cref: ArcGIS.Desktop.Mapping.SelectionEnvironment.SelectionTolerance
+		// cref: ArcGIS.Desktop.Mapping.Map.GetDefaultExtent()
+		// cref: ArcGIS.Desktop.Mapping.MapView.MapToScreen(ArcGIS.Core.Geometry.MapPoint)
+		// cref: ArcGIS.Desktop.Mapping.MapView.ScreenToMap(System.Windows.Point)
+		#region Calculate Selection tolerance in map units
+		/// <summary>
+    /// Calculates the selection tolerance in map units based on the current map's selection tolerance in pixels.
     /// </summary>
-    /// <remarks>This method demonstrates how to convert the selection tolerance from pixels to map units by using the map's scale.</remarks>
     public static void CalculateSelectionTolerance()
     {
       //Selection tolerance for the map in pixels
@@ -89,17 +103,16 @@ namespace MapExploration.ProSnippets
         var searchRadius = GeometryEngine.Instance.Distance(mapPoint, radiusMapPoint);
       });
     }
-    #endregion
+		#endregion
 
-    // cref: ArcGIS.Desktop.Mapping.MapViewOverlayControl
-    // cref: ArcGIS.Desktop.Mapping.MapViewOverlayControl.#ctor(System.Windows.FrameworkElement, System.Boolean, System.Boolean, System.Boolean, ArcGIS.Desktop.Mapping.OverlayControlRelativePosition, System.Double, System.Double)
-    // cref: ArcGIS.Desktop.Mapping.MapView.AddOverlayControl(IMapViewOverlayControl)
-    // cref: ArcGIS.Desktop.Mapping.MapView.RemoveOverlayControl(IMapViewOverlayControl)
-    #region MapView Overlay Control
-    /// <summary>
-    /// This method demonstrates how to add a custom overlay control (a progress bar) to the active map view in ArcGIS Pro.
+		// cref: ArcGIS.Desktop.Mapping.MapViewOverlayControl
+		// cref: ArcGIS.Desktop.Mapping.MapViewOverlayControl.#ctor(System.Windows.FrameworkElement, System.Boolean, System.Boolean, System.Boolean, ArcGIS.Desktop.Mapping.OverlayControlRelativePosition, System.Double, System.Double)
+		// cref: ArcGIS.Desktop.Mapping.MapView.AddOverlayControl(IMapViewOverlayControl)
+		// cref: ArcGIS.Desktop.Mapping.MapView.RemoveOverlayControl(IMapViewOverlayControl)
+		#region MapView Overlay Control
+		/// <summary>
+    /// Adds a temporary progress bar overlay control to the active map view.
     /// </summary>
-    /// <remarks>The overlay control is displayed for a short duration (3 seconds) before being removed from the map view.</remarks>
     public static async void AddMapViewOverlayControl()
     {
       //Create a Progress Bar user control

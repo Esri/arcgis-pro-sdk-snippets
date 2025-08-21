@@ -110,7 +110,7 @@ namespace Editing.ProSnippets
       QueuedTask.Run(() =>
       {
         //Listen for row events on a layer
-        var featLayer = MapView.Active.GetSelectedLayers().First() as FeatureLayer;
+        var featLayer = MapView.Active.GetSelectedLayers()[0] as FeatureLayer;
         var layerTable = featLayer.GetTable();
 
         //subscribe to row events
@@ -170,12 +170,14 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
       var parentEditOp = args.Operation;
 
       // set up some attributes
-      var attribs = new Dictionary<string, object> { };
-      attribs.Add("Layer", "Parcels");
-      attribs.Add("Description", "objectId: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString());
+      var attribs = new Dictionary<string, object>
+      {
+        { "Layer", "Parcels" },
+        { "Description", "objectId: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString() }
+      };
 
       //create a record in an audit table
-      var sTable = MapView.Active.Map.FindStandaloneTables("EditHistory").First();
+      var sTable = MapView.Active.Map.FindStandaloneTables("EditHistory")[0];
       var table = sTable.GetTable();
       parentEditOp.Create(table, attribs);
     }
@@ -224,21 +226,19 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
         var parentEditOp = args.Operation;
 
         // set up some attributes
-        var attribs = new Dictionary<string, object> { };
-        attribs.Add("Description", "objectId: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString());
+        var attribs = new Dictionary<string, object>
+        {
+          { "Description", "objectId: " + args.Row.GetObjectID().ToString() + " " + DateTime.Now.ToShortTimeString() }
+        };
 
         // update Notes table with information about the new feature
-        using (var geoDatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(Project.Current.DefaultGeodatabasePath))))
-        {
-          using (var table = geoDatabase.OpenDataset<Table>("Notes"))
-          {
-            parentEditOp.Create(table, attribs);
-          }
-        }
+        using var geoDatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(Project.Current.DefaultGeodatabasePath)));
+        using var table = geoDatabase.OpenDataset<Table>("Notes");
+        parentEditOp.Create(table, attribs);
       }
       catch (Exception e)
       {
-        MessageBox.Show($@"Error in OnRowCreated for objectId: {args.Row.GetObjectID()} : {e.ToString()}");
+        MessageBox.Show($@"Error in OnRowCreated for objectId: {args.Row.GetObjectID()} : {e}");
       }
     }
     #endregion
@@ -265,7 +265,6 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
       RowChangedEvent.Subscribe(OnRowChangedEvent, table);
     }
 
-    public static Guid _currentRowChangedGuid = Guid.Empty;
     /// <summary>
     /// Handles the row changed event by validating and updating the affected row.
     /// </summary>
@@ -275,6 +274,9 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
     /// <param name="args">The event arguments containing information about the changed row and the event context.</param>
     public static void OnRowChangedEvent(RowChangedEventArgs args)
     {
+      // set the current row changed guid when you execute the Row.Store method
+      // used for re-entry checking
+      Guid _currentRowChangedGuid = new();
       // RowEvent callbacks are always called on the QueuedTask so there is no need 
       // to wrap your code within a QueuedTask.Run lambda.
 
@@ -329,7 +331,7 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
       RowChangedEvent.Subscribe(MyRowChangedEvent, table);
     }
 
-    public static Guid _lastEdit = Guid.Empty;
+    
 
     /// <summary>
     /// Handles the event triggered when a row is changed, allowing for custom modifications to the row.
@@ -340,7 +342,11 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
     /// <param name="args">The event arguments containing details about the row change, including the row, operation, and unique identifier
     /// for the change.</param>
     public static void MyRowChangedEvent(RowChangedEventArgs args)
-    {
+    { 
+      // set the last row changed guid when you execute the Row.Store method
+      // used for re-entry checking
+      Guid _lastEdit = new();
+
       // RowEvent callbacks are always called on the QueuedTask so there is no need 
       // to wrap your code within a QueuedTask.Run lambda.
 
@@ -362,7 +368,7 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
     // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
     // cref: ArcGIS.Core.Data.Row.GetOriginalvalue
     #region Determine if Geometry Changed while editing
-    public static FeatureLayer featureLayer;
+    private static FeatureLayer modifiedFeatureLayer;
     /// <summary>
     /// Subscribes to the <see cref="ArcGIS.Desktop.Editing.Events.RowChangedEvent"/> for the specified feature layer.
     /// </summary>
@@ -374,6 +380,7 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
       QueuedTask.Run(() =>
       {
         //Listen to the RowChangedEvent that occurs when a Row is changed.
+        modifiedFeatureLayer = featureLayer;
         ArcGIS.Desktop.Editing.Events.RowChangedEvent.Subscribe(OnRowChangedEvent2, featureLayer.GetTable());
       });
     }
@@ -390,7 +397,7 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
       // to wrap your code within a QueuedTask.Run lambda.
 
       //Get the layer's definition
-      var lyrDefn = featureLayer.GetFeatureClass().GetDefinition();
+      var lyrDefn = modifiedFeatureLayer.GetFeatureClass().GetDefinition();
       //Get the shape field of the feature class
       string shapeField = lyrDefn.GetShapeField();
       //Index of the shape field
@@ -401,6 +408,16 @@ public static void MyRowCreatedEvent(RowChangedEventArgs args)
       var geomNew = args.Row[shapeIndex] as Geometry;
       //Compare the two
       bool shapeChanged = geomOrig.IsEqual(geomNew);
+      if (shapeChanged)
+      {
+        // The geometry has not changed
+        Console.WriteLine("Geometry has not changed");
+      }
+      else
+      {
+        // The geometry has changed
+        Console.WriteLine("Geometry has changed");
+      }
     }
     #endregion
 

@@ -1,4 +1,22 @@
-﻿using ArcGIS.Desktop.Framework.Threading.Tasks;
+/*
+
+   Copyright 2025 Esri
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
@@ -16,15 +34,15 @@ namespace MapExploration.ProSnippets
   /// scripting.</remarks>
   public static class ProSnippetsFeature
   {
-    #region ProSnippet Group: Features
-    #endregion
+		#region ProSnippet Group: Features
+		#endregion
 
-    // cref: ArcGIS.Core.CIM.CIMBaselayer.LayerMasks
-    #region Mask feature
-    /// <summary>
-    /// This method demonstrates how to apply masking to a feature layer in the active map view using a polygon layer as the mask.
-    /// </summary>
-    public static void Masking()
+		// cref: ArcGIS.Core.CIM.CIMBaselayer.LayerMasks
+		#region Mask feature
+		/// <summary>
+		/// Masks a feature layer using a polygon layer.
+		/// </summary>
+		public static void Masking()
     {
       QueuedTask.Run(() =>
       {
@@ -34,7 +52,7 @@ namespace MapExploration.ProSnippets
         var lyrDefn = lineLyrToBeMasked.GetDefinition();
         //Create an array of Masking layers (polygon only)
         //Set the LayerMasks property of the Masked layer
-        lyrDefn.LayerMasks = new string[] { "CIMPATH=map3/testpoly.xml" };
+        lyrDefn.LayerMasks = ["CIMPATH=map3/testpoly.xml"];
         //Re-set the Masked layer's definition
         lineLyrToBeMasked.SetDefinition(lyrDefn);
       });

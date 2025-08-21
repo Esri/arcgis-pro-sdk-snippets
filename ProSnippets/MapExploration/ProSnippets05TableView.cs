@@ -1,4 +1,22 @@
-﻿using ArcGIS.Core.CIM;
+/*
+
+   Copyright 2025 Esri
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
@@ -28,9 +46,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableViewMode.eAllRecords
     #region Set Table ViewingMode
     /// <summary>
-    /// Sets the viewing mode of the active table view to "selected records".
+    /// Sets the table view to display only selected records.
     /// </summary>
-    /// <remarks>This method changes the viewing mode of the active table view to show only selected records.</remarks>
     public static void SetViewingModelTableView()
     {
       //Get the active table view.
@@ -47,11 +64,9 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ZoomLevel
     #region Set ZoomLevel
     /// <summary>
-    /// Sets the zoom level of the active table view to the specified value.
+    /// Sets the zoom level of the active table view.
     /// </summary>
-    /// <remarks>If there is no active table view, this method performs no action. The actual zoom level set
-    /// may differ from the specified value depending on the current zoom state of the table view.</remarks>
-    /// <param name="zoomLevel">The desired zoom level to apply to the active table view. Must be a non-negative integer.</param>
+    /// <param name="zoomLevel">The desired zoom level.</param>
     public static void SetZoomLevelTableView(int zoomLevel)
     {
       //Get the active table view.
@@ -72,9 +87,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ToggleFieldAlias()
     #region Toggle Field Alias
     /// <summary>
-    /// Toggles the visibility of field aliases in the active table view.
+    /// Shows or toggles the field alias in the active table view.
     /// </summary>
-    /// <remarks>This method toggles the visibility of field aliases in the active table view.</remarks>
     public static void AliasTableView()
     {
       //Get the active table view.
@@ -96,9 +110,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ToggleSubtypeDomainDescriptionsAsync()
     #region Toggle Subtype Descriptions
     /// <summary>
-    /// Toggles the visibility of subtype domain descriptions in the active table view.
+    /// Shows or toggles subtype domain descriptions in the active table view.
     /// </summary>
-    /// <remarks>This method toggles the visibility of subtype domain descriptions in the active table view.</remarks>
     public static void DomainDescTableView()
     {
       //Get the active table view.
@@ -118,11 +131,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ActiveRowIndex
     #region Get the active row 
     /// <summary>
-    /// Demonstrates how to retrieve the index of the active row in the currently active table view.
+    /// Gets the active row index from the active table view.
     /// </summary>
-    /// <remarks>This method shows how to access the <see cref="TableView.Active"/> instance and obtain its
-    /// <see cref="TableView.ActiveRowIndex"/> property. Use this approach when you need to determine which row is
-    /// currently selected or active in a table view within ArcGIS Pro.</remarks>
     public static void GetActiveRowIndexTableView()
     {
       //Get the active table view.
@@ -139,11 +149,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.BringIntoView(System.Int32,System.Int32)
     #region Change the active row 
     /// <summary>
-    /// Changes the active row in the currently active table view by moving the selection to a new row index.
+    /// Changes the active row index in the active table view.
     /// </summary>
-    /// <remarks>This method retrieves the active <see cref="TableView"/>, obtains its current active row
-    /// index, and moves the selection to a new row by adding 10 to the current index. If there is no active table view,
-    /// the method does nothing.</remarks>
     public static async void ChangeActiveRowIndexTableView()
     {
       //Get the active table view.
@@ -163,11 +170,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ActiveObjectId
     #region Get the active object ID
     /// <summary>
-    /// Retrieves the active object ID from the currently active table view, if available.
+    /// Gets the active object ID from the active table view.
     /// </summary>
-    /// <remarks>This method attempts to access the <see cref="TableView.Active"/> instance and obtain its
-    /// <see cref="TableView.ActiveObjectId"/> property. If there is no active table view, the method performs no
-    /// action.</remarks>
     public static void GetActiveOIDTableView()
     {
       //Get the active table view.
@@ -185,13 +189,11 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.GetRowIndexAsync(System.Int64, System.Boolean)
     #region Translate between rowIndex and objectID
     /// <summary>
-    /// Demonstrates how to convert between row index and object ID in the currently active table view.
+    /// Converts between row index and object ID in the active table view.
     /// </summary>
-    /// <remarks>This method shows how to access the <see cref="TableView.Active"/> instance and obtain its
-    /// <see cref="TableView.ActiveRowIndex"/> and <see cref="TableView.ActiveObjectId"/> properties. Use this approach
-    /// when you need to translate between row indices and object IDs in a table view within ArcGIS Pro.</remarks>
     public static async void ConvertBetweenRowAndObjectIDTableView()
     {
+
       //Get the active table view.
       var tableView = TableView.Active;
       if (tableView == null)
@@ -217,11 +219,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.GetSelectedRowIndexes
     #region Get selected rows  or row indexes
     /// <summary>
-    /// Demonstrates how to retrieve the selected rows or row indexes from the currently active table view.
+    /// Gets the selected object IDs and row indexes from the active table view.
     /// </summary>
-    /// <remarks>This method shows how to access the <see cref="TableView.Active"/> instance and obtain its
-    /// <see cref="TableView.GetSelectedObjectIds"/> and <see cref="TableView.GetSelectedRowIndexes"/> methods.
-    /// Use this approach when you need to work with selected rows in a table view within ArcGIS Pro.</remarks>
     public static void GetSelectionTableView()
     {
       var tv = TableView.Active;
@@ -243,12 +242,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.GetSelectedRowIndexes
     #region Change selected rows 
     /// <summary>
-    /// Changes the selection of rows in the active table view to include specific object IDs.
+    /// Sets or adds to the selection of rows in the active table view.
     /// </summary>
-    /// <remarks>This method modifies the selection in the currently active <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView"/> by first selecting a set of object IDs and then adding additional rows
-    /// to the selection. If there is no active table view, the method performs no action. This operation is performed
-    /// asynchronously on the main QueuedTask thread.</remarks>
     public static void SetSelectionTableView()
     {
       var tv = TableView.Active;
@@ -276,10 +271,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.SelectAll()
     #region Select all rows
     /// <summary>
-    /// Selects all rows in the currently active table view, if available.
+    /// Selects all rows in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if selecting all rows is not
-    /// supported in the current context.</remarks>
     public static void SelectAllTableView()
     {
       var tv = TableView.Active;
@@ -299,9 +292,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ClearSelection()
     #region Toggle, Switch, Clear Selection
     /// <summary>
-    /// Demonstrates how to toggle, switch, and clear row selections in the currently active table view.
+    /// Toggles, switches, or clears the selection in the active table view.
     /// </summary>
-    /// <remarks>This method accesses the <see cref="TableView.Active"/> instance and performs selection
     public static void OtherSelectionTableView()
     {
       var tv = TableView.Active;
@@ -328,10 +320,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.PanToSelected()
     #region Zoom or Pan To Selected Rows
     /// <summary>
-    /// Zooms to the currently selected rows in the active table view, if available.
+    /// Zooms or pans to the selected rows in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if zooming to selected rows is not
-    /// supported in the current context.</remarks>
     public static void ZoomSelectedTableView()
     {
       var tv = TableView.Active;
@@ -350,11 +340,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.DeleteSelected()
     #region Delete Selected Rows
     /// <summary>
-    /// Deletes the currently selected rows in the active table view, if deletion is permitted.
+    /// Deletes the selected rows in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if the selected rows cannot be
-    /// deleted. Use this method to programmatically remove selected records from the active table view in the
-    /// application.</remarks>
     public static void DeleteSelectedTableView()
     {
       var tv = TableView.Active;
@@ -370,10 +357,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.GetHighlightedObjectIds
     #region Get highlighted row indexes
     /// <summary>
-    /// Gets the currently highlighted row indexes in the active table view, if available.
+    /// Gets the highlighted object IDs from the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if getting highlighted row indexes is not
-    /// supported in the current context.</remarks>
     public static void GetHighlightTableView()
     {
       var tv = TableView.Active;
@@ -394,12 +379,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.Highlight(System.Collections.Generic.IEnumerable{System.Int64},System.Boolean)
     #region Change highlighted rows 
     /// <summary>
-    /// Highlights the first two selected rows in the active table view, if available.
+    /// Highlights specific rows in the active table view.
     /// </summary>
-    /// <remarks>This method checks for an active table view and, if present, highlights up to the first two
-    /// currently selected rows. If fewer than two rows are selected, no rows are highlighted. The operation is
-    /// performed asynchronously on the main QueuedTask thread. If no table view is active, the method does
-    /// nothing.</remarks>
     public static void SetHighlightedTableView()
     {
       var tv = TableView.Active;
@@ -434,10 +415,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.ClearHighlighted()
     #region Toggle, Switch, Clear Highlights
     /// <summary>
-    /// Toggles the highlight state of the currently selected rows in the active table view, if available.
+    /// Toggles, switches, or clears highlights in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if toggling row highlights is not
-    /// supported in the current context.</remarks>
     public static void OtherHighlightedTableView()
     {
       var tv = TableView.Active;
@@ -464,10 +443,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.PanToHighlighted()
     #region Zoom or Pan To Highlighted Rows
     /// <summary>
-    /// Zooms to the currently highlighted rows in the active table view, if available.
+    /// Zooms or pans to the highlighted rows in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if zooming to highlighted rows is not
-    /// supported in the current context.</remarks>
     public static void ZoomHighlightedTableView()
     {
       var tv = TableView.Active;
@@ -486,11 +463,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.DeleteHighlighted()
     #region Delete Highlighted Rows
     /// <summary>
-    /// Deletes the currently highlighted rows in the active table view, if any are selected and deletable.
+    /// Deletes the highlighted rows in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if no highlighted rows can be
-    /// deleted. It is typically used to remove selected records from the currently focused table in the
-    /// application.</remarks>
     public static void DeleteHighlightedTableView()
     {
       var tv = TableView.Active;
@@ -508,9 +482,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.FieldDescription
     #region Field Access
     /// <summary>
-    /// Demonstrates how to access fields in the active table view.
+    /// Accesses fields and field descriptions in the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view.</remarks>
     public static void FieldsTableView()
     {
       var tv = TableView.Active;
@@ -533,7 +506,6 @@ namespace MapExploration.ProSnippets
     /// <summary>
     /// Gets or sets the active field in the active table view.
     /// </summary>
-    /// <remarks>This method retrieves the active field index and description from the currently active table view.
     public static void ActiveFieldTableView()
     {
       var tv = TableView.Active;
@@ -557,14 +529,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.SetSelectedFields(List<string>)
     #region Select Fields
     /// <summary>
-    /// Demonstrates how to retrieve and set the selected fields in the active <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView"/>.
+    /// Gets or sets the selected fields in the active table view.
     /// </summary>
-    /// <remarks>This method shows how to use the <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView.GetSelectedFields"/> and <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView.SetSelectedFields(System.Collections.Generic.List{string})"/> methods to
-    /// manage field selection in the currently active table view. If there is no active table view, the method performs
-    /// no action.</remarks>
     public static void SelectFieldTableView()
     {
       var tv = TableView.Active;
@@ -584,13 +550,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.SetFieldOrderAsync(List<string>)
     #region Set Field Order 
     /// <summary>
-    /// Sets the field order of the active table view to display the "STATE_NAME" and "STATE_FIPS" fields in order,
-    /// after resetting any custom field order.
+    /// Sets the field order in the active table view.
     /// </summary>
-    /// <remarks>This method operates on the currently active <see cref="ArcGIS.Desktop.Mapping.TableView"/>.
-    /// If no table view is active, the method performs no action. The field order is first reset to the default before
-    /// applying the new order. Only the specified fields ("STATE_NAME" and "STATE_FIPS") will be visible and in the
-    /// given order after this operation.</remarks>
     public static async void SetFieldOrderTableView()
     {
       var tv = TableView.Active;
@@ -617,11 +578,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.HideSelectedFields()
     #region Show or Hide Fields
     /// <summary>
-    /// Demonstrates how to show or hide fields in the active <see cref="ArcGIS.Desktop.Mapping.TableView"/>.
+    /// Shows or hides fields in the active table view.
     /// </summary>
-    /// <remarks>This method shows how to use the <see cref="ArcGIS.Desktop.Mapping.TableView.GetHiddenFields"/> and <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView.SetHiddenFields(List<string>)"/> methods to manage field visibility in the
-    /// currently active table view. If there is no active table view, the method performs no action.</remarks>
     public static void HideFieldsTableView()
     {
       var tv = TableView.Active;
@@ -657,14 +615,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.SetFrozenFieldsAsync(List<string>)
     #region Freeze Fields
     /// <summary>
-    /// Freezes a specified set of fields in the active table view, replacing any previously frozen fields.
+    /// Freezes or unfreezes fields in the active table view.
     /// </summary>
-    /// <remarks>This method first clears all currently frozen fields in the active <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView"/>, then freezes the fields "CITY_FIPS" and "STATE_FIPS". If there is no
-    /// active table view, the method performs no action. <para> Use this method to programmatically control which
-    /// fields remain visible when horizontally scrolling in the table view. Only the specified fields will be frozen
-    /// after this operation. </para> <para> This method is asynchronous but returns <see langword="void"/>; exceptions
-    /// may be unhandled if not observed by the synchronization context. </para></remarks>
     public static async void FreezeFieldsTableView()
     {
       var tv = TableView.Active;
@@ -691,11 +643,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.SortAsync
     #region Sort 
     /// <summary>
-    /// Demonstrates how to sort fields in the active <see cref="ArcGIS.Desktop.Mapping.TableView"/>.
+    /// Sorts the table view by the active field or custom sort order.
     /// </summary>
-    /// <remarks>This method shows how to use the <see cref="ArcGIS.Desktop.Mapping.TableView.SortDescending"/> and <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView.SortAscending"/> methods to sort fields in the currently active table view.
-    /// If there is no active table view, the method performs no action.</remarks>
     public static async void SortTableView()
     {
       var tv = TableView.Active;
@@ -710,6 +659,7 @@ namespace MapExploration.ProSnippets
       // sort the active field ascending
       if (tv.CanSortAscending)
         tv.SortAscending();
+
 
       // perform a custom sort programmatically
       if (tv.CanCustomSort)
@@ -733,11 +683,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.FindAndReplace()
     #region Find and Replace
     /// <summary>
-    /// Demonstrates how to find and replace text in the active <see cref="ArcGIS.Desktop.Mapping.TableView"/>.
+    /// Launches the find or find and replace UI in the active table view.
     /// </summary>
-    /// <remarks>This method shows how to use the <see cref="ArcGIS.Desktop.Mapping.TableView.Find"/> and <see
-    /// cref="ArcGIS.Desktop.Mapping.TableView.FindAndReplace"/> methods to find and replace text in the currently active
-    /// table view. If there is no active table view, the method performs no action.</remarks>
     public static void FindReplaceTableView()
     {
       var tv = TableView.Active;
@@ -759,10 +706,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.GoTo()
     #region GoTo TableView
     /// <summary>
-    /// Displays the Go To dialog for the active table view, allowing navigation to a specific row.
+    /// Launches the GoTo UI in the active table view.
     /// </summary>
-    /// <remarks>If there is no active table view, or if the Go To operation is not available, this method
-    /// does nothing.</remarks>
     public static void GoToTableView()
     {
       var tv = TableView.Active;
@@ -779,10 +724,8 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.TableView.Refresh()
     #region Refresh
     /// <summary>
-    /// Refreshes the currently active table view, if one is available and can be refreshed.
+    /// Refreshes the active table view.
     /// </summary>
-    /// <remarks>This method has no effect if there is no active table view or if the active table view does
-    /// not support refreshing.</remarks>
     public static void RefreshTableView()
     {
       var tv = TableView.Active;
@@ -803,23 +746,20 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.IExternalTablePane.Caption
     #region Change table View caption
     /// <summary>
-    /// Renames the caption of the active table view.
+    /// Changes the caption of a table view pane.
     /// </summary>
-    /// <remarks>This method shows how to use the <see cref="ArcGIS.Desktop.Mapping.ITablePaneEx.Caption"/> property
-    /// to rename the caption of the currently active table view. If there is no active table view, the method
-    /// performs no action.</remarks>
-    public static void RenameTableCaption()
+    public static void TableCaption()
     {
       // find all the table panes (table panes hosting map data)
       var tablePanes = FrameworkApplication.Panes.OfType<ITablePane>();
-      var tablePane = tablePanes.FirstOrDefault(p => (p as ITablePaneEx)?.Caption == "oldCaption");
+      var tablePane = tablePanes.FirstOrDefault(p => (p as ITablePaneEx)?.Caption == "oldcCaption");
       var tablePaneEx = tablePane as ITablePaneEx;
       if (tablePaneEx != null)
         tablePaneEx.Caption = "newCaption";
 
       // find all the external table panes (table panes hosting external data)
       var externalPanes = FrameworkApplication.Panes.OfType<IExternalTablePane>();
-      var externalTablePane = externalPanes.FirstOrDefault(p => p.Caption == "oldCaption");
+      var externalTablePane = externalPanes.FirstOrDefault(p => p.Caption == "oldcCaption");
       if (externalTablePane != null)
         externalTablePane.Caption = "newCaption";
     }
@@ -833,13 +773,9 @@ namespace MapExploration.ProSnippets
     // cref: ArcGIS.Desktop.Mapping.IExternalTablePane.TableView
     #region Get TableView from table pane
     /// <summary>
-    /// Gets the <see cref="ArcGIS.Desktop.Mapping.TableView"/> associated with a table pane by its caption.
+    /// Gets the TableView from a table pane or external table pane.
     /// </summary>
-    /// <remarks>This method demonstrates how to retrieve the <see cref="ArcGIS.Desktop.Mapping.TableView"/> associated
-    /// with a table pane by searching for the pane using its caption. It first looks for standard table panes
-    /// that host map data, and if not found, it searches for external table panes that host external data.
-    /// If no matching pane is found, the method does nothing.</remarks>
-    public static void GetTableViewFromTablePane()
+    public static void TableViewFromPane()
     {
       TableView tv = null;
 

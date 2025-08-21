@@ -1,4 +1,22 @@
-﻿using ArcGIS.Desktop.Mapping;
+/*
+
+   Copyright 2025 Esri
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +36,13 @@ namespace MapExploration.ProSnippets
     #region ProSnippet Group: Time
     #endregion
 
+    #region Step forward in time by 1 month
     // cref: ArcGIS.Desktop.Mapping.TimeDelta
     // cref: ArcGIS.Desktop.Mapping.TimeDelta.#ctor(System.Double, ArcGIS.Desktop.Mapping.TimeUnit)
     // cref: ArcGIS.Desktop.Mapping.TimeUnit
     // cref: ArcGIS.Desktop.Mapping.MapView.Time
     // cref: ArcGIS.Desktop.Mapping.TimeRange
     // cref: ArcGIS.Desktop.Mapping.TimeRange.Offset(ArcGIS.Desktop.Mapping.TimeDelta)
-    #region Step forward in time by 1 month
-    /// <summary>
-    /// This method steps the current map time forward by one month.
-    /// </summary>
-    /// <remarks>This method retrieves the active map view and advances its time by one month using a <see cref="ArcGIS.Desktop.Mapping.TimeDelta"/>.</remarks>
     public static void StepMapTime()
     {
       //Get the active view
@@ -42,14 +56,10 @@ namespace MapExploration.ProSnippets
     }
     #endregion
 
+    #region  Disable time in the map. 
     // cref: ArcGIS.Desktop.Mapping.MapView.Time
     // cref: ArcGIS.Desktop.Mapping.TimeRange.Start
     // cref: ArcGIS.Desktop.Mapping.TimeRange.End
-    #region  Disable time in the map. 
-    /// <summary>
-    /// This method disables time in the active map view by setting the start and end times to null.
-    /// </summary>
-    /// <remarks>This method demonstrates how to disable time in the active map view.</remarks>
     public static void DisableTime()
     {
       MapView.Active.Time.Start = null;
