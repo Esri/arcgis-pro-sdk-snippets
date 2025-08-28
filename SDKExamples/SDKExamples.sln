@@ -3,37 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Layouts", "Layouts\Layouts.csproj", "{4F7B7414-7196-4746-A8F1-D05D422AA82E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arcade", "Arcade\Arcade.csproj", "{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Framework\Framework.csproj", "{540D3A60-0CFB-470C-B86B-D9AF410DEE27}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapAuthoring", "MapAuthoring\MapAuthoring.csproj", "{7C5FD95C-A2C5-FCD9-6ECF-F2E28EA2E6FA}"
-EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{540D3A60-0CFB-470C-B86B-D9AF410DEE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{540D3A60-0CFB-470C-B86B-D9AF410DEE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{540D3A60-0CFB-470C-B86B-D9AF410DEE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{540D3A60-0CFB-470C-B86B-D9AF410DEE27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C5FD95C-A2C5-FCD9-6ECF-F2E28EA2E6FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C5FD95C-A2C5-FCD9-6ECF-F2E28EA2E6FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C5FD95C-A2C5-FCD9-6ECF-F2E28EA2E6FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C5FD95C-A2C5-FCD9-6ECF-F2E28EA2E6FA}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
