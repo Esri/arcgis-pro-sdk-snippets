@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Layouts", "Layouts\Layouts.csproj", "{4F7B7414-7196-4746-A8F1-D05D422AA82E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arcade", "Arcade\Arcade.csproj", "{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProSnippets", "ProSnippets\ProSnippets.csproj", "{21FB103F-42E6-44D8-8C9F-FFA0D714DB31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F7B7414-7196-4746-A8F1-D05D422AA82E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81BAF3DB-6EAF-4368-96DF-D701648A3D4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21FB103F-42E6-44D8-8C9F-FFA0D714DB31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21FB103F-42E6-44D8-8C9F-FFA0D714DB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21FB103F-42E6-44D8-8C9F-FFA0D714DB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21FB103F-42E6-44D8-8C9F-FFA0D714DB31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
