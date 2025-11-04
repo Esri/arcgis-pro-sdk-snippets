@@ -1,7 +1,7 @@
 ## ArcGIS Pro 3.6 SDK for .NET
 
 ```
-ArcGIS Pro Version: 3.6.0.XXXXX
+ArcGIS Pro Version: 3.6.0.59527
 ```
 
 This repository provides a comprehensive set of ready-to-use code snippets for ArcGIS Pro SDK addin development. These snippets provide pre-written examples for common tasks and functionalities within the ArcGIS Pro SDK for .NET, allowing developers to quickly integrate specific features into their addins. Addin developers are also welcome to use these examples as a learning resource. These snippets are provided "as-is" and are not supported. 
@@ -103,7 +103,7 @@ limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE.txt](LICENSE.txt?raw=true) file.
 
-<p align = center><img src="http://esri.github.io/arcgis-pro-sdk/images/ArcGISPro.png"  alt="pre-req" align = "top" height = "20" width = "20" ><b> ArcGIS Pro 3.5 SDK for Microsoft .NET Framework</b></p>
+<p align = center><img src="http://esri.github.io/arcgis-pro-sdk/images/ArcGISPro.png"  alt="pre-req" align = "top" height = "20" width = "20" ><b> ArcGIS Pro 3.6 SDK for Microsoft .NET Framework</b></p>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Home](https://github.com/Esri/arcgis-pro-sdk/wiki) | <a href="http://pro.arcgis.com/en/pro-app/sdk/api-reference/index.html" target="_blank">API Reference</a> | [Requirements](#requirements) | [Download](#installing-arcgis-pro-sdk-for-net) |  <a href="http://github.com/esri/arcgis-pro-sdk-community-samples" target="_blank">Samples</a>
 
