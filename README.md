@@ -19,7 +19,7 @@ The Visual Studio solution in this repo is organized into folders, each correspo
 1.	Clone the Repository <br/>
 * Use Git to clone the repository to your local machine:
 ```cmd
- git clone https://github.com/ArcGIS/arcgis-pro-sdk-snippets.git
+ git clone https://github.com/Esri/arcgis-pro-sdk-snippets.git
 ```
 2.	Explore the Snippet Folders
 * The solution is organized into folders by functional area (e.g., Editing, Map Authoring, Map Exploration, Geodatabase, Layouts).
@@ -76,7 +76,7 @@ Released alongside .NET 8, the [Visual Studio 2022 17.8 release](https://devblog
 * <a href="https://pro.arcgis.com/en/pro-app/sdk/" target="_blank">ArcGIS Pro SDK for .NET (pro.arcgis.com)</a>
 * [arcgis-pro-sdk-community-samples](http://github.com/Esri/arcgis-pro-sdk-community-samples)
 * [ArcGIS Pro DAML ID Reference](http://github.com/Esri/arcgis-pro-sdk/wiki/ArcGIS-Pro-DAML-ID-Reference)
-* [ArcGIS Pro SDK icons](https://github.com/Esri/arcgis-pro-sdk/releases/tag/3.5.0.57365)
+* [ArcGIS Pro SDK icons](https://github.com/Esri/arcgis-pro-sdk/releases/tag/3.6.0.59527)
 
 ## Contributing
 
