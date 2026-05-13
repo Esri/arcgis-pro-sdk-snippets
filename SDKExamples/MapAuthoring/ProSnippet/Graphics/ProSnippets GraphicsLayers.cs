@@ -45,7 +45,7 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.GraphicsLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.LayerFactory
       // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateGroupLayer(ArcGIS.Desktop.Mapping.ILayerContainerEdit, System.Int32, System.String)
       #region Create GraphicsLayer
@@ -472,7 +472,7 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
         // Note: must be called on the QueuedTask
         {
           var selectedElements = graphicsLayer.GetSelectedElements().ToList(); ;
-          if (selectedElements?.Any() == false)//must be at least 1.
+          if (selectedElements?.Count == 0)//must be at least 1.
             return;
           var elementsToUnGroup = new List<GroupElement>();
           //All selected elements should be grouped.

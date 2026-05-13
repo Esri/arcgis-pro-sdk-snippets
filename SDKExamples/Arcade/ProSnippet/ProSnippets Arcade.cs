@@ -69,7 +69,7 @@ namespace ProSnippets.ArcadeSnippets
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo.ReturnType
       //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Basic Query
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -127,7 +127,7 @@ namespace ProSnippets.ArcadeSnippets
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo.ReturnType
       //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Basic Query using Features
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -190,7 +190,7 @@ namespace ProSnippets.ArcadeSnippets
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Retrieve features using FeatureSetByName
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -250,7 +250,7 @@ namespace ProSnippets.ArcadeSnippets
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Retrieve features using Filter
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -309,7 +309,7 @@ namespace ProSnippets.ArcadeSnippets
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Calculate basic statistics with Math functions
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -376,7 +376,7 @@ namespace ProSnippets.ArcadeSnippets
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Using FeatureSet functions Filter and Intersects
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -463,7 +463,7 @@ namespace ProSnippets.ArcadeSnippets
 
       //cref: ArcGIS.Core.CIM.CIMLabelClass
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Evaluating an Arcade Labeling Expression
       {
         string ArcadeLabelingExpressionName = "My Arcade Label Expression";
@@ -519,7 +519,7 @@ namespace ProSnippets.ArcadeSnippets
       //cref: ArcGIS.Core.CIM.CIMSizeVisualVariable
       //cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.ValueExpressionInfo
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
       #region Evaluating Arcade Visual Variable Expressions on a Renderer
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
@@ -603,8 +603,8 @@ namespace ProSnippets.ArcadeSnippets
       // cref: ArcGIS.Core.CIM.CIMExpressionInfo.Expression
       // cref: ArcGIS.Core.CIM.CIMExpressionInfo.Title
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.ValueExpressionInfo
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer()
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
       #region Modify renderer using Arcade
       {
         // Note: the following should be embedded in a QueuedTask.Run() statement
@@ -631,11 +631,10 @@ namespace ProSnippets.ArcadeSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer
       // cref: ArcGIS.Core.CIM.CIMGeoFeatureLayerBase.LabelClasses
       // cref: ArcGIS.Core.CIM.CIMLabelClass
       // cref: ArcGIS.Core.CIM.CIMLabelClass.Expression
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Modify label expression using Arcade
       {
         // Note: the following should be embedded in a QueuedTask.Run() statement

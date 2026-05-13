@@ -38,8 +38,8 @@ namespace ProSnippets.EditingSnippets
     /// </summary>
     public class MyProvider : InspectorProvider
     {
-      private Guid guid = Guid.NewGuid();
-      internal MyProvider() {}
+      private readonly Guid guid = Guid.NewGuid();
+      internal MyProvider() { }
       public override Guid SharedFieldColumnSizeID() { return guid; }
       public override string CustomName(ArcGIS.Desktop.Editing.Attributes.Attribute attr)
       {

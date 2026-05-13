@@ -59,7 +59,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(MAPMEMBER,INT64)
       // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
       // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary``1()
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary()
+      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
       // cref: ArcGIS.Desktop.Mapping.Map.GetSelection
       #region Load map selection into Inspector
       {
@@ -77,7 +77,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Shape
       // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
       // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary``1()
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary()
+      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
       // cref: ArcGIS.Desktop.Mapping.Map.GetSelection
       #region Get selected feature's attribute value
       // Retrieves the value of a specific attribute and the geometry of the first selected feature from the provided selection set.

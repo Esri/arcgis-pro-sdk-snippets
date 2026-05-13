@@ -374,7 +374,7 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
       #endregion Explore topology graph
 
 
-      // cref: ArcGIS.Core.Data.Topology.TopologyGraph.FindClosestElement<T>(ArcGIS.Core.Geometry.MapPoint,System.Double)
+      // cref: ArcGIS.Core.Data.Topology.TopologyGraph.FindClosestElement``1(ArcGIS.Core.Geometry.MapPoint,System.Double)
       // cref: ArcGIS.Core.Data.Topology.Topology.BuildGraph
       // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent
       // cref: ArcGIS.Core.Data.Topology.TopologyElement

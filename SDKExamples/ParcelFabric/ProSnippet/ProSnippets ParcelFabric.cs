@@ -33,22 +33,22 @@ using System.Windows;
 
 namespace ProSnippets.ParcelFabricSnippets
 {
-	/// <summary>
-	/// Provides code snippets demonstrating common parcel fabric operations in ArcGIS Pro,
-	/// including adding parcel layers, managing records, copying and assigning features,
-	/// creating and building parcels, changing parcel types, and accessing parcel fabric datasets and topology.
-	/// </summary>
-	public static partial class ProSnippetsParcelFabric
+  /// <summary>
+  /// Provides code snippets demonstrating common parcel fabric operations in ArcGIS Pro,
+  /// including adding parcel layers, managing records, copying and assigning features,
+  /// creating and building parcels, changing parcel types, and accessing parcel fabric datasets and topology.
+  /// </summary>
+  public static partial class ProSnippetsParcelFabric
   {
-		#region ProSnippet Group: Parcel Fabric
-		#endregion
+    #region ProSnippet Group: Parcel Fabric
+    #endregion
 
-		/// <summary>
-		/// Demonstrates key parcel fabric operations in ArcGIS Pro, including adding parcel layers,
-		/// managing and setting active records, copying and assigning features, creating and building parcels,
-		/// changing parcel types, retrieving parcel features and topology, and working with parcel fabric datasets.
-		/// </summary>
-		public static async Task ProSnippetsParcelFabricAsync()
+    /// <summary>
+    /// Demonstrates key parcel fabric operations in ArcGIS Pro, including adding parcel layers,
+    /// managing and setting active records, copying and assigning features, creating and building parcels,
+    /// changing parcel types, retrieving parcel features and topology, and working with parcel fabric datasets.
+    /// </summary>
+    public static async Task ProSnippetsParcelFabricAsync()
     {
 
       #region ignore - Variable initialization

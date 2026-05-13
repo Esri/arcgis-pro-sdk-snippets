@@ -25,10 +25,10 @@ using System.Linq;
 namespace ProSnippets.EditingSnippets
 {
   public static partial class ProSnippetsEditing
-  {    
+  {
     #region ProSnippet Group: Snapping
     #endregion
-    
+
     public static async void ProSnippetsSnappingAsync()
     {
       // cref: ArcGIS.Desktop.Mapping.Snapping.IsEnabled
@@ -65,7 +65,7 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.IsSnappable
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetSnappable(System.Boolean)
-      // cref: ARCGIS.CORE.CIM.CIMGEOFEATURELAYERBASE.SNAPPABLE
+      // cref: ArcGIS.Core.CIM.CIMGeoFeatureLayerBase.Snappable
       #region Configure Snapping - Layer Snappability
       var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
       // is the layer snappable?
@@ -100,13 +100,13 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.#ctor(System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Vertex
       // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(ArcGIS.Desktop.Mapping.Layer)
-      // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(IEnumerable{Layer})
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,Boolean)
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IEnumerable{Layer},Boolean)
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,LayerSnapModes)
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(Layer,SnapMode,Boolean)
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IEnumerable{Layer},LayerSnapModes)
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IDictionary{Layer,LayerSnapModes},Boolean)      
+      // cref: ArcGIS.Desktop.Mapping.Snapping.GetLayerSnapModes(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.Layer})
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(ArcGIS.Desktop.Mapping.Layer,System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.Layer},System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Mapping.LayerSnapModes)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Mapping.SnapMode,System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.Layer},ArcGIS.Desktop.Mapping.LayerSnapModes)
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(System.Collections.Generic.IDictionary{ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Mapping.LayerSnapModes},System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.LayerSnapModes.Intersection
       #region Configure Snapping - LayerSnapModes
       var featureLayerList = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>();
@@ -166,8 +166,8 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapModes
       // cref: ArcGIS.Desktop.Mapping.Snapping.SetSnapMode(ArcGIS.Desktop.Mapping.SnapMode, System.Boolean)
-      // cref: ARCGIS.DESKTOP.MAPPING.Snapping.SetLayerSnapModes(IDictionary{Layer,LayerSnapModes},Boolean)      
-      // cref: ARCGIS.DESKTOP.MAPPING.FEATURELAYER.SETSNAPPABLE
+      // cref: ArcGIS.Desktop.Mapping.Snapping.SetLayerSnapModes(System.Collections.Generic.IDictionary{ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Mapping.LayerSnapModes},System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetSnappable(System.Boolean)
       #region Configure Snapping - Combined Example
       // interested in only snapping to the vertices of a specific layer of interest and not the vertices of other layers
       //  all other snapModes should be off.

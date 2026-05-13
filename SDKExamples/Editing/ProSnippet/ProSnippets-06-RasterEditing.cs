@@ -31,7 +31,7 @@ namespace ProSnippets.EditingSnippets
 
     public static async void ReadwriteRasterFieldAsync()
     {
-      // cref: ARCGIS.DESKTOP.EDITING.ATTRIBUTES.INSPECTOR.LOAD(MAPMEMBER,INT64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(MapMember,Int64)
       #region Read from a raster field
       await QueuedTask.Run(() =>
       {
@@ -45,7 +45,7 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ARCGIS.DESKTOP.EDITING.ATTRIBUTES.INSPECTOR.LOAD(MAPMEMBER,INT64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(MapMember,Int64)
       #region Write an image to a raster field
       await QueuedTask.Run(() =>
       {
@@ -67,10 +67,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor
-      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor()
-      // cref: ARCGIS.CORE.DATA.RASTER.RASTERSTORAGEDEF.SETCOMPRESSIONTYPE
-      // cref: ARCGIS.CORE.DATA.RASTER.RASTERSTORAGEDEF.SETCOMPRESSIONQUALITY
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.MODIFY(INSPECTOR)
+      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.SetCompressionType
+      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.SetCompressionQuality
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(Inspector)
       // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterStorageDef
       // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterDataset
       #region Write a compressed image to a raster field

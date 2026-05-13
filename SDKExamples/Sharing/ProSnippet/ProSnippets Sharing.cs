@@ -405,7 +405,7 @@ namespace ProSnippets.SharingSnippets
       // cref: ArcGIS.Desktop.Core.UploadDefinition.#ctor(System.String,ArcGIS.Desktop.Core.Item,System.String[])
       // cref: ArcGIS.Desktop.Core.ItemFactory
       #region EsriHttpClient: Upload CSV file to ArcGIS Online
-      { 
+      {
         // Create the item to be uploaded, based on a local file
         var itemToUpload = ItemFactory.Instance.Create(@"C:\Data\AddToMapCustomItem\AlaskaCitiesXY.csv");
         // Define the tags for the item
@@ -479,7 +479,7 @@ namespace ProSnippets.SharingSnippets
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage.Content
       // cref: ArcGIS.Desktop.Core.ItemFactory.Create(System.String, ArcGIS.Desktop.Core.ItemFactory.ItemType)
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.LayerFactory
       #region EsriHttpClient: Get a Service Layer and Add it to Pro
       {

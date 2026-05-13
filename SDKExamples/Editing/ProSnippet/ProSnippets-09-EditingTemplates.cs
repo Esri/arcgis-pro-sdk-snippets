@@ -130,7 +130,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateLastSelectedToolAsync()
-      #region Activate template and it's last selected tool
+      #region Activate template and its last selected tool
       {
         await QueuedTask.Run(() =>
         {
@@ -178,7 +178,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Core.CIM.CIMBasicRowTemplate
       // cref: ArcGIS.Core.CIM.CIMRowTemplate
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate.DefaultToolGUID
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition()
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.SetDefinition(ArcGIS.Core.CIM.CIMEditingTemplate)
       #region Change Default Edit tool for a template
       await QueuedTask.Run(() =>
@@ -230,15 +230,15 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate
       // cref: ArcGIS.Core.CIM.CIMBasicRowTemplate
       // cref: ArcGIS.Core.CIM.CIMRowTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition()
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateDefaultToolAsync
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ToolIDs
       // cref: ArcGIS.Core.CIM.CIMExtensions.GetExcludedToolIDs(ArcGIS.Core.CIM.CIMEditingTemplate)
       // cref: ArcGIS.Core.CIM.CIMExtensions.SetExcludedToolIDs(ArcGIS.Core.CIM.CIMEditingTemplate,System.String[])
       // cref: ArcGIS.Core.CIM.CIMExtensions.AllowToolID(ArcGIS.Core.CIM.CIMEditingTemplate,System.String)
       // cref: ArcGIS.Core.CIM.CIMBasicFeatureLayer.FeatureTemplates
-      // cref: ARCGIS.DESKTOP.MAPPING.LAYER.GETDEFINITION
-      // cref: ARCGIS.DESKTOP.MAPPING.LAYER.SETDEFINITION
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBasicFeatureLayer)
       #region Hide or show editing tools on templates
       await QueuedTask.Run(() =>
          {

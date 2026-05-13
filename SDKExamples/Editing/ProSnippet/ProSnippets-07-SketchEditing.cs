@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ProSnippets.EditingSnippets
-{   
+{
   #region ProSnippet Group: Working with the Sketch
   #endregion
 
@@ -36,7 +36,7 @@ namespace ProSnippets.EditingSnippets
   /// </summary>
   public class ProSnippetsSketchEditing : MapTool
   {
-    // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.ACTIVATESELECTASYNC
+    // cref: ArcGIS.Desktop.Mapping.MapTool.ActivateSelectAsync(System.Boolean)
     #region Toggle sketch selection mode
 
     /// <summary>
@@ -105,7 +105,7 @@ namespace ProSnippets.EditingSnippets
   {
     public static void ProSnippetsSketchEventSamples()
     {
-      // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEvent.Subscribe(ArcGIS.Desktop.Mapping.Events.SketchModifiedEventHandler)
+      // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEvent.Subscribe(System.Action{ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs
       // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs.CurrentSketch
       // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs.PreviousSketch
@@ -137,7 +137,7 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEvent.Subscribe(ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventHandler)
+      // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEvent.Subscribe(System.Func{ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs,System.Threading.Tasks.Task},System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs
       // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs.Sketch
       // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs.SetSketchGeometry
@@ -177,28 +177,28 @@ namespace ProSnippets.EditingSnippets
     }
   }
 
-    // cref: ArcGIS.Desktop.Mapping.MapTool
-    // cref: ArcGIS.Desktop.Mapping.MapTool.FireSketchEvents
-    #region Custom construction tool that fires sketch events
-    /// <summary>
-    /// Represents a custom map construction tool that enables sketching of all types of geometries (points, lines, polygons) with snapping and template support in
-    /// ArcGIS Pro.  ProSnippetConstructionToolLine is a specialized MapTool class configured for creating line geometries
-    /// </summary>
-    public class ProSnippetConstructionToolLine : MapTool
+  // cref: ArcGIS.Desktop.Mapping.MapTool
+  // cref: ArcGIS.Desktop.Mapping.MapTool.FireSketchEvents
+  #region Custom construction tool that fires sketch events
+  /// <summary>
+  /// Represents a custom map construction tool that enables sketching of all types of geometries (points, lines, polygons) with snapping and template support in
+  /// ArcGIS Pro.  ProSnippetConstructionToolLine is a specialized MapTool class configured for creating line geometries
+  /// </summary>
+  public class ProSnippetConstructionToolLine : MapTool
+  {
+    public ProSnippetConstructionToolLine()
     {
-      public ProSnippetConstructionToolLine()
-      {
-        IsSketchTool = true;
-        UseSnapping = true;
-        // Select the type of construction tool you wish to implement.  
-        // Make sure that the tool is correctly registered with the correct component category type in the daml 
-        SketchType = SketchGeometryType.Line;
-        //Gets or sets whether the sketch is for creating a feature and should use the CurrentTemplate.
-        UsesCurrentTemplate = true;
+      IsSketchTool = true;
+      UseSnapping = true;
+      // Select the type of construction tool you wish to implement.  
+      // Make sure that the tool is correctly registered with the correct component category type in the daml 
+      SketchType = SketchGeometryType.Line;
+      //Gets or sets whether the sketch is for creating a feature and should use the CurrentTemplate.
+      UsesCurrentTemplate = true;
 
-        // set FireSketchEvents property to true
-        FireSketchEvents = true;
-      }
+      // set FireSketchEvents property to true
+      FireSketchEvents = true;
+    }
     //  ...
     #endregion
 

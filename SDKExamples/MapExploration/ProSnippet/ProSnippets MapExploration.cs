@@ -1708,9 +1708,9 @@ namespace ProSnippets.MapExplorationSnippets
 
         IDisposable _graphic = mapView.AddOverlay(pictureGraphic);
       }
-      // cref: ArcGIS.Desktop.Mapping.MapTool.AddOverlayAsync(ArcGIS.Core.Geometry.Geometry, ArcGIS.Core.CIM.CIMSymbolReference, System.Double, System.Double)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.CIM.CIMGraphic, System.Double)
+      #endregion
 
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddOverlay(ArcGIS.Desktop.Mapping.MapView, ArcGIS.Core.CIM.CIMGraphic, System.Double)
       #region Add overlay graphic with text
       {
         IDisposable _graphic = null;
@@ -1735,11 +1735,6 @@ namespace ProSnippets.MapExplorationSnippets
         }
       }
       #endregion
-      #endregion
-
-
-
-
 
       #region ProSnippet Group: Mapping Options
       #endregion

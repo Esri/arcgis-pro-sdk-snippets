@@ -13,7 +13,7 @@ namespace ProSnippets.MapExplorationSnippets.CustomPaneWithContents
 {
   public partial class ProSnippetsMapExploration : ViewStatePane, IContentsProvider, IContentsControl
   {
-    DispatcherTimer timer;
+    readonly DispatcherTimer timer;
     private string _currentTime = "";
     private static OperationManager _operationsManager = null;
     /// <summary>
