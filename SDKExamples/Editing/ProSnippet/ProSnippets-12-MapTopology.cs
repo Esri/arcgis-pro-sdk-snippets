@@ -145,7 +145,7 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.Topology.TopologyDefinition
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.BuildMapTopologyGraph<T>(ArcGIS.Desktop.Mapping.MapView, System.Action<ArcGIS.Core.Data.Topology.TopologyGraph>)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.BuildMapTopologyGraph``1(ArcGIS.Desktop.Mapping.MapView, System.Action<ArcGIS.Core.Data.Topology.TopologyGraph>)
       // cref: ArcGIS.Core.Data.Topology.TopologyGraph.GetNodes()
       // cref: ArcGIS.Core.Data.Topology.TopologyGraph.GetEdges()
       // cref: ArcGIS.Core.Data.Topology.TopologyNode

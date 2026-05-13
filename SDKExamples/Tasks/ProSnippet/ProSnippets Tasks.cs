@@ -29,17 +29,17 @@ using ArcGIS.Desktop.TaskAssistant.Exceptions;
 
 namespace ProSnippets.TaskAssistantSnippets
 {
-	/// <summary>
-	/// Provides code snippets demonstrating common operations with the ArcGIS Pro Task Assistant API,
-	/// including retrieving, opening, closing, exporting, and querying task items, as well as handling task events and exceptions.
-	/// </summary>
-	public static partial class ProSnippetsTaskAssistant
+  /// <summary>
+  /// Provides code snippets demonstrating common operations with the ArcGIS Pro Task Assistant API,
+  /// including retrieving, opening, closing, exporting, and querying task items, as well as handling task events and exceptions.
+  /// </summary>
+  public static partial class ProSnippetsTaskAssistant
   {
-		/// <summary>
-		/// Demonstrates common operations with ArcGIS Pro Task Assistant, including retrieving, opening, closing, exporting, 
-		/// and querying task items, as well as handling task events and exceptions.
-		/// </summary>
-		public static async Task ProSnippetsTaskAssistantAsync()
+    /// <summary>
+    /// Demonstrates common operations with ArcGIS Pro Task Assistant, including retrieving, opening, closing, exporting, 
+    /// and querying task items, as well as handling task events and exceptions.
+    /// </summary>
+    public static async Task ProSnippetsTaskAssistantAsync()
     {
       // cref: ArcGIS.Desktop.TaskAssistant.TaskProjectItem
       #region Retrieve all the Task Items in a Project
@@ -309,66 +309,66 @@ namespace ProSnippets.TaskAssistantSnippets
           }
 
         });
-			}
-			#endregion
+      }
+      #endregion
 
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEvent
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.UserID
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.ProjectName
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskItemGuid
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskItemName
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskItemVersion
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskGuid
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskName
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.StartTime
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEvent
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.UserID
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.ProjectName
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskItemGuid
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskItemName
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskItemVersion
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskGuid
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskName
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.StartTime
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.EndTime
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.Duration
-			// cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.Completed
-			#region Subscribe to Task Events
-			{
-				TaskStartedEvent.Subscribe(taskStartedEventArgs =>
-				{
-					string userName = taskStartedEventArgs.UserID;    // ArcGIS Online signed in userName.  If not signed in to ArcGIS Online then returns the name of the user logged in to the Windows OS.
-					string projectName = taskStartedEventArgs.ProjectName;
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEvent
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.UserID
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.ProjectName
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskItemGuid
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskItemName
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskItemVersion
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskGuid
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.TaskName
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskStartedEventArgs.StartTime
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEvent
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.UserID
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.ProjectName
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskItemGuid
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskItemName
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskItemVersion
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskGuid
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.TaskName
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.StartTime
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.EndTime
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.Duration
+      // cref: ArcGIS.Desktop.TaskAssistant.Events.TaskEndedEventArgs.Completed
+      #region Subscribe to Task Events
+      {
+        TaskStartedEvent.Subscribe(taskStartedEventArgs =>
+        {
+          string userName = taskStartedEventArgs.UserID;    // ArcGIS Online signed in userName.  If not signed in to ArcGIS Online then returns the name of the user logged in to the Windows OS.
+          string projectName = taskStartedEventArgs.ProjectName;
 
-					Guid taskItemGuid = taskStartedEventArgs.TaskItemGuid;
-					string taskItemName = taskStartedEventArgs.TaskItemName;
-					string taskItemVersion = taskStartedEventArgs.TaskItemVersion;
+          Guid taskItemGuid = taskStartedEventArgs.TaskItemGuid;
+          string taskItemName = taskStartedEventArgs.TaskItemName;
+          string taskItemVersion = taskStartedEventArgs.TaskItemVersion;
 
-					Guid taskGuid = taskStartedEventArgs.TaskGuid;
-					string taskName = taskStartedEventArgs.TaskName;
+          Guid taskGuid = taskStartedEventArgs.TaskGuid;
+          string taskName = taskStartedEventArgs.TaskName;
 
-					DateTime startTime = taskStartedEventArgs.StartTime;
-				});
-				TaskEndedEvent.Subscribe(taskEndedEventArgs =>
-							{
-								string userName = taskEndedEventArgs.UserID;    // ArcGIS Online signed in userName.  If not signed in to ArcGIS Online then returns the name of the user logged in to the Windows OS.
-								string projectName = taskEndedEventArgs.ProjectName;
+          DateTime startTime = taskStartedEventArgs.StartTime;
+        });
+        TaskEndedEvent.Subscribe(taskEndedEventArgs =>
+              {
+                string userName = taskEndedEventArgs.UserID;    // ArcGIS Online signed in userName.  If not signed in to ArcGIS Online then returns the name of the user logged in to the Windows OS.
+                string projectName = taskEndedEventArgs.ProjectName;
 
-								Guid taskItemGuid = taskEndedEventArgs.TaskItemGuid;
-								string taskItemName = taskEndedEventArgs.TaskItemName;
-								string taskItemVersion = taskEndedEventArgs.TaskItemVersion;
+                Guid taskItemGuid = taskEndedEventArgs.TaskItemGuid;
+                string taskItemName = taskEndedEventArgs.TaskItemName;
+                string taskItemVersion = taskEndedEventArgs.TaskItemVersion;
 
-								Guid taskGuid = taskEndedEventArgs.TaskGuid;
-								string taskName = taskEndedEventArgs.TaskName;
+                Guid taskGuid = taskEndedEventArgs.TaskGuid;
+                string taskName = taskEndedEventArgs.TaskName;
 
-								DateTime startTime = taskEndedEventArgs.StartTime;
-								DateTime endTime = taskEndedEventArgs.EndTime;
-								double duration = taskEndedEventArgs.Duration;
+                DateTime startTime = taskEndedEventArgs.StartTime;
+                DateTime endTime = taskEndedEventArgs.EndTime;
+                double duration = taskEndedEventArgs.Duration;
 
-								bool completed = taskEndedEventArgs.Completed;    // completed or cancelled
-							});
-			}
-			#endregion
-		}
-	}
+                bool completed = taskEndedEventArgs.Completed;    // completed or cancelled
+              });
+      }
+      #endregion
+    }
+  }
 }

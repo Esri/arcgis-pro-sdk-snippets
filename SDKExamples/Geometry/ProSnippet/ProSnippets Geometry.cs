@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+
 using System.IO;
 using System.Linq;
 using System.Security.Policy;
@@ -3522,68 +3523,68 @@ namespace ProSnippets.GeometrySnippets
       #region Get the individual parts of a multipart feature
       IEnumerable<Geometry> MultipartToSinglePart(Geometry inputGeometry)
       {
-          // list holding the part(s) of the input geometry
-          List<Geometry> singleParts = new List<Geometry>();
+        // list holding the part(s) of the input geometry
+        List<Geometry> singleParts = new List<Geometry>();
 
-          // check if the input is a null pointer or if the geometry is empty
-          if (inputGeometry == null || inputGeometry.IsEmpty)
-            return singleParts;
-
-          // based on the type of geometry, take the parts/points and add them individually into a list
-          switch (inputGeometry.GeometryType)
-          {
-            case GeometryType.Envelope:
-              singleParts.Add(inputGeometry.Clone() as Envelope);
-              break;
-            case GeometryType.Multipatch:
-              singleParts.Add(inputGeometry.Clone() as Multipatch);
-              break;
-            case GeometryType.Multipoint:
-              var multiPoint = inputGeometry as Multipoint;
-
-              foreach (var point in multiPoint.Points)
-              {
-                // add each point of collection as a standalone point into the list
-                singleParts.Add(point);
-              }
-              break;
-            case GeometryType.Point:
-              singleParts.Add(inputGeometry.Clone() as MapPoint);
-              break;
-            case GeometryType.Polygon:
-              var polygonNew = inputGeometry as Polygon;
-
-              foreach (var polygonPart in polygonNew.Parts)
-              {
-                // use the PolygonBuilderEx turning the segments into a standalone 
-                // polygon instance
-                singleParts.Add(PolygonBuilderEx.CreatePolygon(polygonPart));
-              }
-              break;
-            case GeometryType.Polyline:
-              var polylineNew = inputGeometry as Polyline;
-
-              foreach (var polylinePart in polyline.Parts)
-              {
-                // use the PolylineBuilderEx turning the segments into a standalone
-                // polyline instance
-                singleParts.Add(PolylineBuilderEx.CreatePolyline(polylinePart));
-              }
-              break;
-            case GeometryType.Unknown:
-              break;
-            default:
-              break;
-          }
+        // check if the input is a null pointer or if the geometry is empty
+        if (inputGeometry == null || inputGeometry.IsEmpty)
           return singleParts;
+
+        // based on the type of geometry, take the parts/points and add them individually into a list
+        switch (inputGeometry.GeometryType)
+        {
+          case GeometryType.Envelope:
+            singleParts.Add(inputGeometry.Clone() as Envelope);
+            break;
+          case GeometryType.Multipatch:
+            singleParts.Add(inputGeometry.Clone() as Multipatch);
+            break;
+          case GeometryType.Multipoint:
+            var multiPoint = inputGeometry as Multipoint;
+
+            foreach (var point in multiPoint.Points)
+            {
+              // add each point of collection as a standalone point into the list
+              singleParts.Add(point);
+            }
+            break;
+          case GeometryType.Point:
+            singleParts.Add(inputGeometry.Clone() as MapPoint);
+            break;
+          case GeometryType.Polygon:
+            var polygonNew = inputGeometry as Polygon;
+
+            foreach (var polygonPart in polygonNew.Parts)
+            {
+              // use the PolygonBuilderEx turning the segments into a standalone 
+              // polygon instance
+              singleParts.Add(PolygonBuilderEx.CreatePolygon(polygonPart));
+            }
+            break;
+          case GeometryType.Polyline:
+            var polylineNew = inputGeometry as Polyline;
+
+            foreach (var polylinePart in polyline.Parts)
+            {
+              // use the PolylineBuilderEx turning the segments into a standalone
+              // polyline instance
+              singleParts.Add(PolylineBuilderEx.CreatePolyline(polylinePart));
+            }
+            break;
+          case GeometryType.Unknown:
+            break;
+          default:
+            break;
         }
+        return singleParts;
+      }
 
-    #endregion
+      #endregion
 
-    // cref: ArcGIS.Core.Geometry.Polygon
-    // cref: ArcGIS.Core.Geometry.GeometryEngine.Within
-    #region Get the outermost rings of a polygon
-    {
+      // cref: ArcGIS.Core.Geometry.Polygon
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Within
+      #region Get the outermost rings of a polygon
+      {
         List<Polygon> internalRings = new List<Polygon>();
 
         // explode the parts of the polygon into a list of individual geometries
@@ -3625,12 +3626,12 @@ namespace ProSnippets.GeometrySnippets
         }
 
         // the final geometry of the outer rings
-        var outerRingsResult =  outerRings.ToGeometry();
+        var outerRingsResult = outerRings.ToGeometry();
       }
-    #endregion
+      #endregion
 
-    #region ProSnippet Group: Retrieve Geometry from Geodatabase
-    #endregion
+      #region ProSnippet Group: Retrieve Geometry from Geodatabase
+      #endregion
       // cref: ArcGIS.Core.Geometry.Polygon
       // cref: ArcGIS.Core.Geometry.Geometry
       // cref: ArcGIS.Core.Data.Feature.GetShape

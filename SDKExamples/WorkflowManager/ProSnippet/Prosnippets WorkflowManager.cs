@@ -357,7 +357,7 @@ namespace ProSnippets.WorkFlowSnippets
 
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.NotificationManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.SubscribeToJobs()
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.SubscribeToJobs(System.Collections.Generic.List{System.String})
       // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEvent
       #region Subscribe to job notification messages
       {
@@ -379,7 +379,7 @@ namespace ProSnippets.WorkFlowSnippets
 
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.NotificationManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.UnsubscribeFromJobs()
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.UnsubscribeFromJobs(System.Collections.Generic.List{System.String})
       // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEvent
       #region Unsubscribe to messages for the given jobs
       {
@@ -395,7 +395,7 @@ namespace ProSnippets.WorkFlowSnippets
 
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.NotificationManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.SendStepResponse()
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.SendStepResponse(ArcGIS.Desktop.Workflow.Client.Models.Messages.StepResponse)
       // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepResponse
       // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepInfoResponseMessage
       // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.QuestionStepInfoResponseMessage

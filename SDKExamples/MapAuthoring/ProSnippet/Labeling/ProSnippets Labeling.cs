@@ -338,7 +338,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref: ArcGIS.Core.CIM.CIMMaplexRotationProperties.AlignmentType
       // cref: ArcGIS.Core.CIM.CIMMaplexRotationProperties.AlignLabelToAngle
       // cref: ArcGIS.Core.CIM.MaplexLabelRotationType
-      // cref ArcGIS.Core.CIM.MaplexRotationAlignmentType
+      // cref: ArcGIS.Core.CIM.MaplexRotationAlignmentType
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.RotationProperties
       #region Modify label Rotation - Point geometry
       {

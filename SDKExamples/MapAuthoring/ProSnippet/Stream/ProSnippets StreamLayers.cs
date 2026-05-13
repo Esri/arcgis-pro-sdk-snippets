@@ -74,7 +74,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Desktop.Mapping.StreamLayer
       // cref: ArcGIS.Desktop.Mapping.FeatureLayerCreationParams.#ctor(Uri)
       // cref: ArcGIS.Desktop.Mapping.Layer.SetVisibility
-      // cref: ARCGIS.DESKTOP.MAPPING.ILAYERFACTORY.CREATELAYER(URI,ILAYERCONTAINEREDIT,INT32,STRING)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer(URI,ILayerContainerEdit,INT32,STRING)
       #region Create Stream Layer with URI
       {
         // Note: call within QueuedTask.Run()
@@ -96,7 +96,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
 
       // cref: ArcGIS.Desktop.Mapping.StreamLayer
       // cref: ArcGIS.Desktop.Mapping.FeatureLayerCreationParams.DefinitionQuery
-      // cref: ARCGIS.DESKTOP.MAPPING.LAYERFACTORY.CREATELAYER
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.DefinitionQuery.#ctor(String,String)
       #region Create a stream layer with a definition query
       {
@@ -116,7 +116,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureLayerCreationParams.RendererDefinition
-      // cref: ARCGIS.DESKTOP.MAPPING.LAYERFACTORY.CREATELAYER
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer
       // cref: ArcGIS.Desktop.Mapping.SimpleRendererDefinition
       // cref: ArcGIS.Desktop.Mapping.SimpleRendererDefinition.SymbolTemplate
       #region Create a stream layer with a simple renderer
@@ -142,7 +142,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.IsVisible
-      // cref: ARCGIS.DESKTOP.MAPPING.LAYERFACTORY.CREATELAYER
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.Fields
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.UseDefaultSymbol

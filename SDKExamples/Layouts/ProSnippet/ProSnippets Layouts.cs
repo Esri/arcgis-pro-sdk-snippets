@@ -66,14 +66,14 @@ namespace ProSnippets.LayoutsSnippets
       layout = LayoutFactory.Instance.CreateLayout(8.5, 11, LinearUnit.Inches); //Create a new layout
       LayoutProjectItem layoutProjectItem = Project.Current.GetItems<LayoutProjectItem>()
                                        .FirstOrDefault(); //Reference to a layout project item
-      //Note: Needs QueuedTask to run
+                                                          //Note: Needs QueuedTask to run
       layout = layoutProjectItem?.GetLayout(); //Get the layout from a layout project item
 
       //Reference a Map Frame
       MapFrame mapFrame = layoutView?.Layout?.GetElementsAsFlattenedList()
                                        .OfType<MapFrame>()
                                        .FirstOrDefault(); //Reference to the first map frame in the layout
-      //Or
+                                                          //Or
       MapFrame mapFrameElement = layout.FindElement("New Map Frame") as MapFrame;
       //Reference map
       var map = MapView.Active.Map;
@@ -89,11 +89,11 @@ namespace ProSnippets.LayoutsSnippets
       //Reference elements
       Element element = layoutView?.Layout?.GetElementsAsFlattenedList()
                                        .FirstOrDefault(); //Reference to the first element in the layout
-      //Or by type
+                                                          //Or by type
       TextElement textElement = layoutView?.Layout?.GetElementsAsFlattenedList()
                                        .OfType<TextElement>()
                                        .FirstOrDefault(); //Reference to the first text element in the layout
-      //GroupElement
+                                                          //GroupElement
       GroupElement groupElement = layoutView?.Layout?.GetElementsAsFlattenedList()
                                        .OfType<GroupElement>()
                                        .FirstOrDefault(); //Reference to the first group element in the layout
@@ -118,7 +118,7 @@ namespace ProSnippets.LayoutsSnippets
         Project.Current.AddItem(pagx);
       }
       #endregion Create an IProjectItem from a layout template pagex file and add it to the project
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
       #region Get a Layout by name from the current project
       {
@@ -129,7 +129,7 @@ namespace ProSnippets.LayoutsSnippets
       }
 
       #endregion Get a Layout by name from the current project
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
       #region Reference layout project items and their associated layout
       {
@@ -218,7 +218,7 @@ namespace ProSnippets.LayoutsSnippets
       }
       #endregion
       LayoutProjectItem layoutItem = null; //Layout project item reference
-      // cref: ArcGIS.Desktop.Core.Project.RemoveItem
+                                           // cref: ArcGIS.Desktop.Core.Project.RemoveItem
       #region Remove a layout project item
       {
         //Remove a layout project item.
@@ -354,7 +354,7 @@ namespace ProSnippets.LayoutsSnippets
       }
       #endregion
 
-      #region ProSnippet Group CIM Graphics and GraphicFactory
+      #region ProSnippet Group: CIM Graphics and GraphicFactory
       #endregion
       // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
       // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.CreateCircle
@@ -2155,10 +2155,7 @@ namespace ProSnippets.LayoutsSnippets
         {
           //If the a layout view is active, clear its selection
           LayoutView activeLayoutView = LayoutView.Active;
-          if (activeLayoutView != null)
-          {
-            activeLayoutView.ClearElementSelection();
-          }
+          activeLayoutView?.ClearElementSelection();
         }
         #endregion
 
@@ -2279,7 +2276,7 @@ namespace ProSnippets.LayoutsSnippets
         {
           //Note: Must be on QueuedTask.Run
           var selectedElements = layout.GetSelectedElements().ToList();
-          if (selectedElements?.Any() == false)//must be at least 1.
+          if (selectedElements?.Count == 0)//must be at least 1.
             return;
           var elementsToUnGroup = new List<GroupElement>();
           //All selected elements should be grouped elements.
@@ -2390,7 +2387,7 @@ namespace ProSnippets.LayoutsSnippets
               txtElm.SetTextProperties(txtProperties);
             }
           }
-          #endregion
+        #endregion
 
           // cref: ArcGIS.Desktop.Layouts.PictureElement
           // cref: ArcGIS.Desktop.Layouts.PictureElement.SetSourcePath
@@ -2402,8 +2399,7 @@ namespace ProSnippets.LayoutsSnippets
             // Reference a picture element by name
             PictureElement picElm = layout.FindElement("MyPicture") as PictureElement;
             // Change the path to a new source
-            if (picElm != null)
-              picElm.SetSourcePath(@"D:\MyData\Pics\somePic.jpg");
+            picElm?.SetSourcePath(@"D:\MyData\Pics\somePic.jpg");
           }
           #endregion
 
@@ -3352,7 +3348,7 @@ namespace ProSnippets.LayoutsSnippets
       }
       #endregion
 
-      #region ProSnippet Group: MapFrame_Display_Constraints
+      #region ProSnippet Group: MapFrame Display Constraints
       #endregion
       // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
       // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
@@ -3703,6 +3699,91 @@ namespace ProSnippets.LayoutsSnippets
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
           mapFrame.SetAutoCamera(autoCamera);
+      }
+      #endregion
+
+      #region ProSnippets Group: Layer visibility overrides in MapFrames
+      #endregion
+      // cref: ArcGIS.Core.CIM.CIMMapFrame.OverrideLayerVisibility
+      // cref: ArcGIS.Core.CIM.CIMMapFrame.LayerVisibilityOverrides
+      // cref: ArcGIS.Core.CIM.CIMLayerOverrideSet
+      #region Set Layer Visibility Overrides in MapFrames
+      {
+        //Note: Run this code within a QueuedTask
+        //Get the USA States map from the project
+        //This map has both States and Cities layers
+        var usaMap = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(m => m.Name == "USA States")?.GetMap();
+
+        //The layout has two map frames - one for States and one for Cities
+        //We will set layer visibility overrides on each map frame, so that only the relevant layer is visible in each map frame
+        // Get the States map frame in the layout
+        var statesMapFrame = layout.Elements.OfType<MapFrame>().FirstOrDefault(n => n.Name == "States");
+        //Get the map frame definition
+        var mapFrameDefinition = statesMapFrame.GetDefinition() as CIMMapFrame;
+        //Enable layer visibility overrides for the states map frame
+        mapFrameDefinition.OverrideLayerVisibility = true;
+        //Create layer override sets
+        //Set States layer to visible and Cities layer to not visible
+        var layerOverrideSets = new List<CIMLayerOverrideSet>
+                {
+                    new CIMLayerOverrideSet
+                    {
+                        LayerURI = usaMap.Layers.FirstOrDefault(l => l.Name == "States")?.URI,
+                        Value = true
+                    },
+                    new CIMLayerOverrideSet {
+                        LayerURI = usaMap.Layers.FirstOrDefault(l => l.Name == "Cities")?.URI,
+                        Value = false
+                    }
+                };
+        //Assign the layer override sets to the map frame definition
+        mapFrameDefinition.LayerVisibilityOverrides = layerOverrideSets.ToArray();
+        //Set the modified definition back to the map frame
+        statesMapFrame.SetDefinition(mapFrameDefinition);
+
+        //Next, get the cities map frame in the layout
+        var citiesMapFrame = layout.Elements.OfType<MapFrame>().FirstOrDefault(n => n.Name == "Cities");
+        //Get the map frame definition for the cities map frame
+        var mapFrameDefinitionCities = citiesMapFrame.GetDefinition() as CIMMapFrame;
+        //Enable layer visibility overrides for the cities map frame
+        mapFrameDefinitionCities.OverrideLayerVisibility = true;
+        //Create layer override sets for the cities map frame
+        //Set Cities layer to visible and States layer to not visible
+        var layerOverrideSetsCities = new List<CIMLayerOverrideSet>
+                {
+                    new CIMLayerOverrideSet
+                    {
+                        LayerURI = usaMap.Layers.FirstOrDefault(l => l.Name == "States")?.URI,
+                        Value = false
+                    },
+                    new CIMLayerOverrideSet {
+                        LayerURI = usaMap.Layers.FirstOrDefault(l => l.Name == "Cities")?.URI,
+                        Value = true
+                    }
+                };
+        //Assign the layer override sets to the cities map frame definition
+        mapFrameDefinitionCities.LayerVisibilityOverrides = layerOverrideSetsCities.ToArray();
+        //Set the modified definition back to the cities map frame
+        citiesMapFrame.SetDefinition(mapFrameDefinitionCities);
+      }
+      #endregion
+      // cref: ArcGIS.Core.CIM.CIMMapFrame.OverrideLayerVisibility
+      // cref: ArcGIS.Core.CIM.CIMMapFrame.LayerVisibilityOverrides
+      #region Remove Layer Visibility Overrides in MapFrames
+      {
+        //Note: Run this code within a QueuedTask
+        //Get all map frames in the layout
+        var mapFrames = layout.Elements.OfType<MapFrame>();
+        //Iterate through each map frame in the layout
+        foreach (var mapFrameInLayout in mapFrames)
+        {
+          //Get the map frame definition
+          var mapFrameDefinition = mapFrame.GetDefinition() as CIMMapFrame;
+          //Remove all layer visibility overrides
+          mapFrameDefinition.OverrideLayerVisibility = false;
+          mapFrameDefinition.LayerVisibilityOverrides = null;
+          mapFrame.SetDefinition(mapFrameDefinition);
+        }
       }
       #endregion
     }

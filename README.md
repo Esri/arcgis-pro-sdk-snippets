@@ -1,12 +1,12 @@
-## ArcGIS Pro 3.6 SDK for .NET
+## ArcGIS Pro 3.7 SDK for .NET
 
 ```
-ArcGIS Pro Version: 3.6.0.59527
+ArcGIS Pro Version: 3.7.0.1901
 ```
 
 This repository provides a comprehensive set of ready-to-use code snippets for ArcGIS Pro SDK addin development. These snippets provide pre-written examples for common tasks and functionalities within the ArcGIS Pro SDK for .NET, allowing developers to quickly integrate specific features into their addins. Addin developers are also welcome to use these examples as a learning resource. These snippets are provided "as-is" and are not supported. 
 
-<a href="http://pro.arcgis.com/en/pro-app/sdk/" target="_blank">View it live</a>
+<a href="https://doc.esri.com/en/arcgis-pro/3.7/sdk/" target="_blank">View it live</a>
 
 --------------------------
 
@@ -19,7 +19,7 @@ The Visual Studio solution in this repo is organized into folders, each correspo
 1.	Clone the Repository <br/>
 * Use Git to clone the repository to your local machine:
 ```cmd
- git clone https://github.com/Esri/arcgis-pro-sdk-snippets.git
+ git clone https://github.com/arcgis/arcgis-pro-sdk-snippets.git
 ```
 2.	Explore the Snippet Folders
 * The solution is organized into folders by functional area (e.g., Editing, Map Authoring, Map Exploration, Geodatabase, Layouts).
@@ -50,7 +50,7 @@ Some snippets may require specific data or context (e.g., a particular layer nam
 
 #### ArcGIS Pro
 
-* ArcGIS Pro 3.6
+* ArcGIS Pro 3.7
 
 #### Supported platforms
 
@@ -58,25 +58,22 @@ Some snippets may require specific data or context (e.g., a particular layer nam
 
 #### Supported .NET
 
-* Microsoft .NET Runtime 8.0.0 or better. [Download .NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+* Microsoft .NET Runtime 10.0.0 or better. [Download .NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 #### Supported IDEs
 
-* Visual Studio 2022 (v17.13 or higher)  
+* Visual Studio 2026 (v18.4.1 or higher)  
    * Community Edition  
    * Professional Edition  
    * Enterprise Edition  
 
-Released alongside .NET 8, the [Visual Studio 2022 17.8 release](https://devblogs.microsoft.com/visualstudio/visual-studio-17-8-now-available/) brings support for .NET 8.
-
 ## Resources
 
-* [API Reference online](https://pro.arcgis.com/en/pro-app/latest/sdk/api-reference)
-* [ProSnippets: ready-made snippets of code for your ArcGIS Pro add-ins.](https://github.com/Esri/arcgis-pro-sdk/wiki/ProSnippets).
-* <a href="https://pro.arcgis.com/en/pro-app/sdk/" target="_blank">ArcGIS Pro SDK for .NET (pro.arcgis.com)</a>
+* [API Reference online](https://doc.esri.com/en/arcgis-pro/3.7/sdk/api-reference)
+* <a href="https://doc.esri.com/en/arcgis-pro/3.7/sdk/" target="_blank">ArcGIS Pro SDK for .NET (doc.esri.com)</a>
 * [arcgis-pro-sdk-community-samples](http://github.com/Esri/arcgis-pro-sdk-community-samples)
-* [ArcGIS Pro DAML ID Reference](http://github.com/Esri/arcgis-pro-sdk/wiki/ArcGIS-Pro-DAML-ID-Reference)
-* [ArcGIS Pro SDK icons](https://github.com/Esri/arcgis-pro-sdk/releases/tag/3.6.0.59527)
+* [ArcGIS Pro DAML ID Reference](https://doc.esri.com/en/arcgis-pro/3.7/sdk/api-reference/conceptdocs/docs/ArcGIS-Pro-DAML-ID-Reference.html)
+* [ArcGIS Pro SDK icons](https://github.com/Esri/arcgis-pro-sdk/releases/tag/3.7.0.1901)
 
 ## Contributing
 
@@ -87,7 +84,7 @@ Esri welcomes contributions from anyone and everyone. For more information, see 
 Find a bug or want to request a new feature? Let us know by submitting an issue.
 
 ## Licensing
-Copyright 2025 Esri
+Copyright 2026 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -103,9 +100,9 @@ limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE.txt](LICENSE.txt?raw=true) file.
 
-<p align = center><img src="http://esri.github.io/arcgis-pro-sdk/images/ArcGISPro.png"  alt="pre-req" align = "top" height = "20" width = "20" ><b> ArcGIS Pro 3.6 SDK for Microsoft .NET Framework</b></p>
+<p align = center><img src="https://esri.github.io/arcgis-pro-sdk/images/ArcGISPro.png"  alt="pre-req" align = "top" height = "20" width = "20" ><b> ArcGIS Pro 3.7 SDK for Microsoft .NET Framework</b></p>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Home](https://github.com/Esri/arcgis-pro-sdk/wiki) | <a href="http://pro.arcgis.com/en/pro-app/sdk/api-reference/index.html" target="_blank">API Reference</a> | [Requirements](#requirements) | [Download](#installing-arcgis-pro-sdk-for-net) |  <a href="http://github.com/esri/arcgis-pro-sdk-community-samples" target="_blank">Samples</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Home](https://github.com/Esri/arcgis-pro-sdk/wiki) | <a href="https://doc.esri.com/en/arcgis-pro-app/latest/sdk/api-reference/" target="_blank">API Reference</a> | [Requirements](#requirements) | <a href="http://github.com/esri/arcgis-pro-sdk-community-samples" target="_blank">Samples</a>
 
 
 

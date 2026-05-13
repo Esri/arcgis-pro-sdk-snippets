@@ -28,7 +28,7 @@ namespace ProSnippets.EditingSnippets
     #region ProSnippet Group: Undo / Redo
     #endregion
 
-    public static async Task ProSnippetsUndoRedoAsync ()
+    public static async Task ProSnippetsUndoRedoAsync()
     {
       #region ignore - Variable initialization
 
@@ -57,16 +57,16 @@ namespace ProSnippets.EditingSnippets
           }
         }
       });
-    #endregion
+      #endregion
 
-    // cref: ArcGIS.Desktop.Framework.OperationManager
-    // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
-    // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
-    // cref: ArcGIS.Desktop.Framework.OperationManager.CanRedo
-    // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync()
-    // cref: ARCGIS.DESKTOP.MAPPING.MAP.OPERATIONMANAGER
-    #region Undo/Redo the Most Recent Operation
-    // Demonstrates how to undo and redo the most recent operation using the map's operation manager.
+      // cref: ArcGIS.Desktop.Framework.OperationManager
+      // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
+      // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
+      // cref: ArcGIS.Desktop.Framework.OperationManager.CanRedo
+      // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync()
+      // cref: ARCGIS.DESKTOP.MAPPING.MAP.OPERATIONMANAGER
+      #region Undo/Redo the Most Recent Operation
+      // Demonstrates how to undo and redo the most recent operation using the map's operation manager.
       //undo
       if (activeMap.OperationManager.CanUndo)
         activeMap.OperationManager?.UndoAsync();//await as needed

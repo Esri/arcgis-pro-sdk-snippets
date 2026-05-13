@@ -42,8 +42,8 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.MODIFY(INSPECTOR)
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.EXECUTE
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(Inspector)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute
       #region Read and Write blob fields with the attribute inspector
       await QueuedTask.Run(() =>
       {
@@ -75,9 +75,9 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.CALLBACK(ACTION{IEDITCONTEXT},DATASET)
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.CALLBACK(ACTION{IEDITCONTEXT},IENUMERABLE{DATASET})
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.CALLBACK(ACTION{IEDITCONTEXT},DATASET[])
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Callback(System.Action{ArcGIS.Desktop.Editing.EditOperation.IEditContext},ArcGIS.Core.Data.Dataset)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Callback(System.Action{ArcGIS.Desktop.Editing.EditOperation.IEditContext},System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.Dataset})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Callback(System.Action{ArcGIS.Desktop.Editing.EditOperation.IEditContext},ArcGIS.Core.Data.Dataset[])
       #region Read and Write blob fields with a row cursor in a callback
       await QueuedTask.Run(() =>
         {
@@ -85,32 +85,32 @@ namespace ProSnippets.EditingSnippets
           var featLayer = activeMap.FindLayers("Hydrant").First() as FeatureLayer;
           editOp.Callback((context) =>
                 {
-            using (var rc = featLayer.GetTable().Search(null, false))
-            {
-              while (rc.MoveNext())
-              {
-                using (var record = rc.Current)
-                {
+                  using (var rc = featLayer.GetTable().Search(null, false))
+                  {
+                    while (rc.MoveNext())
+                    {
+                      using (var record = rc.Current)
+                      {
                         //read the blob field and save to a file
-                  var msw = new MemoryStream();
-                  msw = record["BlobField"] as MemoryStream;
-                  using (FileStream file = new(@"d:\temp\blob.jpg", FileMode.Create, FileAccess.Write))
-                  {
-                    msw.WriteTo(file);
-                  }
+                        var msw = new MemoryStream();
+                        msw = record["BlobField"] as MemoryStream;
+                        using (FileStream file = new(@"d:\temp\blob.jpg", FileMode.Create, FileAccess.Write))
+                        {
+                          msw.WriteTo(file);
+                        }
                         //read file into memory stream
-                  var msr = new MemoryStream();
-                  using (FileStream file = new(@"d:\images\Hydrant.jpg", FileMode.Open, FileAccess.Read))
-                  {
-                    file.CopyTo(msr);
-                  }
+                        var msr = new MemoryStream();
+                        using (FileStream file = new(@"d:\images\Hydrant.jpg", FileMode.Open, FileAccess.Read))
+                        {
+                          file.CopyTo(msr);
+                        }
                         //put the memory stream in the blob field and save to feature
-                  record["BlobField"] = msr;
-                  record.Store();
-                }
-              }
-            }
-          }, featLayer.GetTable());
+                        record["BlobField"] = msr;
+                        record.Store();
+                      }
+                    }
+                  }
+                }, featLayer.GetTable());
           if (!editOp.IsEmpty)
           {
             var result = editOp.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not

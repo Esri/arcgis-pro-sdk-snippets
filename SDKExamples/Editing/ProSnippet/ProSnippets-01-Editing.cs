@@ -37,15 +37,15 @@ namespace ProSnippets.EditingSnippets
   /// </summary>
   public static partial class ProSnippetsEditing
   {
-		#region ProSnippet Group: Edit Operation Methods
-		#endregion
+    #region ProSnippet Group: Edit Operation Methods
+    #endregion
 
-		/// <summary>
-		/// Demonstrates a wide range of feature and table editing operations in ArcGIS Pro,
-		/// including creating, modifying, deleting, moving, splitting, merging, transforming,
-		/// and managing attributes and attachments using the EditOperation API.
-		/// </summary>
-		public static async Task ProSnippetsEditOperations2Async()
+    /// <summary>
+    /// Demonstrates a wide range of feature and table editing operations in ArcGIS Pro,
+    /// including creating, modifying, deleting, moving, splitting, merging, transforming,
+    /// and managing attributes and attachments using the EditOperation API.
+    /// </summary>
+    public static async Task ProSnippetsEditOperations2Async()
     {
       #region ignore - Variable initialization
 
@@ -109,7 +109,6 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.EditOperation.#ctor()
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.Layer, ArcGIS.Core.Geometry.Geometry)
       // cref: ArcGIS.Desktop.Editing.EditOperation.IsSucceeded
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.Dictionary{System.String,System.Object})
       // cref: ArcGIS.Desktop.Editing.EditOperation.Execute
       // cref: ArcGIS.Desktop.Editing.EditOperation.ExecuteAsync
       #region Edit Operation Create Features
@@ -269,7 +268,6 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Core.Geometry.Geometry)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.SelectionSet, ArcGIS.Core.Geometry.Geometry)
       #region Edit Operation Cut Features
       // Cuts features in the specified feature layer using the provided cut line and clip polygon.
       await QueuedTask.Run(() =>
@@ -297,7 +295,6 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Desktop.Mapping.MapMember, System.Int64)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Desktop.Mapping.SelectionSet)
       #region Edit Operation Delete Features
       // Deletes a single feature from the specified feature layer using its ObjectID.
       await QueuedTask.Run(() =>
@@ -316,8 +313,8 @@ namespace ProSnippets.EditingSnippets
             });
       #endregion
 
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.CREATE(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.Dictionary{System.String,System.Object})
-      // cref: ARCGIS.DESKTOP.EDITING.EDITOPERATION.CREATECHAINEDOPERATION
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.Dictionary{System.String,System.Object})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation
       #region Edit Operation Duplicate Features
       // Duplicates a feature in a feature layer and modifies its geometry.
       await QueuedTask.Run(() =>
@@ -348,7 +345,7 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Explode(ARCGIS.DESKTOP.MAPPING.Layer,SYSTEM.COLLECTIONS.GENERIC.IEnumerable{Int64},Boolean)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Explode(ArcGIS.Desktop.Mapping.Layer,System.Collections.Generic.IEnumerable{Int64},Boolean)
       #region Edit Operation Explode Features
       // Explodes a multi-part feature into individual features.
       await QueuedTask.Run(() =>
@@ -371,9 +368,7 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(ARCGIS.DESKTOP.MAPPING.LAYER,ARCGIS.DESKTOP.MAPPING.LAYER,IENUMERABLE{INT64},INSPECTOR)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(EditingRowTemplate,ARCGIS.DESKTOP.MAPPING.Layer,IEnumerable{Int64})
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(ARCGIS.DESKTOP.MAPPING.LAYER,IENUMERABLE{INT64},INSPECTOR)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Mapping.Layer,System.Collections.Generic.IEnumerable{Int64},ArcGIS.Desktop.Editing.Attributes.Inspector)
       #region Edit Operation Merge Features
       // Merges multiple features from a source feature layer into a new feature, optionally using a template or inspector, and supports merging into a destination layer.
       await QueuedTask.Run(() =>
@@ -707,8 +702,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.SplitByEqualParts.#ctor
       // cref: ArcGIS.Desktop.Editing.SplitByDistance.#ctor
       // cref: ArcGIS.Desktop.Editing.SplitByVaryingDistance.#ctor
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer, System.Int64, System.Collections.Generic.IEnumerable<ArcGID.Core.Geometry.MapPoint>)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Desktop.Editing.SplitMethod)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer,System.Int64,System.Collections.Generic.IEnumerable<ArcGIS.Core.Geometry.MapPoint>)
       #region Edit Operation Split Features
       // Splits the specified feature at the given points.
       await QueuedTask.Run(() =>

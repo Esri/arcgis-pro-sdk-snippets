@@ -75,7 +75,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer<T>(LayerCreationParams,ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.#ctor(Uri)
       // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.IsVisible
       // cref: ArcGIS.Desktop.Mapping.LayerFactory
@@ -803,7 +803,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           var dict = pointCloudSceneLayer.GetAvailableClassCodesAndLabels();
 
           //Filter out low noise and unclassified (7 and 1 respectively)
-          //consult https://pro.arcgis.com/en/pro-app/help/data/las-dataset/storing-lidar-data.htm
+          //consult https://doc.esri.com/en/arcgis-pro/latest/help/data/las-dataset/storing-lidar-data.html
           var filterDef = new PointCloudFilterDefinition()
           {
             ClassCodes = dict.Keys.Where(c => c != 7 && c != 1).ToList(),

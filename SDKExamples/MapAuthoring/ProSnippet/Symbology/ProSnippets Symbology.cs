@@ -51,7 +51,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Markers placed at a 45 degree angle
       /// <summary>
       /// Create a line symbol with the markers placed at a 45 degree angle. <br/>  
-      /// ![LineSymbolAngleMarker](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/line-marker-angle.png)
+      /// ![LineSymbolAngleMarker](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/line-marker-angle.png)
       /// </summary>
       {
         //Create a line symbol with the markers placed at a 45 degree angle.
@@ -91,7 +91,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       /// 1. A solid stroke that has dashes.
       /// 1. A circle marker.
       /// 1. A square marker.
-      /// ![LineSymbolTwoMarkers](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/line-dash-two-markers.png)
+      /// ![LineSymbolTwoMarkers](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/line-dash-two-markers.png)
       /// </summary>
       {
         //Create a line symbol with a dash and two markers.
@@ -174,15 +174,15 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Dash line with two markers - Method II
       /// <summary>
       /// Create a line symbol with a dash and two markers. <br/>
-      /// In this pattern of creating this symbol, a [CIMVectorMarker](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic6176.html) object is created as a new [CIMSymbolLayer](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic5503.html).
-      /// The circle and square markers created by [ContructMarker](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic12350.html) method is then assigned to the [MarkerGraphics](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic6188.html) property of the CIMVectorMarker. 
-      /// When using this method, the CIMVectorMarker's [Frame](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic6187.html) property needs to be set to the [CIMMarker](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic3264.html) object's Frame. 
-      /// Similarly, the CIMVectorMarker's [Size](https://pro.arcgis.com/en/pro-app/sdk/api-reference/#topic3284.html) property needs to be set to the CIMMarker object's size.
+      /// In this pattern of creating this symbol, a [CIMVectorMarker](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic6176.html) object is created as a new [CIMSymbolLayer](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic5503.html).
+      /// The circle and square markers created by [ContructMarker](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic12350.html) method is then assigned to the [MarkerGraphics](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic6188.html) property of the CIMVectorMarker. 
+      /// When using this method, the CIMVectorMarker's [Frame](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic6187.html) property needs to be set to the [CIMMarker](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic3264.html) object's Frame. 
+      /// Similarly, the CIMVectorMarker's [Size](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic3284.html) property needs to be set to the CIMMarker object's size.
       /// This line symbol comprises three symbol layers listed below: 
       /// 1. A solid stroke that has dashes.
       /// 1. A circle marker.
       /// 1. A square marker.
-      /// ![LineSymbolTwoMarkers](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/line-dash-two-markers.png)
+      /// ![LineSymbolTwoMarkers](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/line-dash-two-markers.png)
       /// </summary>
       {
         // Create a line symbol with a dash and two markers.
@@ -269,7 +269,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       /// Create a mesh symbol that can be applied to a multi-patch feature layer.
       /// A mesh symbol is a CIMMeshSymbol object.  Define an array of CIMSymbolLayers which contains a CIMMaterialSymbol layer with the specified properties such as Color, etc.
       /// Assign this array of CIMSymbolLayers to the CIMMeshSymbol.
-      /// ![MeshSymbolOrange](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/mesh-material-orange.png)
+      /// ![MeshSymbolOrange](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/mesh-material-orange.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -294,7 +294,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Mesh procedural texture symbol
       /// <summary>
       /// Creates Mesh procedural symbol with various textures.
-      /// ![MeshProceduralTexture](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/mesh-procedural-texture.png)
+      /// ![MeshProceduralTexture](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/mesh-procedural-texture.png)
       /// Note: The rule package used in this method can be obtained from the Sample Data included in the arcgis-pro-sdk-community-samples repository.
       /// </summary>
       {
@@ -324,7 +324,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Custom fill and outline
       /// <summary>
       /// Creates a point symbol with custom fill and outline          
-      /// ![PointSymbolMarker](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/point-fill-outline.png)
+      /// ![PointSymbolMarker](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/point-fill-outline.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -349,7 +349,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Point Symbol from a font
       /// <summary>
       /// Create a point symbol from a character in a font file
-      /// ![PointSymbolFont](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/point-marker.png)
+      /// ![PointSymbolFont](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/point-marker.png)
       /// </summary>
       {
         //creating the marker from the Font selected
@@ -371,7 +371,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Diagonal cross hatch fill
       /// <summary>
       /// Create a polygon symbol with a diagonal cross hatch fill. <br/>
-      /// ![PolygonSymbolDiagonalCrossHatch](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygon-diagonal-crosshatch.png)
+      /// ![PolygonSymbolDiagonalCrossHatch](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygon-diagonal-crosshatch.png)
       /// </summary>
       {
         var trans = 50.0;//semi transparent
@@ -418,7 +418,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Cross hatch
       /// <summary>
       /// Create a polygon symbol using the ConstructHatchFill method . <br/>
-      /// ![PolygonSymbolDiagonalCrossHatch](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/ConstructHatchFill.png)
+      /// ![PolygonSymbolDiagonalCrossHatch](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/ConstructHatchFill.png)
       /// </summary>
       {
         CIMStroke lineStroke = SymbolFactory.Instance.ConstructStroke(CIMColor.CreateRGBColor(51, 51, 51, 60), 4, SimpleLineStyle.Solid);
@@ -449,7 +449,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Dash dot fill
       /// <summary>
       /// Create a polygon symbol with a dash dot fill. <br/>
-      /// ![PolygonSymbolDashDot](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygon-dash-dot.png)
+      /// ![PolygonSymbolDashDot](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygon-dash-dot.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -493,7 +493,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Gradient color fill using CIMGradientFill
       /// <summary>
       /// Create a polygon symbol with a gradient color fill. <br/>
-      /// ![PolygonSymbolGradientColor](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygon-gradient-color.png)
+      /// ![PolygonSymbolGradientColor](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygon-gradient-color.png)
       /// 1. Create a solid colored stroke with 50% transparency
       /// 1. Create a fill using gradient colors red through green
       /// 1. Apply both the stroke and fill as a symbol layer array to the new PolygonSymbol
@@ -526,7 +526,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Gradient fill between two colors
       /// <summary>
       /// Create a polygon symbol using the ConstructGradientFill method. Constructs a gradient fill between two colors passed to the method. <br/>
-      /// ![PolygonSymbolTwoColors](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/PolygonSymbolTwoColors.png)
+      /// ![PolygonSymbolTwoColors](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/PolygonSymbolTwoColors.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -549,7 +549,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Gradient fill using Color ramp
       /// <summary>
       /// Create a polygon symbol using the ConstructGradientFill method. Constructs a gradient fill using the specified color ramp. <br/>
-      /// ![PolygonSymbolColorRamp](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/PolygonSymbolColorRamp.png)
+      /// ![PolygonSymbolColorRamp](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/PolygonSymbolColorRamp.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -589,7 +589,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Picture fill
       /// <summary>
       /// Constructs a picture fill with the specified parameters.
-      /// ![ConstructPictureFill](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/ConstructPictureFill.png)
+      /// ![ConstructPictureFill](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/ConstructPictureFill.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -616,7 +616,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Animation water
       /// <summary>
       /// Constructs a water fill of specific color, waterbody size and wave strength. This fill can be used on polygon feature classes in a Scene view only.
-      /// ![ConstructWaterFill](https://github.com/ArcGIS/arcgis-pro-sdk/blob/master/Images/waterAnimation.gif)
+      /// ![ConstructWaterFill](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/waterAnimation.gif)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -640,7 +640,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Pen and Ink: Ripple
       /// <summary>
       /// Constructs a polygon symbol in the specified color representing a pen and ink ripple water fill. See https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/please-steal-this-pen-and-ink-style/
-      /// ![polygonRipple.png](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygonRipple.png)
+      /// ![polygonRipple.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygonRipple.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -657,7 +657,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Pen and Ink: Stipple
       /// <summary>
       /// Constructs a polygon symbol in the specified color representing a pen and ink stipple effect. See https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/please-steal-this-pen-and-ink-style/
-      /// ![polygonStipple.png](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygonStipple.png)
+      /// ![polygonStipple.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygonStipple.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -675,7 +675,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Pen and Ink: Cross Hatch 
       /// <summary>
       /// Constructs a polygon symbol in the specified color representing a pen and ink cross hatch effect. See https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/please-steal-this-pen-and-ink-style/
-      /// ![polygonPNHatch.png](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygonPNHatch.png)
+      /// ![polygonPNHatch.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygonPNHatch.png)
       /// </summary>
       {
         //Note: Run withing QueuedTask
@@ -694,7 +694,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region Procedural Symbol
       /// <summary>
       /// Create a procedural symbol that can be applied to a polygon building footprint layer
-      /// ![ProceduralSymbol](http://Esri.github.io/arcgis-pro-sdk/images/Symbology/polygon-procedural.png)        
+      /// ![ProceduralSymbol](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygon-procedural.png)        
       /// Note: The rule package used in this method can be obtained from the Sample Data included in the arcgis-pro-sdk-community-samples repository.
       /// </summary>    
       {

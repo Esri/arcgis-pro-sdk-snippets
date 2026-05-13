@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
-{ 
+{
   /// <summary>
   /// Provides methods for working with 3D Analyst layers in ArcGIS Pro, including TIN, Terrain, and LAS dataset layers.
   /// </summary>
@@ -49,7 +49,7 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
     /// Pro.</remarks>
     public static async void ProSnippets3DAnalystLayers()
     {
-     
+
       #region ignore - Variable initialization
       Map map = MapView.Active.Map;
 
@@ -76,9 +76,10 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
       Polyline polyline = PolylineBuilderEx.CreatePolyline();
       Polygon polygon = PolygonBuilderEx.CreatePolygon();
 
-      double x = 0.0, 
+      double x = 0.0,
              y = 0.0;
       #endregion
+
       #region ProSnippet Group: Layer Methods for TIN, Terrain, LasDataset
       #endregion
 
@@ -1381,7 +1382,6 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
 
       // cref: ArcGIS.Desktop.Mapping.LasPointRailSelectionFilter
       // cref: ArcGIS.Desktop.Mapping.LasPointRailSelectionFilter.#ctor
-      // cref: ArcGIS.Desktop.Mapping.LasPointRailSelectionFilter.ApplyWindCorrection
       // cref: ArcGIS.Desktop.Mapping.LasPointRailSelectionFilter.SearchRadius
       // cref: ArcGIS.Desktop.Mapping.LasPointRailSelectionFilter.RailThickness
       // cref: ArcGIS.Desktop.Mapping.LasPointRailSelectionFilter.MaximumLength
@@ -1454,54 +1454,52 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
       }
       #endregion
 
-      // nc   exclude from 3.6
 
 
-      //#region ProSnippet Group: LAS Dataset Layer Classification
-      //#endregion
+      #region ProSnippet Group: LAS Dataset Layer Classification
+      #endregion
 
-      //  // cref: ArcGIS.Desktop.Mapping.LasClassFlagEditType
-      //  // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.CanClassifyLasPoints(LasPointClassificationDescription)
-      //  // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.ClassifyLasPoints(LasPointClassificationDescription, System.Boolean)
-      //  //#region Classify LAS Points
+      // cref: ArcGIS.Desktop.Mapping.LasClassFlagEditType
+      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.CanClassifyLasPoints(LasPointClassificationDescription)
+      // cref: ArcGIS.Desktop.Mapping.LasDatasetLayer.ClassifyLasPoints(LasPointClassificationDescription, System.Boolean)
+      #region Classify LAS Points
 
-      //  //// build the LasPointClassificationDescription
-      //  //// assign a new classification code to be assigned to the selected LAS points
-      //  //// don't alter any of the classification flags
-      //  //var edits = new LasPointClassificationDescription();
-      //  //edits.ClassCode = 6;
+      // build the LasPointClassificationDescription
+      // assign a new classification code to be assigned to the selected LAS points
+      // don't alter any of the classification flags
+      var edits = new LasPointClassificationDescription();
+      edits.ClassCode = 6;
 
-      //  //if (lasDatasetLayer.CanClassifyLasPoints(edits))
-      //  //  lasDatasetLayer.ClassifyLasPoints(edits, true);
-
-
-      //  //// alternatively set up the LasPointClassificationDescription to modify classification flags
-      //  //var edits2 = new LasPointClassificationDescription();
-      //  //edits2.KeyPoints = LasClassFlagEditType.Set;
-      //  //edits2.SyntheticPoints = LasClassFlagEditType.Clear;
-      //  //// don't change the OverlapPoints, WithheldPoints flags
-
-      //  //// apply the edit
-      //  //if (lasDatasetLayer.CanClassifyLasPoints(edits2))
-      //  //  lasDatasetLayer.ClassifyLasPoints(edits2, true);
+      if (lasDatasetLayer.CanClassifyLasPoints(edits))
+        lasDatasetLayer.ClassifyLasPoints(edits, true);
 
 
+      // alternatively set up the LasPointClassificationDescription to modify classification flags
+      var edits2 = new LasPointClassificationDescription();
+      edits2.KeyPoints = LasClassFlagEditType.Set;
+      edits2.SyntheticPoints = LasClassFlagEditType.Clear;
+      // don't change the OverlapPoints, WithheldPoints flags
 
-      //  //// or perform both a classification code and classification flag edit
-      //  //var edits3 = new LasPointClassificationDescription();
-      //  //edits3.ClassCode = 5;
-      //  //edits3.KeyPoints = LasClassFlagEditType.Set;
-      //  //edits3.SyntheticPoints = LasClassFlagEditType.Clear;
-      //  //// be explicit about not changing the other flags
-      //  //edits3.WithheldPoints = LasClassFlagEditType.NoChange;
-      //  //edits3.OverlapPoints = LasClassFlagEditType.NoChange;
+      // apply the edit
+      if (lasDatasetLayer.CanClassifyLasPoints(edits2))
+        lasDatasetLayer.ClassifyLasPoints(edits2, true);
 
-      //  //// apply the edit
-      //  //if (lasDatasetLayer.CanClassifyLasPoints(edits3))
-      //  //  lasDatasetLayer.ClassifyLasPoints(edits3, true);
 
-      //  //#endregion
-      //}
+
+      // or perform both a classification code and classification flag edit
+      var edits3 = new LasPointClassificationDescription();
+      edits3.ClassCode = 5;
+      edits3.KeyPoints = LasClassFlagEditType.Set;
+      edits3.SyntheticPoints = LasClassFlagEditType.Clear;
+      // be explicit about not changing the other flags
+      edits3.WithheldPoints = LasClassFlagEditType.NoChange;
+      edits3.OverlapPoints = LasClassFlagEditType.NoChange;
+
+      // apply the edit
+      if (lasDatasetLayer.CanClassifyLasPoints(edits3))
+        lasDatasetLayer.ClassifyLasPoints(edits3, true);
+
+      #endregion
 
 
 
@@ -1638,10 +1636,12 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
 
       // cref: ArcGIS.Desktop.Mapping.TinLayer.CanInterpolateShape
       // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
+      // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod, System.Double, System.Double)
       // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
       #region Interpolate Shape
       {
         // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
         {
           ArcGIS.Core.Geometry.Geometry output = null;
           // interpolate z values for a geometry
@@ -1671,6 +1671,7 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
       #region Interpolate Shape vertices
       {
         // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
         {
           // interpolate z values at the geometry vertices only
           Geometry output = tinLayer.InterpolateShapeVertices(polyline, SurfaceInterpolationMethod.NaturalNeighbor);
@@ -1691,6 +1692,7 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
       #region Interpolate Z at an x,y location
       {
         // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
         {
           // interpolate values at the specified x,y location
           double z = tinLayer.InterpolateZ(x, y, SurfaceInterpolationMethod.NaturalNeighborZNearest);
@@ -1716,6 +1718,110 @@ namespace ProSnippets.MapAuthoringSnippets.ThreeDAnalyst
 
           // densify the shape before interpolating
           length3d = tinLayer.GetSurfaceLength(polygon, SurfaceInterpolationMethod.NaturalNeighbor, 0.01, 0);
+        }
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.TinLayer.InterpolatePolygonToMultipatch(ArcGIS.Core.Geometry.Polygon,System.Int32)
+      #region Interpolate Polygon To Multipatch
+      {
+        // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
+        {
+          var multipatch = tinLayer.InterpolatePolygonToMultipatch(polygon, 1024);
+          if (multipatch != null)
+          {
+            // process the output
+          }
+        }
+      }
+      #endregion
+
+
+
+      #region ProSnippet Group: Terrain Layer Functionalities
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.CanInterpolateShape
+      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
+      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.InterpolateShape(ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod, System.Double, System.Double)
+      // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
+      #region Interpolate Shape
+      {
+        // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
+        {
+          ArcGIS.Core.Geometry.Geometry output = null;
+          // interpolate z values for a geometry
+          if (terrainLayer.CanInterpolateShape(polyline))
+            output = terrainLayer.InterpolateShape(polyline, SurfaceInterpolationMethod.NaturalNeighbor);
+
+          if (output != null)
+          {
+            // process the output
+          }
+
+          // densify the shape before interpolating
+          if (terrainLayer.CanInterpolateShape(polygon))
+            output = terrainLayer.InterpolateShape(polygon, SurfaceInterpolationMethod.Linear, 0.01, 0);
+
+          if (output != null)
+          {
+            // process the output
+          }
+        }
+      }
+      #endregion
+
+
+      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.InterpolateShapeVertices(ArcGIS.Core.Geometry.Multipart, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod, System.Double)
+      // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
+      #region Interpolate Shape vertices
+      {
+        // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
+        {
+          // interpolate z values at the geometry vertices only
+          Geometry output = terrainLayer.InterpolateShapeVertices(polyline, SurfaceInterpolationMethod.NaturalNeighbor, 0);
+          if (output != null)
+          {
+            // process the output
+          }
+
+          // or use a different interpolation method
+          output = terrainLayer.InterpolateShapeVertices(polyline, SurfaceInterpolationMethod.Linear, 0);
+        }
+      }
+      #endregion
+
+
+      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.InterpolateZ(System.Double, System.Double, ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod)
+      // cref: ArcGIS.Desktop.Mapping.SurfaceInterpolationMethod
+      #region Interpolate Z at an x,y location
+      {
+        // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
+        {
+          // interpolate values at the specified x,y location
+          double z = terrainLayer.InterpolateZ(x, y, SurfaceInterpolationMethod.NaturalNeighborZNearest);
+
+          // or use a different interpolation method
+          z = terrainLayer.InterpolateZ(x, y, SurfaceInterpolationMethod.Linear);
+        }
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Mapping.TerrainLayer.InterpolatePolygonToMultipatch(ArcGIS.Core.Geometry.Polygon,System.Int32, System.Double)
+      #region Interpolate Polygon To Multipatch
+      {
+        // Note: Needs QueuedTask to run
+        // Note: Needs 3d Analyst license to run
+        {
+          var multipatch = terrainLayer.InterpolatePolygonToMultipatch(polygon, 1024, 0);
+          if (multipatch != null)
+          {
+            // process the output
+          }
         }
       }
       #endregion

@@ -179,7 +179,7 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.Items
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog
-      // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateMapFromItem
+      // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateMapFromItem(ArcGIS.Desktop.Core.Item)
       #region BrowseDialogItems
       {
         OpenItemDialog addToProjectDialog = new()
@@ -201,7 +201,7 @@ namespace ProSnippets.ContentSnippets
       #region ProSnippet Group: Retrieving Project Items
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
       #region Get MapProjectItems
       {
@@ -213,7 +213,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //GetMapProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
       #region Get FolderConnectionProjectItems
       {
@@ -223,7 +223,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //GetFolderConnectiontProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Catalog.ServerConnectionProjectItem
       #region Get ServerConnectionProjectItems
       {
@@ -233,7 +233,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //Get ServerConnectionProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Catalog.LocatorsConnectionProjectItem
       #region Get LocatorConnectionProjectItems
       {
@@ -243,7 +243,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //Get LocatorConnectionProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
       // cref: ArcGIS.Desktop.Core.Item.GetItems
       #region Get Project Items by ProjectItem type
@@ -372,7 +372,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Core.Portal.PortalItem 
       #region Get Folder Item Content from Project PortalItem
       {
@@ -642,8 +642,8 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite
       // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.InsertFavorite(ArcGIS.Desktop.Core.Item,Int32)
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.InsertFavorite(ArcGIS.Desktop.Core.Item,Int32,Boolean)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.InsertFavorite(ArcGIS.Desktop.Core.Item,System.Int32)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.InsertFavorite(ArcGIS.Desktop.Core.Item,System.Int32,System.Boolean)
       #region Insert a Favorite - Geodatabase path
       {
         gdbPath = "@C:\\myDataFolder\\myData.gdb";
@@ -773,7 +773,7 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.IMetadata.SetXml(System.String)
       // cref: ArcGIS.Desktop.Core.Item.SetXml(System.String)
       // cref: ArcGIS.Desktop.Core.Project.SetXml(System.String)
-      // cref: ARCGIS.DESKTOP.CORE.ITEM.CANEDIT
+      // cref: ArcGIS.Desktop.Core.Item.CanEdit
       #region Item: Set the metadata of an item: SetXML
       {
         // Note: Needs QueuedTask to run
@@ -892,7 +892,7 @@ namespace ProSnippets.ContentSnippets
       #region Item: Save the metadata of the current item as HTML: SaveMetadataAsHTML
       {
         // Note: Needs QueuedTask to run
-        metadataItemToSaveAsHTML.SaveMetadataAsHTML(@"E:\Temp\OutputHTML.htm", MDSaveAsHTMLOption.esriCurrentMetadataStyle);
+        metadataItemToSaveAsHTML.SaveMetadataAsHTML(@"E:\Temp\OutputHTML.html", MDSaveAsHTMLOption.esriCurrentMetadataStyle);
       }
       #endregion
 
@@ -1163,7 +1163,6 @@ namespace ProSnippets.ContentSnippets
       #region ProSnippet Group: Project
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.CreateAsync()
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
       // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings
@@ -1498,7 +1497,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all project items
       {
         IEnumerable<Item> allProjectItems = Project.Current.GetItems<Item>();
@@ -1510,7 +1509,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all MapProjectItems for a project
       {
         var project = Project.Current;
@@ -1525,7 +1524,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get a specific MapProjectItem
       {
         MapProjectItem mapProjItem = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(item => item.Name.Equals("EuropeMap"));
@@ -1534,7 +1533,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all StyleProjectItems
       {
         IEnumerable<StyleProjectItem> newStyleItemsContainer = null;
@@ -1547,7 +1546,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get a specific StyleProjectItem
       {
         var container = Project.Current.GetItems<StyleProjectItem>();
@@ -1564,7 +1563,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get the Favorite StyleProjectItem
       {
         // Note: Needs QueuedTask to run
@@ -1574,7 +1573,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.GDBProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all GDBProjectItems
       {
         IEnumerable<GDBProjectItem> newGDBItemsContainer = null;
@@ -1587,7 +1586,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.GDBProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get a specific GDBProjectItem
       {
         GDBProjectItem gdbProjItem = Project.Current.GetItems<GDBProjectItem>().FirstOrDefault(item => item.Name.Equals("myGDB"));
@@ -1596,7 +1595,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.ServerConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all ServerConnectionProjectItems
       {
         IEnumerable<ServerConnectionProjectItem> newServerConnections = null;
@@ -1610,7 +1609,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.ServerConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get a specific ServerConnectionProjectItem
       {
         ServerConnectionProjectItem serverProjItem = Project.Current.GetItems<ServerConnectionProjectItem>().FirstOrDefault(item => item.Name.Equals("myServer"));
@@ -1619,7 +1618,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all folder connections in a project
       {
         //Gets all the folder connections in the current project
@@ -1632,7 +1631,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get a specific folder connection
       {
         FolderConnectionProjectItem folderProjItem = Project.Current.GetItems<FolderConnectionProjectItem>().FirstOrDefault(item => item.Name.Equals("myDataFolder"));
@@ -1652,7 +1651,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Gets a specific LayoutProjectItem
       {
         LayoutProjectItem layoutProjItem = Project.Current.GetItems<LayoutProjectItem>().FirstOrDefault(item => item.Name.Equals("myLayout"));
@@ -1661,7 +1660,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all layouts in a project
       {
         //Gets all the layouts in the current project
@@ -1674,7 +1673,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.GeoProcessing.GeoprocessingProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get a specific GeoprocessingProjectItem
       {
         //Gets a specific GeoprocessingProjectItem in the current project
@@ -1685,7 +1684,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.GeoProcessing.GeoprocessingProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Get all GeoprocessingProjectItems in a project
       {
         //Gets all the GeoprocessingProjectItem in the current project
@@ -1698,7 +1697,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       #region Search project for a specific item
       {
         List<Item> _mxd = [];
@@ -1738,7 +1737,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Core.Item.Refresh
       #region Refresh the child item for a folder connection Item
       {
@@ -1849,7 +1848,7 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Core.Project.GetCatalogPane
       // cref: ArcGIS.Desktop.Core.IProjectWindow
       // cref: ArcGIS.Desktop.Core.Project.ProjectItemContainers

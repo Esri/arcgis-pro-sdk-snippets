@@ -67,7 +67,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Pie chart renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using Pie chart symbols to represent data
-      /// ![Pie chart renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/pie-chart.png)
+      /// ![Pie chart renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/pie-chart.png)
       /// </summary>
       {
         //Check feature layer name
@@ -116,7 +116,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Bar Chart Value renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using Bar chart symbols to represent data
-      /// ![bar chart renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/bar-chart.png)
+      /// ![bar chart renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/bar-chart.png)
       /// </summary>
       {
         //Check feature layer name
@@ -164,7 +164,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Stacked bar chart renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using stacked bar chart symbols to represent data
-      /// ![stacked bar chart renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/stacked-bar-chart.png)
+      /// ![stacked bar chart renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/stacked-bar-chart.png)
       /// </summary>
       {
         //Check feature layer name
@@ -215,7 +215,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Class Breaks renderer with graduated colors.
       /// <summary>
       /// Renders a feature layer using graduated colors to draw quantities.
-      /// ![cb-colors.png](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/cb-colors.png "Graduated colors with natural breaks renderer.")
+      /// ![cb-colors.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/cb-colors.png "Graduated colors with natural breaks renderer.")
       /// </summary>
       {
         //Check feature layer name
@@ -243,7 +243,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Class Breaks renderer with graduated colors and outline
       /// <summary>
       /// Renders a feature layer using graduated colors to draw quantities. The outline width is varied based on attributes.
-      /// ![graduatedColorOutline.png](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/graduatedColorOutline.png "Graduated colors with natural breaks renderer.") 
+      /// ![graduatedColorOutline.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/graduatedColorOutline.png "Graduated colors with natural breaks renderer.") 
       /// </summary>
       {
         //Check feature layer name
@@ -300,7 +300,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Class Breaks renderer with graduated symbols.
       /// <summary>
       /// Renders a feature layer using graduated symbols and natural breaks to draw quantities.
-      /// ![cb-symbols.png](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/cb-symbols.png "Graduated symbols with natural breaks renderer.")
+      /// ![cb-symbols.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/cb-symbols.png "Graduated symbols with natural breaks renderer.")
       /// </summary>
       {
         //Check feature layer name
@@ -329,7 +329,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region UnClassed graduated color renderer.
       /// <summary>
       /// Renders a feature layer using an unclassed color gradient.
-      /// ![cb-unclassed.png](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/cb-unclassed.png "Class breaks unclassed renderer.")
+      /// ![cb-unclassed.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/cb-unclassed.png "Class breaks unclassed renderer.")
       /// </summary>
       {
         //Check feature layer name
@@ -358,10 +358,11 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         featureLayer?.SetRenderer(renderer);
       }
       #endregion
+      //cref: ArcGIS.Core.CIM.ClassificationMethod.Manual
       #region Class Breaks renderer with Manual Intervals
       /// <summary>
       /// Renders a feature layer using graduated colors and manual intervals to draw quantities.
-      /// ![cb-colors-manual-breaks.png](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/cb-colors-manual-breaks.png)
+      /// ![cb-colors-manual-breaks.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/cb-colors-manual-breaks.png)
       /// </summary>
       {
         //Check feature layer name
@@ -420,7 +421,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Dot Density renderer.
       /// <summary>
       /// Renders a polygon feature layer with Dot Density symbols to represent quantities.
-      /// ![Dot Density renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/dotDensity-renderer.png)
+      /// ![Dot Density renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/dotDensity-renderer.png)
       /// </summary>
       {
         //Check feature layer name
@@ -486,7 +487,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Heat map renderer
       /// <summary>
       /// Renders a point feature layer using a continuous color gradient to represent density of points.
-      /// ![Heat map renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/heat-map.png)
+      /// ![Heat map renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/heat-map.png)
       /// </summary>
       {
         //Check feature layer name
@@ -517,7 +518,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region Proportional symbols renderer.
       /// <summary>
       /// Renders a feature layer using proportional symbols to draw quantities.
-      /// ![Proportional Symbols renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/proportional-renderer.png)
+      /// ![Proportional Symbols renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/proportional-renderer.png)
       /// </summary>
       {
         //Check feature layer name
@@ -542,17 +543,17 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         //Note: Run within QueuedTask
         CIMProportionalRenderer propRndr = (CIMProportionalRenderer)featureLayer.CreateRenderer(prDef);
         featureLayer.SetRenderer(propRndr);
-        }
+      }
       #endregion
 
       #region ProSnippet Group: Simple Renderers
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.CIMSimpleRenderer
+      //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
       #region Simple Renderer for a Polygon feature layer.
       /// <summary>
       /// Renders a Polygon feature layer using a single symbol.
-      /// ![Simple Renderer for Polygon features](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/simple-polygon.png)
+      /// ![Simple Renderer for Polygon features](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/simple-polygon.png)
       /// </summary>
       {
         //Check feature layer name
@@ -576,13 +577,13 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
 
         //Update the feature layer renderer
         featureLayer.SetRenderer(renderer);
-        }
+      }
       #endregion
-      //cref: ArcGIS.Desktop.Mapping.CIMSimpleRenderer
+      //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
       #region Simple Renderer for a Point feature layer.
       /// <summary>
       /// Renders a Point feature layer using a single symbol.
-      /// ![Simple Renderer for Point features](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/simple-point.png)
+      /// ![Simple Renderer for Point features](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/simple-point.png)
       /// </summary>
       {
         //Check feature layer name
@@ -606,11 +607,11 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         featureLayer.SetRenderer(renderer);
       }
       #endregion
-      //cref: ArcGIS.Desktop.Mapping.CIMSimpleRenderer
+      //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
       #region  Simple Renderer for a Line feature layer.
       /// <summary>
       /// Renders a Line feature layer using a single symbol.
-      /// ![Simple Renderer for Line features](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/simple-line.png)
+      /// ![Simple Renderer for Line features](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/simple-line.png)
       /// </summary>
       {
         //Check feature layer name
@@ -632,13 +633,13 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
 
         //Update the feature layer renderer
         featureLayer.SetRenderer(renderer);
-        }
+      }
       #endregion
-      //cref: ArcGIS.Desktop.Mapping.CIMSimpleRenderer
+      //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
       #region Simple Renderer for a Line feature layer using a style from a StyleProjectItem.
       /// <summary>
       /// Renders a Line feature layer using a style from a StyleProjectItem.
-      /// ![Simple Renderer Style item](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/simple-line-style-item.png)
+      /// ![Simple Renderer Style item](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/simple-line-style-item.png)
       /// </summary>
       {
         //Check feature layer name
@@ -663,17 +664,17 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
 
         //Update the feature layer renderer
         featureLayer.SetRenderer(renderer);
-        }
+      }
       #endregion
 
 
       #region ProSnippet Group: Unique Value Renderers
       #endregion
-
+      //cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition
       #region Unique Value Renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using unique values from one or multiple fields
-      /// ![Unique Value renderer](http://Esri.github.io/arcgis-pro-sdk/images/Renderers/unique-value.png)
+      /// ![Unique Value renderer](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/unique-value.png)
       /// </summary>
       {
         //Check feature layer name
@@ -683,20 +684,20 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
         }
-          //construct unique value renderer definition                
-          UniqueValueRendererDefinition uvr = new
-                   UniqueValueRendererDefinition()
-          {
-            //Refer to the function below to get a display field of the feature layer
-            ValueFields = new List<string> { GetDisplayField(featureLayer) }, //multiple fields in the array if needed.
-            ColorRamp = colorRamp, //Specify color ramp
-          };
+        //construct unique value renderer definition                
+        UniqueValueRendererDefinition uvr = new
+                 UniqueValueRendererDefinition()
+        {
+          //Refer to the function below to get a display field of the feature layer
+          ValueFields = new List<string> { GetDisplayField(featureLayer) }, //multiple fields in the array if needed.
+          ColorRamp = colorRamp, //Specify color ramp
+        };
 
-          //Creates a "Renderer"
-          var cimRenderer = featureLayer.CreateRenderer(uvr);
+        //Creates a "Renderer"
+        var cimRenderer = featureLayer.CreateRenderer(uvr);
 
-          //Sets the renderer to the feature layer
-          featureLayer.SetRenderer(cimRenderer);
+        //Sets the renderer to the feature layer
+        featureLayer.SetRenderer(cimRenderer);
 
         //Function to get the display field of a feature layer
         static string GetDisplayField(FeatureLayer featureLayer)
@@ -743,6 +744,6 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         }
       }
       #endregion
+    }
   }
- }
-} 
+}

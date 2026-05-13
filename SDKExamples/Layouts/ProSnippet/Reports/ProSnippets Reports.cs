@@ -347,7 +347,7 @@ namespace ProSnippets.LayoutsSnippets.Reports
       #endregion
 
       // cref: ArcGIS.Desktop.Reports.ReportProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems<T>
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
       // cref: ArcGIS.Desktop.Core.Project.RemoveItem
       #region Delete a report
       {

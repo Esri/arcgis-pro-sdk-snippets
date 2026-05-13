@@ -19,7 +19,6 @@
 
 // Ignore Spelling: Dockpane Addin Cancelable Progressor Uninitialize
 
-using ArcGIS.Core.Data.UtilityNetwork.Trace;
 using ArcGIS.Core.Events;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Core.Events;
@@ -27,7 +26,6 @@ using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Controls;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Internal.Framework.Metro;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Mapping.Events;
 using System;
@@ -36,7 +34,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -106,6 +103,41 @@ namespace ProSnippets.FrameworkSnippets
       #region ProSnippet Group: ArcGIS Pro status 
       #endregion
 
+      // cref: ArcGIS.Core.SystemCore.Connectivity.IsInAirplaneMode()
+      #region Determine if the system is in airplane mode
+      {
+        bool isInAirplaneMode = ArcGIS.Core.SystemCore.Connectivity.IsInAirplaneMode();
+      }
+      #endregion
+
+      // cref: ArcGIS.Core.SystemCore.Connectivity.IsMobileDevice()
+      #region Determine if the system is a mobile device e.g. a laptop or tablet vs a desktop
+      {
+        bool isMobileDevice = ArcGIS.Core.SystemCore.Connectivity.IsMobileDevice();
+      }
+      #endregion
+
+      // cref: ArcGIS.Core.SystemCore.Connectivity.GetInternetConnectionStatus()
+      // cref: ArcGIS.Core.SystemCore.Connectivity.ConnectionStatus
+      #region Determine the system's internet connection status
+      {
+        var connectionStatus = ArcGIS.Core.SystemCore.Connectivity.GetInternetConnectionStatus();
+
+        switch (connectionStatus)
+        {
+          case ArcGIS.Core.SystemCore.Connectivity.ConnectionStatus.statusPublic:
+            // The system has an active public connection.
+            break;
+          case ArcGIS.Core.SystemCore.Connectivity.ConnectionStatus.statusPrivate:
+            // The system does have an active private connection.
+            break;
+          case ArcGIS.Core.SystemCore.Connectivity.ConnectionStatus.statusDisconnected:
+            // The system's internet connection status is disconnected.
+            break;
+        }
+      }
+      #endregion
+
       // cref: ArcGIS.Desktop.Framework.FrameworkApplication.IsBusy
       #region Determine if the application is busy
       {
@@ -152,8 +184,8 @@ namespace ProSnippets.FrameworkSnippets
         FrameworkApplication.ActivateTab("esri_mapping_insertTab");
       }
       #endregion
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.State.Activate
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.State.Deactivate
+      // cref: ArcGIS.Desktop.Framework.State.Activate(System.String)
+      // cref: ArcGIS.Desktop.Framework.State.Deactivate(System.String)
       #region Activate/Deactivate a state - to modify a condition
       {
         // Define the condition in the DAML file based on the state 

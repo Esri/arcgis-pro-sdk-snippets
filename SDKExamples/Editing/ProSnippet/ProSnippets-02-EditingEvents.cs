@@ -399,8 +399,8 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.Events.RowDeletedEvent
-      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit(System.String, System.Boolean)
-      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit()
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit(System.String,System.Boolean)
       #region Cancel a delete
       // Subscribe to the <see cref="ArcGIS.Desktop.Editing.Events.RowDeletedEvent"/> for the first feature layer's table in the active map.  The event handler can be used to intercept and handle row deletion events, such as canceling a delete operation if certain conditions are met.
       // subscribe to the RowDeletedEvent for the appropriate table

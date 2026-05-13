@@ -31,18 +31,18 @@ using ArcGIS.Core.Data.Raster;
 
 namespace ProSnippets.RasterSnippets
 {
-	/// <summary>
-	/// Provides code snippets demonstrating common raster dataset operations using the ArcGIS Pro SDK,
-	/// including opening, reading, writing, and processing raster data, as well as configuring raster and imagery options.
-	/// </summary>
-	public static partial class ProSnippetsRaster
+  /// <summary>
+  /// Provides code snippets demonstrating common raster dataset operations using the ArcGIS Pro SDK,
+  /// including opening, reading, writing, and processing raster data, as well as configuring raster and imagery options.
+  /// </summary>
+  public static partial class ProSnippetsRaster
   {
-		/// <summary>
-		/// Demonstrates various raster dataset operations using the ArcGIS Pro SDK,
-		/// including opening raster datasets from different sources, accessing bands,
-		/// reading and writing pixel data, processing pixel blocks, and configuring raster and imagery options.
-		/// </summary>
-		public static async Task RasterSnippetsAsync()
+    /// <summary>
+    /// Demonstrates various raster dataset operations using the ArcGIS Pro SDK,
+    /// including opening raster datasets from different sources, accessing bands,
+    /// reading and writing pixel data, processing pixel blocks, and configuring raster and imagery options.
+    /// </summary>
+    public static async Task RasterSnippetsAsync()
     {
 
       #region ignore - Variable initialization
@@ -54,7 +54,7 @@ namespace ProSnippets.RasterSnippets
       // cref: ArcGIS.Core.Data.FileSystemConnectionPath.#ctor(System.Uri, ArcGIS.Core.Data.FileSystemDatastoreType)
       // cref: ArcGIS.Core.Data.FileSystemDatastoreType
       // cref: ArcGIS.Core.Data.FileSystemDatastore.#ctor(ArcGIS.Core.Data.FileSystemConnectionPath)
-      // cref: ArcGIS.Core.Data.FileSystemDatastore.OpenDataset<T>(System.String)
+      // cref: ArcGIS.Core.Data.FileSystemDatastore.OpenDataset``1(System.String)
       // cref: ArcGIS.Core.Data.Raster.RasterDataset
       #region Open raster dataset in a folder
       // Create a FileSystemConnectionPath using the folder path.
@@ -67,7 +67,7 @@ namespace ProSnippets.RasterSnippets
 
       // cref: ArcGIS.Core.Data.FileGeodatabaseConnectionPath.#ctor(System.Uri)
       // cref: ArcGIS.Core.Data.Geodatabase.#ctor(ArcGIS.Core.Data.FileGeodatabaseConnectionPath)
-      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset<T>(System.String)
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
       // cref: ArcGIS.Core.Data.Raster.RasterDataset
       #region Open raster dataset in a geodatabase
       // Create a FileGeodatabaseConnectionPath using the path to the gdb. Note: This can be a path to a .sde file.

@@ -993,7 +993,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveEdits()
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveAs(System.String, System.Boolean)
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StartEditing()
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StopEditing()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StopEditing(System.Boolean)
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
       #region Edit an existing TIN
       {
