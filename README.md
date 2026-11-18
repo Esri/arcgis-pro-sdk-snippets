@@ -62,6 +62,8 @@ Some snippets may require specific data or context (e.g., a particular layer nam
 
 #### Supported IDEs
 
+* Visual Studio Code (v1.137.0 or higher)
+
 * Visual Studio 2026 (v18.4.1 or higher)  
    * Community Edition  
    * Professional Edition  
