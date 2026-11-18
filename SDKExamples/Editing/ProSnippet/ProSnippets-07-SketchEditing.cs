@@ -16,15 +16,15 @@
    limitations under the License.
 
 */
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Mapping.Events;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -54,7 +54,9 @@ namespace ProSnippets.EditingSnippets
           // Toggle the tool to select mode.
           //  The sketch is saved if UseSelection = true;
           if (await ActivateSelectAsync(true))
+          {
             _inSelMode = true;
+          }
         }
       }
       else if (!_inSelMode)
@@ -105,13 +107,11 @@ namespace ProSnippets.EditingSnippets
   {
     public static void ProSnippetsSketchEventSamples()
     {
-      // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEvent.Subscribe(System.Action{ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs},System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs
       // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs.CurrentSketch
       // cref: ArcGIS.Desktop.Mapping.Events.SketchModifiedEventArgs.PreviousSketch
       #region Listen to the sketch modified event
-      // Occurs when a sketch is modified. SketchModified event is fired by 
-      //  - COTS construction tools (except annotation, dimension geometry types), 
+      // Occurs when a sketch is modified. SketchModified event is fired by
+      //  - COTS construction tools (except annotation, dimension geometry types),
       //  - Edit Vertices, Reshape, Align Features
       //  - 3rd party tools with FireSketchEvents = true
       // Handles the SketchModified event, providing access to the current and previous sketch geometries when a sketch
@@ -137,31 +137,28 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEvent.Subscribe(System.Func{ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs,System.Threading.Tasks.Task},System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs
       // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs.Sketch
-      // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs.SetSketchGeometry
+      // cref: ArcGIS.Desktop.Mapping.Events.BeforeSketchCompletedEventArgs.SetSketchGeometry(ArcGIS.Core.Geometry.Geometry)
       #region Listen to the before sketch completed event and modify the sketch
-      // Occurs before a sketch is completed. BeforeSketchCompleted event is fired by 
-      //  - COTS construction tools (except annotation, dimension geometry types), 
+      // Occurs before a sketch is completed. BeforeSketchCompleted event is fired by
+      //  - COTS construction tools (except annotation, dimension geometry types),
       //  - Edit Vertices, Reshape, Align Features
       //  - 3rd party tools with FireSketchEvents = true
       // Register for the BeforeSketchCompleted event
-      BeforeSketchCompletedEvent.Subscribe(beforeSketchCompletedEventArgs
+      BeforeSketchCompletedEvent.Subscribe(async beforeSketchCompletedEventArgs
         =>
       {
         //assign sketch Z values from default surface and set the sketch geometry
-        var modifiedSketch = beforeSketchCompletedEventArgs.MapView.Map.GetZsFromSurfaceAsync(beforeSketchCompletedEventArgs.Sketch).Result;
+        var modifiedSketch = await beforeSketchCompletedEventArgs.MapView.Map.GetZsFromSurfaceAsync(beforeSketchCompletedEventArgs.Sketch);
         beforeSketchCompletedEventArgs.SetSketchGeometry(modifiedSketch.Geometry);
-        return Task.CompletedTask;
       });
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.Events.SketchCompletedEventArgs.Sketch
       #region Listen to the sketch completed event
 
-      // Occurs when a sketch is completed. SketchCompleted event is fired by 
-      //  - COTS construction tools (except annotation, dimension geometry types), 
+      // Occurs when a sketch is completed. SketchCompleted event is fired by
+      //  - COTS construction tools (except annotation, dimension geometry types),
       //  - Edit Vertices, Reshape, Align Features
       //  - 3rd party tools with FireSketchEvents = true
       // Register for the SketchCompleted event
@@ -177,7 +174,6 @@ namespace ProSnippets.EditingSnippets
     }
   }
 
-  // cref: ArcGIS.Desktop.Mapping.MapTool
   // cref: ArcGIS.Desktop.Mapping.MapTool.FireSketchEvents
   #region Custom construction tool that fires sketch events
   /// <summary>
@@ -190,8 +186,8 @@ namespace ProSnippets.EditingSnippets
     {
       IsSketchTool = true;
       UseSnapping = true;
-      // Select the type of construction tool you wish to implement.  
-      // Make sure that the tool is correctly registered with the correct component category type in the daml 
+      // Select the type of construction tool you wish to implement.
+      // Make sure that the tool is correctly registered with the correct component category type in the daml
       SketchType = SketchGeometryType.Line;
       //Gets or sets whether the sketch is for creating a feature and should use the CurrentTemplate.
       UsesCurrentTemplate = true;
@@ -204,17 +200,17 @@ namespace ProSnippets.EditingSnippets
 
     // cref: ArcGIS.Desktop.Mapping.MapTool.GetSketchSegmentSymbolOptions()
     // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
-    // cref: ArcGIS.Desktop.Mapping.MapTool.SetSketchSegmentSymbolOptions
-    // cref: ArcGIS.Desktop.Mapping.MapTool.SetSketchVertexSymbolOptions
+    // cref: ArcGIS.Desktop.Mapping.MapTool.SetSketchSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
+    // cref: ArcGIS.Desktop.Mapping.MapTool.SetSketchVertexSymbolOptions(ArcGIS.Desktop.Core.VertexSymbolType,ArcGIS.Desktop.Core.VertexSymbolOptions)
     // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
     #region Customizing the Sketch Symbol of a Custom Sketch Tool
     /// <summary>
     /// Within the specialization of a MapTool, this method handles activation and deactivation of the tool, allowing customization of sketch segment and vertex symbology when
     /// the tool becomes active.  When the tool is activated, this method customizes the appearance of sketch segments and vertices by updating their symbol options. This includes setting colors, widths, marker types, and other visual properties for both segments and regular unselected vertices.
     /// </summary>
-    protected override Task OnToolActivateAsync(bool active)
+    protected override async Task OnToolActivateAsync(bool active)
     {
-      QueuedTask.Run(() =>
+      await QueuedTask.Run(() =>
       {
         //Getting the current symbology options of the segment
         var segmentOptions = GetSketchSegmentSymbolOptions();
@@ -242,7 +238,7 @@ namespace ProSnippets.EditingSnippets
         SetSketchVertexSymbolOptions(VertexSymbolType.RegularUnselected, vertexOptions);
       });
 
-      return base.OnToolActivateAsync(active);
+      await base.OnToolActivateAsync(active);
     }
     #endregion
   }
@@ -255,7 +251,7 @@ namespace ProSnippets.EditingSnippets
   #region Set a MiniToolbar, ContextMenuID
 
   // daml entries
-  // 
+  //
   // <menus>
   //  <menu id="MyMenu" caption="Nav">
   //    <button refID="esri_mapping_prevExtentButton"/>
@@ -312,7 +308,6 @@ namespace ProSnippets.EditingSnippets
   #endregion
 
   // cref: ArcGIS.Desktop.Mapping.MapTool.SketchTipID
-  // cref: ArcGIS.Desktop.Mapping.MapTool.SketchTipEmbeddableControl
   #region Set a custom UI Sketch Tip
 
   // 1. Add an embeddable control using VS template.  This is the daml entry
@@ -372,7 +367,8 @@ namespace ProSnippets.EditingSnippets
   public class EmbeddableControl1ViewModel : ArcGIS.Desktop.Framework.Controls.EmbeddableControl
   {
     public EmbeddableControl1ViewModel(XElement options, bool canChangeOptions) : base(options, canChangeOptions)
-    { }
+    {
+    }
 
     public string Text;
   }

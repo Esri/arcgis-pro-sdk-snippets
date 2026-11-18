@@ -1,21 +1,15 @@
-﻿using ActiproSoftware.Windows.Shapes;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.Analyst3D;
 using ArcGIS.Core.Data.Exceptions;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Internal.KnowledgeGraph.DataModelling.Interfaces;
-using ArcGIS.Desktop.Internal.Mapping;
-using ArcGIS.Desktop.Internal.Mapping.Ribbon;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProSnippets.GeoDatabase.ThreeDAnalystData
 {
@@ -29,25 +23,25 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
     /// Each region in the method contains a specific code snippet that demonstrates a particular functionality.
     /// Note that some methods may require to be launched on the ArcGIS Pro's Main CIM thread. These methods are marked in the code comments as requiring a QueuedTask to run.
     /// Crefs are used for internal purposes only. Please ignore them in the context of this example.
-    public static async void ProSnippets3DAnalystData()
+    public static async Task ProSnippets3DAnalystDataAsync()
     {
       #region ignore - Variable initialization
       MapView mapView = MapView.Active;
       Map map = mapView?.Map; //Reference to the active map
       // find the first TIN layer
-      var tinLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
+      var tinLayer = map.GetLayersAsFlattenedList().OfType<TinLayer>().FirstOrDefault();
 
       // find the first Terrain layer
-      var terrainLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<TerrainLayer>().FirstOrDefault();
+      var terrainLayer = map.GetLayersAsFlattenedList().OfType<TerrainLayer>().FirstOrDefault();
 
       // find the first LAS dataset layer
-      var lasDatasetLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<LasDatasetLayer>().FirstOrDefault();
+      var lasDatasetLayer = map.GetLayersAsFlattenedList().OfType<LasDatasetLayer>().FirstOrDefault();
 
       // find the set of surface layers
-      var surfaceLayers = MapView.Active.Map.GetLayersAsFlattenedList().OfType<SurfaceLayer>();
+      var surfaceLayers = map.GetLayersAsFlattenedList().OfType<SurfaceLayer>();
       SurfaceLayer surfaceLayer = surfaceLayers.FirstOrDefault();
 
-      //Retrieve data set objects from the layers 
+      //Retrieve data set objects from the layers
       ArcGIS.Core.Geometry.Envelope extent;
       ArcGIS.Core.Geometry.SpatialReference sr;
       TinDataset tinDataset;
@@ -95,7 +89,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       //Examples to create MapPoints
       MapPoint mapPoint = MapPointBuilderEx.CreateMapPoint(0, 0, 2, 3, 1);
       MapPoint observerPoint = MapPointBuilderEx.CreateMapPoint(0, 0, 2, 3, 1);
-      MapPoint targetPoint = MapPointBuilderEx.CreateMapPoint(0, 0, 2, 3, 1); ;
+      MapPoint targetPoint = MapPointBuilderEx.CreateMapPoint(0, 0, 2, 3, 1);
+      ;
 
       //Process to create a Polyline
       // list of points
@@ -136,7 +131,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
          new FileGeodatabaseConnectionPath(new Uri(@"E:\Data\Admin\AdminData.gdb")));
       FeatureClass featureClass = geodatabase.OpenDataset<FeatureClass>("Cities");
 
-      TinEditor tinEditor = new TinEditor(MapView.Active.Extent); //Use an appropriate envelope
+      TinEditor tinEditor = new TinEditor(mapView.Extent); //Use an appropriate envelope
 
       MapPoint[] points = //Define some points
       [];
@@ -159,70 +154,70 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       #endregion
       #region ProSnippet Group: TIN
       #endregion
-      // cref: ArcGIS.Core.Data.FileSystemDatastoreType.Tin
       // cref: ArcGIS.Core.Data.Analyst3D.TinDataset
-      // cref: ArcGIS.Core.Data.FileSystemDatastore.#ctor(ArcGIS.Core.Data.FileSystemConnectionPath)
       // cref: ArcGIS.Core.Data.FileSystemDatastore.OpenDataset``1(System.String)
       #region Open a TIN Dataset
       {
-        //Note: This snippet requires to be run on the MCT (Main CIM Thread)
-        string path = @"d:\Data\Tin";
-        var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.Tin);
-
-        using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
+        await QueuedTask.Run(() =>
         {
-          // TIN is in a folder at d:\Data\Tin\TinDataset
+          string path = @"d:\Data\Tin";
+          var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.Tin);
 
-          string dsName = "TinDataset";
-
-          using (var dataset = dataStore.OpenDataset<ArcGIS.Core.Data.Analyst3D.TinDataset>(dsName))
+          using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
           {
-            //Do something with the dataset
+            // TIN is in a folder at d:\Data\Tin\TinDataset
+
+            string dsName = "TinDataset";
+
+            using (var dataset = dataStore.OpenDataset<ArcGIS.Core.Data.Analyst3D.TinDataset>(dsName))
+            {
+              //Do something with the dataset
+            }
           }
-        }
+        });
       }
       #endregion
-      // cref: ArcGIS.Core.Data.FileSystemDatastoreType.Tin
       // cref: ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition
-      // cref: ArcGIS.Core.Data.FileSystemDatastore.#ctor(ArcGIS.Core.Data.FileSystemConnectionPath)
       // cref: ArcGIS.Core.Data.FileSystemDatastore.GetDefinition``1(System.String)
       #region Get a TIN Defintion
       {
-        //Note: This snippet requires to be run on the MCT (Main CIM Thread)
-        string path = @"d:\Data\Tin";
-        var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.Tin);
-
-        using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
+        await QueuedTask.Run(() =>
         {
-          // TIN is in a folder at d:\Data\Tin\TinDataset
+          string path = @"d:\Data\Tin";
+          var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.Tin);
 
-          string dsName = "TinDataset";
-
-          using (var def = dataStore.GetDefinition<ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition>(dsName))
+          using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
           {
-            //Do something with the definition
+            // TIN is in a folder at d:\Data\Tin\TinDataset
+
+            string dsName = "TinDataset";
+
+            using (var def = dataStore.GetDefinition<ArcGIS.Core.Data.Analyst3D.TinDatasetDefinition>(dsName))
+            {
+              //Do something with the definition
+            }
           }
-        }
+        });
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetSuperNodeExtent
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetSuperNodeExtent()
       #region Get Super Node Extent
       {
         var superNodeExtent = tinDataset.GetSuperNodeExtent();
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetDataArea
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetDataArea()
       #region Get Data Area
       {
         var dataArea = tinDataset.GetDataArea();
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetNodeCount
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetOutsideNodeCount
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetEdgeCount
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetOutsideEdgeCount
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetTriangleCount
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetOutsideTriangleCount
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetNodeCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetOutsideNodeCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetEdgeCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetOutsideEdgeCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetTriangleCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetOutsideTriangleCount()
       #region Element Counts
       {
         var nodeCount = tinDataset.GetNodeCount();
@@ -233,10 +228,10 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         var outsideTriCount = tinDataset.GetOutsideTriangleCount();
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetIsEmpty
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.HasHardEdges
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.HasSoftEdges
-      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.UsesConstrainedDelaunay
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetIsEmpty()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.HasHardEdges()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.HasSoftEdges()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.UsesConstrainedDelaunay()
       #region Tin Properties
       {
         var isEmpty = tinDataset.GetIsEmpty();
@@ -273,15 +268,15 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
 
       // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.SearchNodes(ArcGIS.Core.Data.Analyst3D.TinNodeFilter)
       // cref: ArcGIS.Core.Data.Analyst3D.TinNodeCursor
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeCursor.MoveNext
+      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeCursor.MoveNext()
       // cref: ArcGIS.Core.Data.Analyst3D.TinNodeCursor.Current
       // cref: ArcGIS.Core.Data.Analyst3D.TinNode
       // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter.#ctor
       // cref: ArcGIS.Core.Data.Analyst3D.TinNodeFilter.SuperNode
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterType
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilterType
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetSuperNodeExtent()
       #region Search for TIN Nodes
       {
         // search all nodes that intersect the data extent
@@ -344,13 +339,14 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeCursor
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.#ctor
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterType
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.FilterByEdgeType
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeFilter.EdgeType
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeType
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilterType
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeCursor.Current
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeCursor.MoveNext()
       #region Search for TIN Edges
       {
         // search all single edges that intersect the data extent
@@ -413,10 +409,11 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleCursor
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleFilter
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleFilter.#ctor
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterType
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilter.FilterEnvelope
       // cref: ArcGIS.Core.Data.Analyst3D.TinFilterType
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleCursor.Current
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangleCursor.MoveNext()
       #region Search for TIN Triangles
       {
         // search all triangles that intersect the data extent
@@ -482,30 +479,28 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
           // do something with the triangle
         }
 
-        // get the set of natural neighbors 
+        // get the set of natural neighbors
         // (set of nodes that "mapPoint" would connect with to form triangles if it was added to the TIN)
         IReadOnlyList<ArcGIS.Core.Data.Analyst3D.TinNode> naturalNeighbors = tinDataset.GetNaturalNeighbors(mapPoint);
 
-        // get the set of triangles whose circumscribed circle contains "mapPoint" 
+        // get the set of triangles whose circumscribed circle contains "mapPoint"
         IReadOnlyList<ArcGIS.Core.Data.Analyst3D.TinTriangle> triangles = tinDataset.GetTriangleNeighborhood(mapPoint);
       }
       #endregion
       // cref: ArcGIS.Core.Data.Analyst3D.TinNode
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.Coordinate3D
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.ToMapPoint
       // cref: ArcGIS.Core.Data.Analyst3D.TinNode.IsInsideDataArea
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.GetAdjacentNodes
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.GetIncidentEdges
-      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.GetIncidentTriangles
+      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.GetAdjacentNodes()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.GetIncidentEdges()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinNode.GetIncidentTriangles()
       #region TIN Nodes
       {
         // is the node "inside"
         var isInsideNode = node.IsInsideDataArea;
 
-        // get all other nodes connected to "node" 
+        // get all other nodes connected to "node"
         IReadOnlyList<ArcGIS.Core.Data.Analyst3D.TinNode> adjNodes = node.GetAdjacentNodes();
 
-        // get all edges that share "node" as a from node. 
+        // get all edges that share "node" as a from node.
         IReadOnlyList<ArcGIS.Core.Data.Analyst3D.TinEdge> edges = node.GetIncidentEdges();
 
         // get all triangles that share "node"
@@ -514,16 +509,16 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       #endregion
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.Nodes
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.ToPolyline
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.ToPolyline()
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.Length
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.IsInsideDataArea
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.EdgeType
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdgeType
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.GetNextEdgeInTriangle
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.GetPreviousEdgeInTriangle
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.GeNeighbor
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.GetNextEdgeInTriangle()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.GetPreviousEdgeInTriangle()
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.LeftTriangle
       // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.RightTriangle
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEdge.GetNeighbor()
       #region TIN Edges
       {
         // nodes of the edge
@@ -552,19 +547,18 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         var rightTriangle = edge.RightTriangle;
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.Nodes
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.Edges
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.ToPolygon
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.ToPolygon()
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.Length
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.Area
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.IsInsidedataArea
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.Aspect
       // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.Slope
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetCentroid
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetNormal
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetAdjacentTriangles
-      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetPointsBetweenZs
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetCentroid()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetNormal()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetAdjacentTriangles()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.GetPointsBetweenZs(System.Double,System.Double)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinTriangle.IsInsideDataArea
       #region TIN Triangles
       {
         // nodes, edges of the triangle
@@ -575,7 +569,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         polygon = triangle.ToPolygon();
         // triangle length
         var triLength = triangle.Length;
-        // triangle area 
+        // triangle area
         var triArea = triangle.Area;
         // is the triangle "inside"
         var isInsideTriangle = triangle.IsInsideDataArea;
@@ -599,7 +593,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         IReadOnlyList<Coordinate3D> coords = triangle.GetPointsBetweenZs(minZ, maxZ);
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.#ctor(ArcGIS.Core.Geometry.Envelope)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.IsInEditMode
       #region Create TinEditor from envelope
       {
         //Example envelope
@@ -607,7 +601,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         bool isInEditMode = tinEditorFromEnvelope.IsInEditMode;  // isInEditMode = true
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.IsInEditMode
       #region Create TinEditor from TinDataset
       {
         TinEditor tinEditorFromDataset = new TinEditor(tinDataset);
@@ -616,6 +610,11 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       #endregion
 
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.CreateFromFeatureClass(ArcGIS.Core.Data.FeatureClass,ArcGIS.Core.Data.QueryFilter,ArcGIS.Core.Data.Field, ArcGIS.Core.Data.Field,ArcGIS.Core.Data.Analyst3D.TinSurfaceType)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.IsInEditMode
+      // cref: ArcGIS.Core.Data.FeatureClass.GetDefinition()
+      // cref: ArcGIS.Core.Data.Field.FieldType
+      // cref: ArcGIS.Core.Data.QueryFilter.ObjectIDs
+      // cref: ArcGIS.Core.Data.TableDefinition.GetFields()
       #region Create TinEditor from feature class
       {
         var fields = featureClass.GetDefinition().GetFields();
@@ -644,7 +643,11 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddFromFeatureClass
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddFromFeatureClass(ArcGIS.Core.Data.FeatureClass,ArcGIS.Core.Data.QueryFilter,ArcGIS.Core.Data.Field,ArcGIS.Core.Data.Field,ArcGIS.Core.Data.Analyst3D.TinSurfaceType)
+      // cref: ArcGIS.Core.Data.FeatureClass.GetDefinition()
+      // cref: ArcGIS.Core.Data.Field.FieldType
+      // cref: ArcGIS.Core.Data.QueryFilter.ObjectIDs
+      // cref: ArcGIS.Core.Data.TableDefinition.GetFields()
       #region Add geometries from feature class
       {
         var fields = featureClass.GetDefinition().GetFields();
@@ -670,8 +673,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         tinEditor.AddFromFeatureClass(featureClass, filter, heightField, tagField, TinSurfaceType.HardLine);
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddGeometry
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddGeometryZ
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddGeometry(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Data.Analyst3D.TinSurfaceType,System.Int32,System.Double)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddGeometryZ(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Data.Analyst3D.TinSurfaceType,System.Int32)
       #region Add a geometry
       {
         // Add a point as a node with no tag value at height = 10. Points and multipoints can only be added as mass points.
@@ -691,11 +694,12 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       #endregion
 
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddMassPoints(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},System.Int32,System.Double,ArcGIS.Core.Geometry.SpatialReference)
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddMassPoints
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddMassPointsZ(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},System.Int32,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddMassPointsZ(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},System.Int32,ArcGIS.Core.Geometry.SpatialReference)
       #region Add mass points
       {
         // Add points with no tag value and height = 17.
-        // The points have the same spatial reference as the tin editor, so there is no need to provide it. 
+        // The points have the same spatial reference as the tin editor, so there is no need to provide it.
         tinEditor.AddMassPoints(points, 0, 17);
 
         Coordinate3D[] coordinate3Ds = new Coordinate3D[] //Define some coordinates
@@ -707,7 +711,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         // Add coordinates as nodes with tag value = 42. The height will come from the z-values of the coordinates.
         tinEditor.AddMassPointsZ(coordinate3Ds, 42);
         // Add z-aware points with tag value = 21. The height will come from the z-values of the points.
-        // The points are in a different spatial reference than the tin editor, so we provide the spatial 
+        // The points are in a different spatial reference than the tin editor, so we provide the spatial
         // reference of the points. The points will be projected to the spatial reference of the tin editor.
         tinEditor.AddMassPointsZ(pointsZ, 21, SpatialReferenceBuilder.CreateSpatialReference(54004));
       }
@@ -725,8 +729,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddPolygonsZ(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polygon},ArcGIS.Core.Data.Analyst3D.TinSurfaceType,System.Int32,ArcGIS.Core.Geometry.SpatialReference)
       #region Add polygons
       {
-        // Add polygons with tagValue = 42 and height = 12. 
-        // The polygons are in a different spatial reference than the tin editor, so we provide the spatial 
+        // Add polygons with tagValue = 42 and height = 12.
+        // The polygons are in a different spatial reference than the tin editor, so we provide the spatial
         // reference of the polygons. The polygons will be projected to the spatial reference of the tin editor.
         Polygon[] polygons = new Polygon[] //Define some polygons
         {
@@ -743,7 +747,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         };
         tinEditor.AddPolygons(polygons, TinSurfaceType.ZLessSoftLine, 42, 12, SpatialReferenceBuilder.CreateSpatialReference(54004));
 
-        // Add z-aware polygons with no tag value. The height comes from the z-values of the vertices. 
+        // Add z-aware polygons with no tag value. The height comes from the z-values of the vertices.
         // The polygons are in the same spatial reference as the tin editor, so there is no need to provide it.
         Polygon[] polygonsZ = new Polygon[] //Define some z-aware polygons
         {
@@ -765,9 +769,9 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddPolylines(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polyline},ArcGIS.Core.Data.Analyst3D.TinSurfaceType,System.Int32,System.Double,ArcGIS.Core.Geometry.SpatialReference)
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddPolylinesZ(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polyline},ArcGIS.Core.Data.Analyst3D.TinSurfaceType,System.Int32,ArcGIS.Core.Geometry.SpatialReference)
       #region Add polylines
-      { 
-        // Add polylines with tagValue = 42 and height = 12. 
-        // The polylines are in a different spatial reference than the tin editor, so we provide the spatial 
+      {
+        // Add polylines with tagValue = 42 and height = 12.
+        // The polylines are in a different spatial reference than the tin editor, so we provide the spatial
         // reference of the polylines. The polylines will be projected to the spatial reference of the tin editor.
         Polyline[] polylines = new Polyline[] //Define some polylines
         {
@@ -784,7 +788,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         };
         tinEditor.AddPolylines(polylines, TinSurfaceType.ZLessSoftLine, 42, 12, SpatialReferenceBuilder.CreateSpatialReference(54004));
 
-        // Add z-aware polylines with no tag value. The height comes from the z-values of the vertices. 
+        // Add z-aware polylines with no tag value. The height comes from the z-values of the vertices.
         // The polylines are in the same spatial reference as the tin editor, so there is no need to provide it.
         Polyline[] polylinesZ = new Polyline[] //Define some z-aware polylines
         {
@@ -837,7 +841,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.DeleteNode(System.Int32)
       #region Delete node
       {
-        // Delete node by index 
+        // Delete node by index
         tinEditor.DeleteNode(7);
 
         // Node indices start at 1.
@@ -906,7 +910,6 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       #endregion
 
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SetTriangleInsideDataArea(System.Int32)
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SetTriangleOutsideDataArea(System.Int32)
       #region Set triangle in/out of data area
       {
         // Set triangle #7 to be inside the data area
@@ -916,15 +919,18 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         tinEditor.SetTriangleInsideDataArea(9);
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveEdits
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveEdits()
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveAs(System.String,System.Boolean)
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StartEditing
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StopEditing
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.#ctor(ArcGIS.Core.Geometry.Envelope)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StartEditing()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StopEditing(System.Boolean)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddMassPoints(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},System.Int32,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddPointZ(ArcGIS.Core.Geometry.MapPoint,System.Int32)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.DeleteNode(System.Int32)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.IsInEditMode
       #region Create a new TIN and save edits
       {
-        // Create a new TIN 
-        tinEditor = new TinEditor(MapView.Active.Extent); // or use any envelope 
+        // Create a new TIN
+        tinEditor = new TinEditor(mapView.Extent); // or use any envelope
         tinEditor.AddMassPoints(points, 42, 13.7);
 
         // Since the TIN doesn't exist on disk, you can't call SaveEdits.
@@ -992,9 +998,11 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
 
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveEdits()
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.SaveAs(System.String, System.Boolean)
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StartEditing()
       // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.StopEditing(System.Boolean)
-      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.#ctor(ArcGIS.Core.Data.Analyst3D.TinDataset)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinDataset.GetNodeCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddMassPoints(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},System.Int32,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Data.Analyst3D.TinEditor.AddPointZ(ArcGIS.Core.Geometry.MapPoint,System.Int32)
+      // cref: ArcGIS.Core.Data.FileSystemDatastore.OpenDataset``1(System.String)
       #region Edit an existing TIN
       {
         string tinPath = "C:\\Tin"; //original TIN path
@@ -1010,7 +1018,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         // Adding twenty points
         tinEditor.AddMassPoints(points, 10, 112.5);
 
-        // Calling SaveAs creates a new TIN on disk, and 
+        // Calling SaveAs creates a new TIN on disk, and
         // the tin editor points to the new TIN.
         string tinPath2 = "C:\\Tin2";
         tinEditor.SaveAs(tinPath2, true);
@@ -1043,45 +1051,50 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
       #region Open a Terrain
       {
-        //Note: Use QueuedTask.Run to run on the MCT
-        string path = @"d:\Data\Terrain\filegdb_Containing_A_Terrain.gdb";
-        var fileConnection = new FileGeodatabaseConnectionPath(new Uri(path));
-
-        using (Geodatabase dataStore = new Geodatabase(fileConnection))
+        await QueuedTask.Run(() =>
         {
-          string dsName = "nameOfTerrain";
+          string path = @"d:\Data\Terrain\filegdb_Containing_A_Terrain.gdb";
+          var fileConnection = new FileGeodatabaseConnectionPath(new Uri(path));
 
-          using (var dataset = dataStore.OpenDataset<ArcGIS.Core.Data.Analyst3D.Terrain>(dsName))
+          using (Geodatabase dataStore = new Geodatabase(fileConnection))
           {
+            string dsName = "nameOfTerrain";
+
+            using (var dataset = dataStore.OpenDataset<ArcGIS.Core.Data.Analyst3D.Terrain>(dsName))
+            {
+            }
           }
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDefinition
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetFeatureClassNames
+      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetFeatureClassNames()
+      // cref: ArcGIS.Core.Data.Geodatabase.GetDefinition``1(System.String)
       #region Get a Terrain Definition
       {
-        string path = @"d:\Data\Terrain\filegdb_Containing_A_Terrain.gdb";
-        var fileConnection = new FileGeodatabaseConnectionPath(new Uri(path));
-        //Note: Use QueuedTask.Run to run on the MCT 
-        using (Geodatabase dataStore = new Geodatabase(fileConnection))
+        await QueuedTask.Run(() =>
         {
-          string dsName = "nameOfTerrain";
+          string path = @"d:\Data\Terrain\filegdb_Containing_A_Terrain.gdb";
+          var fileConnection = new FileGeodatabaseConnectionPath(new Uri(path));
 
-          using (var terrainDefinition = dataStore.GetDefinition<ArcGIS.Core.Data.Analyst3D.TerrainDefinition>(dsName))
+          using (Geodatabase dataStore = new Geodatabase(fileConnection))
           {
-            // get the feature class names that are used in the terrain
-            var fcNames = terrainDefinition.GetFeatureClassNames();
+            string dsName = "nameOfTerrain";
+
+            using (var terrainDefinition = dataStore.GetDefinition<ArcGIS.Core.Data.Analyst3D.TerrainDefinition>(dsName))
+            {
+              // get the feature class names that are used in the terrain
+              var fcNames = terrainDefinition.GetFeatureClassNames();
+            }
           }
-        }
+        });
       }
 
 
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDataSourceCount
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDataSources
+      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDataSourceCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetDataSources()
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainDataSource
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainDataSource.DataSourceName
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainDataSource.SurfaceType
@@ -1102,8 +1115,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetPyramidLevelCount
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetPyramidLevels
+      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetPyramidLevelCount()
+      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetPyramidLevels()
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainPyramidLevel
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainPyramidLevel.Resolution
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainPyramidLevel.MaximumScale
@@ -1119,8 +1132,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetTileProperties
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainTileProperties 
+      // cref: ArcGIS.Core.Data.Analyst3D.Terrain.GetTileProperties()
+      // cref: ArcGIS.Core.Data.Analyst3D.TerrainTileProperties
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainTileProperties.ColumnCount
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainTileProperties.RowCount
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainTileProperties.TileSize
@@ -1134,9 +1147,9 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         var tileCount = tileInfo.TileCount;
       }
       #endregion
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetPyramidType
+      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetPyramidType()
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainPyramidType
-      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetPyramidWindowSizeProperties
+      // cref: ArcGIS.Core.Data.Analyst3D.TerrainDefinition.GetPyramidWindowSizeProperties()
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainWindowSizeProperties
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainWindowSizeProperties.Method
       // cref: ArcGIS.Core.Data.Analyst3D.TerrainWindowSizeMethod
@@ -1154,51 +1167,50 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
       #endregion
       #region ProSnippet Group: LAS Dataset
       #endregion
-      // cref: ArcGIS.Core.Data.FileSystemDatastoreType.LasDataset
       // cref: ArcGIS.Core.Data.Analyst3D.LasDataset
-      // cref: ArcGIS.Core.Data.FileSystemDatastore.#ctor(ArcGIS.Core.Data.FileSystemConnectionPath)
       // cref: ArcGIS.Core.Data.FileSystemDatastore.OpenDataset``1(System.String)
       #region Open a LAS Dataset
       {
-        //Note: Use QueuedTask.Run to run on the MCT 
-
-        string path = @"d:\Data\LASDataset";
-        var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.LasDataset);
-
-        using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
+        await QueuedTask.Run(() =>
         {
-          string name = "utrecht_tile.lasd";      // can specify with or without the .lasd extension
+          string path = @"d:\Data\LASDataset";
+          var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.LasDataset);
 
-          using (var dataset = dataStore.OpenDataset<ArcGIS.Core.Data.Analyst3D.LasDataset>(name))
+          using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
           {
+            string name = "utrecht_tile.lasd";      // can specify with or without the .lasd extension
 
+            using (var dataset = dataStore.OpenDataset<ArcGIS.Core.Data.Analyst3D.LasDataset>(name))
+            {
+            }
           }
-        }
+        });
       }
 
       #endregion
-      // cref: ArcGIS.Core.Data.FileSystemDatastoreType.LasDataset
       // cref: ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition
-      // cref: ArcGIS.Core.Data.FileSystemDatastore.#ctor(ArcGIS.Core.Data.FileSystemConnectionPath)
       // cref: ArcGIS.Core.Data.FileSystemDatastore.GetDefinition``1(System.String)
       #region Get a LAS Dataset Defintion
       {
-        //Note: Use QueuedTask.Run to run on the MCT
-        string path = @"d:\Data\LASDataset";
-        var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.LasDataset);
-
-        using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
+        await QueuedTask.Run(() =>
         {
-          string name = "utrecht_tile.lasd";      // can specify with or without the .lasd extension
+          string path = @"d:\Data\LASDataset";
+          var fileConnection = new FileSystemConnectionPath(new Uri(path), FileSystemDatastoreType.LasDataset);
 
-          using (var dataset = dataStore.GetDefinition<ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition>(name))
+          using (FileSystemDatastore dataStore = new FileSystemDatastore(fileConnection))
           {
-            //Use the dataset
+            string name = "utrecht_tile.lasd";      // can specify with or without the .lasd extension
+
+            using (var dataset = dataStore.GetDefinition<ArcGIS.Core.Data.Analyst3D.LasDatasetDefinition>(name))
+            {
+              //Use the dataset
+            }
           }
-        }
+        });
+      }
         #endregion
-        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetFileCounts
-        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetFiles
+        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetFileCounts()
+        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetFiles()
         // cref: ArcGIS.Core.Data.Analyst3D.LasFile
         // cref: ArcGIS.Core.Data.Analyst3D.LasFile.FilePath
         // cref: ArcGIS.Core.Data.Analyst3D.LasFile.FileName
@@ -1220,8 +1232,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         }
         #endregion
 
-        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetSurfaceConstraintCount
-        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetSurfaceConstraints
+        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetSurfaceConstraintCount()
+        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetSurfaceConstraints()
         // cref: ArcGIS.Core.Data.Analyst3D.SurfaceConstraint
         // cref: ArcGIS.Core.Data.Analyst3D.SurfaceConstraint.DataSourceName
         // cref: ArcGIS.Core.Data.Analyst3D.SurfaceConstraint.WorkspacePath
@@ -1241,9 +1253,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
           }
         }
         #endregion
-        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetUniqueClassCodes
-        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetUniqueReturns
-        // cref: ArcGIS.Core.Data.Analyst3D.LasReturnType
+        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetUniqueClassCodes()
+        // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetUniqueReturns()
         #region Get classification codes / Returns from a LAS Dataset
         {
           var classCodes = lasDataset.GetUniqueClassCodes();
@@ -1254,7 +1265,7 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
         // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.GetPointByID(System.Double, ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Data.Analyst3D.LasPoint
         // cref: ArcGIS.Core.Data.Analyst3D.LasPoint.Coordinate3D
-        // cref: ArcGIS.Core.Data.Analyst3D.LasPoint.ToMapPoint
+        // cref: ArcGIS.Core.Data.Analyst3D.LasPoint.ToMapPoint()
         #region Access LAS Points by ID
         {
           // access by ID
@@ -1270,11 +1281,10 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
 
         // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.SearchPoints(ArcGIS.Core.Data.Analyst3D.LasPointFilter, System.Double, System.Double)
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor
-        // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNext
+        // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNext()
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.Current
         // cref: ArcGIS.Core.Data.Analyst3D.LasPoint
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter
-        // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.ClassCodes
         #region Search LAS Points
@@ -1312,9 +1322,8 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
 
         // cref: ArcGIS.Core.Data.Analyst3D.LasDataset.SearchPoints(ArcGIS.Core.Data.Analyst3D.LasPointFilter, Systen.Double, System.Double)
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor
-        // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNextArray
+        // cref: ArcGIS.Core.Data.Analyst3D.LasPointCursor.MoveNextArray(ArcGIS.Core.Geometry.Coordinate3D[],System.Int32[],System.Int32[],System.Double[],System.Int32@)
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter
-        // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.#ctor
         // cref: ArcGIS.Core.Data.Analyst3D.LasPointFilter.FilterGeometry
         #region Search using pre initialized arrays
         {
@@ -1349,9 +1358,6 @@ namespace ProSnippets.GeoDatabase.ThreeDAnalystData
           }
         }
         #endregion
-      }
     }
   }
 }
-
-

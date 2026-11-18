@@ -16,10 +16,10 @@
    limitations under the License.
 
 */
+using System.Threading.Tasks;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System.Threading.Tasks;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -35,9 +35,10 @@ namespace ProSnippets.EditingSnippets
       var activeMap = MapView.Active.Map;
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.OperationManager
-      // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
-      // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.EditOperation.UndoAsync()
       #region Undo/Redo Edit Operations
       // Executes an edit operation and demonstrates how to undo the operation programmatically.
       await QueuedTask.Run(() =>
@@ -59,21 +60,21 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.OperationManager
-      // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
       // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
-      // cref: ArcGIS.Desktop.Framework.OperationManager.CanRedo
-      // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync()
-      // cref: ARCGIS.DESKTOP.MAPPING.MAP.OPERATIONMANAGER
+      // cref: ArcGIS.Desktop.Mapping.Map.OperationManager
       #region Undo/Redo the Most Recent Operation
       // Demonstrates how to undo and redo the most recent operation using the map's operation manager.
       //undo
       if (activeMap.OperationManager.CanUndo)
+      {
         activeMap.OperationManager?.UndoAsync();//await as needed
+      }
 
       //redo
       if (MapView.Active.Map.OperationManager.CanRedo)
+      {
         activeMap.OperationManager?.RedoAsync();//await as needed
+      }
     }
     #endregion
   }

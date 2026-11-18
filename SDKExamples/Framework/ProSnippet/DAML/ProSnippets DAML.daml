@@ -252,7 +252,7 @@
     <!--refID is set to the DAML Id of Pro's Options property sheet-->
     <updateSheet refID="esri_core_optionsPropertySheet">
       <insertPage id="ModifyProUIWithDAML_OptionsPropertySheet_OptionsDialogPropertyPage" caption="Sample Project Settings" className="DAML.OptionsPropertySheet.OptionsDialogPropertyPageViewModel" group="Project">
-        <!--Setting "groups" attribute to "Project" will add 
+        <!--Setting "groups" attribute to "Project" will add
                   page to the Project group on the Pro options dialog.-->
         <content className="DAML.OptionsPropertySheet.OptionsDialogPropertyPageView" />
       </insertPage>

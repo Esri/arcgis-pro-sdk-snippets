@@ -1,15 +1,13 @@
-using ArcGIS.Core.CIM;
-using ArcGIS.Core.Data;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Layouts;
-using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using ArcGIS.Core.CIM;
+using ArcGIS.Core.Data;
+using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Layouts;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.MapAuthoringSnippets.Graphics
 {
@@ -31,10 +29,11 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
     /// graphic elements in graphics layers. It also covers spatial selection, grouping, ordering, and event
     /// subscription for graphic elements. The operations must be executed on the QueuedTask to ensure thread
     /// safety.</remarks>
-    public static void ProSnippetsGraphics()
+    public static async Task ProSnippetsGraphicsAsync()
     {
       #region ignore - Variable initialization
-      Map map = MapView.Active.Map;
+      var mapView = MapView.Active;
+      Map map = mapView.Map;
       GraphicsLayer sourceGraphicsLayer = map.GetLayersAsFlattenedList().OfType<GraphicsLayer>().FirstOrDefault();
       GraphicsLayer targetGraphicsLayer = map.GetLayersAsFlattenedList().OfType<GraphicsLayer>().FirstOrDefault();
       GraphicsLayer graphicsLayer = map.GetLayersAsFlattenedList().OfType<GraphicsLayer>().FirstOrDefault();
@@ -45,16 +44,23 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.GraphicsLayerCreationParams
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.LayerFactory
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateGroupLayer(ArcGIS.Desktop.Mapping.ILayerContainerEdit, System.Int32, System.String)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateGroupLayer(ArcGIS.Desktop.Mapping.ILayerContainerEdit,System.Int32,System.String)
+      // cref: ArcGIS.Desktop.Mapping.BaseCreationParams.MapMemberIndex
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.Map.MapType
+      // cref: ArcGIS.Desktop.Mapping.MapMemberCreationParams.Name
       #region Create GraphicsLayer
       {
         if (map.MapType != MapType.Map)
+        {
           return;// not 2D
+        }
 
         var gl_param = new GraphicsLayerCreationParams { Name = "Graphics Layer" };
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //By default will be added to the top of the TOC
           graphicsLayer = LayerFactory.Instance.CreateLayer<ArcGIS.Desktop.Mapping.GraphicsLayer>(gl_param, map);
@@ -72,10 +78,13 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
 
           // or use the specific CreateGroupLayer method
           LayerFactory.Instance.CreateGroupLayer(map, -1, "Graphics Layer");
-        }
+        });
       }
       #endregion
       // cref: ArcGIS.Desktop.Mapping.GraphicsLayer
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.Map.MapType
+      // cref: ArcGIS.Desktop.Mapping.Map.TargetGraphicsLayer
       #region Accessing GraphicsLayer
       {
         if (map.MapType != MapType.Map)
@@ -87,73 +96,81 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
         graphicsLayer = map.GetLayersAsFlattenedList().OfType<GraphicsLayer>().FirstOrDefault();
         if (graphicsLayer != null)
         {
-          //TODO...use the graphics layer      
+          //TODO...use the graphics layer
         }
-        //Or, Get and set the graphic layer that acts as the target for interactive drawing tools. 
+        //Or, Get and set the graphic layer that acts as the target for interactive drawing tools.
         targetGraphicsLayer = map.TargetGraphicsLayer; // get the target graphics layer
         map.TargetGraphicsLayer = graphicsLayer; // set the target graphics layer
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.FindElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.CopyElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.FindElements(System.Collections.Generic.IEnumerable{System.String})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.CopyElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
       #region Copy Graphic elements
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           var elems = sourceGraphicsLayer.FindElements(new List<string>() { "Point 1", "Line 3", "Text 1" });
           var copiedElements = targetGraphicsLayer.CopyElements(elems);
-        }
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayer
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.RemoveElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.RemoveElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
       #region Remove Graphic elements
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           graphicsLayer.RemoveElements(graphicsLayer.GetSelectedElements());
-        }
+        });
       }
       #endregion
 
       #region ProSnippet Group: Create Graphic Elements
       #endregion
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,CIMGraphic,String,Boolean,ElementInfo)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,Geometry,CIMSymbol,String,Boolean,ElementInfo)
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Point Graphic Element using CIMGraphic
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Place symbol in the center of the map
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           var location = extent.Center;
 
           //specify a symbol
           var pt_symbol = SymbolFactory.Instance.ConstructPointSymbol(
                                 ColorFactory.Instance.GreenRGB);
 
-          //create a CIMGraphic 
+          //create a CIMGraphic
           var graphic = new CIMPointGraphic()
           {
             Symbol = pt_symbol.MakeSymbolReference(),
             Location = location //center of map
           };
           graphicsLayer.AddElement(graphic);
-        }
+        });
       }
       #endregion
-      // cref: ARCGIS.CORE.CIM.CIMLineGraphic
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,CIMGraphic,String,Boolean,ElementInfo)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,Geometry,CIMSymbol,String,Boolean,ElementInfo)
+      // cref: ArcGIS.Core.CIM.CIMLineGraphic
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Line Graphic Element using CIMGraphic
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
-          //On the QueuedTask
           //Place a line symbol using the extent's lower left and upper right corner.
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           //get the lower left corner of the extent
           var pointFromCoordinates = new Coordinate2D(extent.XMin, extent.YMin);
           //get the upper right corner of the extent
@@ -165,26 +182,30 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
           //specify a symbol
           var line_symbol = SymbolFactory.Instance.ConstructLineSymbol(
                                 ColorFactory.Instance.GreenRGB);
-          //create a CIMGraphic 
+          //create a CIMGraphic
           var graphic = new CIMLineGraphic()
           {
             Symbol = line_symbol.MakeSymbolReference(),
             Line = lineSegment,
           };
           graphicsLayer.AddElement(graphic);
-        }
+        });
       }
       #endregion
-      // cref: ARCGIS.CORE.CIM.CIMPolygonGraphic
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,CIMGraphic,String,Boolean,ElementInfo)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,Geometry,CIMSymbol,String,Boolean,ElementInfo)
+      // cref: ArcGIS.Core.CIM.CIMPolygonGraphic
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Polygon Graphic Element using CIMGraphic
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
-          //On the QueuedTask
           //Place a polygon symbol using the mapview extent geometry
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           //Contract the extent
           var polygonEnv = extent.Expand(-100000, -90000, false);
           //create a polygon using the envelope
@@ -194,26 +215,31 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
           var poly_symbol = SymbolFactory.Instance.ConstructPolygonSymbol(
                                 ColorFactory.Instance.GreenRGB);
 
-          //create a CIMGraphic 
+          //create a CIMGraphic
           var graphic = new CIMPolygonGraphic()
           {
             Symbol = poly_symbol.MakeSymbolReference(),
             Polygon = polygon,
           };
           graphicsLayer.AddElement(graphic);
-        }
+        });
       }
       #endregion
 
-      // cref: ARCGIS.CORE.CIM.CIMMultipointGraphic
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,CIMGraphic,String,Boolean,ElementInfo)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,Geometry,CIMSymbol,String,Boolean,ElementInfo)
+      // cref: ArcGIS.Core.CIM.CIMMultipointGraphic
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Multi-point Graphic Element using CIMGraphic
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Place a multipoint graphic using the mapview extent geometry
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           //Contract the extent
           var polygonEnv = extent.Expand(-100000, -90000, false);
           //create a polygon using the envelope
@@ -223,40 +249,49 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
           //specify a symbol
           var point_symbol = SymbolFactory.Instance.ConstructPointSymbol(
                                 ColorFactory.Instance.GreenRGB);
-          //create a CIMGraphic 
+          //create a CIMGraphic
           var graphic = new CIMMultipointGraphic
           {
             Symbol = point_symbol.MakeSymbolReference(),
             Multipoint = multiPoints
           };
           graphicsLayer.AddElement(graphic);
-        }
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,CIMGraphic,String,Boolean,ElementInfo)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,Geometry,CIMSymbol,String,Boolean,ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Graphic Element using CIMSymbol
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Place symbol in the center of the map
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           var location = extent.Center;
 
           //specify a symbol
           var pt_symbol = SymbolFactory.Instance.ConstructPointSymbol(
                                 ColorFactory.Instance.GreenRGB);
           graphicsLayer.AddElement(location, pt_symbol);
-        }
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(GraphicsLayer,MapPoint,String,CIMTextSymbol,String,Boolean,ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Text Graphic Element
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Place symbol in the center of the map
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           var location = extent.Center;
 
           //specify a text symbol
@@ -264,19 +299,29 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
           (ColorFactory.Instance.BlackRGB, 8.5, "Corbel", "Regular");
 
           graphicsLayer.AddElement(location, text_symbol, "Text Example");
-        }
+        });
       }
       #endregion
 
-      // cref: ARCGIS.CORE.CIM.CIMGRAPHIC.SYMBOL
-      // cref: ARCGIS.CORE.CIM.CIMPointGraphic
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElements
+      // cref: ArcGIS.Core.CIM.CIMGraphic.Symbol
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElements(System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMGraphic},System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.ElementInfo})
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.Search(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.TimeRange,ArcGIS.Desktop.Mapping.RangeExtent,ArcGIS.Core.CIM.CIMFloorFilterSettings)
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.ShapeType
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Bulk Graphics creation
       {
         //Point Feature layer to convert into graphics
-        var lyr = MapView.Active?.Map?.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(s => s.ShapeType == esriGeometryType.esriGeometryPoint);
-        if (lyr == null) return;
-        // Note: must be called on the QueuedTask
+        var lyr = mapView?.Map?.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(s => s.ShapeType == esriGeometryType.esriGeometryPoint);
+        if (lyr == null)
+        {
+          return;
+        }
+        await QueuedTask.Run(() =>
         {
           //Point symbol for graphics
           var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(CIMColor.CreateRGBColor(100, 255, 40), 10, SimpleMarkerStyle.Circle);
@@ -304,34 +349,34 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
               }
             }
           }
-          //Magic happens...Add all the features to the Graphics layer 
+          //Magic happens...Add all the features to the Graphics layer
           graphicsLayer.AddElements(listGraphicElements);
-        }
+        });
       }
       #endregion
 
       #region ProSnippet Group: Graphic Elements Selection
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SelectElement
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SelectElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetElementsAsFlattenedList
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SelectElement(ArcGIS.Desktop.Layouts.Element)
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SelectElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetElementsAsFlattenedList()
       #region Select Graphic Elements
       {
-        var elements = graphicsLayer.GetElementsAsFlattenedList()
-                            .Where(e => e.Name.StartsWith("Text"));
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
+          var elements = graphicsLayer.GetElementsAsFlattenedList()
+                              .Where(e => e.Name.StartsWith("Text"));
           graphicsLayer.SelectElements(elements);
           //or select one element
           graphicsLayer.SelectElement(elements.FirstOrDefault());
-        }
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetElementsAsFlattenedList
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.FindElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetElementsAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.FindElements(System.Collections.Generic.IEnumerable{System.String})
       #region Find Graphic elements
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Find elements by name
           var elems = graphicsLayer.FindElements(new List<string>() { "Point 1", "Line 3", "Text 1" });
@@ -346,49 +391,43 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
           var textGraphics = graphicsLayer.GetElementsAsFlattenedList().Where(elem => elem.GetGraphic() is CIMTextGraphic);
           //Find all picture graphics in the Graphics Layer
           var pictureGraphic = graphicsLayer.GetElementsAsFlattenedList().Where(elem => elem.GetGraphic() is CIMPictureGraphic);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements(ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.SelectionCombinationMethod,System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.SelectionCombinationMethod
-      // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.ONSKETCHCOMPLETEASYNC
       #region Spatial selection of elements in all Graphics Layers
       //Map Tool is used to perform Spatial selection.
-      //Graphic selection uses the selection geometry 
-      //to intersect the geometries of those elements (graphic or group) 
-      //that will be selected and then highlights them. 
+      //Graphic selection uses the selection geometry
+      //to intersect the geometries of those elements (graphic or group)
+      //that will be selected and then highlights them.
       {
         var selPoly = geometry as Polygon;
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //note: the selected elements may belong to more than one layer...
-          var elems = MapView.Active.SelectElements(selPoly, SelectionCombinationMethod.New);
-        }
+          var elems = mapView.SelectElements(selPoly, SelectionCombinationMethod.New);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements(MapView,GraphicsLayer,Geometry,SelectionCombinationMethod,Boolean)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements(MapView,Geometry,SelectionCombinationMethod,Boolean)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements(ArcGIS.Desktop.Mapping.GraphicsLayer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.SelectionCombinationMethod,System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.SelectionCombinationMethod
+      // cref: ArcGIS.Desktop.Mapping.MapView.Extent
       #region Spatial selection of elements in one graphics layer
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Create an extent to use for the spatial selection
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           var selectionExtent = extent.Expand(0.5, 0.5, true);
           //Select elements in specified graphics layer using the selection extent.
-          var selectedElements = MapView.Active.SelectElements(graphicsLayer, selectionExtent, SelectionCombinationMethod.Add);
-        }
+          var selectedElements = mapView.SelectElements(graphicsLayer, selectionExtent, SelectionCombinationMethod.Add);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetElementsAsFlattenedList
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements(MapView,GraphicsLayer,Geometry,SelectionCombinationMethod,Boolean)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.SelectElements(MapView,Geometry,SelectionCombinationMethod,Boolean)
-      // cref: ArcGIS.Desktop.Mapping.SelectionCombinationMethod
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetElementsAsFlattenedList()
       #region Select Text Graphic Elements
       {
         var all_text = graphicsLayer.GetElementsAsFlattenedList()
@@ -396,33 +435,34 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.ClearSelection
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.UnSelectElement
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.UnSelectElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.ClearSelection()
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.UnSelectElement(ArcGIS.Desktop.Layouts.Element)
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.UnSelectElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
       #region Un-Select Graphic elements
       {
-        //unselect the first element in the currently selected elements
-        var elem = graphicsLayer.GetSelectedElements().FirstOrDefault();
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
+          //unselect the first element in the currently selected elements
+          var elem = graphicsLayer.GetSelectedElements().FirstOrDefault();
           if (elem != null)
+          {
             //Unselect one element
             graphicsLayer.UnSelectElement(elem);
+          }
 
           //unselect all elements
           graphicsLayer.UnSelectElements();
           //equivalent to
           graphicsLayer.ClearSelection();
-        }
+        });
       }
       #endregion
 
       #region ProSnippet Group: Graphic Element Events
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
-      // cref: ArcGIS.Desktop.Layouts.Events.ElementEventArgs
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
       // cref: ArcGIS.Desktop.Layouts.Events.ElementEventArgs.Elements
       #region Subscribe to ElementSelectionChangedEvent
       {
@@ -452,28 +492,32 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
 
       #region ProSnippet Group: Grouping and Ordering Graphic Elements
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GroupElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GroupElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
       #region Group Graphic Elements
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           var elemsToGroup = graphicsLayer.GetSelectedElements();
           //group  elements
           groupElement = graphicsLayer.GroupElements(elemsToGroup);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.UnGroupElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.UnGroupElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.GroupElement})
       #region Un-Group Graphic Elements
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
-          var selectedElements = graphicsLayer.GetSelectedElements().ToList(); ;
+          var selectedElements = graphicsLayer.GetSelectedElements().ToList();
+          ;
           if (selectedElements?.Count == 0)//must be at least 1.
+          {
             return;
+          }
+
           var elementsToUnGroup = new List<GroupElement>();
           //All selected elements should be grouped.
           if (selectedElements.Count() == selectedElements.OfType<GroupElement>().Count())
@@ -482,15 +526,16 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
             elementsToUnGroup = selectedElements.ConvertAll(x => (GroupElement)x);
           }
           if (elementsToUnGroup.Count() == 0)
+          {
             return;
+          }
           //UnGroup
           graphicsLayer.UnGroupElements(elementsToUnGroup);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.GroupElement.ELEMENTS
-      // cref: ArcGIS.Desktop.Layouts.Element.GetParent
+      // cref: ArcGIS.Desktop.Layouts.Element.GetParent(System.Boolean)
       #region Parent of GroupElement
       {
         //check the parent
@@ -500,16 +545,14 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.BringForward
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.BringForward(GraphicsLayer,Element)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.BringForward(GraphicsLayer,IEnumerable{Element})
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SendBackward
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SendBackward(GraphicsLayer,Element)
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SendBackward(GraphicsLayer,IEnumerable{Element})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.BringForward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.SendBackward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.CanBringForward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.CanSendBackward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
       #region Ordering: Send backward and Bring forward
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //get the current selection set
           var sel_elems = graphicsLayer.GetSelectedElements();
@@ -528,35 +571,40 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
             //send to the back (of parent)
             //graphicsLayer.SendToBack(sel_elems);
           }
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
       // cref: ArcGIS.Desktop.Layouts.Element.ZOrder
       #region Get Z-Order
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           var selElementsZOrder = graphicsLayer.GetSelectedElements();
           //list out the z order
           foreach (var elem in selElementsZOrder)
+          {
             System.Diagnostics.Debug.WriteLine($"{elem.Name}: z-order {elem.ZOrder}");
-        }
+          }
+        });
       }
       #endregion
 
       #region ProSnippet Group: Modifying Graphic Elements
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements
-      // cref: ArcGIS.Desktop.Layouts.Element.SetAnchorPoint
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Layouts.Element.SetAnchorPoint(ArcGIS.Core.Geometry.Coordinate2D)
       #region Move Graphic Elements
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
           //Each selected element will move to a set distance to the upper right.
           var selElements = graphicsLayer.GetSelectedElements();
-          if (selElements.Count == 0) return;
+          if (selElements.Count == 0)
+          {
+            return;
+          }
           //Move the element up
           foreach (var selElement in selElements)
           {
@@ -567,18 +615,23 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
             //Move the element's Anchor point to the upper right.
             selElement.SetAnchorPoint(pointsList[1]);
           }
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.FindElement
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic
-      // cref: ARCGIS.DESKTOP.LAYOUTS.GRAPHICELEMENT.SETGRAPHIC
+      // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic(ArcGIS.Core.CIM.CIMGraphic)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMStroke)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Modify symbology of a Graphic Element
       {
-        // Note: must be called on the QueuedTask
+        await QueuedTask.Run(() =>
         {
-          //within a queued Task
           //get the first line element in the layer
           var ge = graphicsLayer.FindElement("Line 10") as GraphicElement;
           var graphic = ge.GetGraphic();
@@ -592,7 +645,7 @@ namespace ProSnippets.MapAuthoringSnippets.Graphics
             //apply the change
             ge.SetGraphic(lineGraphic);
           }
-        }
+        });
       }
       #endregion
     }

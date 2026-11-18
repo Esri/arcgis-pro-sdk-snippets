@@ -16,18 +16,14 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Core.Portal;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ProSnippets.SharingSnippets
 {
@@ -55,7 +51,7 @@ namespace ProSnippets.SharingSnippets
       var userContent = await portal.GetUserContentAsync(signOnUserName);
 
       //Get the owner of the content
-      //var owner = 
+      //var owner =
       #endregion
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager.Current
@@ -72,7 +68,6 @@ namespace ProSnippets.SharingSnippets
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager.Current
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager.GetPortals()
-      // cref: ArcGIS.Desktop.Core.ArcGISPortal
       // cref: ArcGIS.Desktop.Core.ArcGISPortal.PortalUri
       #region  ArcGISPortalManager: Get a list of all your Portals
       {
@@ -98,7 +93,6 @@ namespace ProSnippets.SharingSnippets
       // cref: ArcGIS.Desktop.Core.ArcGISPortal
       // cref: ArcGIS.Desktop.Core.ArcGISPortal.IsSignedOn()
       // cref: ArcGIS.Desktop.Core.ArcGISPortal.SignIn()
-      // cref: ArcGIS.Desktop.Core.SignInResult
       // cref: ArcGIS.Desktop.Core.SignInResult.success
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager.SetActivePortal(ArcGIS.Desktop.Core.ArcGISPortal)
       #region ArcGISPortalManager: Get a portal and Sign In, Set it Active
@@ -120,20 +114,16 @@ namespace ProSnippets.SharingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Events.ActivePortalChangedEvent
-      // cref: ArcGIS.Desktop.Core.Events.ActivePortalChangedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.Events.ActivePortalChangedEventArgs
+      // cref: ArcGIS.Desktop.Core.Events.ActivePortalChangedEvent.Subscribe(System.Action{ArcGIS.Desktop.Core.Events.ActivePortalChangedEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Core.Events.ActivePortalChangedEventArgs.ActivePortal
       // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalAddedEvent
-      // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalAddedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalAddedEventArgs
+      // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalAddedEvent.Subscribe(System.Action{ArcGIS.Desktop.Core.Events.ArcGISPortalAddedEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalAddedEventArgs.Portal
       // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalRemovedEvent
-      // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalRemovedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalRemovedEventArgs
+      // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalRemovedEvent.Subscribe(System.Action{ArcGIS.Desktop.Core.Events.ArcGISPortalRemovedEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Core.Events.ArcGISPortalRemovedEventArgs.RemovedPortalUri
       // cref: ArcGIS.Desktop.Core.Events.PortalSignOnChangedEvent
-      // cref: ArcGIS.Desktop.Core.Events.PortalSignOnChangedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.Events.PortalSignOnChangedEventArgs
+      // cref: ArcGIS.Desktop.Core.Events.PortalSignOnChangedEvent.Subscribe(System.Action{ArcGIS.Desktop.Core.Events.PortalSignOnChangedEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Core.Events.PortalSignOnChangedEventArgs.Portal
       // cref: ArcGIS.Desktop.Core.Events.PortalSignOnChangedEventArgs.IsSignedOn
       #region ArcGISPortalManager: Listen for the Portal Events
@@ -180,7 +170,7 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetPortalInfoAsync(ArcGIS.Desktop.Core.ArcGISPortal)
+      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetPortalInfoAsync()
       // cref: ArcGIS.Desktop.Core.Portal.PortalInfo
       #region Portal: Get the "online" portal view for the current user
       {
@@ -191,7 +181,7 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
       // cref: ArcGIS.Desktop.Core.ArcGISPortalManager.GetPortal(System.Uri)
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetPortalInfoAsync(ArcGIS.Desktop.Core.ArcGISPortal)
+      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetPortalInfoAsync()
       // cref: ArcGIS.Desktop.Core.Portal.PortalInfo
       // cref: ArcGIS.Desktop.Core.Portal.PortalInfo.OrganizationId
       #region Portal: Get the organization id for the current user
@@ -203,7 +193,7 @@ namespace ProSnippets.SharingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ArcGISPortal.GetSignOnUsername()
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetUserContentAsync(ArcGIS.Desktop.Core.ArcGISPortal, System.String, System.String)
+      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetUserContentAsync(System.String,System.String)
       // cref: ArcGIS.Desktop.Core.Portal.PortalUserContent
       // cref: ArcGIS.Desktop.Core.Portal.PortalUserContent.PortalFolders
       // cref: ArcGIS.Desktop.Core.Portal.PortalFolder
@@ -231,7 +221,6 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetUserContentAsync(ArcGIS.Desktop.Core.ArcGISPortal, System.String, System.String)
       // cref: ArcGIS.Desktop.Core.Portal.PortalUserContent.PortalItems
       // cref: ArcGIS.Desktop.Core.Portal.PortalItemType
       // cref: ArcGIS.Desktop.Core.Portal.PortalItem.PortalItemType
@@ -260,7 +249,7 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetGroupsFromUserAsync(ArcGIS.Desktop.Core.ArcGISPortal, System.String)
+      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetGroupsFromUserAsync(System.String)
       // cref: ArcGIS.Desktop.Core.Portal.PortalGroup
       #region Portal: Get the groups for the specified user
       {
@@ -274,13 +263,15 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
       // cref: ArcGIS.Desktop.Core.ArcGISPortal.GetSignOnUsername()
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetPortalInfoAsync(ArcGIS.Desktop.Core.ArcGISPortal)
+      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetPortalInfoAsync()
       // cref: ArcGIS.Desktop.Core.Portal.PortalQueryParameters.CreateForItemsOfType(ArcGIS.Desktop.Core.Portal.PortalItemType, string)
       // cref: ArcGIS.Desktop.Core.Portal.PortalQueryParameters
       // cref: ArcGIS.Desktop.Core.Portal.PortalQueryParameters.OrganizationId
       // cref: ArcGIS.Desktop.Core.Portal.PortalQueryParameters.Limit
-      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.SearchForContentAsync(ArcGIS.Desktop.Core.ArcGISPortal, ArcGIS.Desktop.Core.Portal.PortalQueryParameters)
-      // cref: ArcGIS.Desktop.Core.Portal.PortalQueryResultSet`1
+      // cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.SearchForContentAsync(ArcGIS.Desktop.Core.Portal.PortalQueryParameters)
+      // cref: ArcGIS.Desktop.Core.Portal.PortalQueryParameters.CreateForItemsOfTypes(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Core.Portal.PortalItemType},System.String,System.String,System.String)
+      // cref: ArcGIS.Desktop.Core.Portal.PortalQueryResultSet{ArcGIS.Desktop.Core.Portal.PortalItem}.NextQueryParameters
+      // cref: ArcGIS.Desktop.Core.Portal.PortalQueryResultSet{ArcGIS.Desktop.Core.Portal.PortalItem}.Results
       #region Portal: Execute a portal search
       {
         var owner = portal.GetSignOnUsername();
@@ -315,7 +306,6 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
       // cref: ArcGIS.Desktop.Core.EsriHttpClient
-      // cref: ArcGIS.Desktop.Core.EsriHttpClient.#ctor
       // cref: ArcGIS.Desktop.Core.EsriHttpClient.Get(System.String)
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage.Content
@@ -334,14 +324,16 @@ namespace ProSnippets.SharingSnippets
         // if the response doesn't contain the user information then it is essentially
         // an anonymous request against the portal
         if (portalSelf.user == null)
+        {
           return;
+        }
+
         string userName = portalSelf.user.username;
       }
 
       #endregion
 
       // cref: ArcGIS.Desktop.Core.EsriHttpClient
-      // cref: ArcGIS.Desktop.Core.EsriHttpClient.#ctor
       // cref: ArcGIS.Desktop.Core.EsriHttpClient.Get(System.String)
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage.Content
@@ -363,7 +355,6 @@ namespace ProSnippets.SharingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.EsriHttpClient
-      // cref: ArcGIS.Desktop.Core.EsriHttpClient.#ctor
       // cref: ArcGIS.Desktop.Core.EsriHttpClient.Get(System.String)
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage.Content
@@ -400,9 +391,7 @@ namespace ProSnippets.SharingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.EsriHttpClient
-      // cref: ArcGIS.Desktop.Core.EsriHttpClient.#ctor
       // cref: ArcGIS.Desktop.Core.EsriHttpClient.Upload(ArcGIS.Desktop.Core.UploadDefinition)
-      // cref: ArcGIS.Desktop.Core.UploadDefinition.#ctor(System.String,ArcGIS.Desktop.Core.Item,System.String[])
       // cref: ArcGIS.Desktop.Core.ItemFactory
       #region EsriHttpClient: Upload CSV file to ArcGIS Online
       {
@@ -422,14 +411,18 @@ namespace ProSnippets.SharingSnippets
 
         // Manage the result of the operation appropriately
         if (result.Item1 == false)
+        {
           return;
+        }
       }
       #endregion
       // cref: ArcGIS.Desktop.Core.EsriHttpClient
-      // cref: ArcGIS.Desktop.Core.EsriHttpClient.#ctor
       // cref: ArcGIS.Desktop.Core.EsriHttpClient.Get(System.String)
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage.Content
+      // cref: ArcGIS.Desktop.Mapping.IMapFactory.CanCreateMapFrom(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateMapFromItem(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Mapping.MapFactory.Instance
       #region EsriHttpClient: Get a Web Map for the Current User and Add it to Pro
       {
         UriBuilder searchURL = new UriBuilder(ArcGISPortalManager.Current.GetActivePortal().PortalUri)
@@ -444,7 +437,10 @@ namespace ProSnippets.SharingSnippets
         // if the response doesn't contain the user information then it is essentially
         // an anonymous request against the portal
         if (portalSelf.user == null)
+        {
           return;
+        }
+
         string userName = portalSelf.user.username;
 
         searchURL.Path = "sharing/rest/search";
@@ -456,7 +452,9 @@ namespace ProSnippets.SharingSnippets
 
         long numberOfTotalItems = resultItems.total.Value;
         if (numberOfTotalItems == 0)
+        {
           return;
+        }
 
         List<dynamic> resultItemList = new List<dynamic>();
         resultItemList.AddRange(resultItems.results);
@@ -474,13 +472,16 @@ namespace ProSnippets.SharingSnippets
       }
       #endregion
       // cref: ArcGIS.Desktop.Core.EsriHttpClient
-      // cref: ArcGIS.Desktop.Core.EsriHttpClient.#ctor
       // cref: ArcGIS.Desktop.Core.EsriHttpClient.Get(System.String)
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage
       // cref: ArcGIS.Desktop.Core.EsriHttpResponseMessage.Content
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create(System.String, ArcGIS.Desktop.Core.ItemFactory.ItemType)
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.LayerFactory
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CanCreateLayerFrom(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region EsriHttpClient: Get a Service Layer and Add it to Pro
       {
         UriBuilder searchURL = new UriBuilder(ArcGISPortalManager.Current.GetActivePortal().PortalUri)
@@ -498,7 +499,9 @@ namespace ProSnippets.SharingSnippets
 
         long numberOfTotalItems = resultItems.total.Value;
         if (numberOfTotalItems == 0)
+        {
           return;
+        }
 
         List<dynamic> resultItemList = new List<dynamic>();
         resultItemList.AddRange(resultItems.results);
@@ -508,6 +511,10 @@ namespace ProSnippets.SharingSnippets
         string itemID = item.id;
         Item currentItem = ItemFactory.Instance.Create(itemID, ItemFactory.ItemType.PortalItem);
 
+        var mapView = MapView.Active;
+        if (mapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
           //Create a LayerCreationParam
@@ -515,7 +522,9 @@ namespace ProSnippets.SharingSnippets
           // if we have an item that can be turned into a layer
           // add it to the map
           if (LayerFactory.Instance.CanCreateLayerFrom(currentItem))
-            LayerFactory.Instance.CreateLayer<FeatureLayer>(layerParam, MapView.Active.Map);
+          {
+            LayerFactory.Instance.CreateLayer<FeatureLayer>(layerParam, mapView.Map);
+          }
         });
       }
       #endregion

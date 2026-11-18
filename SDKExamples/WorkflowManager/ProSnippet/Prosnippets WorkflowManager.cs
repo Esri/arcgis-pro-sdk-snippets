@@ -16,6 +16,10 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using ArcGIS.Core.Events;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
@@ -25,10 +29,6 @@ using ArcGIS.Desktop.Workflow.Client.Exceptions;
 using ArcGIS.Desktop.Workflow.Client.Models;
 using ArcGIS.Desktop.Workflow.Client.Models.Messages;
 using ArcGIS.Desktop.Workflow.Client.Steps;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace ProSnippets.WorkFlowSnippets
 {
@@ -60,7 +60,7 @@ namespace ProSnippets.WorkFlowSnippets
       string mapUri = "myMapUri"; // Get a reference to a map using the ArcGIS.Desktop.Mapping API (active view, project item, etc.)
       string jobId = "myJobId"; // Specify a job Id
       string id = "myId"; // Specify an Id
-      string stepId = "myStepId"; // Specify a step Id                     
+      string stepId = "myStepId"; // Specify a step Id
       List<string> jobIds = new List<string> { "jobId1", "jobId2" }; // Specify a list of job Ids
       SubscriptionToken subscriptionToken;
       #endregion Variable initialization
@@ -122,9 +122,9 @@ namespace ProSnippets.WorkFlowSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Workflow.Client.Steps.OpenProProjectItemsStepCommandArgs
-      // cref: ArcGIS.Desktop.Framework.Contracts.Module
       // cref: ArcGIS.Desktop.Framework.FrameworkApplication
       // cref: ArcGIS.Desktop.Framework.IPlugInWrapper
+      // cref: ArcGIS.Desktop.Workflow.Client.Steps.OpenProProjectItemsStepCommandArgs.JobId
       #region Get the job Id associated with a running OpenProProjectItems step
       {
         // Get the job Id associated with a running OpenProItems step for a Pro Add-In module
@@ -132,6 +132,7 @@ namespace ProSnippets.WorkFlowSnippets
         // In the Add-In Module class, override the ExecuteCommandArgs(string id) method and return a Func<Object[], Task> object like the sample below
         // Refer to the Workflow Manager ProConcepts Sample Code link for an example
 
+        IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper(id);
         Func<object[], Task> overrideFunction = (args) => QueuedTask.Run(() =>
         {
           try
@@ -139,16 +140,17 @@ namespace ProSnippets.WorkFlowSnippets
             // Get the jobId property from the OpenProProjectItemsStep arguments and store it.
             OpenProProjectItemsStepCommandArgs stepArgs = (OpenProProjectItemsStepCommandArgs)args[0];
             var jobId = stepArgs.JobId;
-            ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show($"Got job id from ProMappingStep args: {jobId}", "Project Info");
+            System.Diagnostics.Debug.WriteLine($"Got job id from ProMappingStep args: {jobId}");
 
             // Run the command specified by the id passed into ExecuteCommandArgs
-            IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper(id);
             if (wrapper is ICommand command && command.CanExecute(null))
+            {
               command.Execute(null);
+            }
           }
           catch (Exception e)
           {
-            ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show($"ERROR: {e}", "Error running command");
+            System.Diagnostics.Debug.WriteLine($"ERROR: {e}");
           }
         });
 
@@ -160,7 +162,7 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.GetJob(System.String,System.Boolean,System.Boolean)
       // cref: ArcGIS.Desktop.Workflow.Client.Models.Job
-      #region Get a job
+      #region Get a job's basic properties
       {
         // Note: QueuedTask is required to call Workflow Manager API methods
         // GetJob returns an existing job
@@ -184,9 +186,62 @@ namespace ProSnippets.WorkFlowSnippets
 
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Swagger.Api.JobsApi.SearchJobs(System.String,System.String,System.String,ArcGIS.Desktop.Workflow.Client.Swagger.Model.EsriWorkflowModelsRestJobQuery)
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.GetJob(System.String,System.Boolean,System.Boolean)
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Job
+      #region Get properties of a job
+      {
+        // Note: QueuedTask is required to call Workflow Manager API methods
+        // GetJob returns an existing job
+        try
+        {
+          var jobManager = WorkflowClientModule.JobsManager;
+          var job = jobManager.GetJob(jobId, true, true);
+          // Do something with the job
+        }
+        catch (NotConnectedException)
+        {
+          // Not connected to Workflow Manager server, do some error handling
+        }
+        catch (Exception)
+        {
+          // Some other exception occurred, do some error handling
+        }
+        // Use the job object
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.SearchJobs(ArcGIS.Desktop.Workflow.Client.Models.SearchQuery)
       // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery
       // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.Search
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult.Fields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult.Results
+      #region Search for jobs using a simple string
+      {
+        var search = new SearchQuery() { Search = "My Search String" };
+        var jobManager = WorkflowClientModule.JobsManager;
+        var searchResults = jobManager.SearchJobs(search);
+        var fields = searchResults.Fields;
+        var results = searchResults.Results;
+
+        // Use the fields and results collections
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.SearchJobs(ArcGIS.Desktop.Workflow.Client.Models.SearchQuery)
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.Fields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.Q
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.SortFields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult.Fields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult.Results
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SortField.FieldName
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SortField.SortOrder
       #region Search for jobs using a detailed query
       {
         var search = new SearchQuery()
@@ -210,9 +265,16 @@ namespace ProSnippets.WorkFlowSnippets
 
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Swagger.Api.JobsApi.SearchJobs(System.String,System.String,System.String,ArcGIS.Desktop.Workflow.Client.Swagger.Model.EsriWorkflowModelsRestJobQuery)
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.SearchJobs(ArcGIS.Desktop.Workflow.Client.Models.SearchQuery)
       // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery
       // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.Fields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.Q
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery.SortFields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult.Fields
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult.Results
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SortField.FieldName
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.SortField.SortOrder
       #region Search for jobs using a detailed query with an arcade expression
       {
         var search = new SearchQuery()
@@ -232,32 +294,17 @@ namespace ProSnippets.WorkFlowSnippets
 
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Swagger.Api.JobsApi.SearchJobs(System.String,System.String,System.String,ArcGIS.Desktop.Workflow.Client.Swagger.Model.EsriWorkflowModelsRestJobQuery)
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchQuery
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.SearchResult
-      #region Search for jobs using a simple string
-      {
-        var search = new SearchQuery() { Search = "My Search String" };
-        var jobManager = WorkflowClientModule.JobsManager;
-        var searchResults = jobManager.SearchJobs(search);
-        var fields = searchResults.Fields;
-        var results = searchResults.Results;
-
-        // Use the fields and results collections
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.CalculateJobStatistics(ArcGIS.Desktop.Workflow.Client.Models.JobStatisticsQuery)
       // cref: ArcGIS.Desktop.Workflow.Client.Models.JobStatisticsQuery
       // cref: ArcGIS.Desktop.Workflow.Client.Models.JobStatistics
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.JobStatistics.Total
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.JobStatisticsQuery.Q
       #region Get statistics for jobs
       {
         var query = new JobStatisticsQuery()
         {
-          // Search for open jobs assigned to users
-          Q = "\"assignedType='User' AND closed=0 \""
+          // Search for open jobs assigned to users with high priority
+          Q = "\"assignedType='User' AND closed=0 AND priority='High'\""
         };
         var jobManager = WorkflowClientModule.JobsManager;
         var results = jobManager.CalculateJobStatistics(query);
@@ -268,8 +315,9 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.RunSteps(System.String,System.Collections.Generic.List{System.String})
-      #region Run steps on a job
+      #region Run current steps on a job
       {
+        // All current steps will be started since no stepIds are specified.
         var jobManager = WorkflowClientModule.JobsManager;
         jobManager.RunSteps(jobId);
       }
@@ -278,7 +326,7 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.RunSteps(System.String,System.Collections.Generic.List{System.String})
-      #region Run specific steps on a job
+      #region Run specific current steps on a job
       {
         var jobManager = WorkflowClientModule.JobsManager;
         // Specify specific current steps in a job to run
@@ -290,7 +338,8 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.StopSteps(System.String,System.Collections.Generic.List{System.String})
-      #region Stop running steps on a job
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.GetJobId()
+      #region Stop currently running steps on a job
       {
         var jobManager = WorkflowClientModule.JobsManager;
         // Get the job Id associated with the active map view
@@ -303,7 +352,8 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.StopSteps(System.String,System.Collections.Generic.List{System.String})
-      #region Stop specific running steps on a job
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.GetJobId()
+      #region Stop specific currently running steps on a job
       {
         var jobManager = WorkflowClientModule.JobsManager;
         // Get the job Id associated with the active map view
@@ -317,7 +367,7 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.FinishSteps(System.String,System.Collections.Generic.List{System.String})
-      #region Finish steps on a job
+      #region Finish current steps on a job
       {
         var jobManager = WorkflowClientModule.JobsManager;
         // Finish the current steps in the job with the given id.
@@ -328,7 +378,7 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.FinishSteps(System.String,System.Collections.Generic.List{System.String})
-      #region Finish specific steps on a job
+      #region Finish specific current steps on a job
       {
         var jobManager = WorkflowClientModule.JobsManager;
         List<string> stepIds = ["step12345", "step67890"];
@@ -336,7 +386,40 @@ namespace ProSnippets.WorkFlowSnippets
       }
       #endregion
 
+      // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.AssignedType
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.AssignCurrentStep(System.String,ArcGIS.Desktop.Workflow.Client.Models.AssignedType,System.String)
+      #region Assign the current steps of a job.
+      {
+        var jobManager = WorkflowClientModule.JobsManager;
+        jobManager.AssignCurrentStep(jobId, AssignedType.User, "testUser");
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.AssignedType
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.AssignStep(System.String,System.String,ArcGIS.Desktop.Workflow.Client.Models.AssignedType,System.String)
+      #region Assign a specific current step of a job.
+      {
+        var jobManager = WorkflowClientModule.JobsManager;
+        jobManager.AssignStep(jobId, "step12345", AssignedType.User, "testUser");
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Workflow.Client.WorkflowClientModule.JobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.IJobsManager.SetCurrentStep(System.String,System.String)
+      #region Sets a single step to be the active step on the job.
+      {
+        var jobManager = WorkflowClientModule.JobsManager;
+        jobManager.SetCurrentStep(jobId, "step12345");
+      }
+      #endregion
+
       // cref: ArcGIS.Desktop.Workflow.Client.Events.WorkflowConnectionChangedEvent
+      // cref: ArcGIS.Desktop.Workflow.Client.Events.WorkflowConnectionChangedEvent.Subscribe(System.Func<ArcGIS.Desktop.Workflow.Client.Events.WorkflowConnectionChangedEventArgs, System.Threading.Task>,System.Boolean)
       #region Subscribe to a workflow connection changed event.
       {
         subscriptionToken = WorkflowConnectionChangedEvent.Subscribe(e =>
@@ -349,6 +432,7 @@ namespace ProSnippets.WorkFlowSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Workflow.Client.Events.WorkflowConnectionChangedEvent
+      // cref: ArcGIS.Desktop.Workflow.Client.Events.WorkflowConnectionChangedEvent.Unsubscribe(ArcGIS.Core.Events.SubscriptionToken)
       #region Unsubscribe from a workflow connection changed event.
       {
         WorkflowConnectionChangedEvent.Unsubscribe(subscriptionToken);
@@ -359,6 +443,10 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.SubscribeToJobs(System.Collections.Generic.List{System.String})
       // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEvent
+      // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEvent.Subscribe(System.Action<ArcGIS.Desktop.Workflow.Client.Events.JobMessageEventArgs<ArcGIS.Desktop.Workflow.Client.Models.Messages.JobMessage>>,System.Boolean)
+      // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEventArgs{ArcGIS.Desktop.Workflow.Client.Models.Messages.JobMessage}.Message
+      // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEventArgs{ArcGIS.Desktop.Workflow.Client.Models.Messages.JobMessage}.MessageType
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.JobMessage.JobId
       #region Subscribe to job notification messages
       {
         // Subscribe to the job message event to start receiving job and step notifications.
@@ -381,6 +469,7 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.UnsubscribeFromJobs(System.Collections.Generic.List{System.String})
       // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEvent
+      // cref: ArcGIS.Desktop.Workflow.Client.Events.JobMessageEvent.Unsubscribe(ArcGIS.Core.Events.SubscriptionToken)
       #region Unsubscribe to messages for the given jobs
       {
         // Unsubscribe from the job message event using the subscription token
@@ -397,8 +486,12 @@ namespace ProSnippets.WorkFlowSnippets
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager
       // cref: ArcGIS.Desktop.Workflow.Client.Models.INotificationManager.SendStepResponse(ArcGIS.Desktop.Workflow.Client.Models.Messages.StepResponse)
       // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepResponse
-      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepInfoResponseMessage
       // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.QuestionStepInfoResponseMessage
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.QuestionStepInfoResponseMessage.Comment
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.QuestionStepInfoResponseMessage.QuestionResponse
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepInfoResponseMessage.JobId
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepInfoResponseMessage.StepId
+      // cref: ArcGIS.Desktop.Workflow.Client.Models.Messages.StepResponse.Message
       #region Send a response to Workflow Manager Server pertaining to a job's current step
       {
         // Send a step response to Workflow Manager Server with additional information required for the step to continue.

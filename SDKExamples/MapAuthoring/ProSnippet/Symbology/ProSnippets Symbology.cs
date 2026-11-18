@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -16,16 +16,13 @@
    limitations under the License.
 
 */
-using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Mapping;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using ArcGIS.Core.CIM;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.MapAuthoringSnippets.Symbology
 {
@@ -44,13 +41,16 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #region ProSnippet Group: Line Symbology
       #endregion
       // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(System.Int32,System.String,System.String,System.Int32)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructMarker(System.Int32,System.String,System.String,System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
       // cref: ArcGIS.Core.CIM.CIMMarkerPlacementAlongLineSameSize
 
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Markers placed at a 45 degree angle
       /// <summary>
-      /// Create a line symbol with the markers placed at a 45 degree angle. <br/>  
+      /// Create a line symbol with the markers placed at a 45 degree angle. <br/>
       /// ![LineSymbolAngleMarker](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/line-marker-angle.png)
       /// </summary>
       {
@@ -59,7 +59,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         //Note: Run withing QueuedTask
         var lineMarker = SymbolFactory.Instance.ConstructMarker(124, "Agency FB", "Regular", 12);
 
-        //Default line symbol which will be modified 
+        //Default line symbol which will be modified
         CIMLineSymbol lineSymbolWithMarkersAtAngle = SymbolFactory.Instance.ConstructLineSymbol(ColorFactory.Instance.BlackRGB, 2, SimpleLineStyle.Solid);
 
         //Modifying the marker to align with line
@@ -84,10 +84,15 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       // cref: ArcGIS.Core.CIM.CIMGeometricEffectDashes
       // cref: ArcGIS.Core.CIM.CIMGeometricEffectOffset
       // cref: ArcGIS.Core.CIM.CIMMarkerPlacementAlongLineSameSize
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Dash line with two markers - Method I
       /// <summary>
-      /// Create a line symbol with a dash and two markers.<br/>          
-      /// This line symbol comprises three symbol layers listed below: 
+      /// Create a line symbol with a dash and two markers.<br/>
+      /// This line symbol comprises three symbol layers listed below:
       /// 1. A solid stroke that has dashes.
       /// 1. A circle marker.
       /// 1. A square marker.
@@ -166,19 +171,23 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       }
       #endregion
       // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(System.Int32,System.String,System.String,System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
       // cref: ArcGIS.Core.CIM.CIMGeometricEffect
       // cref: ArcGIS.Core.CIM.CIMGeometricEffectDashes
       // cref: ArcGIS.Core.CIM.CIMSolidStroke
       // cref: ArcGIS.Core.CIM.CIMVectorMarker
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Dash line with two markers - Method II
       /// <summary>
       /// Create a line symbol with a dash and two markers. <br/>
       /// In this pattern of creating this symbol, a [CIMVectorMarker](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic6176.html) object is created as a new [CIMSymbolLayer](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic5503.html).
-      /// The circle and square markers created by [ContructMarker](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic12350.html) method is then assigned to the [MarkerGraphics](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic6188.html) property of the CIMVectorMarker. 
-      /// When using this method, the CIMVectorMarker's [Frame](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic6187.html) property needs to be set to the [CIMMarker](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic3264.html) object's Frame. 
+      /// The circle and square markers created by [ContructMarker](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic12350.html) method is then assigned to the [MarkerGraphics](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic6188.html) property of the CIMVectorMarker.
+      /// When using this method, the CIMVectorMarker's [Frame](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic6187.html) property needs to be set to the [CIMMarker](https://doc.esri.com/en/arcgis-pro/sdk/api-reference/#topic3264.html) object's Frame.
       /// Similarly, the CIMVectorMarker's [Size](https://doc.esri.com/en/arcgis-pro/latest/sdk/api-reference/#topic3284.html) property needs to be set to the CIMMarker object's size.
-      /// This line symbol comprises three symbol layers listed below: 
+      /// This line symbol comprises three symbol layers listed below:
       /// 1. A solid stroke that has dashes.
       /// 1. A circle marker.
       /// 1. A square marker.
@@ -229,7 +238,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
                     {
                         MarkerGraphics = circleMarker.MarkerGraphics,
                         Frame = circleMarker.Frame, //need to match the CIMVector marker's frame to the circleMarker's frame.
-                        Size = circleMarker.Size,    //need to match the CIMVector marker's size to the circleMarker's size.                    
+                        Size = circleMarker.Size,    //need to match the CIMVector marker's size to the circleMarker's size.
                        MarkerPlacement = new CIMMarkerPlacementAlongLineSameSize()
                        {
                            AngleToLine = true,
@@ -262,8 +271,9 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
 
       // cref: ArcGIS.Core.CIM.CIMMeshSymbol
       // cref: ArcGIS.Core.CIM.CIMMaterialSymbolLayer
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.CreateRGBColor(System.Double,System.Double,System.Double,System.Double)
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.CreateRGBColor(System.Double,System.Double,System.Double,System.Double)
       // cref: ArcGIS.Desktop.Mapping.ColorFactory
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
       #region Mesh material fill symbol
       /// <summary>
       /// Create a mesh symbol that can be applied to a multi-patch feature layer.
@@ -319,11 +329,17 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #endregion
       // cref: ArcGIS.Core.CIM.CIMPointSymbol
       // cref: ArcGIS.Core.CIM.CIMVectorMarker
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructSolidFill(ArcGIS.Core.CIM.CIMColor)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructSolidFill(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Custom fill and outline
       /// <summary>
-      /// Creates a point symbol with custom fill and outline          
+      /// Creates a point symbol with custom fill and outline
       /// ![PointSymbolMarker](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/point-fill-outline.png)
       /// </summary>
       {
@@ -344,8 +360,9 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       }
       #endregion
       // cref: ArcGIS.Core.CIM.CIMPointSymbol
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructMarker(System.Int32, System.String, System.String, System.Int32)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructMarker(System.Int32,System.String,System.String,System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMMarker)
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Point Symbol from a font
       /// <summary>
       /// Create a point symbol from a character in a font file
@@ -368,6 +385,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       // cref: ArcGIS.Core.CIM.CIMFill
       // cref: ArcGIS.Core.CIM.CIMHatchFill
       // cref: ArcGIS.Core.CIM.CIMLineSymbol
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Diagonal cross hatch fill
       /// <summary>
       /// Create a polygon symbol with a diagonal cross hatch fill. <br/>
@@ -413,8 +431,9 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #endregion
       // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
       // cref: ArcGIS.Core.CIM.CIMSymbolLayer
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructHatchFill(ArcGIS.Core.CIM.CIMStroke,System.Double,System.Double,System.Double)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructHatchFill(ArcGIS.Core.CIM.CIMStroke,System.Double,System.Double,System.Double)
       // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Cross hatch
       /// <summary>
       /// Create a polygon symbol using the ConstructHatchFill method . <br/>
@@ -439,13 +458,15 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       #endregion
       // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
       // cref: ArcGIS.Core.CIM.CIMSymbolLayer
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructHatchFill(ArcGIS.Core.CIM.CIMStroke,System.Double,System.Double,System.Double)
       // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.CreateRGBColor(System.Double,System.Double,System.Double,System.Double)
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.CreateRGBColor(System.Double,System.Double,System.Double,System.Double)
       // cref: ArcGIS.Desktop.Mapping.ColorFactory
       // cref: ArcGIS.Core.CIM.CIMHatchFill
       // cref: ArcGIS.Core.CIM.CIMHatchFill.LineSymbol
       // cref: ArcGIS.Core.CIM.CIMSolidFill
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Dash dot fill
       /// <summary>
       /// Create a polygon symbol with a dash dot fill. <br/>
@@ -456,7 +477,7 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         var trans = 50.0;//semi transparent
         CIMStroke outline = SymbolFactory.Instance.ConstructStroke(CIMColor.CreateRGBColor(0, 0, 0, trans), 2.0, SimpleLineStyle.Solid);
 
-        //Stroke for the fill            
+        //Stroke for the fill
         var dashDot = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.RedRGB, 1.0, SimpleLineStyle.DashDotDot);
         //Mimic cross hatch
         CIMFill[] solidColorHatch =
@@ -485,11 +506,15 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       }
       #endregion
       // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.ConstructColorRamp(ArcGIS.Desktop.Mapping.ColorRampAlgorithm,ArcGIS.Core.CIM.CIMColor,ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.ConstructColorRamp(ArcGIS.Desktop.Mapping.ColorRampAlgorithm,ArcGIS.Core.CIM.CIMColor,ArcGIS.Core.CIM.CIMColor)
       // cref: ArcGIS.Core.CIM.CIMGradientFill
       // cref: ArcGIS.Core.CIM.CIMSymbolLayer
       // cref: ArcGIS.Core.CIM.CIMFill
       // cref: ArcGIS.Core.CIM.CIMStroke
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Gradient color fill using CIMGradientFill
       /// <summary>
       /// Create a polygon symbol with a gradient color fill. <br/>
@@ -522,7 +547,8 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         //theLayer.SetRenderer(renderer);
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructGradientFill(ArcGIS.Core.CIM.CIMColorRamp,ArcGIS.Core.CIM.GradientFillMethod,System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructGradientFill(ArcGIS.Core.CIM.CIMColor,ArcGIS.Core.CIM.CIMColor,ArcGIS.Core.CIM.GradientFillMethod,System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Gradient fill between two colors
       /// <summary>
       /// Create a polygon symbol using the ConstructGradientFill method. Constructs a gradient fill between two colors passed to the method. <br/>
@@ -544,8 +570,11 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       }
       #endregion
       // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructGradientFill(ArcGIS.Core.CIM.CIMColorRamp,ArcGIS.Core.CIM.GradientFillMethod,System.Int32)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructGradientFill(ArcGIS.Core.CIM.CIMColorRamp,ArcGIS.Core.CIM.GradientFillMethod,System.Int32)
 
+      // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem.ColorRamp
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchColorRamps(System.String)
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Gradient fill using Color ramp
       /// <summary>
       /// Create a polygon symbol using the ConstructGradientFill method. Constructs a gradient fill using the specified color ramp. <br/>
@@ -583,9 +612,10 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         }
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPictureFill(System.String,System.Double)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPictureFill(System.String,System.Double)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
 
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Picture fill
       /// <summary>
       /// Constructs a picture fill with the specified parameters.
@@ -610,9 +640,10 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         //theLayer.SetRenderer(renderer);
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructWaterFill(ArcGIS.Core.CIM.CIMColor,ArcGIS.Core.CIM.WaterbodySize,ArcGIS.Core.CIM.WaveStrength) 
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructWaterFill(ArcGIS.Core.CIM.CIMColor,ArcGIS.Core.CIM.WaterbodySize,ArcGIS.Core.CIM.WaveStrength)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
 
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Animation water
       /// <summary>
       /// Constructs a water fill of specific color, waterbody size and wave strength. This fill can be used on polygon feature classes in a Scene view only.
@@ -635,8 +666,9 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         //theLayer.SetRenderer(renderer);
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbolWithPenInkRipple(ArcGIS.Core.CIM.CIMColor) 
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbolWithPenInkRipple(ArcGIS.Core.CIM.CIMColor)
 
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Pen and Ink: Ripple
       /// <summary>
       /// Constructs a polygon symbol in the specified color representing a pen and ink ripple water fill. See https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/please-steal-this-pen-and-ink-style/
@@ -653,7 +685,8 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         //theLayer.SetRenderer(renderer);
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbolWithPenInkStipple(ArcGIS.Core.CIM.CIMColor,System.Boolean) 
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbolWithPenInkStipple(ArcGIS.Core.CIM.CIMColor,System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Pen and Ink: Stipple
       /// <summary>
       /// Constructs a polygon symbol in the specified color representing a pen and ink stipple effect. See https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/please-steal-this-pen-and-ink-style/
@@ -670,9 +703,10 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
         //theLayer.SetRenderer(renderer);
       }
       #endregion
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbolWithPenInkCrossHatch(ArcGIS.Core.CIM.CIMColor,System.Boolean) 
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbolWithPenInkCrossHatch(ArcGIS.Core.CIM.CIMColor,System.Boolean)
 
-      #region Pen and Ink: Cross Hatch 
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
+      #region Pen and Ink: Cross Hatch
       /// <summary>
       /// Constructs a polygon symbol in the specified color representing a pen and ink cross hatch effect. See https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/please-steal-this-pen-and-ink-style/
       /// ![polygonPNHatch.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygonPNHatch.png)
@@ -689,14 +723,15 @@ namespace ProSnippets.MapAuthoringSnippets.Symbology
       }
       #endregion
       // cref: ArcGIS.Core.CIM.CIMProceduralSymbolLayer
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbol()
 
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Procedural Symbol
       /// <summary>
       /// Create a procedural symbol that can be applied to a polygon building footprint layer
-      /// ![ProceduralSymbol](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygon-procedural.png)        
+      /// ![ProceduralSymbol](https://ArcGIS.github.io/arcgis-pro-sdk/images/Symbology/polygon-procedural.png)
       /// Note: The rule package used in this method can be obtained from the Sample Data included in the arcgis-pro-sdk-community-samples repository.
-      /// </summary>    
+      /// </summary>
       {
         //Note: Run withing QueuedTask
         string _rulePkgPath = @"C:\Data\RulePackages\Venice_2014.rpk";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +15,17 @@ using System.Windows.Shapes;
 
 namespace ProSnippets.FrameworkSnippets
 {
-	/// <summary>
-	/// Interaction logic for ProWindowSample.xaml
-	/// </summary>
-	public partial class ProWindowSample : ArcGIS.Desktop.Framework.Controls.ProWindow
+  /// <summary>
+  /// Interaction logic for ProWindowSample.xaml
+  /// </summary>
+  public partial class ProWindowSample : ArcGIS.Desktop.Framework.Controls.ProWindow
   {
-		/// <summary>
-		/// Constructor for ProWindowSample
-		/// </summary>
-		public ProWindowSample()
-		{
-			InitializeComponent();
-		}
-	}
+    /// <summary>
+    /// Constructor for ProWindowSample
+    /// </summary>
+    public ProWindowSample()
+    {
+      InitializeComponent();
+    }
+  }
 }

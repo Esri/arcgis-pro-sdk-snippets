@@ -16,22 +16,17 @@
    limitations under the License.
 
 */
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Framework.Dialogs;
+using ArcGIS.Core.Data;
+using ArcGIS.Core.Data.Mapping;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Editing;
-using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Editing.Attributes;
-using ArcGIS.Core.Data.Mapping;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.MapAuthoringSnippets.Annotation
 {
@@ -54,22 +49,23 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
     /// includes operations such as modifying annotation text attributes, rotating annotation graphics, and obtaining
     /// the graphic and outline geometries of annotation features. Each operation requires a <see cref="QueuedTask"/>
     /// context to ensure thread safety when accessing and modifying GIS data.</remarks>
-    public static void ProSnippetsAnnotation()
+    public static async Task ProSnippetsAnnotationAsync()
     {
       #region ignore - Variable initialization
-      AnnotationLayer annotationLayer = MapView.Active.Map.Layers.OfType<AnnotationLayer>().FirstOrDefault();
+      var mapView = MapView.Active;
+      AnnotationLayer annotationLayer = mapView.Map.Layers.OfType<AnnotationLayer>().FirstOrDefault();
       #endregion Variable initialization
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify
-      #region Update Annotation Text via attribute. 
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      #region Update Annotation Text via attribute.
       {
         var oid = 1;
 
         // See "Change Annotation Text Graphic" for an alternative if TEXTSTRING is missing from the schema
 
-        // Note: QueuedTask is required to access the Inspector
+        await QueuedTask.Run(() =>
         {
           // use the inspector methodology
           var insp = new Inspector();
@@ -94,7 +90,7 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
 
             op.Execute();
           }
-        }
+        });
       }
       #endregion
 
@@ -102,12 +98,13 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
       // cref: ArcGIS.Core.Data.Mapping.AnnotationFeature.GetGraphic()
       // cref: ArcGIS.Core.CIM.CIMTextGraphic
       // cref: ArcGIS.Core.CIM.CIMTextGraphicBase.Shape
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Centroid
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Rotate
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.Centroid(ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.Rotate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double)
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.Search(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.TimeRange,ArcGIS.Desktop.Mapping.RangeExtent,ArcGIS.Core.CIM.CIMFloorFilterSettings)
       #region Rotate or Move the Annotation
       {
         var oid = 1; //ObjectID of the annotation feature to modify
-                     // Note: QueuedTask is required to access the AnnotationFeature
+        await QueuedTask.Run(() =>
         {
           //Don't use 'Shape'....Shape is the bounding box of the annotation text. This is NOT what you want...
           //
@@ -146,17 +143,17 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
               op.Execute();
             }
           }
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.Data.Mapping.AnnotationFeature
       // cref: ArcGIS.Core.Data.Mapping.AnnotationFeature.GetGraphic()
-      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.GetTable
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.GetTable()
       #region Get the Annotation Text Graphic
       {
 
-        // Note: QueuedTask is required to access the AnnotationFeature
+        await QueuedTask.Run(() =>
         {
           using var table = annotationLayer.GetTable();
           using var rc = table.Search();
@@ -165,19 +162,20 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
           var graphic = af.GetGraphic();
           var textGraphic = graphic as CIMTextGraphic;
 
-          //Note: 
-          //var outline_geom = af.GetGraphicOutline(); 
+          //Note:
+          //var outline_geom = af.GetGraphicOutline();
           //gets the anno text outline geometry...
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.Data.Mapping.AnnotationFeature
       // cref: ArcGIS.Core.Data.Mapping.AnnotationFeature.GetGraphicOutline()
+      // cref: ArcGIS.Desktop.Mapping.AnnotationLayer.GetFeatureClass()
       #region Get the Outline Geometry for an Annotation
       {
 
-        // Note: QueuedTask is required to access the AnnotationFeature
+        await QueuedTask.Run(() =>
         {
           //get the first annotation feature...
           //...assuming at least one feature gets selected
@@ -188,20 +186,20 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
           var outline_geom = af.GetGraphicOutline();
           //TODO - use the outline...
 
-          //Note: 
-          //var graphic = annoFeature.GetGraphic(); 
+          //Note:
+          //var graphic = annoFeature.GetGraphic();
           //gets the CIMTextGraphic...
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.GetDrawingOutline(System.Int64, ArcGIS.Desktop.Mapping.MapView, ArcGIS.Desktop.Mapping.DrawingOutlineType)
-      // cref: ArcGIS.Desktop.Mapping.AnnotationLayer.GetFeatureClass
+      // cref: ArcGIS.Desktop.Mapping.AnnotationLayer.GetFeatureClass()
       #region Get the Mask Geometry for an Annotation
       {
-        var mv = MapView.Active;
+        var mv = mapView;
 
-        // Note: QueuedTask is required to access the AnnotationFeature
+        await QueuedTask.Run(() =>
         {
           //get the first annotation feature...
           //...assuming at least one feature gets selected
@@ -215,12 +213,15 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
           //mask geometry or "Box". The mask will be in the same SpatRef as the map.
           //The mask will be constructed using the anno class reference scale
           var mask_geom = annotationLayer.GetDrawingOutline(oid, mv, DrawingOutlineType.Exact);
-        }
+        });
       }
       #endregion
     }
   }
 
+  // cref: ArcGIS.Desktop.Mapping.MapTool.IsSketchTool
+  // cref: ArcGIS.Desktop.Mapping.MapTool.SketchType
+  // cref: ArcGIS.Desktop.Mapping.MapTool.UseSnapping
   #region Create Annotation Construction Tool
   public class AnnoConstructionTool : MapTool
   {
@@ -242,7 +243,9 @@ namespace ProSnippets.MapAuthoringSnippets.Annotation
     protected async override Task<bool> OnSketchCompleteAsync(ArcGIS.Core.Geometry.Geometry geometry)
     {
       if (CurrentTemplate == null || geometry == null)
+      {
         return false;
+      }
 
       // Create an edit operation
       var createOperation = new EditOperation();

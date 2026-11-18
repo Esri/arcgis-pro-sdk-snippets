@@ -16,18 +16,17 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.Realtime;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProSnippets.MapAuthoringSnippets.Stream
 {
@@ -37,7 +36,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
   /// <remarks>
   /// The code snippets in this class are intended to be used as examples of how to work with Stream Layers in ArcGIS Pro.
   /// Each region in the method contains a specific code snippet that demonstrates a particular functionality.
-  /// Note that some methods may require to be launched on the ArcGIS Pro's Main CIM thread. These methods are marked in the code comments as requiring a QueuedTask to run.
+  /// Thread-affine operations are implemented with awaited <see cref="QueuedTask.Run"/> calls.
   /// CRefs are used for internal purposes only. Please ignore them in the context of this example.
   /// </remarks>
   public static partial class ProSnippetsMapAuthoring
@@ -49,7 +48,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
     /// streaming connections, and subscribing to real-time data. It showcases how to configure stream layers with
     /// different renderers, handle track-aware layers, and manage data expiration settings. The method also
     /// demonstrates how to subscribe to streaming data and handle real-time feature updates.</remarks>
-    public static void ProSnippetsStream()
+    public static async Task ProSnippetsStreamAsync()
     {
       #region ignore - Variable initialization
       Map map = MapView.Active.Map;
@@ -72,12 +71,14 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StreamLayer
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayerCreationParams.#ctor(Uri)
-      // cref: ArcGIS.Desktop.Mapping.Layer.SetVisibility
-      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer(URI,ILayerContainerEdit,INT32,STRING)
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetVisibility(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer(System.Uri,ArcGIS.Desktop.Mapping.ILayerContainerEdit,System.Int32,System.String)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.IsVisible
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
       #region Create Stream Layer with URI
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var url = "https://geoeventsample1.esri.com:6443/arcgis/rest/services/AirportTraffics/StreamServer";
           var createParam = new FeatureLayerCreationParams(new Uri(url))
@@ -90,19 +91,19 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           Uri uri = new Uri(url);
           streamLayer = LayerFactory.Instance.CreateLayer(uri, map) as StreamLayer;
           streamLayer.SetVisibility(false);//turn off
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StreamLayer
       // cref: ArcGIS.Desktop.Mapping.FeatureLayerCreationParams.DefinitionQuery
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
-      // cref: ArcGIS.Desktop.Mapping.DefinitionQuery.#ctor(String,String)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.IsVisible
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
       #region Create a stream layer with a definition query
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
-          //Must be on the QueuedTask
           var url = "https://geoeventsample1.esri.com:6443/arcgis/rest/services/AirportTraffics/StreamServer";
           var lyrCreateParam = new FeatureLayerCreationParams(new Uri(url))
           {
@@ -111,17 +112,23 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           };
 
           streamLayer = LayerFactory.Instance.CreateLayer<StreamLayer>(lyrCreateParam, map);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureLayerCreationParams.RendererDefinition
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer
       // cref: ArcGIS.Desktop.Mapping.SimpleRendererDefinition
       // cref: ArcGIS.Desktop.Mapping.SimpleRendererDefinition.SymbolTemplate
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Create a stream layer with a simple renderer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var url = @"https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer";
           var uri = new Uri(url, UriKind.Absolute);
@@ -137,12 +144,12 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           };
           streamLayer = LayerFactory.Instance.CreateLayer<StreamLayer>(
                               createParams, map);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.IsVisible
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.Fields
       // cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.UseDefaultSymbol
@@ -159,9 +166,17 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Core.CIM.CIMUniqueValueGroup
       // cref: ArcGIS.Core.CIM.CIMUniqueValueGroup.Classes
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(CIMRenderer)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetVisibility(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Setting a unique value renderer for latest observations
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var url = @"https://geoeventsample1.esri.com:6443/arcgis/rest/services/AirportTraffics/StreamServer";
           var uri = new Uri(url, UriKind.Absolute);
@@ -215,8 +230,8 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           uvr.Groups = groups.ToArray();
           //Apply the renderer (for current observations)
           streamLayer.SetRenderer(uvr);
-          streamLayer.SetVisibility(true);//turn on the layer        
-        }
+          streamLayer.SetVisibility(true);//turn on the layer
+        });
       }
       #endregion
 
@@ -224,6 +239,9 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.IsTrackAware
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Find all Stream Layers that are Track Aware
       {
         var trackAwareLayers = MapView.Active.Map.GetLayersAsFlattenedList()
@@ -248,41 +266,41 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StreamLayer.IsStreamingConnectionOpen
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.StartStreaming
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.StartStreaming()
       #region Check the Stream Layer connection state
       {
         if (!streamLayer.IsStreamingConnectionOpen)
-        // Note: call within QueuedTask.Run()
-        {
-          streamLayer.StartStreaming();
-        }
+          await QueuedTask.Run(() =>
+          {
+            streamLayer.StartStreaming();
+          });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.StartStreaming
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.StopStreaming
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.StartStreaming()
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.StopStreaming()
       #region Start and stop streaming
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Start...
           streamLayer.StartStreaming();
           //Stop...
           streamLayer.StopStreaming();
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetFeatureClass
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass.Truncate
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetFeatureClass()
+      // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass.Truncate()
       #region Delete all current and previous observations
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Must be called on the feature class
           using var rfc = streamLayer.GetFeatureClass();
           rfc.Truncate();
-        }
+        });
       }
       #endregion
 
@@ -321,32 +339,38 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Desktop.Mapping.StreamLayer.SetExpirationMaxCount(System.UInt64)
       #region Set the Maximum Count of Previous Observations to be Stored in Memory
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Set Expiration Method and Max Expiration Count
           if (streamLayer.GetExpirationMethod() != FeatureExpirationMethod.MaximumFeatureCount)
+          {
             streamLayer.SetExpirationMethod(FeatureExpirationMethod.MaximumFeatureCount);
+          }
+
           streamLayer.SetExpirationMaxCount(15);
           //FYI
           if (streamLayer.IsTrackAware)
           {
             //MaxCount is per track! otherwise for the entire layer
           }
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetExpirationMethod()
       // cref: ArcGIS.Core.CIM.FeatureExpirationMethod
       // cref: ArcGIS.Desktop.Mapping.StreamLayer.SetExpirationMethod(ArcGIS.Core.CIM.FeatureExpirationMethod)
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.SetExpirationMaxCount(System.UInt64)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.IsTrackAware
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.SetExpirationMaxAge(System.TimeSpan)
       #region Set the Maximum Age of Previous Observations to be Stored in Memory
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Set Expiration Method and Max Expiration Age
           if (streamLayer.GetExpirationMethod() != FeatureExpirationMethod.MaximumFeatureAge)
+          {
             streamLayer.SetExpirationMethod(FeatureExpirationMethod.MaximumFeatureAge);
+          }
           //set to 12 hours (max is 24 hours)
           streamLayer.SetExpirationMaxAge(new TimeSpan(12, 0, 0));
 
@@ -355,7 +379,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           {
             //MaxAge is per track! otherwise for the entire layer
           }
-        }
+        });
       }
       #endregion
 
@@ -365,6 +389,8 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetExpirationMaxCount()
       // cref: ArcGIS.Core.CIM.CIMGeoFeatureLayerBase.ShowPreviousObservations
       // cref: ArcGIS.Core.CIM.CIMGeoFeatureLayerBase.ShowTracks
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Set Stream Layer properties via the CIM
       {
         //The layer must be track aware and spatial
@@ -372,18 +398,18 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
         {
           // not track aware and spatial
         }
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //get the CIM Definition
           var def = streamLayer.GetDefinition() as CIMFeatureLayer;
-          //set the number of previous observations, 
+          //set the number of previous observations,
           def.PreviousObservationsCount = (int)streamLayer.GetExpirationMaxCount() - 1;
           //set show previous observations and track lines to true
           def.ShowPreviousObservations = true;
           def.ShowTracks = true;
           //commit the changes
           streamLayer.SetDefinition(def);
-        }
+        });
       }
       #endregion
 
@@ -395,10 +421,15 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition.SymbolTemplate
       // cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition.ValuesLimit
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(CIMRenderer)
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Defining a unique value renderer definition
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           streamLayer = null;
           //https://geoeventsample1.esri.com:6443/arcgis/rest/services/AirportTraffics/StreamServer
@@ -414,7 +445,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           //Note: CreateRenderer can only create value classes based on
           //the current events it has received
           streamLayer.SetRenderer(streamLayer.CreateRenderer(uvrDef));
-        }
+        });
       }
       #endregion
 
@@ -434,9 +465,12 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Core.CIM.CIMUniqueValueGroup
       // cref: ArcGIS.Core.CIM.CIMUniqueValueGroup.Classes
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(CIMRenderer)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Setting a unique value renderer for latest observations 2
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Define the classes by hand to avoid using CreateRenderer(...)
           CIMUniqueValueClass uvcB727 = new CIMUniqueValueClass()
@@ -473,12 +507,16 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           //layer may or may not have events for each of the specified
           //unique value classes
           streamLayer.SetRenderer(UVrndr);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(CIMRenderer,FeatureRendererTarget)
       // cref: ArcGIS.Desktop.Mapping.FeatureRendererTarget
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.TrackType
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Setting a unique value renderer for previous observations
       {
         //The layer must be track aware and spatial
@@ -486,7 +524,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
         {
           // not track aware and spatial
         }
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Define unique value classes same as we do for current observations
           //or use "CreateRenderer(...)" to assign them automatically
@@ -529,15 +567,23 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           };
 
           streamLayer.SetRenderer(UVrndr, FeatureRendererTarget.PreviousObservations);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureRendererTarget
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer, ArcGIS.Desktop.Mapping.FeatureRendererTarget)
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.TrackType
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.SimpleRendererDefinition.SymbolTemplate
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Setting a simple renderer to draw track lines
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //The layer must be track aware and spatial
           if (streamLayer.TrackType != TrackType.Spatial)
@@ -545,7 +591,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
             // not track aware and spatial
           }
 
-          //Note: only a simple renderer with solid line symbol is supported for track 
+          //Note: only a simple renderer with solid line symbol is supported for track
           //line renderer
           var trackRenderer = new SimpleRendererDefinition()
           {
@@ -556,7 +602,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           streamLayer.SetRenderer(
                streamLayer.CreateRenderer(trackRenderer),
                  FeatureRendererTarget.TrackLines);
-        }
+        });
       }
       #endregion
 
@@ -564,6 +610,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetTrackLinesVisibility(System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.ArePreviousObservationsVisible
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetPreviousObservationsVisibility(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.TrackType
       #region Check Previous Observation and Track Line Visibility
       {
         //The layer must be track aware and spatial for these settings
@@ -572,13 +619,18 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
         {
           // not track aware and spatial
         }
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           if (!streamLayer.AreTrackLinesVisible)
+          {
             streamLayer.SetTrackLinesVisibility(true);
+          }
+
           if (!streamLayer.ArePreviousObservationsVisible)
+          {
             streamLayer.SetPreviousObservationsVisibility(true);
-        }
+          }
+        });
       }
       #endregion
 
@@ -587,6 +639,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetTrackLinesVisibility(System.Boolean)
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.ArePreviousObservationsVisible
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetPreviousObservationsVisibility(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.TrackType
       #region Make Track Lines and Previous Observations Visible
       {
         //The layer must be track aware and spatial for these settings
@@ -597,31 +650,37 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           // not track aware and spatial
         }
 
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
-          //Note: Setting PreviousObservationsCount larger than the 
+          //Note: Setting PreviousObservationsCount larger than the
           //"SetExpirationMaxCount()" has no effect
           streamLayer.SetPreviousObservationsCount(6);
           if (!streamLayer.AreTrackLinesVisible)
+          {
             streamLayer.SetTrackLinesVisibility(true);
+          }
+
           if (!streamLayer.ArePreviousObservationsVisible)
+          {
             streamLayer.SetPreviousObservationsVisibility(true);
-        }
+          }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer()
       #region Retrieve the current observation renderer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var renderer = streamLayer.GetRenderer();
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureRendererTarget
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer(ArcGIS.Desktop.Mapping.FeatureRendererTarget)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.TrackType
       #region Retrieve the previous observation renderer
       {
         //The layer must be track aware and spatial
@@ -629,16 +688,17 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
         {
           // not track aware and spatial
         }
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var prev_renderer = streamLayer.GetRenderer(
           FeatureRendererTarget.PreviousObservations);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureRendererTarget
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer(ArcGIS.Desktop.Mapping.FeatureRendererTarget)
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.TrackType
       #region Retrieve the track lines renderer
       {
         //The layer must be track aware and spatial
@@ -647,11 +707,11 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
 
         }
 
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var track_renderer = streamLayer.GetRenderer(
             FeatureRendererTarget.TrackLines);
-        }
+        });
       }
       #endregion
 
@@ -668,91 +728,54 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass.SearchAndSubscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
       #region Search And Subscribe for Streaming Data
       {
-        // Note: call within QueuedTask.Run()
+        //query filter can be null to search and retrieve all rows
+        //true means recycling cursor
+        using (var rc = await QueuedTask.Run(() => streamLayer.SearchAndSubscribe(qfilter, true)))
         {
-          //query filter can be null to search and retrieve all rows
-          //true means recycling cursor
-          using (var rc = streamLayer.SearchAndSubscribe(qfilter, true))
+          //waiting for new features to be streamed
+          //default is no cancellation
+          while (await rc.WaitForRowsAsync())
           {
-            //waiting for new features to be streamed
-            //default is no cancellation
-            while (rc.WaitForRowsAsync().Result)
+            while (rc.MoveNext())
             {
-              while (rc.MoveNext())
+              using (var row = rc.Current)
               {
-                using (var row = rc.Current)
+                //determine the origin of the row event
+                switch (row.GetRowSource())
                 {
-                  //determine the origin of the row event
-                  switch (row.GetRowSource())
-                  {
-                    case RealtimeRowSource.PreExisting:
-                      //pre-existing row at the time of subscribe
-                      continue;
-                    case RealtimeRowSource.EventInsert:
-                      //row was inserted after subscribe
-                      continue;
-                    case RealtimeRowSource.EventDelete:
-                      //row was deleted after subscribe
-                      continue;
-                  }
+                  case RealtimeRowSource.PreExisting:
+                    //pre-existing row at the time of subscribe
+                    continue;
+                  case RealtimeRowSource.EventInsert:
+                    //row was inserted after subscribe
+                    continue;
+                  case RealtimeRowSource.EventDelete:
+                    //row was deleted after subscribe
+                    continue;
                 }
               }
-            }
-          }//row cursor is disposed. row cursor is unsubscribed
-
-          //....or....
-          //Use the feature class instead of the layer
-          using var rfc = streamLayer.GetFeatureClass();
-          //non-recycling cursor - 2nd param "false"
-          using (RealtimeCursor rc = rfc.SearchAndSubscribe(qfilter, false))
-          {
-            //waiting for new features to be streamed
-            //default is no cancellation
-            while (rc.WaitForRowsAsync().Result)
-            {
-              //etc
             }
           }
-        }
-      }
-      #endregion
+        }//row cursor is disposed. row cursor is unsubscribed
 
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.SearchAndSubscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync()
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.MoveNext()
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.Current
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeRow.GetRowSource()
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeRowSource
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetFeatureClass()
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass.SearchAndSubscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
-      #region Search And Subscribe With Cancellation
-      {
-        // Note: call within QueuedTask.Run()
+        //....or....
+        //Use the feature class instead of the layer
+        RealtimeFeatureClass rfc = null;
+        RealtimeCursor realtimeCursor = null;
+        await QueuedTask.Run(() =>
         {
-          //Recycling cursor - 2nd param "true"
-          //or streamLayer.Subscribe(qfilter, true) to just subscribe
-          using (var rc = streamLayer.SearchAndSubscribe(qfilter, true))
+          rfc = streamLayer.GetFeatureClass();
+          //non-recycling cursor - 2nd param "false"
+          realtimeCursor = rfc.SearchAndSubscribe(qfilter, false);
+        });
+        using (rfc)
+        using (realtimeCursor)
+        {
+          //waiting for new features to be streamed
+          //default is no cancellation
+          while (await realtimeCursor.WaitForRowsAsync())
           {
-            //auto-cancel after 20 seconds
-            var cancel = new CancellationTokenSource(new TimeSpan(0, 0, 20));
-            //catch TaskCanceledException
-            try
-            {
-              while (rc.WaitForRowsAsync(cancel.Token).Result)
-              {
-                //check for row events
-                while (rc.MoveNext())
-                {
-                  using var row = rc.Current;
-                  //etc
-                }
-              }
-            }
-            catch (TaskCanceledException)
-            {
-              //Handle cancellation as needed
-            }
-            cancel.Dispose();
+            //etc
           }
         }
       }
@@ -762,9 +785,42 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync(System.Threading.CancellationToken)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.MoveNext()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.Current
+      #region Search And Subscribe With Cancellation
+      {
+        //Recycling cursor - 2nd param "true"
+        //or streamLayer.Subscribe(qfilter, true) to just subscribe
+        using (var rc = await QueuedTask.Run(() => streamLayer.SearchAndSubscribe(qfilter, true)))
+        {
+          //auto-cancel after 20 seconds
+          var cancel = new CancellationTokenSource(new TimeSpan(0, 0, 20));
+          //catch TaskCanceledException
+          try
+          {
+            while (await rc.WaitForRowsAsync(cancel.Token))
+            {
+              //check for row events
+              while (rc.MoveNext())
+              {
+                using var row = rc.Current;
+                //etc
+              }
+            }
+          }
+          catch (TaskCanceledException)
+          {
+            //Handle cancellation as needed
+          }
+          cancel.Dispose();
+        }
+      }
+      #endregion
+
+      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync(System.Threading.CancellationToken)
+      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.MoveNext()
+      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.Current
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.Subscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
       #region Explicitly Cancel WaitForRowsAsync
       {
-        RealtimeCursor rc = null;
         bool SomeConditionForCancel = false;
 
         //somewhere in our code we create a CancellationTokenSource
@@ -774,13 +830,15 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
         //call cancel on the CancellationTokenSource anywhere in
         //the add-in, assuming the CancellationTokenSource is in scope
         if (SomeConditionForCancel)
+        {
           cancel.Cancel();//<-- will cancel the token
+        }
 
-        //Within QueuedTask we are subscribed! streamLayer.Subscribe() or SearchAndSubscribe()
+        using RealtimeCursor rc = await QueuedTask.Run(() => streamLayer.Subscribe(qfilter, true));
         try
         {
           //TaskCanceledException will be thrown when the token is cancelled
-          while (rc.WaitForRowsAsync(cancel.Token).Result)
+          while (await rc.WaitForRowsAsync(cancel.Token))
           {
             //check for row events
             while (rc.MoveNext())
@@ -802,9 +860,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       #endregion
 
       // cref: ArcGIS.Core.Data.Realtime.RealtimeServiceConnectionProperties
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeServiceConnectionProperties.#ctor(System.Uri, ArcGIS.Core.Data.Realtime.RealtimeDatastoreType)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeDatastoreType
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeDatastore.#ctor(ArcGIS.Core.Data.Realtime.RealtimeServiceConnectionProperties)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeDatastore.GetTableNames()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeDatastore.OpenTable(System.String)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass
@@ -813,7 +869,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       {
         var url = "https://geoeventsample1.esri.com:6443/arcgis/rest/services/AirportTraffics/StreamServer";
 
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var realtimeServiceConProp = new RealtimeServiceConnectionProperties(
                                          new Uri(url),
@@ -829,7 +885,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
             //TODO use the feature class
             //...
           }
-        }
+        });
       }
       #endregion
 
@@ -840,7 +896,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClassDefinition.HasTrackIDField()
       #region Check the Realtime Feature Class is Track Aware
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           using var rfc = streamLayer.GetFeatureClass();
           using var rfc_def = rfc.GetDefinition();
@@ -848,7 +904,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
           {
             //Track aware
           }
-        }
+        });
       }
       #endregion
 
@@ -860,7 +916,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClassDefinition.GetTrackIDField()
       #region Get the Track Id Field from the Realtime Feature class
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           using (var rfc = streamLayer.GetFeatureClass())
           using (var rfc_def = rfc.GetDefinition())
@@ -871,34 +927,41 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
 
             }
           }
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass.Subscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.Subscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync(System.Threading.CancellationToken)
+      // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.MoveNext()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.Current
       // cref: ArcGIS.Core.Data.Realtime.RealtimeRow.GetRowSource()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeRowSource
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeature
       // cref: ArcGIS.Core.Data.Realtime.RealtimeFeature.GetShape()
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.Select(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.SelectionCombinationMethod,ArcGIS.Desktop.Mapping.TimeRange,ArcGIS.Desktop.Mapping.RangeExtent,ArcGIS.Core.CIM.CIMFloorFilterSettings)
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetFeatureClass()
       #region Subscribe to Streaming Data
       {
         //Note: with feature class we can also use a System Task to subscribe and
         //process rows
-        // Note: call within QueuedTask.Run()
+        RealtimeFeatureClass rfc = null;
+        RealtimeCursor rc = null;
+        await QueuedTask.Run(() =>
         {
           // or var rfc = realtimeDatastore.OpenTable(name) as RealtimeFeatureClass
-          using RealtimeFeatureClass rfc = streamLayer.GetFeatureClass();
+          rfc = streamLayer.GetFeatureClass();
           //non-recycling cursor - 2nd param "false"
           //subscribe, pre-existing rows are not searched
-          using RealtimeCursor rc = rfc.Subscribe(qfilter, false);
+          rc = rfc.Subscribe(qfilter, false);
+        });
+        using (rfc)
+        using (rc)
+        {
           SpatialQueryFilter spatialFilter = new SpatialQueryFilter();
           //waiting for new features to be streamed
           //default is no cancellation
-          while (rc.WaitForRowsAsync().Result)
+          while (await rc.WaitForRowsAsync())
           {
             while (rc.MoveNext())
             {
@@ -912,7 +975,7 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
 
                     //using the geometry to select features from another feature layer
                     spatialFilter.FilterGeometry = poly;//project poly if needed...
-                    featureLayer.Select(spatialFilter);
+                    await QueuedTask.Run(() => featureLayer.Select(spatialFilter));
                     continue;
                   default:
                     continue;
@@ -925,28 +988,32 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeFeatureClass.Subscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.Subscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.MoveNext()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.Current
       // cref: ArcGIS.Core.Data.Realtime.RealtimeRow.GetRowSource()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeRowSource
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeFeature
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetFeatureClass()
       #region Search Existing Data and Subscribe for Streaming Data
       {
         //Note we can use System Task with the Realtime feature class
         //for subscribe
 
-        // Note: call within QueuedTask.Run()
+        RealtimeFeatureClass rfc = null;
+        RealtimeCursor rc = null;
+        await QueuedTask.Run(() =>
         {
-          using RealtimeFeatureClass rfc = streamLayer.GetFeatureClass();
+          rfc = streamLayer.GetFeatureClass();
           //non-recycling cursor - 2nd param "false"
-          using RealtimeCursor rc = rfc.SearchAndSubscribe(qfilter, false);
+          rc = rfc.SearchAndSubscribe(qfilter, false);
+        });
+        using (rfc)
+        using (rc)
+        {
 
           //waiting for new features to be streamed
           //default is no cancellation - use await in async method
-          while (rc.WaitForRowsAsync().Result)
+          while (await rc.WaitForRowsAsync())
           {
             //pre-existing rows will be retrieved that were searched
             while (rc.MoveNext())
@@ -972,26 +1039,30 @@ namespace ProSnippets.MapAuthoringSnippets.Stream
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.StreamLayer.Subscribe(ArcGIS.Core.Data.QueryFilter,System.Boolean)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync(System.Threading.CancellationToken)
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.MoveNext()
       // cref: ArcGIS.Core.Data.Realtime.RealtimeCursor.Current
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeRow.GetRowSource()
-      // cref: ArcGIS.Core.Data.Realtime.RealtimeRowSource
+      // cref: ArcGIS.Desktop.Mapping.StreamLayer.GetFeatureClass()
       #region Search And Subscribe With Cancellation 2
       {
-        // Note: call within QueuedTask.Run()
+        RealtimeFeatureClass rfc = null;
+        RealtimeCursor rc = null;
+        await QueuedTask.Run(() =>
         {
-          using RealtimeFeatureClass rfc = streamLayer.GetFeatureClass();
+          rfc = streamLayer.GetFeatureClass();
           //Recycling cursor - 2nd param "true"
-          using RealtimeCursor rc = rfc.SearchAndSubscribe(qfilter, true);
+          rc = rfc.SearchAndSubscribe(qfilter, true);
+        });
+        using (rfc)
+        using (rc)
+        {
           //auto-cancel after 20 seconds
           var cancel = new CancellationTokenSource(new TimeSpan(0, 0, 20));
           //catch TaskCanceledException
           try
           {
             // Use await in async method
-            while (rc.WaitForRowsAsync(cancel.Token).Result)
+            while (await rc.WaitForRowsAsync(cancel.Token))
             {
               //check for row events
               while (rc.MoveNext())

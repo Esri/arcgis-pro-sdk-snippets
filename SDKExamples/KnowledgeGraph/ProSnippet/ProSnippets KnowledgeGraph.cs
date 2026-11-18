@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -17,6 +17,12 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.DDL;
@@ -35,12 +41,6 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Internal.Catalog;
 using ArcGIS.Desktop.KnowledgeGraph;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProSnippets.KnowledgeGraphSnippets
 {
@@ -116,8 +116,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #region ProSnippet Group: KnowledgeGraph Datastore
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.#ctor(System.Uri)
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph
       #region Opening a Connection to a KnowledgeGraph
       {
@@ -142,10 +140,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.#ctor(System.Uri)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.PathOrURL
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinitions``1()
       #region Opening a Connection to a File KnowledgeGraph
       {
         await QueuedTask.Run(() =>
@@ -169,7 +165,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
               //Get the featureclass definitions from the KG datastore
               var fc_defs = kg.GetDefinitions<FeatureClassDefinition>();
               //For each feature class definition, get the corresponding
-              //feature class. Note: The name of the feature class will match 
+              //feature class. Note: The name of the feature class will match
               //the name of its corresponding KnowledgeGraph named object type
               //in the KnowledgeGraph graph data model
               foreach (var fc_def in fc_defs)
@@ -188,9 +184,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetDatastore
-      #region Getting a Connection from a KnowledgeGraphLayer 
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetDatastore()
+      #region Getting a Connection from a KnowledgeGraphLayer
       {
         //var kgLayer = MapView.Active.Map.GetLayersAsFlattenedList()
         //			.OfType<KnowledgeGraphLayer>().FirstOrDefault();
@@ -201,7 +196,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
           KnowledgeGraph datastore = kgLayer.GetDatastore();
 
           // or you can use any of the sub items since
-          //KnowledgeGraphLayer is a composite layer - get the first 
+          //KnowledgeGraphLayer is a composite layer - get the first
           // child feature layer or standalone table
           var featlayer = kgLayer?.GetLayersAsFlattenedList()?
                           .OfType<FeatureLayer>()?.FirstOrDefault();
@@ -209,7 +204,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           if (featlayer != null)
           {
             using (var fc = featlayer.GetFeatureClass())
+            {
               kg = fc.GetDatastore() as KnowledgeGraph;
+            }
             //TODO use KnowledgeGraph
           }
           else
@@ -220,7 +217,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
             if (stbl != null)
             {
               using (var tbl = stbl.GetTable())
+              {
                 kg = tbl.GetDatastore() as KnowledgeGraph;
+              }
               //TODO use KnowledgeGraph
             }
           }
@@ -228,11 +227,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.#ctor(System.Uri)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinitions``1
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinitions``1()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
-      #region Retrieving GDB FeatureClasses and Definitions 
+      #region Retrieving GDB FeatureClasses and Definitions
       {
         await QueuedTask.Run(() =>
         {
@@ -246,7 +243,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
             //Get the featureclass definitions from the KG datastore
             var fc_defs = kg.GetDefinitions<FeatureClassDefinition>();
             //For each feature class definition, get the corresponding
-            //feature class. Note: The name of the feature class will match 
+            //feature class. Note: The name of the feature class will match
             //the name of its corresponding KnowledgeGraph named object type
             //in the KnowledgeGraph graph data model
             foreach (var fc_def in fc_defs)
@@ -262,9 +259,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.#CTOR(ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.#CTOR(System.Uri)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinitions``1
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinitions``1()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Retrieving GDB Tables and Definitions
       {
@@ -298,7 +293,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetConnector()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.URL
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.PathOrURL
       #region Get service Uri from KG datastore
       {
         await QueuedTask.Run(() =>
@@ -318,7 +313,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.TransformToIDs(System.string, System. System.Collections.Generic.IEnumerable{System.Int64})
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.TransformToIDs(System.String,System.Collections.Generic.IEnumerable{System.Int64})
       #region Transform a set of objectIDs to IDs for an entity
       {
         await QueuedTask.Run(() =>
@@ -363,7 +358,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel
-      #region Retrieving the Data Model 
+      #region Retrieving the Data Model
       {
         await QueuedTask.Run(() =>
         {
@@ -383,12 +378,13 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetTimestamp
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetTimestamp()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetSpatialReference()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetIsArcGISManaged()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetOIDPropertyName()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetIsStrict()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.PathOrURL
       #region Get Data Model Properties
       {
         await QueuedTask.Run(() =>
@@ -424,15 +420,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
 
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetIdentifierInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetIdentifierInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIdentifierInfo
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIdentifierInfo.GetIdentifierGeneration
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIdentifierInfo.GetIdentifierGeneration()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIdentifierGeneration
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNativeIdentifier
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphUniformIdentifier
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphUniformIdentifier.GetIdentifierName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIdentifierGeneration.GetMethodHint
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphUUIDMethodHint
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphUniformIdentifier.GetIdentifierName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIdentifierGeneration.GetMethodHint()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
       #region Get Data Model Identifier Info
       {
         await QueuedTask.Run(() =>
@@ -467,14 +463,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
       #region Get Data Model MetaEntityTypes/Provenance
       {
-        //Provenance entity type is stored as a MetaEntityType 
+        //Provenance entity type is stored as a MetaEntityType
         QueuedTask.Run(() =>
         {
           //Create a connection properties
@@ -506,13 +503,14 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetAliasName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetObjectIDPropertyName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetAliasName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetObjectIDPropertyName()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
       #region Get KnowledgeGraph Entity Types
       {
         await QueuedTask.Run(() =>
@@ -546,7 +544,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.SupportsProvenance
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.ProvenanceTypeName
@@ -570,10 +568,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
       #region Get Whether KG Supports Provenance
       string GetProvenanceEntityTypeName(KnowledgeGraphDataModel kg_dm)
@@ -582,7 +579,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
         foreach (var entity_type in entity_types)
         {
           if (entity_type.Value.GetRole() == KnowledgeGraphNamedObjectTypeRole.Provenance)
+          {
             return entity_type.Value.GetName();
+          }
         }
         return "";
       }
@@ -599,7 +598,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.SupportsDocuments
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.DocumentTypeName
@@ -626,12 +625,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
-      #region Get Whether KG Has a Document Type 
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes()
+      #region Get Whether KG Has a Document Type
       string GetDocumentEntityTypeName(KnowledgeGraphDataModel kg_dm)
       {
         var entity_types = kg_dm.GetEntityTypes();
@@ -639,7 +637,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
         {
           var role = entity_type.Value.GetRole();
           if (role == KnowledgeGraphNamedObjectTypeRole.Document)
+          {
             return entity_type.Value.GetName();
+          }
         }
         return "";//Unusual - probably Neo4j user-managed
       }
@@ -656,10 +656,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityValue
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetTypeName
-      #region Check Whether A KG Entity Is a Document 
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetTypeName()
+      #region Check Whether A KG Entity Is a Document
 
       //Use GetDocumentEntityTypeName(KnowledgeGraphDataModel kg_dm) from
       //the 'Get Whether KG Has a Document Type' snippet to
@@ -668,16 +666,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
         string documentNameType = "")
       {
         if (string.IsNullOrEmpty(documentNameType))
+        {
           return false;
+        }
+
         return entity.GetTypeName() == documentNameType;
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityValue
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetProperties
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType
-      #region Check Whether A Graph Type has a Spatial Property 
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetProperties()
+      #region Check Whether A Graph Type has a Spatial Property
 
       //Use GetDocumentEntityTypeName(KnowledgeGraphDataModel kg_dm) from
       //the 'Get Whether KG Has a Document Type' snippet to
@@ -690,15 +688,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetRelationshipTypes
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetRelationshipTypes()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType.GetEndPoints
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType.GetEndPoints()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEndPoint
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEndPoint.GetOriginEntityTypeName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEndPoint.GetDestinationEntityTypeName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEndPoint.GetOriginEntityTypeName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEndPoint.GetDestinationEntityTypeName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
       #region Get KnowledgeGraph Relationship Types
       {
         await QueuedTask.Run(() =>
@@ -738,13 +737,13 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetRelationshipTypes
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetProperties
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetRelationshipTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetMetaEntityTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetRole()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetProperties()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
       #region Get All KnowledgeGraph Graph Types
       {
         await QueuedTask.Run(() =>
@@ -793,9 +792,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationFactory.CreateInvestigation(System.String, System.String)
-      //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationFactory.CreateInvestigation(System.String, System.String)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationFactory.CreateInvestigation(System.String,System.String)
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationFactory.Instance
       #region Create an Investigation
       {
         await QueuedTask.Run(() =>
@@ -809,49 +808,43 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
 
 
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationFactory.CreateInvestigation(System.String, System.String)
-      //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationFactory.CreateInvestigation(System.String, System.String)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationFactory.CreateInvestigation(System.String,System.String)
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation
-      //cref: ArcGIS.Desktop.Core.KnowledgeGraphFrameworkExtender.CreateInvestigationPaneAsync
+      //cref: ArcGIS.Desktop.Core.KnowledgeGraphFrameworkExtender.CreateInvestigationPaneAsync(ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationFactory.Instance
       #region Create and open an investigation pane
       {
-        await QueuedTask.Run(() =>
-        {
-          var investigation = KnowledgeGraphInvestigationFactory.Instance.CreateInvestigation(url, "myInvestigation");
+        var investigation = await QueuedTask.Run(() =>
+          KnowledgeGraphInvestigationFactory.Instance.CreateInvestigation(url, "myInvestigation"));
 
-          ProApp.Panes.CreateInvestigationPaneAsync(investigation);
-        });
+        await ProApp.Panes.CreateInvestigationPaneAsync(investigation);
       }
       #endregion
 
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetInvestigation
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetInvestigation()
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation
-      //cref: ArcGIS.Desktop.Core.KnowledgeGraphFrameworkExtender.CreateInvestigationPaneAsync
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.OpenViewAsync
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.OpenInvestigationPaneAsync
+      //cref: ArcGIS.Desktop.Core.KnowledgeGraphFrameworkExtender.CreateInvestigationPaneAsync(ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.OpenViewAsync()
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.OpenInvestigationPaneAsync()
       #region Open an existing investigation
       {
         // open an existing investigation
         var investigationProjectItems = Project.Current.GetItems<KnowledgeGraphInvestigationProjectItem>();
         var investigationProjectItem = investigationProjectItems.FirstOrDefault(ipi => ipi.Name.Equals("myInvestigation"));
-        await QueuedTask.Run(() =>
-        {
-          KnowledgeGraphInvestigation investigation = investigationProjectItem.GetInvestigation();
-          ProApp.Panes.CreateInvestigationPaneAsync(investigation);
+        KnowledgeGraphInvestigation investigation = await QueuedTask.Run(() =>
+          investigationProjectItem.GetInvestigation());
+        await ProApp.Panes.CreateInvestigationPaneAsync(investigation);
 
+        // or
+        await investigation.OpenViewAsync();
 
-          // or 
-          investigation.OpenViewAsync();
-        });
-
-        // or 
-        investigationProjectItem.OpenInvestigationPaneAsync();
+        // or
+        await investigationProjectItem.OpenInvestigationPaneAsync();
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem
       #region Get the Knowlege Graph Investigation container
       {
         var containerPath = "KnowledgeGraph";
@@ -879,11 +872,12 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetInvestigation
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetInvestigation()
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetInvestigationPanes
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetInvestigationPanes()
       //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationPane
       //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationPane.InvestigationView
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
       #region Get the panes for an investigation
       {
         // open an existing investigation
@@ -908,7 +902,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetDatastore
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetDatastore()
       #region Get the KnowledgeGraph from a KnowledgeGraphInvestigationProjectItem
       {
         // get an existing investigation
@@ -925,9 +919,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetAllQueryDefinitions
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetAllQueryDefinitions()
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetQueryDefinition(System.String)
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Retrieve Investigation Query Definitions
       {
         // access the currently active knowledge graph investigation view
@@ -953,6 +949,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition.Name
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition.ProvenanceBehavior
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition.OpenCypherQuery
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Add Query Definition
       {
         var newQueryDefinition = new CIMKnowledgeGraphQueryDefinition();
@@ -977,9 +975,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.UpdateQueryDefinition(System.String, System.String)
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.UpdateQueryDefinition(ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition)
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition
-      //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition.Name
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition.ProvenanceBehavior
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition.OpenCypherQuery
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetQueryDefinition(System.String)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Update Query Definition
       {
         // access the currently active knowledge graph investigation view
@@ -1011,7 +1011,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.RenameQueryDefinition(System.String, System.String)
-      //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Rename a Query Definition
       {
         // access the currently active knowledge graph investigation view
@@ -1029,7 +1030,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.DeleteQueryDefinition(System.String)
-      //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphQueryDefinition
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Delete a Query Definition
       {
         // access the currently active knowledge graph investigation view
@@ -1047,9 +1049,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetAllFilteredFindPathsConfigurations
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetAllFilteredFindPathsConfigurations()
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetFilteredFindPathsConfiguration(System.String)
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Retrieve Investigation Filtered Find Paths Configurations
       {
         // access the currently active knowledge graph investigation view
@@ -1072,6 +1076,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.AddFilteredFindPathsConfiguration(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Add Filtered Find Paths Configuration
       {
         var newFFPConfig = new CIMFilteredFindPathsConfiguration();
@@ -1105,6 +1111,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.UpdateFilteredFindPathsConfiguration(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetFilteredFindPathsConfiguration(System.String)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Update Filtered Find Paths Configuration
       {
         // access the currently active knowledge graph investigation view
@@ -1137,7 +1146,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.RenameFilteredFindPathsConfiguration(System.String, System.String)
-      //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Rename a Filtered Find Paths Configuration
       {
         // access the currently active knowledge graph investigation view
@@ -1155,7 +1165,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.DeleteFilteredFindPathsConfiguration(System.String)
-      //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Delete a Filtered Find Paths Configuration
       {
         // access the currently active knowledge graph investigation view
@@ -1174,6 +1185,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.ImportFilteredFindPathsConfiguration(System.String)
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Import a Filtered Find Paths Configuration
       {
         // access the currently active knowledge graph investigation view
@@ -1190,6 +1203,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.ExportFilteredFindPathsConfiguration(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration, System.String, System.Boolean)
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.GetFilteredFindPathsConfiguration(System.String)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Export a Filtered Find Paths Configuration
       {
         // access the currently active knowledge graph investigation view
@@ -1232,11 +1248,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetInvestigation
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationProjectItem.GetInvestigation()
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation
       //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationPane
       //cref: ArcGIS.Desktop.KnowledgeGraph.IKnowledgeGraphInvestigationPane.InvestigationView
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Activate an existing investigation view
       {
         //Confirm if investigation exists as a project item
@@ -1264,10 +1280,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.ClearTOCSelection
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SelectEntities
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SelectRelationships
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SelectNamedObjectTypes
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.ClearTOCSelection()
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SelectEntities(System.Collections.Generic.IReadOnlyCollection{System.String})
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SelectRelationships(System.Collections.Generic.IReadOnlyCollection{System.String})
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SelectNamedObjectTypes(System.Collections.Generic.IReadOnlyCollection{System.String})
       #region Select entity, relationship types in an investigation view
       {
         // get the active investigation view
@@ -1299,11 +1315,12 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.ServiceUri
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SetSelectedRecords
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.SetSelectedRecords(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.SelectionCombinationMethod)
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
       #region Select records in an investigation view
       {
-        // get the active investigation view 
+        // get the active investigation view
         var iv = KnowledgeGraphInvestigationView.Active;
         var serviceUri = iv.Investigation.ServiceUri;
 
@@ -1323,11 +1340,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.ClearSelectedRecords
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.ClearSelectedRecords()
       #region Clear selected records in an investigation view
       {
-        // get the active investigation view 
+        // get the active investigation view
         var iv = KnowledgeGraphInvestigationView.Active;
 
         // clear the selected records
@@ -1339,15 +1355,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Active
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.Investigation
-      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.GetSelectedRecords
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigationView.GetSelectedRecords()
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphInvestigation.ServiceUri
       #region Get Selected records and open in a new link chart
       {
         // get the active investigation view
         var iv = KnowledgeGraphInvestigationView.Active;
 
-        await QueuedTask.Run(() =>
+        var linkChartMap = await QueuedTask.Run(() =>
         {
           // get the investigation
           var inv = iv.Investigation;
@@ -1356,9 +1373,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           var idSet = iv.GetSelectedRecords();
 
           // view these records in a link chart
-          var map = MapFactory.Instance.CreateLinkChart("myLinkChart", new Uri(inv.ServiceUri), idSet);
-          ProApp.Panes.CreateMapPaneAsync(map);
+          return MapFactory.Instance.CreateLinkChart("myLinkChart", new Uri(inv.ServiceUri), idSet);
         });
+        await ProApp.Panes.CreateMapPaneAsync(linkChartMap);
       }
       #endregion
 
@@ -1366,8 +1383,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerCreationParams
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerCreationParams.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraph)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerCreationParams.#ctor(System.Uri)
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer
       #region Create a KG Layer containing all Entity and Relate types
       {
@@ -1386,7 +1401,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
             Name = "KG_With_All_Types",
             IsVisible = false
           };
-          //Call layer factory with map or group layer container. 
+          //Call layer factory with map or group layer container.
           //A KG layer containing a feature layer and/or standalone table per
           //entity and relate type (except provenance) is created
           var kg_layer = LayerFactory.Instance.CreateLayer<KnowledgeGraphLayer>(
@@ -1398,8 +1413,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerCreationParams
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerCreationParams.IDSet
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromDictionary
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromDictionary(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.Int64}})
       //cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetRelationshipTypes()
       #region Create a KG Layer containing a subset of Entity and Relate types
       {
         await QueuedTask.Run(() =>
@@ -1445,7 +1463,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerCreationParams
-      //cref: ArcGIS.Desktop.Mapping.LayerFactory.CanCreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      //cref: ArcGIS.Desktop.Mapping.ILayerFactory.CanCreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Using LayerFactory.Instance.CanCreateLayer with KG Create Layer Params
       {
         await QueuedTask.Run(() =>
@@ -1496,14 +1515,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #region  ProSnippet Group: KnowledgeGraph Layer
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.ToOIDDictionary
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.ToOIDDictionary()
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromDictionary(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.Int64}})
       #region Get and Set a KG Layer IDSet
       {
         var kg_layer = MapView.Active.Map.GetLayersAsFlattenedList()
                         .OfType<KnowledgeGraphLayer>().FirstOrDefault();
         if (kg_layer == null)
+        {
           return;
+        }
 
         await QueuedTask.Run(() =>
         {
@@ -1528,13 +1549,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphExtensions.GetIsKnowledgeGraphDataset
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphExtensions.GetIsKnowledgeGraphDataset()
       #region Is a dataset part of a Knowledge Graph
       {
         var featureLyer = MapView.Active.Map.GetLayersAsFlattenedList()
                         .OfType<FeatureLayer>().FirstOrDefault();
         if (featureLyer == null)
+        {
           return;
+        }
 
         await QueuedTask.Run(() =>
         {
@@ -1548,13 +1571,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetDatastore
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetDatastore()
       #region Get KG Datastore
       {
         var kg_layer = MapView.Active.Map.GetLayersAsFlattenedList()
                         .OfType<KnowledgeGraphLayer>().FirstOrDefault();
         if (kg_layer == null)
+        {
           return;
+        }
 
         await QueuedTask.Run(() =>
         {
@@ -1568,7 +1593,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetPathOrServiceUri
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetPathOrServiceUri()
       #region Get KG Service uri
       {
         //will be a path for a file-based kg otherwise it will be a service uri
@@ -1585,7 +1610,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       {
         var kg_layer = map.GetLayersAsFlattenedList().OfType<KnowledgeGraphLayer>().FirstOrDefault();
         if (kg_layer == null)
+        {
           return;
+        }
 
         if (map.MapType == MapType.LinkChart)
         {
@@ -1623,14 +1650,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetIDSet
-      //cref: ArcGIS.Desktop.Mapping.LinkChartFeatureLayer.GetTypeName
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetIDSet()
+      //cref: ArcGIS.Desktop.Mapping.LinkChartFeatureLayer.GetTypeName()
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
       #region Create a LinkChart from a subset of an existing LinkChart IDSet
       {
         //var map = ...
         if (map.MapType != MapType.LinkChart)
+        {
           return;
+        }
 
         // find the KG layer
         //var kgLayer = map.GetLayersAsFlattenedList()
@@ -1639,7 +1668,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
         // find the first LinkChartFeatureLayer in the KG layer
         var lcFeatureLayer = kgLayer.GetLayersAsFlattenedList().OfType<LinkChartFeatureLayer>().FirstOrDefault();
         if (lcFeatureLayer != null)
+        {
           return;
+        }
 
         await QueuedTask.Run(() =>
         {
@@ -1671,18 +1702,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery(ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter)
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.#Ctor
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.QueryText
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.ProvenanceBehavior
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphProvenanceBehavior
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
       //cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync()
-      //cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync(System.Threading.CancellationToken)
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.GetCount
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.Item(System.Int32)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.GetCount()
       #region Submit a Graph Query
       {
         await QueuedTask.Run(async () =>
@@ -1744,15 +1772,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitSearch
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.GetCount
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.Item(System.Int32)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphSearchFilter.#ctor
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitSearch(ArcGIS.Core.Data.Knowledge.KnowledgeGraphSearchFilter)
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphSearchFilter.SearchTarget
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphSearchFilter.SearchText
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphSearchFilter.ReturnSearchContext
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphSearchFilter.MaxRowCount
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedTypeCategory
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetTypeName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphObjectValue.GetKeys()
       #region Submit a Text Search
       {
         await QueuedTask.Run(async () =>
@@ -1807,6 +1836,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery(ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.QueryText
       #region Convert an Open Cypher Query Result to a Selection
       {
         await QueuedTask.Run(async () =>
@@ -1862,6 +1895,12 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.BindParameters
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery(ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphArrayValue.AddRange(System.Collections.IList)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.QueryText
       #region Use Bind Parameters with an Open Cypher Query
       {
         await QueuedTask.Run(async () =>
@@ -1922,8 +1961,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.BindParameters
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery(ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphArrayValue.AddRange(System.Collections.IList)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.QueryText
       #region Use Bind Parameters with an Open Cypher Query2
       {
+        var mapView = MapView.Active;
+        if (mapView == null)
+          return;
+
         await QueuedTask.Run(async () =>
         {
           //assume we have, in this case, a list of ids (perhaps retrieved
@@ -1954,7 +2003,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
           kg_qry_filter.BindParameters["object_ids"] = kg_oid_array;
 
           //Create a polygon based on current map extent
-          var extent = MapView.Active.Extent;
+          var extent = mapView.Extent;
           var poly = PolygonBuilder.CreatePolygon(extent.Expand(0.25, 0.25, true));
           kg_qry_filter.BindParameters["sel_geom"] = poly;
           oids.Clear();
@@ -1971,16 +2020,19 @@ namespace ProSnippets.KnowledgeGraphSnippets
                 //current row is accessible via ".Current" prop of the cursor
                 using (var graphRow = kgRowCursor.Current)
                 {
+                  // cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
                   #region Process Row
+                  {
 
-                  var cell_phone = graphRow[0] as KnowledgeGraphEntityValue;
-                  var oid = cell_phone.GetObjectID();
+                    var cell_phone = graphRow[0] as KnowledgeGraphEntityValue;
+                    var oid = cell_phone.GetObjectID();
 
-                  var name = (string)cell_phone["FULL_NAME"];
-                  var ph_number = (string)cell_phone["PHONE_NUMBER"];
-                  System.Diagnostics.Debug.WriteLine(
-                    $"[{oid}] {name}, {ph_number}");
+                    var name = (string)cell_phone["FULL_NAME"];
+                    var ph_number = (string)cell_phone["PHONE_NUMBER"];
+                    System.Diagnostics.Debug.WriteLine(
+                      $"[{oid}] {name}, {ph_number}");
 
+                  }
                   #endregion
                 }
               }
@@ -1990,9 +2042,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitSearch
       //cref: ArcGIS.Core.Data.Realtime.RealtimeCursorBase.WaitForRowsAsync(System.Threading.CancellationToken)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.GetCount()
       #region Call WaitForRowsAsync With Cancellation
       {
         //On the QueuedTask...
@@ -2037,27 +2090,14 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphValue
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphValueType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPrimitiveValue.GetValue
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphArrayValue.GetSize
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphArrayValue.Item(System.UInt64)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPathValue.GetEntityCount
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPathValue.GetEntity
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPathValue.GetRelationshipCount
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPathValue.GetRelationship
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphObjectValue.GetKeys
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphObjectValue.Item(System.String)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetID
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetTypeName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityValue.GetLabel
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetTypeName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityValue.GetLabel()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue.GetHasRelatedEntityIDs
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue.GetOriginID
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue.GetDestinationID
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.GetCount
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.Item(System.Int32)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue.GetHasRelatedEntityIDs()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue.GetOriginID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue.GetDestinationID()
       #region Process a KnowledgeGraphRow Value
 
       void ProcessGraphNamedObjectValue(
@@ -2106,7 +2146,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
         //to a collection of key/value pairs)
         var keys = kg_obj_val.GetKeys();
         foreach (var key in keys)
+        {
           ProcessKnowledgeGraphRowValue(kg_obj_val[key]);//Recurse
+        }
       }
 
       //Process a KnowledgeGraphValue from a query or search
@@ -2116,26 +2158,34 @@ namespace ProSnippets.KnowledgeGraphSnippets
         {
           case KnowledgeGraphPrimitiveValue kg_prim:
             //KnowledgeGraphPrimitiveValue not currently used in
-            //query and search 
+            //query and search
             ProcessKnowledgeGraphRowValue(kg_prim.GetValue());//Recurse
             return;
           case KnowledgeGraphArrayValue kg_array:
             var count = kg_array.GetSize();
             //Recursively process each value in the array
             for (ulong i = 0; i < count; i++)
+            {
               ProcessKnowledgeGraphRowValue(kg_array[i]);//Recurse
+            }
+
             return;
           case KnowledgeGraphPathValue kg_path:
             //Entities
             var entity_count = kg_path.GetEntityCount();
             //Recursively process each entity value in the path
             for (ulong i = 0; i < entity_count; i++)
+            {
               ProcessGraphObjectValue(kg_path.GetEntity(i));//Recurse
+            }
 
             //Recursively process each relationship value in the path
             var relate_count = kg_path.GetRelationshipCount();
             for (ulong i = 0; i < relate_count; i++)
+            {
               ProcessGraphObjectValue(kg_path.GetRelationship(i));//Recurse
+            }
+
             return;
           case KnowledgeGraphObjectValue kg_object:
             ProcessGraphObjectValue(kg_object);//Recurse
@@ -2254,7 +2304,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Mapping.MapView.IsLinkChartView
-      //cref: ArcGIS.Desktop.Mapping.Map.IsLinkChart
       #region Does Active MapView contain a link chart map
       {
         var mv = MapView.Active;
@@ -2280,11 +2329,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetLinkChartLayout 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartLayoutAsync 
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetLinkChartLayout()
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartLayoutAsync(ArcGIS.Core.CIM.KnowledgeLinkChartLayoutAlgorithm)
       //cref: ArcGIS.Core.CIM.KnowledgeLinkChartLayoutAlgorithm
-      //cref: ArcGIS.Core.CIM.MapType
-      //cref: ArcGIS.Desktop.Mapping.Map.IsLinkChart
       #region Get and set the link chart layout
       {
         //var map = MapView.Active.Map;
@@ -2305,9 +2352,13 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
             // toggle the value
             if (layoutAlgorithm == KnowledgeLinkChartLayoutAlgorithm.Geographic_Organic_Standard)
+            {
               layoutAlgorithm = KnowledgeLinkChartLayoutAlgorithm.Organic_Standard;
+            }
             else
+            {
               layoutAlgorithm = KnowledgeLinkChartLayoutAlgorithm.Geographic_Organic_Standard;
+            }
 
             // set it
             mv.SetLinkChartLayoutAsync(layoutAlgorithm);
@@ -2322,45 +2373,40 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #region ProSnippet Group: Create and Append to Link Charts
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromKnowledgeGraph
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphFilterType.AllNamedObjects
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromKnowledgeGraph(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphFilterType)
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
       #region Create a Link Chart Containing All Records for a KG
       {
-        await QueuedTask.Run(() =>
+        var allRecordsLinkChart = await QueuedTask.Run(() =>
         {
           //Create the link chart and show it
           //build the IDSet using KnowledgeGraphFilterType.AllNamedObjects
           var idSet = KnowledgeGraphLayerIDSet.FromKnowledgeGraph(
             kg, KnowledgeGraphFilterType.AllNamedObjects);
-          var linkChart = MapFactory.Instance.CreateLinkChart(
-                            "KG Link Chart", kg, idSet);
-          FrameworkApplication.Panes.CreateMapPaneAsync(linkChart);
+          return MapFactory.Instance.CreateLinkChart(
+                   "KG Link Chart", kg, idSet);
         });
+        await FrameworkApplication.Panes.CreateMapPaneAsync(allRecordsLinkChart);
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
       #region Create a Link Chart With an Empty KG Layer
       {
-        await QueuedTask.Run(() =>
+        var emptyLayerLinkChart = await QueuedTask.Run(() =>
         {
           //Create the link chart with a -null- id set
           //This will create a KG Layer with empty sub-layers
           //(Note: you cannot create an empty KG layer on a map - only on a link chart)
-          var linkChart = MapFactory.Instance.CreateLinkChart(
-                            "KG Link Chart", kg, null);
-          FrameworkApplication.Panes.CreateMapPaneAsync(linkChart);
+          return MapFactory.Instance.CreateLinkChart(
+                   "KG Link Chart", kg, null);
         });
+        await FrameworkApplication.Panes.CreateMapPaneAsync(emptyLayerLinkChart);
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromKnowledgeGraph
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphFilterType.AllEntities
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromKnowledgeGraph(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphFilterType)
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
       #region Create a link chart with all the entities of the Knowledge Graph
       {
         await QueuedTask.Run(() =>
@@ -2378,9 +2424,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromDictionary
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromDictionary(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.Int64}})
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery(ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetTypeName()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.QueryText
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRow.GetCount()
       #region Create a Link Chart from a query
       {
         //use the results of a query to create an idset. Create the link chart
@@ -2396,7 +2448,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
         var dict = new Dictionary<string, List<long>>();
 
-        await QueuedTask.Run(async () =>
+        var queryLinkChart = await QueuedTask.Run(async () =>
         {
           using (var kg_for_lc = kgLayer.GetDatastore())
           {
@@ -2425,7 +2477,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
                         dict[type_name] = new List<long>();
                       }
                       if (!dict[type_name].Contains(oid))
+                      {
                         dict[type_name].Add(oid);
+                      }
                     }
                   }
                 }
@@ -2435,30 +2489,33 @@ namespace ProSnippets.KnowledgeGraphSnippets
             var idSet = KnowledgeGraphLayerIDSet.FromDictionary(kg_for_lc, dict);
 
             //Create the link chart and show it
-            var linkChart = MapFactory.Instance.CreateLinkChart(
-                              "KG With ID Set", kg_for_lc, idSet);
-            FrameworkApplication.Panes.CreateMapPaneAsync(linkChart);
+            return MapFactory.Instance.CreateLinkChart(
+                     "KG With ID Set", kg_for_lc, idSet);
           }
         });
+        await FrameworkApplication.Panes.CreateMapPaneAsync(queryLinkChart);
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromKnowledgeGraph
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,System.String)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,System.String)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphFilterType.AllEntities
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromKnowledgeGraph(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphFilterType)
       #region Create a link chart based on a template link chart
       {
         // note that the template link chart MUST use the same KG server
 
-        await QueuedTask.Run(() =>
+        var currentProject = Project.Current;
+        if (currentProject == null)
+          return;
+
+        Map templateLinkChart = await QueuedTask.Run(() =>
         {
           // find the existing link chart by name
-          var projectItem = Project.Current.GetItems<MapProjectItem>()
+          var projectItem = currentProject.GetItems<MapProjectItem>()
           .FirstOrDefault(pi => pi.Name == "Acme Link Chart");
           var linkChartMap = projectItem?.GetMap();
           if (linkChartMap == null)
-            return;
+          {
+            return null;
+          }
 
           //Create a connection properties
           var kg_props2 =
@@ -2472,57 +2529,67 @@ namespace ProSnippets.KnowledgeGraphSnippets
               var idSet = KnowledgeGraphLayerIDSet.FromKnowledgeGraph(
                     kg_for_lc, KnowledgeGraphFilterType.AllEntities);
               //Create the new link chart and show it
-              var newLinkChart = MapFactory.Instance.CreateLinkChart(
-                                "KG from Template", kg_for_lc, idSet, linkChartMap.URI);
-              FrameworkApplication.Panes.CreateMapPaneAsync(newLinkChart);
+              return MapFactory.Instance.CreateLinkChart(
+                       "KG from Template", kg_for_lc, idSet, linkChartMap.URI);
             }
           }
           catch (Exception ex)
           {
             System.Diagnostics.Debug.WriteLine(ex.ToString());
+            return null;
           }
         });
+        if (templateLinkChart != null)
+          await FrameworkApplication.Panes.CreateMapPaneAsync(templateLinkChart);
       }
       #endregion
 
       //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphLayerException
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,System.String)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,System.String)
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.KnowledgeGraph.KnowledgeGraphLayerException.InvalidNamedTypes
       #region Checking KnowledgeGraphLayerException
       {
-        // running on QueuedTask
-
-        var dict = new Dictionary<string, List<long>>();
-        dict.Add("person", new List<long>());  //Empty list means all records
-        dict.Add("made_call", null);  //null list means all records
-
-        // or specific records - however the ids are obtained
-        dict.Add("phone_call", new List<long>() { 1, 5, 18, 36, 78 });
-
-        // make the id set
-        var idSet = KnowledgeGraphLayerIDSet.FromDictionary(kg, dict);
-
-        try
+        Map validatedLinkChart = await QueuedTask.Run(() =>
         {
-          //Create the link chart and show it
-          var linkChart = MapFactory.Instance.CreateLinkChart(
-                            "KG With ID Set", kg, idSet);
-          FrameworkApplication.Panes.CreateMapPaneAsync(linkChart);
-        }
-        catch (KnowledgeGraphLayerException e)
-        {
-          // get the invalid named types
-          //   remember that the named types are case-sensitive
-          var invalidNamedTypes = e.InvalidNamedTypes;
+          var dict = new Dictionary<string, List<long>>();
+          dict.Add("person", new List<long>());  //Empty list means all records
+          dict.Add("made_call", null);  //null list means all records
 
-          // do something with the invalid named types 
-          // for example - log or return to caller to show message to user
-        }
+          // or specific records - however the ids are obtained
+          dict.Add("phone_call", new List<long>() { 1, 5, 18, 36, 78 });
+
+          // make the id set
+          var idSet = KnowledgeGraphLayerIDSet.FromDictionary(kg, dict);
+
+          try
+          {
+            //Create the link chart and show it
+            return MapFactory.Instance.CreateLinkChart(
+                     "KG With ID Set", kg, idSet);
+          }
+          catch (KnowledgeGraphLayerException e)
+          {
+            // get the invalid named types
+            //   remember that the named types are case-sensitive
+            var invalidNamedTypes = e.InvalidNamedTypes;
+
+            // do something with the invalid named types
+            // for example - log or return to caller to show message to user
+            return null;
+          }
+        });
+        if (validatedLinkChart != null)
+          await FrameworkApplication.Panes.CreateMapPaneAsync(validatedLinkChart);
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanAppendToLinkChart
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.AppendToLinkChart
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanAppendToLinkChart(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.AppendToLinkChart(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.SubmitQuery(ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.Current
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphCursor.MoveNext()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectValue.GetObjectID()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphQueryFilter.QueryText
       #region Append to Link Chart
       {
         //We create an id set to contain the records to be appended
@@ -2575,14 +2642,16 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
             //Call AppendToLinkChart with the id set
             if (linkChartMap.CanAppendToLinkChart(idSet))
+            {
               linkChartMap.AppendToLinkChart(idSet);
+            }
           }
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanClearLinkChartContent(ArcGIS.Desktop.Mapping.Map)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.ClearLinkChartContent(ArcGIS.Desktop.Mapping.Map)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanClearLinkChartContent()
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.ClearLinkChartContent()
       #region Clear all content from a link chart
       {
         await QueuedTask.Run(() =>
@@ -2595,23 +2664,27 @@ namespace ProSnippets.KnowledgeGraphSnippets
           var linkChartMap = mapPane.MapView.Map;
           //Clear all content from the link chart
           if (linkChartMap.CanClearLinkChartContent())
+          {
             linkChartMap.ClearLinkChartContent();
+          }
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanSetLinkChartContent(ArcGIS.Desktop.Mapping.Map,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartContent(ArcGIS.Desktop.Mapping.Map,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanSetLinkChartContent(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartContent(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
       //cref: ArcGIS.Desktop.Mapping.IDSetCombinationMethod
-      //cref: ArcGIS.Desktop.Mapping.IDSetCombinationMethod.New
       #region Set only the Selected Features as the Link Chart content
       {
-        if (!MapView.Active?.Map?.IsLinkChart == true)
+        var linkChartMapView = MapView.Active;
+        if (!linkChartMapView?.Map?.IsLinkChart == true)
+        {
           return;
+        }
 
         await QueuedTask.Run(() =>
         {
-          var map = MapView.Active.Map;
+          var map = linkChartMapView.Map;
           var sel_set = map.GetSelection();
           if (sel_set.Count > 0)
           {
@@ -2626,14 +2699,17 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanSetLinkChartContent(ArcGIS.Desktop.Mapping.Map,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartContent(ArcGIS.Desktop.Mapping.Map,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanSetLinkChartContent(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartContent(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
       //cref: ArcGIS.Desktop.Mapping.IDSetCombinationMethod
-      //cref: ArcGIS.Desktop.Mapping.IDSetCombinationMethod.Add
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphIDSet.FromDictionary(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.Object}})
       #region Append a set of records to a link chart
       {
-        if (!MapView.Active?.Map?.IsLinkChart == true)
+        var appendLinkChartMapView = MapView.Active;
+        if (!appendLinkChartMapView?.Map?.IsLinkChart == true)
+        {
           return;
+        }
 
         //Assume we have a set of features in an entity type 'Species' and an entity
         //type 'Observation' that we want to append to an existing link chart...
@@ -2649,10 +2725,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
         await QueuedTask.Run(() =>
         {
-          var map = MapView.Active.Map;
+          var map = appendLinkChartMapView.Map;
 
           //Get the knowledge graph layer from the link chart
-          var kg_layer = MapView.Active?.Map?.GetLayersAsFlattenedList()?
+          var kg_layer = appendLinkChartMapView.Map.GetLayersAsFlattenedList()?
                                     .OfType<ArcGIS.Desktop.Mapping.KnowledgeGraphLayer>()?
                                     .First();
 
@@ -2680,18 +2756,20 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanSetLinkChartContent(ArcGIS.Desktop.Mapping.Map,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartContent(ArcGIS.Desktop.Mapping.Map,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanSetLinkChartContent(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetLinkChartContent(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet,ArcGIS.Desktop.Mapping.IDSetCombinationMethod)
       //cref: ArcGIS.Desktop.Mapping.IDSetCombinationMethod
-      //cref: ArcGIS.Desktop.Mapping.IDSetCombinationMethod.Subtract
       #region Remove the selected features from the link chart's content
       {
-        if (!MapView.Active?.Map?.IsLinkChart == true)
+        var removeLinkChartMapView = MapView.Active;
+        if (!removeLinkChartMapView?.Map?.IsLinkChart == true)
+        {
           return;
+        }
 
         await QueuedTask.Run(() =>
         {
-          var map = MapView.Active.Map;
+          var map = removeLinkChartMapView.Map;
           var sel_set = map.GetSelection();
           if (sel_set.Count > 0)
           {
@@ -2710,12 +2788,12 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetIDSet
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayer.GetIDSet()
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.IsEmpty
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.NamedObjectTypeCount
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.Contains
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.ToOIDDictionary
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.ToUIDDictionary
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.Contains(System.String)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.ToOIDDictionary()
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.ToUIDDictionary()
       #region Get the ID Set of a KG layer
       {
         await QueuedTask.Run(() =>
@@ -2733,7 +2811,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
   var oidDict = idSet.ToOIDDictionary();
   var speciesOIDs = oidDict["Species"];
 
-  // alternatively get the idSet as a dictionary of 
+  // alternatively get the idSet as a dictionary of
   // namedObjectTypes and uuids
   var uuidDict = idSet.ToUIDDictionary();
   var speciesUuids = uuidDict["Species"];
@@ -2743,7 +2821,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromSelectionSet
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet.FromSelectionSet(ArcGIS.Desktop.Mapping.SelectionSet)
       #region Create an ID set from a SelectionSet
       {
         await QueuedTask.Run(() =>
@@ -2753,10 +2831,12 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
           // translate to an KnowledgeGraphLayerIDSet
           //  if the selectionset does not contain any KG entity or relationship records
-          //    then idSet will be null  
+          //    then idSet will be null
           var idSet = KnowledgeGraphLayerIDSet.FromSelectionSet(sSet);
           if (idSet == null)
+          {
             return;
+          }
 
           // you can use the idSet to create a new linkChart
           //   (using MapFactory.Instance.CreateLinkChart)
@@ -2768,27 +2848,35 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetShowRootNodes(ArcGIS.Desktop.Mapping.MapView)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetShowRootNodes(ArcGIS.Desktop.Mapping.MapView, System.Boolean)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetShowRootNodes()
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetShowRootNodes(System.Boolean)
       #region Toggle Root Node Display
       {
-        var val = MapView.Active.GetShowRootNodes();
+        var toggleRootNodesMapView = MapView.Active;
+        if (toggleRootNodesMapView == null)
+          return;
+
+        var val = toggleRootNodesMapView.GetShowRootNodes();
 
         await QueuedTask.Run(() =>
         {
-          MapView.Active.SetShowRootNodes(!val);
+          toggleRootNodesMapView.SetShowRootNodes(!val);
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetRootNodes(ArcGIS.Desktop.Mapping.MapView)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetRootNodes()
       //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet
-      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
+      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary()
       #region Get records that are set as Root Nodes
       {
+        var rootNodesMapView = MapView.Active;
+        if (rootNodesMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
-          MapMemberIDSet rootNodes = MapView.Active.GetRootNodes();
+          MapMemberIDSet rootNodes = rootNodesMapView.GetRootNodes();
           var rootNodeDict = rootNodes.ToDictionary();
 
           // rootNodeDict is a Dictionary<MapMember, List<long>>
@@ -2808,55 +2896,70 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetRootNodes(ArcGIS.Desktop.Mapping.MapView,ArcGIS.Desktop.Mapping.MapMemberIDSet)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetRootNodes(ArcGIS.Desktop.Mapping.MapMemberIDSet)
       //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet
-      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.FromDictionary``1
+      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.FromDictionary``1(System.Collections.Generic.Dictionary{ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.List{System.Int64}})
       #region Assign a set of records as Root Nodes
       {
+        var assignRootNodesMapView = MapView.Active;
+        if (assignRootNodesMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
           var dict = new Dictionary<MapMember, List<long>>();
           dict.Add(entityLayer, oids);
           MapMemberIDSet mmIDSet = MapMemberIDSet.FromDictionary(dict);
 
-          MapView.Active.SetRootNodes(mmIDSet);
+          assignRootNodesMapView.SetRootNodes(mmIDSet);
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetRootNodes(ArcGIS.Desktop.Mapping.MapView,ArcGIS.Desktop.Mapping.MapMemberIDSet)
-      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet
-      #region Assign a selection as Root Nodes 
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetRootNodes(ArcGIS.Desktop.Mapping.MapMemberIDSet)
+      #region Assign a selection as Root Nodes
       {
+        var selectionRootNodesMapView = MapView.Active;
+        if (selectionRootNodesMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
-          var mapSel = MapView.Active.Map.GetSelection();
+          var mapSel = selectionRootNodesMapView.Map.GetSelection();
 
-          MapView.Active.SetRootNodes(mapSel);
+          selectionRootNodesMapView.SetRootNodes(mapSel);
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectAllRootNodes(ArcGIS.Desktop.Mapping.MapView)
-      #region Select the records that are Root Node 
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectAllRootNodes()
+      #region Select the records that are Root Node
       {
+        var selectAllRootNodesMapView = MapView.Active;
+        if (selectAllRootNodesMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
-          var mapSel = MapView.Active.SelectAllRootNodes();
+          var mapSel = selectAllRootNodesMapView.SelectAllRootNodes();
 
-          // this is the same as 
-          MapMemberIDSet rootNodes = MapView.Active.GetRootNodes();
+          // this is the same as
+          MapMemberIDSet rootNodes = selectAllRootNodesMapView.GetRootNodes();
           SelectionSet selSet = SelectionSet.FromMapMemberIDSet(rootNodes);
-          MapView.Active.Map.SetSelection(selSet);
+          selectAllRootNodesMapView.Map.SetSelection(selSet);
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectRootNodes(ArcGIS.Desktop.Mapping.MapView,ArcGIS.Desktop.Mapping.MapMemberIDSet)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectRootNodes(ArcGIS.Desktop.Mapping.MapMemberIDSet)
       //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet
-      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.FromDictionary``1
+      //cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.FromDictionary``1(System.Collections.Generic.Dictionary{ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.List{System.Int64}})
       #region Define and select a set of records as Root Nodes
       {
+        var selectRootNodesMapView = MapView.Active;
+        if (selectRootNodesMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
           var dict = new Dictionary<MapMember, List<long>>();
@@ -2864,43 +2967,52 @@ namespace ProSnippets.KnowledgeGraphSnippets
           dict.Add(entityLayer2, oids2);
           MapMemberIDSet mmIDSet = MapMemberIDSet.FromDictionary(dict);
 
-          MapView.Active.SelectRootNodes(mmIDSet);
+          selectRootNodesMapView.SelectRootNodes(mmIDSet);
         });
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.ClearRootNodes(ArcGIS.Desktop.Mapping.MapView)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.ClearRootNodes()
       #region Clear Root Nodes
       {
+        var clearRootNodesMapView = MapView.Active;
+        if (clearRootNodesMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
           //Assuming mapview is a link chart view
-          MapView.Active.ClearRootNodes();
+          clearRootNodesMapView.ClearRootNodes();
         });
       }
       #endregion
 
       #region PrSnippet Group: Non Spatial Data
+      {
+      }
       #endregion
 
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.GetShowNonSpatialData(ArcGIS.Desktop.Mapping.MapView)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetShowNonSpatialData(ArcGIS.Desktop.Mapping.MapView, System.Boolean)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectNonSpatialData(ArcGIS.Desktop.Mapping.MapView)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectSpatialData(ArcGIS.Desktop.Mapping.MapView)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetShowNonSpatialData(System.Boolean)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectNonSpatialData()
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SelectSpatialData()
       #region Non spatial data
       {
+        var nonSpatialDataMapView = MapView.Active;
+        if (nonSpatialDataMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
           // display non spatial data
-          MapView.Active.SetShowNonSpatialData(true);
+          nonSpatialDataMapView.SetShowNonSpatialData(true);
 
           // select the current set of non spatial data
-          var selNonSpatial = MapView.Active.SelectNonSpatialData();
+          var selNonSpatial = nonSpatialDataMapView.SelectNonSpatialData();
 
           // perform some action
 
           // select the current set of spatial data
-          var selSpatial = MapView.Active.SelectSpatialData();
+          var selSpatial = nonSpatialDataMapView.SelectSpatialData();
 
           // perform some other action
         });
@@ -2910,9 +3022,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #region ProSnippet Group: Editing
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.Dictionary{System.String,System.Object})
       //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table,System.Collections.Generic.Dictionary{System.String,System.Object})
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a new Entity
       {
         var mv = MapView.Active;
@@ -2927,7 +3038,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
           //Use datasets or feature layer(s) or standalone table(s)
           //Get a reference to the KnowledgeGraph
-          //var kg = ... ; 
+          //var kg = ... ;
 
           //Open the feature class or Table to be edited
           var org_fc = kg.OpenDataset<FeatureClass>("Organization");
@@ -2964,8 +3075,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.OriginIDPropertyName
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.DestinationIDPropertyName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipValue
       //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table,System.Collections.Generic.Dictionary{System.String,System.Object})
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a new Relationship from Existing Entities 1
       {
         var create_rel = await QueuedTask.Run(() =>
@@ -2979,7 +3090,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
           //Use datasets or feature layer(s) or standalone table(s)
           //Get a reference to the KnowledgeGraph
-          //var kg = ... ; 
+          //var kg = ... ;
 
           //We will use a relate called 'HasEmployee' to relate an Organization w/ a Person
           //Use either tables or map members to get the rows to be related...
@@ -3003,14 +3114,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = org_fc.Search())
           {
             if (rc.MoveNext())
+            {
               //Use the KnowledgeGraphPropertyInfo to avoid hardcoding...
               attribs[kg_prop_info.OriginIDPropertyName] = rc.Current.GetGlobalID();
+            }
           }
           using (var rc = person_tbl.Search())
           {
             if (rc.MoveNext())
+            {
               //Use the KnowledgeGraphPropertyInfo to avoid hardcoding...
               attribs[kg_prop_info.DestinationIDPropertyName] = rc.Current.GetGlobalID();
+            }
           }
 
           //Add any extra attribute information for the relation as needed
@@ -3026,9 +3141,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription
-      //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription.#ctor(System.Guid,System.Guid,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
       //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table, ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a new Relationship from Existing Entities 2
       {
         var create_rel2 = await QueuedTask.Run(() =>
@@ -3042,7 +3156,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
           //Use datasets or feature layer(s) or standalone table(s)
           //Get a reference to the KnowledgeGraph
-          //var kg = ... ; 
+          //var kg = ... ;
 
           //We will use a relate called 'HasEmployee' to relate an Organization w/ a Person
           //Use either tables or map members to get the rows to be related...
@@ -3059,14 +3173,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = org_fc.Search())
           {
             if (rc.MoveNext())
+            {
               //Use the KnowledgeGraphPropertyInfo to avoid hardcoding...
               guidOrigin = rc.Current.GetGlobalID();
+            }
           }
           using (var rc = person_tbl.Search())
           {
             if (rc.MoveNext())
+            {
               //Use the KnowledgeGraphPropertyInfo to avoid hardcoding...
               guidDestination = rc.Current.GetGlobalID();
+            }
           }
 
           //Add any extra attribute information for the relation as needed
@@ -3083,14 +3201,13 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.OriginIDPropertyName
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.DestinationIDPropertyName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation
+      //cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation()
       //cref: ArcGIS.Desktop.Editing.RowToken
       //cref: ArcGIS.Desktop.Editing.RowToken.GlobalID
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a new Relationship and New Entities 1
       {
         var mv = MapView.Active;
@@ -3162,15 +3279,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription
-      //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription.#ctor(ArcGIS.Desktop.Editing.RowHandle,ArcGIS.Desktop.Editing.RowHandle,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
       //cref: ArcGIS.Desktop.Editing.RowToken
-      //cref: ArcGIS.Desktop.Editing.RowToken.GlobalID
-      //cref: ArcGIS.Desktop.Editing.RowHandle.#ctor(ArcGIS.Desktop.Editing.RowToken)
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table, ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
+      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.Dictionary{System.String,System.Object})
+      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
       #region Create a new Relationship and New Entities 2
       {
         var mv = MapView.Active;
@@ -3241,8 +3353,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.ProvenancePropertyInfo      
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.ProvenancePropertyInfo
       //cref: ArcGIS.Core.Data.Knowledge.ProvenancePropertyInfo
       //cref: ArcGIS.Core.Data.Knowledge.ProvenancePropertyInfo.ProvenanceTypeNamePropertyName
       //cref: ArcGIS.Core.Data.Knowledge.ProvenancePropertyInfo.ProvenanceFieldNamePropertyName
@@ -3251,6 +3363,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.ProvenancePropertyInfo.ProvenanceSourcePropertyName
       //cref: ArcGIS.Core.Data.Knowledge.ProvenancePropertyInfo.ProvenanceCommentPropertyName
       //cref: ArcGIS.Core.Data.Knowledge.ProvenancePropertyInfo.ProvenanceInstanceIDPropertyName
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a Provenance Record
       {
         await QueuedTask.Run(() =>
@@ -3266,7 +3379,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           //map TOC)
           var provenance_tbl = kg.OpenDataset<Table>("Provenance");
           if (provenance_tbl == null)
+          {
             return;
+          }
           //we will add a row to the provenance for person entity
           var person_tbl = kg.OpenDataset<Table>("Person");
 
@@ -3275,7 +3390,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = person_tbl.Search())
           {
             if (!rc.MoveNext())
+            {
               return;
+            }
+
             instance_id = rc.Current.GetGlobalID();//Get the global id
           }
 
@@ -3312,13 +3430,14 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.SupportsProvenance
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.ProvenanceTypeName
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphProvenanceDescription
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphSourceType
       //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.KnowledgeGraphProvenanceDescription)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a Provenance Record 2
       {
         await QueuedTask.Run(() =>
@@ -3326,7 +3445,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           // check if provenance supported
           var propInfo = kg.GetPropertyNameInfo();
           if (!propInfo.SupportsProvenance)
+          {
             return;
+          }
 
           //Instantiate an operation for the Create
           var edit_op = new EditOperation()
@@ -3345,7 +3466,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = person_tbl.Search())
           {
             if (!rc.MoveNext())
+            {
               return;
+            }
+
             instance_id = rc.Current.GetGlobalID();//Get the global id
           }
 
@@ -3399,7 +3523,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
           edit_op.Create(docLayer, rd);
 
           // create the provenance record for the person entity using the document entity
-          // provenance record is on the "name" field 
+          // provenance record is on the "name" field
           var pd = new KnowledgeGraphProvenanceDescription(
             personHandle, "name", docHandle, "", "comments");
           edit_op.Create(pd);
@@ -3410,16 +3534,14 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.OriginIDPropertyName
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.DestinationIDPropertyName
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectTypeRole.Document
-      //cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation
+      //cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation()
       //cref: ArcGIS.Desktop.Editing.RowToken
       //cref: ArcGIS.Desktop.Editing.RowToken.GlobalID
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a Document Record 1
       {
         var ok = await QueuedTask.Run(() =>
@@ -3434,10 +3556,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
             var doc_entity_name = GetDocumentTypeName(kg_for_doc.GetDataModel());
             if (string.IsNullOrEmpty(doc_entity_name))
+            {
               return false;
+            }
+
             var hasdoc_rel_name = GetHasDocumentTypeName(kg_for_doc.GetDataModel());
             if (string.IsNullOrEmpty(hasdoc_rel_name))
+            {
               return false;
+            }
 
             //Document can also be FeatureClass
             var doc_tbl = kg_for_doc.OpenDataset<Table>(doc_entity_name);
@@ -3480,7 +3607,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
             using (var rc = org_fc.Search(qf))
             {
               if (!rc.MoveNext())
+              {
                 return false;
+              }
+
               origin_org_id = rc.Current.GetGlobalID();//For the relate
             }
 
@@ -3521,7 +3651,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
         {
           var role = entity_type.Value.GetRole();
           if (role == KnowledgeGraphNamedObjectTypeRole.Document)
+          {
             return entity_type.Value.GetName();
+          }
         }
         return "";
       }
@@ -3533,20 +3665,23 @@ namespace ProSnippets.KnowledgeGraphSnippets
         {
           var role = rel_type.Value.GetRole();
           if (role == KnowledgeGraphNamedObjectTypeRole.Document)
+          {
             return rel_type.Value.GetName();
+          }
         }
         return "";
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.SupportsDocuments
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.DocumentTypeName
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphDocumentDescription
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription
       //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table, ArcGIS.Core.Data.Knowledge.KnowledgeGraphDocumentDescription)
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Core.Data.Knowledge.KnowledgeGraphDocumentDescription)
       //cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table,ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create a Document Record 2
       {
         await QueuedTask.Run(() =>
@@ -3555,7 +3690,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           {
             var propInfo = kg_for_doc.GetPropertyNameInfo();
             if (!propInfo.SupportsDocuments)
+            {
               return false;
+            }
 
             var edit_op = new EditOperation()
             {
@@ -3579,7 +3716,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
             // if there is a geometry use the following ctor
             // var kgDocDesc = new KnowledgeGraphDocumentDescription(doc_url, doc_location);
 
-            // if you have additional custom attributes 
+            // if you have additional custom attributes
             //var customDocAtts = new Dictionary<string, object>();
             //customDocAtts.Add("custom_attrib", "Foo");
             //customDocAtts.Add("custom_attrib2", "Bar");
@@ -3589,7 +3726,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
             kgDocDesc.Keywords = @"text,file,example";
 
             // The Create method will auto-populate the Url, Name, FileExtension and contentType fields of the document row
-            // from the path supplied.  
+            // from the path supplied.
             var rowToken = edit_op.Create(doc_tbl, kgDocDesc);
 
             //Get the entity whose document this is...
@@ -3603,7 +3740,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
             using (var rc = org_fc.Search(qf))
             {
               if (!rc.MoveNext())
+              {
                 return false;
+              }
+
               origin_org_id = rc.Current.GetGlobalID();//For the relate
             }
 
@@ -3630,7 +3770,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetPropertyNameInfo()
       //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphPropertyInfo.OriginIDPropertyName
       #region Modify an Entity and Relationship record
       {
@@ -3665,12 +3805,17 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = org_fl.Search(qf))
           {
             if (!rc.MoveNext())
+            {
               return;
+            }
+
             org_oid = rc.Current.GetObjectID();
             org_gid = rc.Current.GetGlobalID();
           }
           if (org_oid == -1)
+          {
             return; //nothing to modify
+          }
 
           var attribs = new Dictionary<string, object>();
 
@@ -3697,7 +3842,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = rel_stbl.Search(qf))
           {
             if (!rc.MoveNext())
+            {
               return;
+            }
+
             rel_oid = rc.Current.GetObjectID();
           }
           if (rel_oid > -1)
@@ -3720,8 +3868,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphEntityType
       #region Delete an Entity record
       {
         var mv = MapView.Active;
@@ -3750,7 +3896,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = org_fl.Search(qf))
           {
             if (!rc.MoveNext())
+            {
               return;//nothing to delete
+            }
+
             org_oid = rc.Current.GetObjectID();
           }
 
@@ -3760,7 +3909,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
       #region Delete a Relationship record 1
       {
         var mv = MapView.Active;
@@ -3784,7 +3932,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = rel_stbl.Search())
           {
             if (!rc.MoveNext())
+            {
               return;
+            }
             //arbitrarily, in this example, get the first row
             rel_oid = rc.Current.GetObjectID();
           }
@@ -3795,11 +3945,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphRelationshipType
       //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription
-      //cref: ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription.#ctor(System.Guid,System.Guid,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Core.Data.Table, ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
-      //cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Desktop.Mapping.MapMember, ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
+      //cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Desktop.Mapping.MapMember,ArcGIS.Desktop.Editing.KnowledgeGraphRelationshipDescription)
       #region Delete a Relationship record 2
       {
         var mv = MapView.Active;
@@ -3832,14 +3979,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
           using (var rc = entityOrg.Search())
           {
             if (rc.MoveNext())
+            {
               //Use the KnowledgeGraphPropertyInfo to avoid hardcoding...
               guidOrigin = rc.Current.GetGlobalID();
+            }
           }
           using (var rc = entityPerson.Search())
           {
             if (rc.MoveNext())
+            {
               //Use the KnowledgeGraphPropertyInfo to avoid hardcoding...
               guidDestination = rc.Current.GetGlobalID();
+            }
           }
 
           var rd = new KnowledgeGraphRelationshipDescription(guidOrigin, guidDestination);
@@ -3853,8 +4004,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.CreateFileKnowledgeGraph(ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.#ctor(System.Uri)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphConnectionProperties.PathOrURL
       #region Create a File Knowledge Graph with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -3901,18 +4050,13 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraph)
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.ErrorMessages
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Create(ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphTypeDescription)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.Data.DDL.SchemaBuilder)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.DDL.SchemaBuilder)
       //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphEntityTypeDescription
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphEntityTypeDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription})
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphEntityTypeDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription},ArcGIS.Core.Data.DDL.ShapeDescription)
       //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphRelationshipTypeDescription
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphRelationshipTypeDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription})
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphRelationshipTypeDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription},ArcGIS.Core.Data.DDL.ShapeDescription)
       //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription.#ctor(System.String,ArcGIS.Core.Data.FieldType)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetSpatialReference()
       #region Create Entity and Relationship Types with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -3992,11 +4136,8 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraph)
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Delete(ArcGIS.Core.Data.DDL.Description)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.Data.DDL.SchemaBuilder)
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphEntityTypeDescription.#ctor(System.String)
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphRelationshipTypeDescription.#ctor(System.String)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.DDL.SchemaBuilder)
       #region Delete Entity and Relationship Types with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -4033,14 +4174,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Modify(ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphTypeDescription)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.Data.DDL.SchemaBuilder)
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphEntityTypeDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription},ArcGIS.Core.Data.DDL.ShapeDescription)
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphRelationshipTypeDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription},ArcGIS.Core.Data.DDL.ShapeDescription)
-      //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription.#ctor(ArcGIS.Core.Data.Knowledge.KnowledgeGraphProperty)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.DDL.SchemaBuilder)
       //cref: ArcGIS.Core.Data.DDL.Knowledge.KnowledgeGraphPropertyDescription.CreateStringProperty(System.String,System.Int32)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetIsSpatial
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetShapeDefinition
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetShapeField
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetIsSpatial()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetShapeDefinition()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetShapeField()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDataModel()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetEntityTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphDataModel.GetRelationshipTypes()
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraphNamedObjectType.GetProperties()
       #region Modify Entity and Relationship Type Schemas with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -4148,7 +4290,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Create(ArcGIS.Core.Data.DDL.IndexDescription)
       //cref: ArcGIS.Core.Data.DDL.AttributeIndexDescription
-      //cref: ArcGIS.Core.Data.DDL.AttributeIndexDescription.#ctor(System.String,ArcGIS.Core.Data.DDL.TableDescription,System.Collections.Generic.IEnumerable{System.String})
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinition``1(System.String)
       #region Create Attribute Indexes on KG Schemas with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -4170,7 +4312,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
               if (fld.FieldType == FieldType.String && attr_index1 == null)
               {
                 if (fld.Name == "ESRI__ID")//special case
+                {
                   continue;
+                }
                 //Index _must_ be ascending for KG
                 attr_index1 = new AttributeIndexDescription(
                   "Index1", entity_table_desc, new List<string> { fld.Name })
@@ -4192,20 +4336,31 @@ namespace ProSnippets.KnowledgeGraphSnippets
                   IsUnique = true //optional - unique if all values are to be unique in the index
                 };
               }
-              if (attr_index1 != null && attr_index2 != null) break;
+              if (attr_index1 != null && attr_index2 != null)
+              {
+                break;
+              }
             }
 
             if (attr_index1 == null && attr_index2 == null)
+            {
               return; //nothing to index
+            }
 
             //Run the schema builder
             try
             {
               SchemaBuilder sb = new(kg);
               if (attr_index1 != null)
+              {
                 sb.Create(attr_index1);
+              }
+
               if (attr_index2 != null)
+              {
                 sb.Create(attr_index2);
+              }
+
               if (!kg.ApplySchemaEdits(sb))
               {
                 var err_msg = string.Join(",", sb.ErrorMessages.ToArray());
@@ -4223,7 +4378,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Delete(ArcGIS.Core.Data.DDL.Description)
       //cref: ArcGIS.Core.Data.DDL.AttributeIndexDescription
-      //cref: ArcGIS.Core.Data.DDL.AttributeIndexDescription.#ctor(System.String,ArcGIS.Core.Data.DDL.TableDescription,System.Collections.Generic.IEnumerable{System.String})
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDefinition``1(System.String)
       #region Delete Attribute Indexes on KG Schemas with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -4247,7 +4402,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
               idx => idx.GetName().ToLower() == "Index2".ToLower());
 
             if (idx1 == null && idx2 == null)
+            {
               return;
+            }
 
             //Run the schema builder
             try
@@ -4283,13 +4440,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Create(ArcGIS.Core.Data.DDL.CodedValueDomainDescription)
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Create(ArcGIS.Core.Data.DDL.RangeDomainDescription)
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Modify(ArcGIS.Core.Data.DDL.FeatureClassDescription)
-      //cref: ArcGIS.Core.Data.DDL.RangeDomainDescription.#ctor(System.String,ArcGIS.Core.Data.FieldType,System.Object,System.Object)
-      //cref: ArcGIS.Core.Data.DDL.CodedValueDomainDescription.#ctor(System.String,ArcGIS.Core.Data.FieldType,System.Collections.Generic.SortedList{System.Object,System.String})
-      //cref: ArcGIS.Core.Data.DDL.FieldDescription.#ctor(System.String,ArcGIS.Core.Data.FieldType)
       //cref: ArcGIS.Core.Data.DDL.FieldDescription.SetDomainDescription(ArcGIS.Core.Data.DDL.DomainDescription,System.Nullable{System.Int32})
-      //cref: ArcGIS.Core.Data.DDL.FeatureClassDescription.#ctor(ArcGIS.Core.Data.FeatureClassDefinition)
-      //cref: ArcGIS.Core.Data.DDL.FeatureClassDescription.#ctor(System.String,System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.DDL.FieldDescription},ArcGIS.Core.Data.DDL.ShapeDescription)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.Data.DDL.SchemaBuilder)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphExtensions.ApplySchemaEdits(ArcGIS.Core.Data.DDL.SchemaBuilder)
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.OpenDataset``1(System.String)
       #region Create Domain and Field Definition on KG Schemas with SchemaBuilder
       {
         await QueuedTask.Run(() =>
@@ -4377,9 +4530,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.DDL.RangeDomainDescription.#ctor(ArcGIS.Core.Data.RangeDomain)
-      //cref: ArcGIS.Core.Data.DDL.CodedValueDomainDescription.#ctor(ArcGIS.Core.Data.CodedValueDomain)
-      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDomains
+      //cref: ArcGIS.Core.Data.Knowledge.KnowledgeGraph.GetDomains()
       //cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Delete(ArcGIS.Core.Data.DDL.Description)
       #region Delete Domain on KG Schemas with SchemaBuilder
       {
@@ -4396,13 +4547,19 @@ namespace ProSnippets.KnowledgeGraphSnippets
               //skip the special provenance domain
               var name = domain.GetName();
               if (string.Compare(name, "esri__provenanceSourceType", true) == 0)
+              {
                 continue;//skip this one
+              }
 
               //Delete all other domains
               if (domain is ArcGIS.Core.Data.RangeDomain rd)
+              {
                 sb.Delete(new RangeDomainDescription(rd));
+              }
               else if (domain is ArcGIS.Core.Data.CodedValueDomain cvd)
+              {
                 sb.Delete(new CodedValueDomainDescription(cvd));
+              }
             }
 
             try
@@ -4438,7 +4595,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration
       //cref: ArcGIS.Core.CIM.CentralityMeasure
-      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
       #region Compute Centrality Using Defaults
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -4480,10 +4637,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.Scores
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.Measures
-      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.GetUidsForNamedType(System.String)
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.NamedTypes
       #region Process Centrality Results
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -4549,6 +4706,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration.RelationshipImportanceProperty
       //cref: ArcGIS.Core.CIM.CentralityRelationshipInterpretation
       //cref: ArcGIS.Core.CIM.CentralityScoresNormalization
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
       #region Configure Centrality
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -4604,8 +4762,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphNamedTypeFilter.NamedType
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphNamedTypeFilterByInstances.InstancesIDs
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphNamedTypeFilterByType.PropertyFilterPredicate
-      //cref: ArcGIS.Core.CIM.KGFilterType.Include
-      //cref: ArcGIS.Core.CIM.KGFilterType.Exclude
       #region Configure Centrality Entity SubGraph Filters
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -4806,8 +4962,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphNamedTypeFilter.NamedType
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphNamedTypeFilterByInstances.InstancesIDs
       //cref: ArcGIS.Core.CIM.CIMKnowledgeGraphNamedTypeFilterByType.PropertyFilterPredicate
-      //cref: ArcGIS.Core.CIM.KGFilterType.Include
-      //cref: ArcGIS.Core.CIM.KGFilterType.Exclude
       #region Configure Centrality Relationship SubGraph Filters
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5041,7 +5195,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
           kgSubgraph.EntityFilters = entity_filters1.ToArray();
           kgSubgraph.RelationshipFilters = relate_filters1.ToArray();
 
-          //Example 2 - 
+          //Example 2 -
           //Include a subset of Entities from A using a predicate,
           //and all of B, C, D and all of R1 and R3 (but not R2)
 
@@ -5136,14 +5290,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.ComputeCentrality(ArcGIS.Core.CIM.CIMKnowledgeGraphCentralityConfiguration,ArcGIS.Core.CIM.CIMKnowledgeGraphSubGraph,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CentralityMeasure})
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.NamedTypes
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.Scores
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.GetUidsForNamedType(System.String)
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.Measures
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.Item(System.Object)
       #region Output Centrality Results
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5178,11 +5329,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.RawUids
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.Measures
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.RawScores
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.Scores
       #region Get Max and Min Centrality Result Scores No Sort or LINQ
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5244,11 +5394,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.RawUids
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.Measures
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.RawScores
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.Scores
       #region Get Max and Min Centrality Result Scores With Sort and Linq
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5295,11 +5444,10 @@ namespace ProSnippets.KnowledgeGraphSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.RawUids
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.Measures
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityScores.RawScores
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.Scores
       #region Get Top or Bottom N Centrality Result Scores
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5342,7 +5490,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
           //get up to the top or bottom N scores
           if (n > kg_score_vals.Length)
+          {
             n = kg_score_vals.Length;
+          }
 
           //get the top N scores and uids - largest first
           var top_n = kg_score_vals.Take(n).ToList();
@@ -5371,6 +5521,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #endregion
 
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.GetUidsForNamedType(System.String)
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphCentralityResults.NamedTypes
       #region Get The NamedType for a Given UID in Result Scores
       {
         //object uid = "{.... uid value ....}";
@@ -5398,7 +5549,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
       #region ProSnippet Group: KnowledgeGraph FFP
       #endregion
 
-      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration.OriginEntities
@@ -5463,6 +5614,7 @@ namespace ProSnippets.KnowledgeGraphSnippets
 
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsEntity
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       #region Run FFP Using Multiple Entities and Destinations
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5635,7 +5787,6 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsPathFilter.ItemTypeName
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsPathFilter.ItemType
       //cref: ArcGIS.Core.CIM.CIMFilteredFindPathsPathFilter.FilterType
-      //cref: ArcGIS.Core.CIM.KGPathFilterItemType.Entity
       //cref: ArcGIS.Core.CIM.KGPathFilterType
       #region Run FFP Using Path Filters
       {
@@ -5744,8 +5895,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.ExtractPathsEntitiesAndRelationships(System.Collections.Generic.SortedSet{System.UInt64})
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.ToKnowledgeGraphIDSet(ArcGIS.Core.Data.Knowledge.Analytics.KGResultContentFromFFP)
-      //cref: ArcGIS.Desktop.Mapping.MapFactory.CreateLinkChart(System.String,System.Uri,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetRootNodes(ArcGIS.Desktop.Mapping.MapView,ArcGIS.Desktop.Mapping.MapMemberIDSet)
+      //cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateLinkChart(System.String,ArcGIS.Core.Data.Knowledge.KnowledgeGraph,ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.SetRootNodes(ArcGIS.Desktop.Mapping.MapMemberIDSet)
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       #region Create Link Chart from FFP Results
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5837,8 +5989,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.ExtractPathsEntitiesAndRelationships(System.Collections.Generic.SortedSet{System.UInt64})
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.ToKnowledgeGraphIDSet(ArcGIS.Core.Data.Knowledge.Analytics.KGResultContentFromFFP)
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanAppendToLinkChart
-      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.AppendToLinkChart
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.CanAppendToLinkChart(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Desktop.Mapping.KnowledgeGraphMappingExtensions.AppendToLinkChart(ArcGIS.Desktop.Mapping.KnowledgeGraphLayerIDSet)
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       #region Append to Link Chart from FFP Results
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5864,7 +6017,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
           var map = linkChartView.Map;
 
           if (!map.CanAppendToLinkChart(kgLayerIdSet))
+          {
             return;//not compatible
+          }
 
           map.AppendToLinkChart(kgLayerIdSet);
           //switch layout algo
@@ -5887,10 +6042,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingMinPathCost
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingMaxPathCost
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.MaterializePath(System.Int64)
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathRelationshipGroup
-      //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathRelationshipGroup.Relationships
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathRelationship
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       #region List out FFP Results by Path Length, Min Cost, Max Cost
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -5927,11 +6081,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
           path_by_max_cost})
           {
             if (x == 0)
+            {
               sb.AppendLine($"Paths by length: {path_by_len_indices.Count()}");
+            }
             else if (x == 1)
+            {
               sb.AppendLine($"Paths by min cost: {path_by_min_cost.Count()}");
+            }
             else if (x == 2)
+            {
               sb.AppendLine($"Paths by max cost: {path_by_max_cost.Count()}");
+            }
+
             x++;
             foreach (var path_idx in path_indeces)
             {
@@ -5964,9 +6125,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       {
         id = id.ToUpperInvariant();
         if (!id.StartsWith('{'))
+        {
           id = '{' + id;
+        }
+
         if (!id.EndsWith('}'))
+        {
           id += '}';
+        }
+
         return id;
       }
       #endregion
@@ -5980,6 +6147,11 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.EntitiesUIDs
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.EntityTypes
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.EntityTypeNames
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.CountPaths
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingMaxPathCost
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingMinPathCost
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingPathLength
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       #region List out FFP Results Origin, Destination, Other Entities
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -6016,11 +6188,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
           path_by_max_cost})
           {
             if (x == 0)
+            {
               sb.AppendLine($"Entities by length: {path_by_len_indices.Count()}");
+            }
             else if (x == 1)
+            {
               sb.AppendLine($"Entities by min cost: {path_by_min_cost.Count()}");
+            }
             else if (x == 2)
+            {
               sb.AppendLine($"Entities by max cost: {path_by_max_cost.Count()}");
+            }
+
             x++;
             foreach (var path_idx in path_indeces)
             {
@@ -6082,7 +6261,9 @@ namespace ProSnippets.KnowledgeGraphSnippets
                 idx2++;
               }
               if (!wereAnyOthers)
+              {
                 sb.Append(" <<none>>");
+              }
 
               //sb.AppendLine("");
 
@@ -6106,6 +6287,14 @@ namespace ProSnippets.KnowledgeGraphSnippets
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.RelationshipsFrom
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.RelationshipsTo
       //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.EntitiesUIDs
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.CountPaths
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.MaterializePath(System.Int64)
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingMaxPathCost
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingMinPathCost
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.KnowledgeGraphFilteredFindPathsResults.PathIndicesOrderedByIncreasingPathLength
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.EntityTypeNames
+      //cref: ArcGIS.Core.Data.Knowledge.Analytics.PathsEntitiesAndRelationships.EntityTypes
+      //cref: ArcGIS.Core.Data.Knowledge.Extensions.KnowledgeGraphExtensions.RunFilteredFindPaths(ArcGIS.Core.CIM.CIMFilteredFindPathsConfiguration)
       #region List out FFP Results Relationships
       {
         //using ArcGIS.Core.Data.Knowledge.Extensions;
@@ -6142,11 +6331,18 @@ namespace ProSnippets.KnowledgeGraphSnippets
           path_by_max_cost})
           {
             if (x == 0)
+            {
               sb.AppendLine($"Relationships by length: {path_by_len_indices.Count()}");
+            }
             else if (x == 1)
+            {
               sb.AppendLine($"Relationships by min cost: {path_by_min_cost.Count()}");
+            }
             else if (x == 2)
+            {
               sb.AppendLine($"Relationships by max cost: {path_by_max_cost.Count()}");
+            }
+
             x++;
             foreach (var path_idx in path_indeces)
             {
@@ -6193,9 +6389,15 @@ namespace ProSnippets.KnowledgeGraphSnippets
       {
         id = id.ToUpperInvariant();
         if (!id.StartsWith('{'))
+        {
           id = '{' + id;
+        }
+
         if (!id.EndsWith('}'))
+        {
           id += '}';
+        }
+
         return id;
       }
       #endregion
@@ -6211,8 +6413,14 @@ namespace ProSnippets.KnowledgeGraphSnippets
       Uid_idx = uid_idx;
     }
 
-    public double Score { get; set; }
-    public int Uid_idx { get; set; }
+    public double Score
+    {
+      get; set;
+    }
+    public int Uid_idx
+    {
+      get; set;
+    }
 
     public (double score, object uid) ToTuple(object[] uids)
     {

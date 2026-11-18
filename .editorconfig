@@ -1,0 +1,47 @@
+# editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,csproj,xaml,daml,xml}]
+indent_style = space
+indent_size = 2
+
+[*.cs]
+# Blocks and braces
+csharp_prefer_braces = true:warning
+csharp_new_line_before_open_brace = all
+csharp_indent_braces = false
+csharp_preserve_single_line_blocks = false
+csharp_preserve_single_line_statements = false
+csharp_style_prefer_simple_using_statement = false:suggestion
+
+# Indentation
+csharp_indent_block_contents = true
+csharp_indent_case_contents = true
+csharp_indent_case_contents_when_block = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current
+
+# Newlines
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+
+# Namespaces and imports
+csharp_style_namespace_declarations = block_scoped:suggestion
+csharp_style_prefer_top_level_statements = false:suggestion
+csharp_using_directive_placement = outside_namespace:suggestion
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+
+# Enforcement
+dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0011.severity = warning
+dotnet_diagnostic.IDE0055.severity = warning

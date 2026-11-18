@@ -31,22 +31,23 @@ namespace ProSnippets.EditingSnippets
     /// </summary>
     public static void GroundToGridSettings(CIMGroundToGridCorrection correction)
     {
-      // cref: ArcGIS.Core.CIM.CIMGroundToGridCorrection
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.IsCorrecting(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDirectionOffset(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetDirectionOffset(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDistanceFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingElevationMode(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingConstantScaleFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
-      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetConstantScaleFactor(ArcGIS.Core.CIM.CIMGroundToGridCorrection)
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.IsCorrecting()
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDirectionOffset()
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetDirectionOffset()
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingDistanceFactor()
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingElevationMode()
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.UsingConstantScaleFactor()
+      // cref: ArcGIS.Desktop.Editing.GroundToGridCorrection.GetConstantScaleFactor()
       #region G2G Settings
-      bool isCorecting = correction.IsCorrecting();   // equivalent to correction != null && correction.Enabled;
-      bool UsingOffset = correction.UsingDirectionOffset();   // equivalent to correction.IsCorrecting() && correction.UseDirection;
-      double dOffset = correction.GetDirectionOffset(); // equivalent to correction.UsingDirectionOffset() ? correction.Direction : DefaultDirectionOffset;
-      bool usingDistanceFactor = correction.UsingDistanceFactor();  // equivalent to correction.IsCorrecting() && correction.UseScale;
-      bool usingElevation = correction.UsingElevationMode(); // equivalent to correction.UsingDistanceFactor() && c.ScaleType == GroundToGridScaleType.ComputeUsingElevation;
-      bool usingSFactor = correction.UsingConstantScaleFactor();  //; equivalent to correction.UsingDistanceFactor() && correction.ScaleType == GroundToGridScaleType.ConstantFactor;
-      double dSFactor = correction.GetConstantScaleFactor(); // equivalent to correctionc.UsingDistanceFactor() ? correction.ConstantScaleFactor : DefaultConstantScaleFactor;
+      {
+        bool isCorecting = correction.IsCorrecting();   // equivalent to correction != null && correction.Enabled;
+        bool UsingOffset = correction.UsingDirectionOffset();   // equivalent to correction.IsCorrecting() && correction.UseDirection;
+        double dOffset = correction.GetDirectionOffset(); // equivalent to correction.UsingDirectionOffset() ? correction.Direction : DefaultDirectionOffset;
+        bool usingDistanceFactor = correction.UsingDistanceFactor();  // equivalent to correction.IsCorrecting() && correction.UseScale;
+        bool usingElevation = correction.UsingElevationMode(); // equivalent to correction.UsingDistanceFactor() && c.ScaleType == GroundToGridScaleType.ComputeUsingElevation;
+        bool usingSFactor = correction.UsingConstantScaleFactor();  //; equivalent to correction.UsingDistanceFactor() && correction.ScaleType == GroundToGridScaleType.ConstantFactor;
+        double dSFactor = correction.GetConstantScaleFactor(); // equivalent to correctionc.UsingDistanceFactor() ? correction.ConstantScaleFactor : DefaultConstantScaleFactor;
+      }
       #endregion
     }
   }

@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -16,33 +16,22 @@
    limitations under the License.
 
 */
-using ArcGIS.Core.CIM;
-using ArcGIS.Core.Data;
-using ArcGIS.Core.Data.Knowledge;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Core.Internal.Geometry;
-using ArcGIS.Desktop.Catalog;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Extensions;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Framework.Dialogs;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Internal.Catalog;
-using ArcGIS.Desktop.Internal.Mapping;
-using ArcGIS.Desktop.KnowledgeGraph;
-using ArcGIS.Desktop.Layouts;
-using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Markup;
+using ArcGIS.Core.CIM;
+using ArcGIS.Core.Data;
+using ArcGIS.Core.Geometry;
+using ArcGIS.Core.Internal.Geometry;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework.Contracts;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Internal.Catalog;
+using ArcGIS.Desktop.Layouts;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.LayoutsSnippets
 {
@@ -57,7 +46,7 @@ namespace ProSnippets.LayoutsSnippets
     /// Note that some methods may require to be launched on the ArcGIS Pro's Main CIM thread. These methods are marked in the code comments as requiring a QueuedTask to run.
     /// Crefs are used for internal purposes only. Please ignore them in the context of this example.
     /// </remarks>
-    public static async void ProSnippetsLayouts()
+    public static async Task ProSnippetsLayoutsAsync()
     {
       #region ignore - Variable initialization
       //Different ways to reference or create a layout
@@ -66,8 +55,7 @@ namespace ProSnippets.LayoutsSnippets
       layout = LayoutFactory.Instance.CreateLayout(8.5, 11, LinearUnit.Inches); //Create a new layout
       LayoutProjectItem layoutProjectItem = Project.Current.GetItems<LayoutProjectItem>()
                                        .FirstOrDefault(); //Reference to a layout project item
-                                                          //Note: Needs QueuedTask to run
-      layout = layoutProjectItem?.GetLayout(); //Get the layout from a layout project item
+      layout = await QueuedTask.Run(() => layoutProjectItem?.GetLayout()); //Get the layout from a layout project item
 
       //Reference a Map Frame
       MapFrame mapFrame = layoutView?.Layout?.GetElementsAsFlattenedList()
@@ -102,7 +90,7 @@ namespace ProSnippets.LayoutsSnippets
       #endregion
       // cref: ArcGIS.Desktop.Core.IProjectItem
       // cref: ArcGIS.Desktop.Core.ItemFactory
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
       #region Create an IProjectItem from a layout template pagx file and add it to the project
       {
@@ -114,22 +102,22 @@ namespace ProSnippets.LayoutsSnippets
         // Create an IProjectItem using a layout template pagx file
         IProjectItem pagx = ItemFactory.Instance.Create(layoutTemplateFilePath) as IProjectItem;
         // Add the IProjectItem to the current project
-        //Note: Needs QueuedTask to run
-        Project.Current.AddItem(pagx);
+        var project = Project.Current;
+        await QueuedTask.Run(() => project.AddItem(pagx));
       }
       #endregion Create an IProjectItem from a layout template pagex file and add it to the project
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
+      // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem.GetLayout()
       #region Get a Layout by name from the current project
       {
         LayoutProjectItem layoutItemByName = Project.Current.GetItems<LayoutProjectItem>()
           .FirstOrDefault((lpi) => lpi.Name == "MyLayout");
-        //Note: Needs QueuedTask to run
-        Layout layoutByName = layoutItemByName.GetLayout();
+        Layout layoutByName = await QueuedTask.Run(() => layoutItemByName.GetLayout());
       }
 
       #endregion Get a Layout by name from the current project
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
       #region Reference layout project items and their associated layout
       {
@@ -146,20 +134,19 @@ namespace ProSnippets.LayoutsSnippets
       }
       #endregion
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
-      // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem.GetLayout
-      // cref: ArcGIS.Desktop.Core.LayoutFrameworkExtender.CreateLayoutPaneAsync
+      // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem.GetLayout()
+      // cref: ArcGIS.Desktop.Core.LayoutFrameworkExtender.CreateLayoutPaneAsync(ArcGIS.Desktop.Layouts.Layout)
       #region Open a layout project item in a new view
       {
         //Open a layout project item in a new view.
-        //A layout project item may exist but it may not be open in a view. 
+        //A layout project item may exist but it may not be open in a view.
 
         //Reference a layout project item by name
         LayoutProjectItem layoutItemByName = Project.Current.GetItems<LayoutProjectItem>()
                                   .FirstOrDefault(item => item.Name.Equals("MyLayoutItem"));
 
         //Get the layout associated with the layout project item
-        //Note: Needs QueuedTask to run
-        Layout layoutFromItem = layoutItemByName.GetLayout();  //Worker thread
+        Layout layoutFromItem = await QueuedTask.Run(() => layoutItemByName.GetLayout());
 
         //Create the new pane - call on UI
         ILayoutPane iNewLayoutPane = await ProApp.Panes.CreateLayoutPaneAsync(layout); //GUI thread
@@ -167,20 +154,23 @@ namespace ProSnippets.LayoutsSnippets
       #endregion
       // cref: ArcGIS.Desktop.Layouts.ILayoutPane
       // cref: ArcGIS.Desktop.Layouts.ILayoutPane.LayoutView
-      // cref: ArcGIS.Desktop.FRAMEWORK.FRAMEWORKAPPLICATION.Panes
-      // cref: ArcGIS.Desktop.FRAMEWORK.Contracts.Pane.Activate
+      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Activate()
+      // cref: ArcGIS.Desktop.Layouts.LayoutView.Layout
       #region Activate an already open layout view
       {
         //Activate an already open layout view.
         //A layout view may be open but it may not be active.
 
-        //Find the pane that references the layout and activate it. 
+        //Find the pane that references the layout and activate it.
         //Note - there can be multiple panes referencing the same layout.
         foreach (var pane in ProApp.Panes)
         {
           var layoutPane = pane as ILayoutPane;
           if (layoutPane == null)  //if not a layout view, continue to the next pane
+          {
             continue;
+          }
+
           if (layoutPane.LayoutView.Layout == layout) //activate the view
           {
             (layoutPane as Pane).Activate();
@@ -206,68 +196,61 @@ namespace ProSnippets.LayoutsSnippets
       #endregion
       // cref: ArcGIS.Desktop.Core.IProjectItem
       // cref: ArcGIS.Desktop.Core.ItemFactory
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
       #region Import a pagx into a project
       {
         //Create a layout project item from importing a pagx file
-        //Note: Needs QueuedTask to run
-        IProjectItem pagx = ItemFactory.Instance.Create(
-                                  @"C:\Temp\Layout.pagx") as IProjectItem;
-        Project.Current.AddItem(pagx);
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
+          IProjectItem pagx = ItemFactory.Instance.Create(
+                                    @"C:\Temp\Layout.pagx") as IProjectItem;
+          project.AddItem(pagx);
+        });
       }
       #endregion
       LayoutProjectItem layoutItem = null; //Layout project item reference
-                                           // cref: ArcGIS.Desktop.Core.Project.RemoveItem
+                                           // cref: ArcGIS.Desktop.Core.Project.RemoveItem(ArcGIS.Desktop.Core.IProjectItem)
       #region Remove a layout project item
       {
         //Remove a layout project item.
         //Remove the layout from the project
-        //Note: Needs QueuedTask to run
-        Project.Current.RemoveItem(layoutItem);
+        var project = Project.Current;
+        await QueuedTask.Run(() => project.RemoveItem(layoutItem));
       }
       #endregion
       // cref: ArcGIS.Desktop.Layouts.LayoutFactory
-      // cref: ArcGIS.Desktop.Layouts.LayoutFactory.CreateLayout
-      // cref: ArcGIS.Desktop.Layouts.Layout.SetName
-      // cref: ArcGIS.Desktop.Core.LayoutFrameworkExtender.CreateLayoutPaneAsync
+      // cref: ArcGIS.Desktop.Layouts.ILayoutFactory.CreateLayout(System.Double,System.Double,ArcGIS.Core.Geometry.LinearUnit,System.Boolean,System.Double)
+      // cref: ArcGIS.Desktop.Layouts.Layout.SetName(System.String)
+      // cref: ArcGIS.Desktop.Core.LayoutFrameworkExtender.CreateLayoutPaneAsync(ArcGIS.Desktop.Layouts.Layout)
+      // cref: ArcGIS.Desktop.Layouts.LayoutFactory.Instance
       #region Create a new, basic layout and open it
       {
         //Create a new, basic layout and open it.
-        //Create layout with minimum set of parameters on the worker thread
-        //Note: Needs QueuedTask to run
-        var myNewLayout = LayoutFactory.Instance.CreateLayout(8.5, 11, LinearUnit.Inches);
-        myNewLayout.SetName("New 8.5x11 Layout");
+        var myNewLayout = await QueuedTask.Run(() =>
+        {
+          var newLayout = LayoutFactory.Instance.CreateLayout(8.5, 11, LinearUnit.Inches);
+          newLayout.SetName("New 8.5x11 Layout");
+          return newLayout;
+        });
 
         //Open new layout on the GUI thread
         await ProApp.Panes.CreateLayoutPaneAsync(myNewLayout);
       }
       #endregion
       // cref: ArcGIS.Desktop.Layouts.ILayoutFactory.CreateLayout(ArcGIS.Core.CIM.CIMPage)
-      // cref: ArcGIS.Desktop.Layouts.LayoutFactory.CreateLayout(ArcGIS.Core.CIM.CIMPage)
-      // cref: ArcGIS.Core.CIM.CIMPAGE
-      // cref: ArcGIS.Core.CIM.CIMPAGE.ShowGuides
-      // cref: ArcGIS.Core.CIM.CIMPAGE.ShowRulers
-      // cref: ArcGIS.Core.CIM.CIMPAGE.SmallestRulerDivision
-      // cref: ArcGIS.Core.CIM.CIMPAGE.Guides
-      // cref: ArcGIS.Core.CIM.CIMPAGE.Units
-      // cref: ArcGIS.Core.CIM.CIMPAGE.Width
-      // cref: ArcGIS.Core.CIM.CIMPAGE.Height
-      // cref: ArcGIS.Core.CIM.CIMGUIDE
-      // cref: ArcGIS.Core.CIM.CIMGUIDE.Position
-      // cref: ArcGIS.Core.CIM.CIMGUIDE.Orientation
       // cref: ArcGIS.Core.CIM.Orientation
-      // cref: ArcGIS.Desktop.Core.LayoutFrameworkExtender.CreateLayoutPaneAsync
+      // cref: ArcGIS.Desktop.Core.LayoutFrameworkExtender.CreateLayoutPaneAsync(ArcGIS.Desktop.Layouts.Layout)
       // cref: ArcGIS.Core.Geometry.LinearUnit
+      // cref: ArcGIS.Desktop.Layouts.Layout.SetName(System.String)
+      // cref: ArcGIS.Desktop.Layouts.LayoutFactory.Instance
       #region Create a new layout using a modified CIM and open it
       {
         //Create a new layout using a modified CIM and open it.
         //The CIM exposes additional members that may not be
-        //available through the managed API.  
+        //available through the managed API.
         //In this example, optional guides are added.
-        //Create a new CIMLayout on the worker thread
-
-        //Note: Needs QueuedTask to run
         //Set up a CIM page
         CIMPage newPage = new CIMPage
         {
@@ -314,8 +297,12 @@ namespace ProSnippets.LayoutsSnippets
         newPage.Guides = guideList.ToArray();
 
         //Construct the new layout using the customized cim definitions
-        var layout_local = LayoutFactory.Instance.CreateLayout(newPage);
-        layout_local.SetName("New 8.5x11 Layout");
+        var layout_local = await QueuedTask.Run(() =>
+        {
+          var newLayout = LayoutFactory.Instance.CreateLayout(newPage);
+          newLayout.SetName("New 8.5x11 Layout");
+          return newLayout;
+        });
 
         //Open new layout on the GUI thread
         await ProApp.Panes.CreateLayoutPaneAsync(layout_local);
@@ -323,12 +310,9 @@ namespace ProSnippets.LayoutsSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem.GetLayout
-      // cref: ArcGIS.Desktop.Layouts.Layout.GetPage
-      // cref: ArcGIS.Desktop.Layouts.Layout.SetPage
-      // cref: ArcGIS.Core.CIM.CIMPAGE
-      // cref: ArcGIS.Core.CIM.CIMPAGE.Width
-      // cref: ArcGIS.Core.CIM.CIMPAGE.Height
+      // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem.GetLayout()
+      // cref: ArcGIS.Desktop.Layouts.Layout.GetPage()
+      // cref: ArcGIS.Desktop.Layouts.Layout.SetPage(ArcGIS.Core.CIM.CIMPage)
       #region Change the layout page size
       {
         //Change the layout page size.
@@ -337,31 +321,35 @@ namespace ProSnippets.LayoutsSnippets
                                .FirstOrDefault(item => item.Name.Equals("MyLayoutItem"));
         if (layoutItem != null)
         {
-          //Note: Needs QueuedTask to run
-          //Get the layout
-          Layout lyt = lytItem.GetLayout();
-          if (lyt != null)
+          await QueuedTask.Run(() =>
           {
-            //Change properties
-            CIMPage page = lyt.GetPage();
-            page.Width = 8.5;
-            page.Height = 11;
+            //Get the layout
+            Layout lyt = lytItem.GetLayout();
+            if (lyt != null)
+            {
+              //Change properties
+              CIMPage page = lyt.GetPage();
+              page.Width = 8.5;
+              page.Height = 11;
 
-            //Apply the changes to the layout
-            lyt.SetPage(page);
-          }
+              //Apply the changes to the layout
+              lyt.SetPage(page);
+            }
+          });
         }
       }
       #endregion
 
       #region ProSnippet Group: CIM Graphics and GraphicFactory
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
-      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.CreateCircle
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.CreateCircle(ArcGIS.Core.Geometry.Coordinate2D,System.Double,ArcGIS.Core.Geometry.ArcOrientation,ArcGIS.Core.Geometry.SpatialReference)
       // cref: ArcGIS.Core.Geometry.ArcOrientation
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Circle Graphic
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D center = new Coordinate2D(2, 4);
@@ -384,14 +372,17 @@ namespace ProSnippets.LayoutsSnippets
         //Make an element to add to GraphicsLayer or Layout
         //var elemInfo = new ElementInfo() { Anchor = Anchor.CenterPoint };
         //GraphicElement cirElm = ElementFactory.Instance.CreateGraphicElement(
-        //  layout, circleGraphic, "New Circle", true, elemInfo);
+          //  layout, circleGraphic, "New Circle", true, elemInfo);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleTextGraphic
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleTextGraphic(ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Circle Text Graphic
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         Coordinate2D center = new Coordinate2D(4.5, 4);
         var eabCir = new EllipticArcBuilderEx(center, 0.5, ArcOrientation.ArcClockwise);
@@ -410,14 +401,17 @@ namespace ProSnippets.LayoutsSnippets
 
         //Make an element to add to GraphicsLayer or Layout
         //var ge = ElementFactory.Instance.CreateGraphicElement(layout, graphic,
-        //  "New Circle Text", true);
+          //  "New Circle Text", true);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleTextGraphic
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleTextGraphic(ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Bezier Graphic
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D pt1 = new Coordinate2D(3.5, 7.5);
@@ -436,14 +430,17 @@ namespace ProSnippets.LayoutsSnippets
           TextType.SplinedText, bezPl, sym, "Splined text");
 
         //Make an element to add to GraphicsLayer or Layout
-        //var ge = ElementFactory.Instance.CreateGraphicElement(layout, graphic);
+          //var ge = ElementFactory.Instance.CreateGraphicElement(layout, graphic);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateLegendPatchGraphic
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateLegendPatchGraphic(ArcGIS.Core.CIM.PatchShape,ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.CIM.CIMSymbol)
       // cref: ArcGIS.Core.CIM.PatchShape
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Legend Patch Graphic
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plyCoords = new List<Coordinate2D>();
@@ -475,18 +472,21 @@ namespace ProSnippets.LayoutsSnippets
         //  Anchor = Anchor.LeftMidPoint
         //};
         //var ge = ElementFactory.Instance.CreateGraphicElement(layout, graphic,
-        //  "New Legend Patch", true, elemInfo);
+          //  "New Legend Patch", true, elemInfo);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.ArrowHeadKey
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.ArrowOnBothEnds
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.ArrowSizePoints
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.LineWidthPoints
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateArrowGraphic(ArcGIS.Core.Geometry.Polyline,ArcGIS.Desktop.Layouts.ArrowInfo)
       #region Create Arrow Graphic
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plCoords = new List<Coordinate2D>();
@@ -509,14 +509,17 @@ namespace ProSnippets.LayoutsSnippets
 
         //Make an element to add to GraphicsLayer or Layout
         //var ge = ElementFactory.Instance.CreateGraphicElement(
-        //  layout, graphic, "Arrow Line", false);
+          //  layout, graphic, "Arrow Line", false);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreatePictureGraphic
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreatePictureGraphic(ArcGIS.Core.Geometry.Geometry,System.String)
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Picture Graphic
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         Coordinate2D ll = new Coordinate2D(3.5, 1);
         Coordinate2D ur = new Coordinate2D(5.5, 2);
@@ -527,10 +530,13 @@ namespace ProSnippets.LayoutsSnippets
         var graphic = GraphicFactory.Instance.CreatePictureGraphic(env.Center, picPath);
 
         //Make an element to add to GraphicsLayer or Layout
-        //var ge = ElementFactory.Instance.CreateGraphicElement(layout, graphic);
+          //var ge = ElementFactory.Instance.CreateGraphicElement(layout, graphic);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.GetGraphicOutline
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.GetGraphicOutline(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.CIM.CIMGraphic)
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
       #region Get Graphic Outline
       {
         //given a graphic, extract its outline geometry
@@ -542,13 +548,20 @@ namespace ProSnippets.LayoutsSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.GetGraphicOutline
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.GetGraphicOutline(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.CIM.CIMGraphic)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.Layout.GetElementsAsFlattenedList()
       #region Get Graphic Outline from Graphic Element
       {
         //given a graphic, extract its outline geometry
         var graphic_elem = layout.GetElementsAsFlattenedList().OfType<GraphicElement>()?.FirstOrDefault();
         if (graphic_elem != null)//can be point, line, poly, or text
+        {
           return;
+        }
 
         var outline = GraphicFactory.Instance.GetGraphicOutline(layout, graphic_elem.GetGraphic());
         //create an element using the outline
@@ -559,16 +572,18 @@ namespace ProSnippets.LayoutsSnippets
 
       #region ProSnippet Group: Create Layout Graphic Elements
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Core.CIM.CIMStroke
       // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
       // cref: ArcGIS.Desktop.Mapping.SimpleLineStyle
       // cref: ArcGIS.Desktop.Mapping.SimpleFillStyle
       // cref: ArcGIS.Desktop.Mapping.ColorFactory
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.GreyRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GreyRGB
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Ellipse Graphic Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D center = new Coordinate2D(2, 2.75);
@@ -589,16 +604,19 @@ namespace ProSnippets.LayoutsSnippets
 
         var elpElm = ElementFactory.Instance.CreateGraphicElement(
           layout, poly, ellipseSym, "New Ellipse");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Core.CIM.CIMLineSymbol
       // cref: ArcGIS.Desktop.Mapping.SimpleLineStyle
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.BlackRGB
-      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Lasso Line, Freehand Graphic Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         List<Coordinate2D> plCoords = new List<Coordinate2D>();
         plCoords.Add(new Coordinate2D(1.5, 10.5));
@@ -618,19 +636,22 @@ namespace ProSnippets.LayoutsSnippets
 
         var ge = ElementFactory.Instance.CreateGraphicElement(
                                 layout, linePl, lineSym, "New Freehand");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Core.CIM.CIMStroke
       // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
       // cref: ArcGIS.Desktop.Mapping.SimpleLineStyle
       // cref: ArcGIS.Desktop.Mapping.SimpleFillStyle
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.BlackRGB
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.RedRGB
-      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlackRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Lasso Polygon, Freehand Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         List<Coordinate2D> plyCoords = new List<Coordinate2D>();
         plyCoords.Add(new Coordinate2D(1, 1));
@@ -652,18 +673,22 @@ namespace ProSnippets.LayoutsSnippets
 
         ElementFactory.Instance.CreateGraphicElement(
           layout, poly, polySym, "New Lasso");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.StyleItemType
-      // cref: ARCGIS.DESKTOP.MAPPING.SymbolStyleItem.Symbol
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSYMBOLS
-      // cref: ARCGIS.DESKTOP.MAPPING.SYMBOLEXTENSIONMETHODS.SETSIZE
-      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline
+      // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.Symbol
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleItemType,System.String)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetSize(System.Double)
+      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Line Element
       {
-        //Note: Must be on QueuedTask.Run
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plCoords = new List<Coordinate2D>();
@@ -674,7 +699,7 @@ namespace ProSnippets.LayoutsSnippets
         Polyline linePl = PolylineBuilderEx.CreatePolyline(plCoords);
 
         //Reference a line symbol in a style
-        var ProjectStyles = Project.Current.GetItems<StyleProjectItem>();
+        var ProjectStyles = project.GetItems<StyleProjectItem>();
         StyleProjectItem style = ProjectStyles.First(x => x.Name == "ArcGIS 2D");
         var symStyle = style.SearchSymbols(StyleItemType.LineSymbol, "Line with 2 Markers")[0];
         CIMLineSymbol lineSym = symStyle.Symbol as CIMLineSymbol;
@@ -684,32 +709,37 @@ namespace ProSnippets.LayoutsSnippets
         //CIMLineSymbol lineSym = SymbolFactory.Instance.ConstructLineSymbol(ColorFactory.Instance.BlueRGB, 4.0, SimpleLineStyle.Solid);
         ElementFactory.Instance.CreateGraphicElement(
           layout, linePl, lineSym, "New Line");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.StyleItemType
       // cref: ArcGIS.Core.CIM.Anchor
-      // cref: ARCGIS.DESKTOP.MAPPING.SymbolStyleItem.Symbol
+      // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.Symbol
       // cref: ArcGIS.Core.CIM.CIMStringMap
       // cref: ArcGIS.Core.CIM.CIMStringMap.Key
       // cref: ArcGIS.Core.CIM.CIMStringMap.Value
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSYMBOLS
-      // cref: ARCGIS.DESKTOP.MAPPING.SYMBOLEXTENSIONMETHODS.SETSIZE
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleItemType,System.String)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetSize(System.Double)
       // cref: ArcGIS.Desktop.Layouts.ElementInfo
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.CustomProperties
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Rotation
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Point Element
       {
-        //Note: Must be on QueuedTask.Run(() => { ...
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D coord2D = new Coordinate2D(2.0, 10.0);
 
         //Reference a point symbol in a style
-        StyleProjectItem stylePrjItm = Project.Current.GetItems<StyleProjectItem>()
+        StyleProjectItem stylePrjItm = project.GetItems<StyleProjectItem>()
                   .FirstOrDefault(item => item.Name == "ArcGIS 2D");
         SymbolStyleItem symStyleItm = stylePrjItm.SearchSymbols(
                               StyleItemType.PointSymbol, "City Hall")[0];
@@ -731,19 +761,22 @@ namespace ProSnippets.LayoutsSnippets
 
         ElementFactory.Instance.CreateGraphicElement(
           layout, graphic, "New Point", true, elemInfo);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Core.CIM.CIMStroke
       // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
       // cref: ArcGIS.Desktop.Mapping.SimpleLineStyle
       // cref: ArcGIS.Desktop.Mapping.SimpleFillStyle
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.BlueRGB
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.RedRGB
-      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Polygon Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plyCoords = new List<Coordinate2D>();
@@ -763,19 +796,23 @@ namespace ProSnippets.LayoutsSnippets
 
         ElementFactory.Instance.CreateGraphicElement(
           layout, poly, polySym, "New Polygon", false);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
       // cref: ArcGIS.Core.CIM.Anchor
       // cref: ArcGIS.Desktop.Layouts.ElementInfo
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Rotation
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.CornerRounding
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Rectangle Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(1.0, 4.75);
@@ -798,15 +835,17 @@ namespace ProSnippets.LayoutsSnippets
 
         ElementFactory.Instance.CreateGraphicElement(
           layout, env, polySym, "New Rectangle", false, elemInfo);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Core.Geometry.CubicBezierBuilderEx.CreateCubicBezierSegment(Coordinate2D,Coordinate2D,Coordinate2D,Coordinate2D,SpatialReference)
-      // cref: ArcGIS.Core.Geometry.CubicBezierBuilderEx.ToSegment
-      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(Segment,SpatialReference)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Core.Geometry.CubicBezierBuilderEx.ToSegment()
+      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.AttributeFlags,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Bezier Curve Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         Coordinate2D pt1 = new Coordinate2D(1, 7.5);
         Coordinate2D pt2 = new Coordinate2D(1.66, 8);
@@ -821,13 +860,17 @@ namespace ProSnippets.LayoutsSnippets
           ColorFactory.Instance.RedRGB, 4.0, SimpleLineStyle.DashDot);
 
         ElementFactory.Instance.CreateGraphicElement(layout, bezPl, lineSym, "New Bezier");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElements
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElements(ArcGIS.Desktop.Mapping.IElementContainer,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMGraphic},System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.ElementInfo})
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Graphic Elements
       {
-        //Note:Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plyCoords = new List<Coordinate2D>();
@@ -855,20 +898,21 @@ namespace ProSnippets.LayoutsSnippets
           layout, new List<CIMGraphic>() { g1, g2, g3 },
           new List<string>() { "Poly", "Envelope", "MapPoint" },
           true);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.GraphicFactory
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC.Location
-      // cref: ARCGIS.CORE.CIM.CIMGRAPHIC.Symbol
-      // cref: ArcGIS.CORE.CIM.CIMGraphicElement
-      // cref: ArcGIS.CORE.CIM.CIMGraphicElement.Graphic
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic.Location
+      // cref: ArcGIS.Core.CIM.CIMGraphic.Symbol
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Create Graphic Element using CIMGraphic
       {
-        //Note: on the QueuedTask
+        await QueuedTask.Run(() =>
+        {
         //Place symbol on the layout
         MapPoint location = MapPointBuilderEx.CreateMapPoint(new Coordinate2D(9, 1));
 
@@ -876,7 +920,7 @@ namespace ProSnippets.LayoutsSnippets
         var pt_symbol = SymbolFactory.Instance.ConstructPointSymbol(
                               ColorFactory.Instance.GreenRGB);
 
-        //create a CIMGraphic 
+        //create a CIMGraphic
         var graphic = new CIMPointGraphic()
         {
           Symbol = pt_symbol.MakeSymbolReference(),
@@ -887,15 +931,16 @@ namespace ProSnippets.LayoutsSnippets
 
         ElementFactory.Instance.CreateGraphicElement(layout, graphic);
         ElementFactory.Instance.CreateGraphicElement(layout, graphicFactory);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Graphic Element using CIMSymbol
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Place symbol on the layout
         MapPoint location = MapPointBuilderEx.CreateMapPoint(new Coordinate2D(9, 1));
 
@@ -904,18 +949,21 @@ namespace ProSnippets.LayoutsSnippets
                               ColorFactory.Instance.GreenRGB);
 
         ElementFactory.Instance.CreateGraphicElement(layout, location, pt_symbol);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElements
-      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElements
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC.Location
-      // cref: ARCGIS.CORE.CIM.CIMGRAPHIC.Symbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElements(ArcGIS.Desktop.Mapping.IElementContainer,System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMGraphic},System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.ElementInfo})
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic.Location
+      // cref: ArcGIS.Core.CIM.CIMGraphic.Symbol
       // cref: ArcGIS.Desktop.Layouts.GraphicFactory
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Bulk Element creation
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //List of Point graphics
         var listGraphics = new List<CIMPointGraphic>();
@@ -933,7 +981,7 @@ namespace ProSnippets.LayoutsSnippets
           for (int col = 0; col <= dy; ++col)
           {
             point = MapPointBuilderEx.CreateMapPoint(col, row);
-            //create a CIMGraphic 
+            //create a CIMGraphic
             var graphic = new CIMPointGraphic()
             {
               Symbol = pointSymbol.MakeSymbolReference(),
@@ -952,17 +1000,20 @@ namespace ProSnippets.LayoutsSnippets
                                                            layout, listGraphics);
         var bulkgraphicsFactory = ElementFactory.Instance.CreateGraphicElements(
                                                            layout, listGraphicsFactory);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateElement
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC.Location
-      // cref: ARCGIS.CORE.CIM.CIMGRAPHIC.Symbol
-      // cref: ArcGIS.CORE.CIM.CIMGraphicElement
-      // cref: ArcGIS.CORE.CIM.CIMGraphicElement.Graphic
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.CIM.CIMElement,System.Boolean)
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic
+      // cref: ArcGIS.Core.CIM.CIMPointGraphic.Location
+      // cref: ArcGIS.Core.CIM.CIMGraphic.Symbol
+      // cref: ArcGIS.Core.CIM.CIMGraphicElement
+      // cref: ArcGIS.Core.CIM.CIMGraphicElement.Graphic
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Element using a CIMGraphicElement
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Place symbol on the layout
         MapPoint point = MapPointBuilderEx.CreateMapPoint(new Coordinate2D(9, 1));
@@ -971,7 +1022,7 @@ namespace ProSnippets.LayoutsSnippets
         var pt_symbol = SymbolFactory.Instance.ConstructPointSymbol(
                               ColorFactory.Instance.GreenRGB);
 
-        //create a CIMGraphic 
+        //create a CIMGraphic
         var graphic = new CIMGraphicElement()
         {
           Graphic = new CIMPointGraphic()
@@ -981,23 +1032,28 @@ namespace ProSnippets.LayoutsSnippets
           }
         };
         ElementFactory.Instance.CreateElement(layout, graphic);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSYMBOLS
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ARCGIS.DESKTOP.MAPPING.SYMBOLEXTENSIONMETHODS.SETSIZE
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleItemType,System.String)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetSize(System.Double)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetName(System.String)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create point graphic with symbology
       {
         //Create a simple 2D point graphic and apply an existing point style item as the symbology.
-        //Note: Must be on QueuedTask.Run
-        //Build 2D point geometry  
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
+        //Build 2D point geometry
         Coordinate2D coord2D = new Coordinate2D(2.0, 10.0);
 
         //(optionally) Reference a point symbol in a style
-        StyleProjectItem ptStylePrjItm = Project.Current.GetItems<StyleProjectItem>()
+        StyleProjectItem ptStylePrjItm = project.GetItems<StyleProjectItem>()
                                       .FirstOrDefault(item => item.Name == "ArcGIS 2D");
         SymbolStyleItem ptSymStyleItm = ptStylePrjItm.SearchSymbols(
                                                StyleItemType.PointSymbol, "City Hall")[0];
@@ -1010,25 +1066,30 @@ namespace ProSnippets.LayoutsSnippets
         //This would eliminate the four optional lines of code above that
         //reference a style.
         //CIMPointSymbol pointSym = SymbolFactory.Instance.ConstructPointSymbol(
-        //                  ColorFactory.Instance.RedRGB, 25.0, SimpleMarkerStyle.Star);  
+        //                  ColorFactory.Instance.RedRGB, 25.0, SimpleMarkerStyle.Star);
 
         GraphicElement ptElm = ElementFactory.Instance.CreateGraphicElement(
                                        layout, coord2D.ToMapPoint(), pointSym);
         ptElm.SetName("New Point");
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
       // cref: ArcGIS.Core.CIM.CIMLineSymbol
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSYMBOLS
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ARCGIS.DESKTOP.MAPPING.SYMBOLEXTENSIONMETHODS.SETSIZE
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleItemType,System.String)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.SetSize(System.Double)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetName(System.String)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create line graphic with symbology
       {
         //Create a simple 2D line graphic and apply an existing line
         //style item as the symbology.
-        //Note: Must be on QueuedTask.Run
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
         //Build 2d line geometry
         List<Coordinate2D> plCoords = new List<Coordinate2D>();
         plCoords.Add(new Coordinate2D(1, 8.5));
@@ -1039,7 +1100,7 @@ namespace ProSnippets.LayoutsSnippets
         Polyline linePl = PolylineBuilderEx.CreatePolyline(plCoords);
 
         //(optionally) Reference a line symbol in a style
-        StyleProjectItem lnStylePrjItm = Project.Current.GetItems<StyleProjectItem>()
+        StyleProjectItem lnStylePrjItm = project.GetItems<StyleProjectItem>()
                                       .FirstOrDefault(item => item.Name == "ArcGIS 2D");
         SymbolStyleItem lnSymStyleItm = lnStylePrjItm.SearchSymbols(
                                       StyleItemType.LineSymbol, "Line with 2 Markers")[0];
@@ -1053,34 +1114,35 @@ namespace ProSnippets.LayoutsSnippets
         //reference a style.
         //
         //CIMLineSymbol lineSym = SymbolFactory.Instance.ConstructLineSymbol(
-        //         ColorFactory.Instance.BlueRGB, 4.0, SimpleLineStyle.Solid);  
+        //         ColorFactory.Instance.BlueRGB, 4.0, SimpleLineStyle.Solid);
 
 
         GraphicElement lineElm = ElementFactory.Instance.CreateGraphicElement(
                                                     layout, linePl, lineSym);
         lineElm.SetName("New Line");
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructStroke(CIMCOLOR,DOUBLE,SIMPLELINESTYLE)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructPolygonSymbol(CIMCOLOR,SIMPLEFILLSTYLE,CIMSTROKE)
+      // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
       // cref: ArcGIS.Desktop.Mapping.SimpleLineStyle
       // cref: ArcGIS.Desktop.Mapping.SimpleFillStyle
-      // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Mapping.SymbolStyleItem
       // cref: ArcGIS.Core.CIM.CIMStroke
       // cref: ArcGIS.Core.CIM.CIMPolygonSymbol
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreatePredefinedShapeGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreatePredefinedShapeGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.PredefinedShape,ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.CIM.CIMPolygonSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.PredefinedShape
       // cref: ArcGIS.Desktop.Layouts.GraphicElement
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create rectangle graphic with simple symbology
       {
         //Create a simple 2D rectangle graphic and apply simple fill and
         //outline symbols.
 
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build 2D envelope geometry
         Coordinate2D rec_ll = new Coordinate2D(1.0, 4.75);
@@ -1101,6 +1163,7 @@ namespace ProSnippets.LayoutsSnippets
         GraphicElement recElm2 = ElementFactory.Instance.CreatePredefinedShapeGraphicElement(
                                   layout, PredefinedShape.Rectangle, rec_env, polySym,
                                   "New Rectangle2");
+        });
       }
       #endregion
 
@@ -1108,22 +1171,23 @@ namespace ProSnippets.LayoutsSnippets
 
       #region ProSnippet Group: Create Text Graphic Elements
       #endregion
-      // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(CIMPOLYGONSYMBOL,DOUBLE,STRING,STRING)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Core.CIM.CIMTextSymbol
       // cref: ArcGIS.Core.CIM.Anchor
       // cref: ArcGIS.Desktop.Layouts.ElementInfo
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Rotation
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.TextType
-      // cref: ArcGIS.Desktop.Layouts.Element.SetX
-      // cref: ArcGIS.Desktop.Layouts.Element.SetY
+      // cref: ArcGIS.Desktop.Layouts.Element.SetX(System.Double)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetY(System.Double)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Point Text Element 1
       {
         //Create a simple point text element and assign basic symbology and text settings.
 
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Build 2D point geometry
         Coordinate2D coord2D = new Coordinate2D(3.5, 10);
 
@@ -1145,25 +1209,27 @@ namespace ProSnippets.LayoutsSnippets
         //Change additional text properties
         ptTxtElm.SetX(4.5);
         ptTxtElm.SetY(9.5);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(IEnumerable{Coordinate3D},SpatialReference)
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol(CIMPOLYGONSYMBOL,DOUBLE,STRING,STRING)
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
+      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.TextType
       // cref: ArcGIS.Core.CIM.CIMTextSymbol
       // cref: ArcGIS.Core.CIM.CIMGraphic
       // cref: ArcGIS.Core.CIM.CIMParagraphTextGraphic
       // cref: ArcGIS.Core.CIM.CIMParagraphTextGraphic.Frame
-      // cref: ArcGIS.Core.CIM.CIMGraphicFrame
       // cref: ArcGIS.Core.CIM.CIMGraphicFrame.BorderSymbol
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic(ArcGIS.Core.CIM.CIMGraphic)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Rectangle Paragraph Text Element 1
       {
-        //Note: Must be on QueuedTask.Run
-        //Create rectangle text with background and border symbology.  
+        await QueuedTask.Run(() =>
+        {
+        //Create rectangle text with background and border symbology.
         //Build 2D polygon geometry
         List<Coordinate2D> plyCoords = new List<Coordinate2D>();
         plyCoords.Add(new Coordinate2D(3.5, 7));
@@ -1185,7 +1251,7 @@ namespace ProSnippets.LayoutsSnippets
         GraphicElement polyTxtElm = ElementFactory.Instance.CreateTextGraphicElement(
           layout, TextType.RectangleParagraph, poly, sym, text, "Polygon Paragraph");
 
-        //(Optionally) Modify paragraph border 
+        //(Optionally) Modify paragraph border
         CIMGraphic polyTxtGra = polyTxtElm.GetGraphic();
         CIMParagraphTextGraphic cimPolyTxtGra = polyTxtGra as CIMParagraphTextGraphic;
         cimPolyTxtGra.Frame.BorderSymbol = new CIMSymbolReference();
@@ -1193,13 +1259,15 @@ namespace ProSnippets.LayoutsSnippets
                      SymbolFactory.Instance.ConstructLineSymbol(
                                 ColorFactory.Instance.GreyRGB, 1.0, SimpleLineStyle.Solid);
         polyTxtElm.SetGraphic(polyTxtGra);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.TextElement
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Layouts.TextElement.SetTextProperties
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.TextElement.SetTextProperties(ArcGIS.Desktop.Layouts.TextProperties)
       // cref: ArcGIS.Desktop.Layouts.TextProperties
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create a Dynamic Point Text Element
       {
         //Create a dynamic text element.
@@ -1208,22 +1276,26 @@ namespace ProSnippets.LayoutsSnippets
         String title = @"<dyn type = ""page"" property = ""name"" />";
         Coordinate2D llTitle = new Coordinate2D(6, 2.5);
         //Create with default text properties
-        //Note: Must be on QueuedTask.Run
-        TextElement titleGraphics = ElementFactory.Instance.CreateTextGraphicElement(
-                        layout, TextType.PointText, llTitle.ToMapPoint(), null, title) as TextElement;
+        await QueuedTask.Run(() =>
+        {
+          TextElement titleGraphics = ElementFactory.Instance.CreateTextGraphicElement(
+                          layout, TextType.PointText, llTitle.ToMapPoint(), null, title) as TextElement;
 
-        //Modify the text properties
-        titleGraphics.SetTextProperties(new TextProperties(title, "Arial", 24, "Bold"));
+          //Modify the text properties
+          titleGraphics.SetTextProperties(new TextProperties(title, "Arial", 24, "Bold"));
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Point Text Element 2
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         Coordinate2D coord2D = new Coordinate2D(3.5, 10);
 
@@ -1236,14 +1308,17 @@ namespace ProSnippets.LayoutsSnippets
         GraphicElement ptTxtElm = ElementFactory.Instance.CreateTextGraphicElement(
           layout, TextType.PointText, coord2D.ToMapPoint(), sym, textString,
           "New Point Text", true, elemInfo);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Polygon Paragraph Text Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plyCoords = new List<Coordinate2D>();
@@ -1265,14 +1340,17 @@ namespace ProSnippets.LayoutsSnippets
         var ge = ElementFactory.Instance.CreateTextGraphicElement(
           layout, TextType.PolygonParagraph, poly, sym, text,
                 "New Polygon Text", true);
+              });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Rectangle Paragraph Text Element 2
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(3.5, 4.75);
@@ -1286,7 +1364,7 @@ namespace ProSnippets.LayoutsSnippets
                       "<BOL>wraps to other lines</BOL>" +
                       " so that we can see the effects.";
 
-        //(Optionally) Modify border and background with 50% transparency 
+        //(Optionally) Modify border and background with 50% transparency
         //CIMGraphic recTxtGra = recTxtElm.Graphic;
         //CIMParagraphTextGraphic cimRecTxtGra = recTxtGra as CIMParagraphTextGraphic;
         //CIMSymbolReference cimRecTxtBorder = cimRecTxtGra.Frame.BorderSymbol;
@@ -1306,16 +1384,18 @@ namespace ProSnippets.LayoutsSnippets
 
         var ge = ElementFactory.Instance.CreateTextGraphicElement(layout,
                     TextType.RectangleParagraph, env, sym, text, "New Rectangle Text");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
-      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.#ctor(ArcGIS.Core.Geometry.Coordinate2D,System.Double,ArcGIS.Core.Geometry.ArcOrientation,ArcGIS.Core.Geometry.SpatialReference)
-      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.ToSegment
+      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.ToSegment()
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Circle Text Element
       {
-        //Note: Must be on QueuedTask.Run(() => { ...
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         Coordinate2D center = new Coordinate2D(4.5, 4);
         var eabCir = new EllipticArcBuilderEx(center, 0.5, ArcOrientation.ArcClockwise);
@@ -1331,16 +1411,19 @@ namespace ProSnippets.LayoutsSnippets
 
         GraphicElement cirTxtElm = ElementFactory.Instance.CreateTextGraphicElement(
           layout, TextType.CircleParagraph, poly, sym, text, "New Circle Text", false);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
-      // cref: ArcGIS.Core.Geometry.CubicBezierBuilderEx.#ctor(Coordinate2D,Coordinate2D,Coordinate2D,Coordinate2D,SpatialReference)
-      // cref: ArcGIS.Core.Geometry.CubicBezierBuilderEx.ToSegment
+      // cref: ArcGIS.Core.Geometry.CubicBezierBuilderEx.ToSegment()
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
       #region Create Bezier Text Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D pt1 = new Coordinate2D(3.5, 7.5);
@@ -1358,18 +1441,20 @@ namespace ProSnippets.LayoutsSnippets
         var ge = ElementFactory.Instance.CreateTextGraphicElement(
           layout, TextType.SplinedText, bezPl, sym, "this is the bezier text",
                 "New Bezier Text", true, new ElementInfo() { Anchor = Anchor.CenterPoint });
+              });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Mapping.SymbolFactory.ConstructTextSymbol
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructTextSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,System.String,System.String)
       // cref: ArcGIS.Desktop.Layouts.TextType
-      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.#ctor(Coordinate2D,Double,Double,Double,ArcOrientation,SpatialReference)
-      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.ToSegment
+      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.ToSegment()
       // cref: ArcGIS.Core.Geometry.ArcOrientation
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Ellipse Text Element
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D center = new Coordinate2D(4.5, 2.75);
@@ -1386,16 +1471,19 @@ namespace ProSnippets.LayoutsSnippets
 
         GraphicElement ge = ElementFactory.Instance.CreateTextGraphicElement(
           layout, TextType.PolygonParagraph, poly, sym, text, "New Ellipse Text", false);
+        });
       }
       #endregion
       #region ProSnippet Group: Create Predefined Shapes And Arrows
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreatePredefinedShapeGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreatePredefinedShapeGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.PredefinedShape,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,ArcGIS.Core.CIM.CIMPolygonSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.PredefinedShape
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Predefined Shape Graphic Element
       {
         PredefinedShape shapeType = PredefinedShape.Circle;
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //PredefinedShape shapeType =
         //              PredefinedShape.Circle | Cloud | Cross |Circle | Triangle | ... ;
@@ -1413,13 +1501,16 @@ namespace ProSnippets.LayoutsSnippets
         var ge = ElementFactory.Instance.CreatePredefinedShapeGraphicElement(
                                layout, shapeType, env.Center, env.Width, env.Height,
                                 poly_sym, shapeType.ToString(), true);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreatePredefinedShapeGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreatePredefinedShapeGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.PredefinedShape,ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.CIM.CIMPolygonSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.PredefinedShape
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Predefined Shape Graphic Element 2
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(6.5, 7);
@@ -1433,15 +1524,18 @@ namespace ProSnippets.LayoutsSnippets
 
         var ge = ElementFactory.Instance.CreatePredefinedShapeGraphicElement(
           layout, PredefinedShape.RoundedRectangle, env, poly_sym, "Rounded Rect", true);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreatePredefinedShapeGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreatePredefinedShapeGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.PredefinedShape,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,ArcGIS.Core.CIM.CIMPolygonSymbol,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.PredefinedShape
-      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.#ctor(MapPoint,MapPoint,Double,Double,Double,MinorOrMajor,ArcOrientation,SpatialReference)
       // cref: ArcGIS.Core.Geometry.ArcOrientation
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
       #region Create Predefined Shape Graphic Element 3
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D center = new Coordinate2D(2, 2.75);
@@ -1461,18 +1555,21 @@ namespace ProSnippets.LayoutsSnippets
         var ge = ElementFactory.Instance.CreatePredefinedShapeGraphicElement(
           layout, PredefinedShape.Ellipse, poly.Extent.Center, 0, 0, ellipseSym,
           "New Ellipse2", false, new ElementInfo() { Anchor = Anchor.TopRightCorner });
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateArrowGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateArrowGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Polyline,ArcGIS.Desktop.Layouts.ArrowInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.ArrowHeadKey
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.ArrowOnBothEnds
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.ArrowSizePoints
       // cref: ArcGIS.Desktop.Layouts.ArrowInfo.LineWidthPoints
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.Rotation
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Line Arrow Element
       {
-        //Note: Must be on QueuedTask.Run(() => { ...
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         List<Coordinate2D> plCoords = new List<Coordinate2D>();
@@ -1495,17 +1592,19 @@ namespace ProSnippets.LayoutsSnippets
           layout, linePl, arrowInfo, "Arrow Line", true,
                                     new ElementInfo() { Rotation = 15.0 });
         //lineElm.SetName("New Line");
+        });
       }
       #endregion
 
       #region ProSnippet Group: Picture Elements
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement
-      // cref: ARCGIS.CORE.CIM.CIMPOINTGRAPHIC
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreatePictureGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       #region Create Picture Graphic Element using CIMSymbol
       {
-        //Note: Must be on QueuedTask.Run(() => { ...
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(0.5, 1);
@@ -1517,19 +1616,22 @@ namespace ProSnippets.LayoutsSnippets
           "SamplePicture.jpg");
         var pic_gr = ElementFactory.Instance.CreatePictureGraphicElement(
           layout, env.Center, picPath, "New Picture", true, new ElementInfo() { Anchor = Anchor.CenterPoint });
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreatePictureGraphicElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreatePictureGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Core.CIM.CIMPictureGraphic
       // cref: ArcGIS.Core.CIM.CIMPictureGraphic.Frame
       // cref: ArcGIS.Core.CIM.CIMGraphicFrame.BorderSymbol
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic(ArcGIS.Core.CIM.CIMGraphic)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create a new picture element with advanced symbol settings
       {
         //Create a picture element and also set background and border symbology.
 
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build 2D envelope geometry
         Coordinate2D pic_ll = new Coordinate2D(6, 1);
@@ -1542,7 +1644,7 @@ namespace ProSnippets.LayoutsSnippets
         GraphicElement picElm = ElementFactory.Instance.CreatePictureGraphicElement(
                                              layout, env, picPath, "New Picture");
 
-        //(Optionally) Modify the border and shadow 
+        //(Optionally) Modify the border and shadow
         CIMGraphic picGra = picElm.GetGraphic();
         CIMPictureGraphic cimPicGra = picGra as CIMPictureGraphic;
         cimPicGra.Frame.BorderSymbol = new CIMSymbolReference();
@@ -1557,6 +1659,7 @@ namespace ProSnippets.LayoutsSnippets
 
         //Update the element
         picElm.SetGraphic(picGra);
+        });
       }
       #endregion
 
@@ -1564,16 +1667,17 @@ namespace ProSnippets.LayoutsSnippets
       #region ProSnippet Group: Create MapFrame and Surrounds
       #endregion
       // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(Coordinate2D,Coordinate2D,SpatialReference)
-      // cref: ArcGIS.Desktop.Mapping.MapProjectItem
-      // cref: ArcGIS.Desktop.Mapping.MapProjectItem.GetMap
-      // cref: ArcGIS.Desktop.Mapping.Map.GetBookmarks
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapFrameElement
+      // cref: ArcGIS.Desktop.Mapping.Map.GetBookmarks()
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapFrameElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.Map,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.MapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(BOOKMARK)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(ArcGIS.Desktop.Mapping.Bookmark)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Map Frame and Set Camera
       {
         //Create a map frame and set its camera by zooming to the extent of an existing bookmark.
-        //Construct on the worker thread
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
 
         //Build 2D envelope geometry
         Coordinate2D mf_ll = new Coordinate2D(6.0, 8.5);
@@ -1581,7 +1685,7 @@ namespace ProSnippets.LayoutsSnippets
         Envelope mf_env = EnvelopeBuilderEx.CreateEnvelope(mf_ll, mf_ur);
 
         //Reference map, create MF and add to layout
-        MapProjectItem mapPrjItem = Project.Current.GetItems<MapProjectItem>()
+        MapProjectItem mapPrjItem = project.GetItems<MapProjectItem>()
                              .FirstOrDefault(item => item.Name.Equals("Map"));
         Map mfMap = mapPrjItem.GetMap();
         Bookmark bookmark = mfMap.GetBookmarks().FirstOrDefault(
@@ -1592,17 +1696,22 @@ namespace ProSnippets.LayoutsSnippets
 
         //Zoom to bookmark
         mfElm.SetCamera(bookmark);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.Legend
       // cref: ArcGIS.Desktop.Layouts.LegendInfo
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
       #region Create Legend
       {
         //Create a legend for an associated map frame.
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build 2D envelope geometry
         Coordinate2D leg_ll = new Coordinate2D(6, 2.5);
@@ -1622,15 +1731,20 @@ namespace ProSnippets.LayoutsSnippets
         };
         Legend legendElm = ElementFactory.Instance.CreateMapSurroundElement(
                             layout, leg_env, legendInfo, "New Legend") as Legend;
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.ScaleBarStyleItem
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSCALEBARS
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchScaleBars(System.String)
       // cref: ArcGIS.Desktop.Layouts.ScaleBarInfo
       // cref: ArcGIS.Desktop.Layouts.ScaleBarInfo.ScaleBarStyleItem
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
       #region Create Scale Bar From StyleItem
       {
         //Create a scale bar using a style.
@@ -1639,9 +1753,10 @@ namespace ProSnippets.LayoutsSnippets
         StyleProjectItem arcgis_2dStyle = Project.Current.GetItems<StyleProjectItem>()
                                     .First(si => si.Name == "ArcGIS 2D");
 
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
-        //Reference the specific scale bar by name 
+        //Reference the specific scale bar by name
         ScaleBarStyleItem scaleBarItem = arcgis_2dStyle.SearchScaleBars(
                             "Double Alternating Scale Bar").FirstOrDefault();
 
@@ -1657,15 +1772,20 @@ namespace ProSnippets.LayoutsSnippets
         };
         ElementFactory.Instance.CreateMapSurroundElement(
                 layout, coord2D.ToMapPoint(), sbarInfo);
+              });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.NorthArrowStyleItem
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SearchNorthArrows
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchNorthArrows(System.String)
       // cref: ArcGIS.Desktop.Layouts.NorthArrowInfo
       // cref: ArcGIS.Desktop.Layouts.NorthArrowInfo.NorthArrowStyleItem
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
       #region Create North Arrow From StyleItem 1
       {
         //Create a north arrow using a style.
@@ -1674,7 +1794,8 @@ namespace ProSnippets.LayoutsSnippets
         StyleProjectItem arcgis2dStyles = Project.Current.GetItems<StyleProjectItem>()
                           .First(si => si.Name == "ArcGIS 2D");
 
-        //Construct on the worker thread
+        await QueuedTask.Run(() =>
+        {
 
         NorthArrowStyleItem naStyleItem = arcgis2dStyles.SearchNorthArrows(
                       "ArcGIS North 13").FirstOrDefault();
@@ -1692,21 +1813,26 @@ namespace ProSnippets.LayoutsSnippets
         };
         var newNorthArrow = ElementFactory.Instance.CreateMapSurroundElement(
                                 layout, nArrow.ToMapPoint(), naInfo);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.TableFrameInfo
       // cref: ArcGIS.Desktop.Layouts.TableFrameInfo.FieldNames
-      // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapMemberUri
       // cref: ArcGIS.Desktop.Layouts.TableFrame
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
-      // cref: ArcGIS.Desktop.Mapping.Map.FindLayers
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Mapping.Map.FindLayers(System.String,System.Boolean)
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region Create Table Frame
       {
         //Create a table frame.
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build 2D envelope geometry
         Coordinate2D rec_ll = new Coordinate2D(1.0, 3.5);
@@ -1730,13 +1856,16 @@ namespace ProSnippets.LayoutsSnippets
         };
         var tabFrame = ElementFactory.Instance.CreateMapSurroundElement(
           layout, rec_env, tableFrameInfo) as TableFrame;
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapFrameElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapFrameElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.Map,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.MapFrame
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Map Frame 1
       {
-        //Note: QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(2.0, 4.5);
@@ -1745,13 +1874,16 @@ namespace ProSnippets.LayoutsSnippets
 
         //Reference map, create MF and add to layout
         MapFrame mfElm = ElementFactory.Instance.CreateMapFrameElement(layout, env, map);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapFrameElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapFrameElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.Map,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.MapFrame
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Map Frame 2
       {
-        //Note: Must be on QueuedTask.Run(() => { ...
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(4.0, 2.5);
@@ -1760,16 +1892,21 @@ namespace ProSnippets.LayoutsSnippets
 
         MapFrame mfElm = ElementFactory.Instance.CreateMapFrameElement(
         layout, env.Center, map);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.LegendInfo
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
-      // cref: ArcGIS.Desktop.Layouts.Element.SetName
+      // cref: ArcGIS.Desktop.Layouts.Element.SetName(System.String)
       // cref: ArcGIS.Desktop.Layouts.Legend
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
       #region Create Legend 2
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(6, 2.5);
@@ -1786,33 +1923,39 @@ namespace ProSnippets.LayoutsSnippets
         var legendElm = ElementFactory.Instance.CreateMapSurroundElement(
           layout, env.Center, surroundInfo) as Legend;
         legendElm.SetName("New Legend");
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.NorthArrowInfo
       // cref: ArcGIS.Desktop.Layouts.NorthArrowInfo.NorthArrowStyleItem
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
-      // cref: ArcGIS.Desktop.Layouts.Element.SetName
-      // cref: ArcGIS.Desktop.Layouts.Element.SetHeight
-      // cref: ArcGIS.Desktop.Layouts.Element.SetX
-      // cref: ArcGIS.Desktop.Layouts.Element.SetY
+      // cref: ArcGIS.Desktop.Layouts.Element.SetName(System.String)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetHeight(System.Double)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetX(System.Double)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetY(System.Double)
       // cref: ArcGIS.Desktop.Layouts.NorthArrow
       // cref: ArcGIS.Desktop.Mapping.NorthArrowStyleItem
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SearchNorthArrows
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchNorthArrows(System.String)
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
       #region Create North Arrow From StyleItem 2
       {
-        //Note: Must be on QueuedTask.Run
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D center = new Coordinate2D(7, 5.5);
 
         //Reference a North Arrow in a style
-        StyleProjectItem stylePrjItm = Project.Current.GetItems<StyleProjectItem>()
+        StyleProjectItem stylePrjItm = project.GetItems<StyleProjectItem>()
                                        .FirstOrDefault(item => item.Name == "ArcGIS 2D");
         NorthArrowStyleItem naStyleItm = stylePrjItm.SearchNorthArrows(
                                                "ArcGIS North 10")[0];
 
-        //Reference MF, create north arrow and add to layout 
+        //Reference MF, create north arrow and add to layout
 
         var mf = layout.FindElement("Map Frame") as MapFrame;
         var narrow_info = new NorthArrowInfo()
@@ -1826,9 +1969,10 @@ namespace ProSnippets.LayoutsSnippets
         arrowElm.SetHeight(1.75);
         arrowElm.SetX(7);
         arrowElm.SetY(6);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.TableFrameInfo
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapMemberUri
@@ -1836,9 +1980,11 @@ namespace ProSnippets.LayoutsSnippets
       // cref: ArcGIS.Core.CIM.CIMStringMap.Value
       // cref: ArcGIS.Desktop.Layouts.ElementInfo.CustomProperties
       // cref: ArcGIS.Desktop.Layouts.TableFrame
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Table Frame 2
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(1, 1);
@@ -1866,18 +2012,23 @@ namespace ProSnippets.LayoutsSnippets
         var tableFrameElem = ElementFactory.Instance.CreateMapSurroundElement(
                                       layout, env.Center, tableFrameInfo,
                                       "New Table Frame", false, elemInfo) as TableFrame;
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.ScaleBarInfo
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.ScaleBarStyleItem
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSCALEBARS
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchScaleBars(System.String)
       // cref: ArcGIS.Desktop.Layouts.ScaleBar
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Scale Bar
       {
-        //Note: Must be on QueuedTask.Run
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
 
         //Build geometry
         Coordinate2D ll = new Coordinate2D(5.0, 6);
@@ -1885,7 +2036,7 @@ namespace ProSnippets.LayoutsSnippets
         Envelope sbEnv = EnvelopeBuilderEx.CreateEnvelope(ll, ur);
 
         //Reference a Scale Bar in a style
-        StyleProjectItem stylePrjItm = Project.Current.GetItems<StyleProjectItem>()
+        StyleProjectItem stylePrjItm = project.GetItems<StyleProjectItem>()
                       .FirstOrDefault(item => item.Name == "ArcGIS 2D");
         ScaleBarStyleItem sbStyleItm = stylePrjItm.SearchScaleBars(
                      "Alternating Scale Bar 1")[0];
@@ -1902,26 +2053,31 @@ namespace ProSnippets.LayoutsSnippets
 
         var sbElm = ElementFactory.Instance.CreateMapSurroundElement(
                                            layout, sbEnv, sbInfo) as ScaleBar;
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateMapSurroundElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateMapSurroundElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Layouts.MapSurroundInfo,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Desktop.Layouts.ScaleBarInfo
       // cref: ArcGIS.Desktop.Layouts.ScaleBarInfo.ScaleBarStyleItem
       // cref: ArcGIS.Desktop.Layouts.MapSurroundInfo.MapFrameName
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Mapping.ScaleBarStyleItem
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHSCALEBARS
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchScaleBars(System.String)
       // cref: ArcGIS.Desktop.Layouts.ScaleBar
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create Scale Line
       {
-        //Note: Must be on QueuedTask.Run
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
         //Build geometry
         Coordinate2D ll = new Coordinate2D(5.0, 8);
         Coordinate2D ur = new Coordinate2D(6.0, 9);
         Envelope sbEnv = EnvelopeBuilderEx.CreateEnvelope(ll, ur);
 
         //Reference a Scale Bar in a style
-        StyleProjectItem stylePrjItm = Project.Current.GetItems<StyleProjectItem>()
+        StyleProjectItem stylePrjItm = project.GetItems<StyleProjectItem>()
                                      .FirstOrDefault(item => item.Name == "ArcGIS 2D");
         ScaleBarStyleItem sbStyleItm = stylePrjItm.SearchScaleBars(
                                       "Scale Line 1")[0];
@@ -1939,17 +2095,20 @@ namespace ProSnippets.LayoutsSnippets
 
         var sbElm = ElementFactory.Instance.CreateMapSurroundElement(
                           layout, sbEnv, sbInfo, "ScaleBar Line") as ScaleBar;
+        });
       }
       #endregion
       #region ProSnippet Group: Group Elements
       #endregion
       // cref: ArcGIS.Desktop.Layouts.GroupElement
-      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGroupElement
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGroupElement(ArcGIS.Desktop.Mapping.IElementContainer,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element},System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Creating empty group elements
       {
         //Create an empty group element at the root level of the contents pane
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
 
         //container is IElementContainer - GroupLayer or Layout
         GroupElement grp1 = ElementFactory.Instance.CreateGroupElement(
@@ -1964,15 +2123,15 @@ namespace ProSnippets.LayoutsSnippets
         //Create on worker thread
         GroupElement grp2 = ElementFactory.Instance.CreateGroupElement(
             existingGroup, null, "Group in Group");
+          });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.GroupElement
       // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(string)
       // cref: ArcGIS.Desktop.Layouts.Layout.FindElements(IEnumerable<string>)
-      // cref: ArcGIS.Desktop.Mapping.IElementContainer.FindElement(string, bool)
-      // cref: ArcGIS.Desktop.Layouts.Layout.FindElements
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGroupElement
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGroupElement(ArcGIS.Desktop.Mapping.IElementContainer,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element},System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
       #region Create a group element with elements
       {
         //Create a group with a list of elements at the root level of the contents pane.
@@ -1990,8 +2149,8 @@ namespace ProSnippets.LayoutsSnippets
           elem2,
           elem3
         };
-        //Note: Must be on QueuedTask.Run
-
+        await QueuedTask.Run(() =>
+        {
         GroupElement groupWithListOfElementsAtRoot =
                   ElementFactory.Instance.CreateGroupElement(
                            layout, elmList, "Group with list of elements at root");
@@ -2002,23 +2161,25 @@ namespace ProSnippets.LayoutsSnippets
         //List of element names
         var elmNameList = new[] { "Para Text1", "Line 3" };
 
-        //Note: Must be on QueuedTask.Run
-
         var elemToGroup = layout.FindElements(elmNameList);
         GroupElement groupWithListOfElementNamesAtRoot =
               ElementFactory.Instance.CreateGroupElement(
                    layout, elemToGroup, "Group with list of element names at root");
+        });
       }
       #endregion
 
       #region ProSnippet Group: Layout Elements and Selection
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
       // cref: ArcGIS.Desktop.Layouts.Layout.Elements
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem.GetLayout()
       #region Find an element on a layout
       {
         //Find an element on a layout.
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         // Reference and load the layout associated with the layout item
         Layout mylayout = layoutItem.GetLayout();
         if (mylayout != null)
@@ -2029,16 +2190,18 @@ namespace ProSnippets.LayoutsSnippets
           //Or use the Elements collection
           Element rect2 = mylayout.Elements.FirstOrDefault(item => item.Name.Equals("Rectangle"));
         }
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.Layout.FindElements
-      // cref: ArcGIS.Desktop.Layouts.Layout.GetElements
-      // cref: ArcGIS.Desktop.Layouts.Layout.GetElementsAsFlattenedList
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElements(System.Collections.Generic.IEnumerable{System.String})
+      // cref: ArcGIS.Desktop.Layouts.Layout.GetElements()
+      // cref: ArcGIS.Desktop.Layouts.Layout.GetElementsAsFlattenedList()
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
       // cref: ArcGIS.Desktop.Layouts.GraphicElement
       #region Find layout elements
       {
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Find elements by name
         var layoutElementsToFind = layout.FindElements(new List<string>() { "Point 1", "Line 3", "Text 1" });
         //Get the collection of elements from the page layout. Nesting within GroupElement is preserved.
@@ -2058,17 +2221,20 @@ namespace ProSnippets.LayoutsSnippets
         var textGraphics = graphicElements.Where(elem => elem.GetGraphic() is CIMTextGraphic);
         ////Find all picture graphics in the Graphics Layer
         var pictureGraphic = graphicElements.Where(elem => elem.GetGraphic() is CIMPictureGraphic);
+        });
       }
       #endregion
 
 
-      // cref: ArcGIS.Desktop.Layouts.Element.SetName
-      // cref: ArcGIS.Desktop.Layouts.Element.SetVisible
+      // cref: ArcGIS.Desktop.Layouts.Element.SetName(System.String)
+      // cref: ArcGIS.Desktop.Layouts.Element.SetVisible(System.Boolean)
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
       #region Update element properties
       {
         //Update an element's properties.
 
-        //Note: Must be on QueuedTask.Run
+        await QueuedTask.Run(() =>
+        {
         //Find a single specific element
         element = layout.FindElement("Rectangle") as Element;
         // update an element's name
@@ -2076,10 +2242,12 @@ namespace ProSnippets.LayoutsSnippets
 
         // update and element's visibility
         element.SetVisible(true);
+        });
       }
       #endregion
       // cref: ArcGIS.Desktop.Layouts.LayoutView
-      // cref: ArcGIS.Desktop.Layouts.LayoutView.GetSelectedElements
+      // cref: ArcGIS.Desktop.Layouts.LayoutView.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
       #region Get element selection count
       {
         //Get element's selection count.
@@ -2094,18 +2262,22 @@ namespace ProSnippets.LayoutsSnippets
       #endregion
       {
         // cref: ArcGIS.Desktop.Layouts.LayoutView
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.SelectElements
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.SelectElements(System.Collections.Generic.IReadOnlyList{ArcGIS.Desktop.Layouts.Element})
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.Layout
         #region Set element selection
         {
           //Set the active layout view's selection to include 2 rectangle elements.
 
-          //Reference the active view 
+          //Reference the active view
           LayoutView activeLayoutView = LayoutView.Active;
           if (activeLayoutView != null)
           {
-            //Note: Must be on QueuedTask.Run
-            //Reference the layout
-            Layout lyt = activeLayoutView.Layout;
+            await QueuedTask.Run(() =>
+            {
+              //Reference the layout
+              Layout lyt = activeLayoutView.Layout;
 
             //Reference the two rectangle elements
             Element rec = lyt.FindElement("Rectangle");
@@ -2118,13 +2290,14 @@ namespace ProSnippets.LayoutsSnippets
               rec2
             };
             //Set the selection
-            activeLayoutView.SelectElements(elmList);
+              activeLayoutView.SelectElements(elmList);
+            });
           }
         }
         #endregion
-        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements
-        // cref: ArcGIS.Desktop.Layouts.Layout.UnSelectElement
-        // cref: ArcGIS.Desktop.Layouts.Layout.UnSelectElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements(System.Collections.Generic.IEnumerable{System.String})
+        // cref: ArcGIS.Desktop.Layouts.Layout.UnSelectElement(ArcGIS.Desktop.Layouts.Element)
+        // cref: ArcGIS.Desktop.Layouts.Layout.UnSelectElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
         #region UnSelect elements on the Layout
         {
           //Unselect one element.
@@ -2136,10 +2309,9 @@ namespace ProSnippets.LayoutsSnippets
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
-        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.UnSelectElement
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.UnSelectElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements(System.Collections.Generic.IEnumerable{System.String})
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.UnSelectElement(ArcGIS.Desktop.Layouts.Element)
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.UnSelectElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
         #region UnSelect elements on the LayoutView
         {
           //Unselect one element.
@@ -2150,7 +2322,8 @@ namespace ProSnippets.LayoutsSnippets
           layoutView.UnSelectElements(elementsToUnSelectInView);
         }
         #endregion
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.ClearElementSelection
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.ClearElementSelection()
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
         #region Clear the selection in a layout view
         {
           //If the a layout view is active, clear its selection
@@ -2159,8 +2332,8 @@ namespace ProSnippets.LayoutsSnippets
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.ClearElementSelection
-        #region Clear the selection in a layout 
+        // cref: ArcGIS.Desktop.Layouts.Layout.ClearElementSelection()
+        #region Clear the selection in a layout
         {
           //Clear the layout selection.
           layout.ClearElementSelection();
@@ -2168,31 +2341,39 @@ namespace ProSnippets.LayoutsSnippets
         #endregion
 
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.CopyElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.CopyElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements(System.Collections.Generic.IEnumerable{System.String})
         #region Copy Layout Elements
         {
-          //Note: Must be on QueuedTask.Run
-          var elems = layout.FindElements(new List<string>() { "Point 1", "Line 3", "Text 1" });
-          var copiedElements = layout.CopyElements(elems);
+          await QueuedTask.Run(() =>
+          {
+            var elems = layout.FindElements(new List<string>() { "Point 1", "Line 3", "Text 1" });
+            var copiedElements = layout.CopyElements(elems);
+          });
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements
-        // cref: ArcGIS.Desktop.Layouts.Layout.DeleteElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
+        // cref: ArcGIS.Desktop.Layouts.Layout.DeleteElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
         #region Delete Layout Elements
         {
-          //Note: Must be on QueuedTask.Run
-          var elementsToRemove = layout.GetSelectedElements();
-          layout.DeleteElements(elementsToRemove);
+          await QueuedTask.Run(() =>
+          {
+            var elementsToRemove = layout.GetSelectedElements();
+            layout.DeleteElements(elementsToRemove);
+          });
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.DeleteElement
-        // cref: ArcGIS.Desktop.Layouts.Layout.DeleteElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.DeleteElement(ArcGIS.Desktop.Layouts.Element)
+        // cref: ArcGIS.Desktop.Layouts.Layout.DeleteElements(System.Func{ArcGIS.Desktop.Layouts.Element,System.Boolean})
+        // cref: ArcGIS.Desktop.Layouts.Element.Name
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
         #region Delete an element or elements on a layout
         {
           //Delete an element or elements on a layout.
-          //Note: Must be on QueuedTask.Run
+          await QueuedTask.Run(() =>
+          {
 
           //Delete a specific element on a layout
           //Find a single specific element
@@ -2204,11 +2385,14 @@ namespace ProSnippets.LayoutsSnippets
 
           //Or delete all elements on a layout
           layout.DeleteElements(item => true);
+          });
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.ZoomToElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElements(System.Collections.Generic.IEnumerable{System.String})
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.ZoomToElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element},System.Nullable{System.TimeSpan})
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.ZoomToElement(ArcGIS.Desktop.Layouts.Element,System.Nullable{System.TimeSpan})
         #region Zoom to elements
         {
           LayoutView lytView = LayoutView.Active;
@@ -2221,13 +2405,14 @@ namespace ProSnippets.LayoutsSnippets
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition
-        // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition
-        // cref: ArcGIS.Desktop.Layouts.LayoutView.GetSelectedElements
+        // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition()
+        // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition(ArcGIS.Core.CIM.CIMElement)
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.GetSelectedElements()
         // cref: ArcGIS.Core.CIM.CIMMarkerNorthArrow
         // cref: ArcGIS.Core.CIM.CIMMarkerNorthArrow.PointSymbol
         // cref: ArcGIS.Core.CIM.CIMPointSymbol.HaloSymbol
         // cref: ArcGIS.Core.CIM.CIMPointSymbol.HaloSize
+        // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
         #region Set halo property of north arrow
         {
           //Set the CIM halo properties of a north arrow.
@@ -2235,9 +2420,10 @@ namespace ProSnippets.LayoutsSnippets
           //Reference the first selected north arrow element
           var northArrow = LayoutView.Active.GetSelectedElements().OfType<NorthArrow>().First();
 
-          //Note: Must be on QueuedTask.Run
-          //Get definition of north arrow...
-          var cim = northArrow.GetDefinition() as CIMMarkerNorthArrow;
+          await QueuedTask.Run(() =>
+          {
+            //Get definition of north arrow...
+            var cim = northArrow.GetDefinition() as CIMMarkerNorthArrow;
 
           //this halo symbol is 50% transparent, no outline (i.e. 0 width)
           //First construct a polygon symbol to use in the Halo
@@ -2246,38 +2432,45 @@ namespace ProSnippets.LayoutsSnippets
           var polyStroke = SymbolFactory.Instance.ConstructStroke(ColorFactory.Instance.BlackRGB, 0);
           var haloPoly = SymbolFactory.Instance.ConstructPolygonSymbol(polyFill, polyStroke);
 
-          //Set the north arrow definition of HaloSymbol and HaloSize 
+          //Set the north arrow definition of HaloSymbol and HaloSize
           ((CIMPointSymbol)cim.PointSymbol.Symbol).HaloSymbol = haloPoly;
           ((CIMPointSymbol)cim.PointSymbol.Symbol).HaloSize = 3;//size of the halo
 
           //Apply the CIM changes back to the element
           northArrow.SetDefinition(cim);
+          });
         }
         #endregion
 
         #region ProSnippet Group: Grouping and Ordering Graphic Elements
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.GroupElements
-        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.GroupElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
         #region Group Graphic Elements
         {
-          //Note: Must be on QueuedTask.Run
-          var elemsToGroup = layout.GetSelectedElements();
-          //Note: run within the QueuedTask
-          //group  elements
-          var newGroupElement = layout.GroupElements(elemsToGroup);
+          await QueuedTask.Run(() =>
+          {
+            var elemsToGroup = layout.GetSelectedElements();
+            //group  elements
+            var newGroupElement = layout.GroupElements(elemsToGroup);
+          });
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.UnGroupElement
-        // cref: ArcGIS.Desktop.Layouts.Layout.UnGroupElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.UnGroupElement(ArcGIS.Desktop.Layouts.GroupElement)
+        // cref: ArcGIS.Desktop.Layouts.Layout.UnGroupElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.GroupElement})
+        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
         #region Un-Group Graphic Elements
         {
-          //Note: Must be on QueuedTask.Run
-          var selectedElements = layout.GetSelectedElements().ToList();
+          await QueuedTask.Run(() =>
+          {
+            var selectedElements = layout.GetSelectedElements().ToList();
           if (selectedElements?.Count == 0)//must be at least 1.
+          {
             return;
+          }
+
           var elementsToUnGroup = new List<GroupElement>();
           //All selected elements should be grouped elements.
           if (selectedElements.Count() == selectedElements.OfType<GroupElement>().Count())
@@ -2286,16 +2479,19 @@ namespace ProSnippets.LayoutsSnippets
             elementsToUnGroup = selectedElements.ConvertAll(x => (GroupElement)x);
           }
           if (elementsToUnGroup.Count() == 0)
+          {
             return;
+          }
           //UnGroup many grouped elements
           layout.UnGroupElements(elementsToUnGroup);
           //Ungroup one grouped element
           layout.UnGroupElement(elementsToUnGroup.FirstOrDefault());
+          });
         }
         #endregion
 
         // cref: ArcGIS.Desktop.Layouts.GroupElement.Elements
-        // cref: ArcGIS.Desktop.Layouts.Element.GetParent
+        // cref: ArcGIS.Desktop.Layouts.Element.GetParent(System.Boolean)
         #region Parent of GroupElement
         {
           //check the parent
@@ -2306,7 +2502,7 @@ namespace ProSnippets.LayoutsSnippets
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.GroupElement.GetElementsAsFlattenedList
+        // cref: ArcGIS.Desktop.Layouts.GroupElement.GetElementsAsFlattenedList()
         #region Children in a Group Element
         {
           // Nested groups within ArcGIS.Desktop.Layouts.GroupElement are not preserved.
@@ -2314,14 +2510,15 @@ namespace ProSnippets.LayoutsSnippets
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements
-        // cref: ArcGIS.Desktop.Layouts.Layout.CanBringForward
-        // cref: ArcGIS.Desktop.Layouts.Layout.BringForward
-        // cref: ArcGIS.Desktop.Layouts.Layout.CanSendBackward
-        // cref: ArcGIS.Desktop.Layouts.Layout.SendBackward
+        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
+        // cref: ArcGIS.Desktop.Layouts.Layout.CanBringForward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+        // cref: ArcGIS.Desktop.Layouts.Layout.BringForward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+        // cref: ArcGIS.Desktop.Layouts.Layout.CanSendBackward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+        // cref: ArcGIS.Desktop.Layouts.Layout.SendBackward(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
         #region Ordering: Send backward and Bring forward
         {
-          //Note: Must be on QueuedTask.Run
+          await QueuedTask.Run(() =>
+          {
           //get the current selection set
           var sel_elems = layout.GetSelectedElements();
           //can they be brought forward? This will also check that all elements have the same parent
@@ -2339,17 +2536,21 @@ namespace ProSnippets.LayoutsSnippets
             //send to the back (of parent)
             //graphicsLayer.SendToBack(sel_elems);
           }
+          });
         }
         #endregion
 
-        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements
+        // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
         // cref: ArcGIS.Desktop.Layouts.Element.ZOrder
+        // cref: ArcGIS.Desktop.Layouts.Element.Name
         #region Get Z-Order
         {
           var selElementsZOrder = layout.GetSelectedElements();
           //list out the z order
           foreach (var elem in selElementsZOrder)
+          {
             System.Diagnostics.Debug.WriteLine($"{elem.Name}: z-order {elem.ZOrder}");
+          }
         }
         #endregion
         #region ProSnippet Group: Update Layout Elements
@@ -2357,16 +2558,17 @@ namespace ProSnippets.LayoutsSnippets
 
 
         // cref: ArcGIS.Desktop.Layouts.TextElement.SetTextProperties(ArcGIS.Desktop.Layouts.TextProperties)
-        // cref: ArcGIS.Desktop.Layouts.TextProperties.#ctor(System.String,System.String,System.Double,System.String)
         // cref: ArcGIS.Desktop.Layouts.TextElement
-        // cref: ArcGIS.Desktop.Layouts.Element.SetX
-        // cref: ArcGIS.Desktop.Layouts.Element.SetY
-        // cref: ArcGIS.Desktop.Layouts.Element.SetAnchor
+        // cref: ArcGIS.Desktop.Layouts.Element.SetX(System.Double)
+        // cref: ArcGIS.Desktop.Layouts.Element.SetY(System.Double)
+        // cref: ArcGIS.Desktop.Layouts.Element.SetAnchor(ArcGIS.Core.CIM.Anchor)
         // cref: ArcGIS.Core.CIM.Anchor
+        // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
         #region Update text element properties
         {
           //Update text element properties for an existing text element.
-          //Note: Must be on QueuedTask.Run
+          await QueuedTask.Run(() =>
+          {
           // Reference and load the layout associated with the layout item
           if (layout != null)
           {
@@ -2387,31 +2589,35 @@ namespace ProSnippets.LayoutsSnippets
               txtElm.SetTextProperties(txtProperties);
             }
           }
+          });
         #endregion
 
           // cref: ArcGIS.Desktop.Layouts.PictureElement
-          // cref: ArcGIS.Desktop.Layouts.PictureElement.SetSourcePath
+          // cref: ArcGIS.Desktop.Layouts.PictureElement.SetSourcePath(System.String)
+          // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
           #region Update a picture element
           {
             //Update a picture element.
-            //Note: Must be on QueuedTask.Run
-
-            // Reference a picture element by name
-            PictureElement picElm = layout.FindElement("MyPicture") as PictureElement;
-            // Change the path to a new source
-            picElm?.SetSourcePath(@"D:\MyData\Pics\somePic.jpg");
+            await QueuedTask.Run(() =>
+            {
+              // Reference a picture element by name
+              PictureElement picElm = layout.FindElement("MyPicture") as PictureElement;
+              // Change the path to a new source
+              picElm?.SetSourcePath(@"D:\MyData\Pics\somePic.jpg");
+            });
           }
           #endregion
 
-          // cref: ArcGIS.Desktop.Layouts.Element.GETDEFINITION
-          // cref: ArcGIS.Desktop.Layouts.Element.SETDEFINITION
           // cref: ArcGIS.Core.CIM.CIMMapFrame
           // cref: ArcGIS.Core.CIM.CIMFrameElement.GraphicFrame
           // cref: ArcGIS.Core.CIM.CIMGraphicFrame.BackgroundSymbol
+          // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition()
+          // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition(ArcGIS.Core.CIM.CIMElement)
           #region Apply a Background Color to a MapFrame
           {
             //Apply a background color to the map frame element using the CIM.
-            //Note: Must be on QueuedTask.Run
+            await QueuedTask.Run(() =>
+            {
             //Get the map frame's definition in order to modify the background.
             var mapFrameDefn = mapFrame.GetDefinition() as CIMMapFrame;
 
@@ -2425,16 +2631,18 @@ namespace ProSnippets.LayoutsSnippets
 
             //Set the map frame definition
             mapFrame.SetDefinition(mapFrameDefn);
+            });
           }
           #endregion
 
           // cref: ArcGIS.Desktop.Layouts.MapSurround
-          // cref: ArcGIS.Desktop.Layouts.ScaleBar
-          // cref: ArcGIS.Desktop.Layouts.MapSurround.SetMapFrame
+          // cref: ArcGIS.Desktop.Layouts.MapSurround.SetMapFrame(ArcGIS.Desktop.Layouts.MapFrame)
+          // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
           #region Update a map surround
           {
             //Update a map surround.
-            //Note: Must be on QueuedTask.Run
+            await QueuedTask.Run(() =>
+            {
             // Reference and load the layout associated with the layout item
 
             // Reference a scale bar element by name
@@ -2444,13 +2652,16 @@ namespace ProSnippets.LayoutsSnippets
             MapFrame mf = layout.FindElement("MyMapFrame") as MapFrame;
 
             if ((scaleBar != null) && (mf != null))
+            {
               //Set the scale bar to the newly referenced map frame
               scaleBar.SetMapFrame(mf);
+            }
+            });
           }
           #endregion
 
-          // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition
-          // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition
+          // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition()
+          // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition(ArcGIS.Core.CIM.CIMElement)
           // cref: ArcGIS.Core.CIM.CIMElement
           // cref: ArcGIS.Core.CIM.CIMElement.Locked
           #region Lock an element
@@ -2458,28 +2669,31 @@ namespace ProSnippets.LayoutsSnippets
             // The Locked property is displayed in the TOC as a lock symbol next
             // to each element.  If locked the element can't be selected in the layout
             // using the graphic selection tools.
-            //Note: Must be on QueuedTask.Run
-
-            //Reference an element 
-            if (element != null)
+            await QueuedTask.Run(() =>
             {
-              // Modify the Locked property via the CIM
-              CIMElement CIMElement = element.GetDefinition() as CIMElement;
-              CIMElement.Locked = true;
-              element.SetDefinition(CIMElement);
-            }
+              //Reference an element
+              if (element != null)
+              {
+                // Modify the Locked property via the CIM
+                CIMElement CIMElement = element.GetDefinition() as CIMElement;
+                CIMElement.Locked = true;
+                element.SetDefinition(CIMElement);
+              }
+            });
           }
           #endregion
 
-          // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic
-          // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic
+          // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
+          // cref: ArcGIS.Desktop.Layouts.GraphicElement.SetGraphic(ArcGIS.Core.CIM.CIMGraphic)
           // cref: ArcGIS.Core.CIM.CIMGraphic
           // cref: ArcGIS.Core.CIM.CIMGraphic.Transparency
+          // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
           #region Update an elements transparency
           {
             //Update an element's transparency using the CIM.
 
-            //Note: Must be on QueuedTask.Run
+            await QueuedTask.Run(() =>
+            {
 
             // Reference a element by name
             GraphicElement graphicElement = layout.FindElement("MyElement") as GraphicElement;
@@ -2490,17 +2704,20 @@ namespace ProSnippets.LayoutsSnippets
               CIMGraphic.Transparency = 50; // mark it 50% transparent
               graphicElement.SetGraphic(CIMGraphic);
             }
+            });
           }
           #endregion
-          // cref: ArcGIS.Desktop.Layouts.GraphicElement.Clone
-          // cref: ArcGIS.Desktop.Layouts.Element.SetX
-          // cref: ArcGIS.Desktop.Layouts.Element.SetY
-          // cref: ArcGIS.Desktop.Layouts.Element.GetX
-          // cref: ArcGIS.Desktop.Layouts.Element.GetY
+          // cref: ArcGIS.Desktop.Layouts.GraphicElement.Clone(System.String)
+          // cref: ArcGIS.Desktop.Layouts.Element.SetX(System.Double)
+          // cref: ArcGIS.Desktop.Layouts.Element.SetY(System.Double)
+          // cref: ArcGIS.Desktop.Layouts.Element.GetX()
+          // cref: ArcGIS.Desktop.Layouts.Element.GetY()
+          // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
           #region Clone an element
           {
             //Clone a layout graphic element and apply an offset.
-            //Note: Must be on QueuedTask.Run
+            await QueuedTask.Run(() =>
+            {
 
             // Reference a graphic element by name
             GraphicElement graphicElement =
@@ -2515,118 +2732,156 @@ namespace ProSnippets.LayoutsSnippets
               cloneElement.SetX(cloneElement.GetX() + xOffset);
               cloneElement.SetY(cloneElement.GetY() + yOffset);
             }
+            });
           }
           #endregion
           #region ProSnippet Group: Style Layout Elements
           #endregion
 
-          // cref: ArcGIS.Desktop.Layouts.Element.CanApplyStyle 
-          // cref: ArcGIS.Desktop.Layouts.Element.ApplyStyle
+          // cref: ArcGIS.Desktop.Layouts.Element.ApplyStyle(ArcGIS.Desktop.Mapping.StyleItem)
+          // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
+          // cref: ArcGIS.Desktop.Layouts.NorthArrow.CanApplyStyle(ArcGIS.Desktop.Mapping.StyleItem)
           #region Apply a style to a North Arrow
           {
-            //Note: Must be on QueuedTask.Run
+            var project = Project.Current;
+            await QueuedTask.Run(() =>
+            {
             //Get the Style project items in the project
-            var styleProjectItems = Project.Current?.GetItems<StyleProjectItem>();
+            var styleProjectItems = project?.GetItems<StyleProjectItem>();
             //Get the ArcGIS 2D Style Project Item
             var styleProjectItem =
             styleProjectItems.FirstOrDefault(s => s.Name == "ArcGIS 2D");
-            if (styleProjectItem == null) return;
+            if (styleProjectItem == null)
+            {
+              return;
+            }
             //Get the north arrow style item you need
             var northArrowStyleItem =
             styleProjectItem.SearchSymbols(StyleItemType.NorthArrow, "ArcGIS North 18").FirstOrDefault();
-            if (northArrowStyleItem == null) return;
+            if (northArrowStyleItem == null)
+            {
+              return;
+            }
             //Select a North arrow layout element
             var northArrowElement = layout.GetSelectedElements().OfType<NorthArrow>().FirstOrDefault();
             if (northArrowElement != null)
             {
               //Check if the input style can be applied to the element
               if (northArrowElement.CanApplyStyle(northArrowStyleItem))
+              {
                 //Apply the style
                 northArrowElement.ApplyStyle(northArrowStyleItem);
-            }
-          }
-          #endregion
-
-          // cref: ArcGIS.Core.CIM.CIMGraticule 
-          // cref: ArcGIS.Core.CIM.CIMMapGrid
-          #region Apply a style to Grid and Graticules
-          {
-            //Note: Must be on QueuedTask.Run
-            //Get the Style project items in the project
-            var styleProjectItems = Project.Current?.GetItems<StyleProjectItem>();
-            //Get the ArcGIS 2D Style Project Item
-            var styleProjectItem =
-            styleProjectItems.OfType<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS 2D");
-            if (styleProjectItem == null) return;
-            //Get the grid style item you need
-            var gridStyleItem =
-            styleProjectItem.SearchSymbols(StyleItemType.Grid, "Blue Vertical Label Graticule").FirstOrDefault();
-            if (gridStyleItem == null) return;
-            var symbolItemName = gridStyleItem.Name;
-            var girdGraticuleObject = gridStyleItem.GetObject() as CIMMapGrid;
-            var cmf = mapFrame.GetDefinition() as CIMMapFrame;
-            //note, if page units are _not_ inches then grid's gridline
-            //lengths and offsets would need to be converted to the page units
-            var mapGrids = new List<CIMMapGrid>();
-            if (cmf.Grids != null)
-              mapGrids.AddRange(cmf.Grids);
-
-            switch (girdGraticuleObject)
-            {
-              case CIMGraticule:
-                var gridGraticule = girdGraticuleObject as CIMGraticule;
-                gridGraticule.Name = symbolItemName;
-                gridGraticule.SetGeographicCoordinateSystem(mapFrame.Map.SpatialReference);
-                //assign grid to the frame             
-                mapGrids.Add(gridGraticule);
-
-                break;
-              case CIMMeasuredGrid:
-                var gridMeasure = girdGraticuleObject as CIMMeasuredGrid;
-                gridMeasure.Name = symbolItemName;
-                gridMeasure.SetProjectedCoordinateSystem(mapFrame.Map.SpatialReference);
-                //assign grid to the frame
-                mapGrids.Add(gridMeasure);
-
-                break;
-              case CIMReferenceGrid:
-                var gridReference = girdGraticuleObject as CIMReferenceGrid;
-                gridReference.Name = symbolItemName;
-                //assign grid to the frame
-                mapGrids.Add(gridReference);
-                break;
-            }
-            cmf.Grids = mapGrids.ToArray();
-            mapFrame.SetDefinition(cmf);
-          }
-          #endregion
-
-          // cref: ArcGIS.Desktop.Layouts.GraphicElement.CanApplyStyle 
-          // cref: ArcGIS.Desktop.Layouts.GraphicElement.ApplyStyle
-          #region Apply a style to a Graphic Element
-          {
-            //Note: Run within QueuedTask context.
-            //Get the Style project items in the project
-            var styleProjectItems = Project.Current?.GetItems<StyleProjectItem>();
-            //Get the ArcGIS 2D Style Project Item
-            var styleProjectItem =
-            styleProjectItems.OfType<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS 2D");
-            if (styleProjectItem == null) return;
-            //Get the north arrow style item you need
-            var pointStyleItem =
-            styleProjectItem.SearchSymbols(StyleItemType.PointSymbol, "Circle 3").FirstOrDefault();
-            if (pointStyleItem == null) return;
-            //Select a North arrow layout element
-            var layoutPointElement = layout.GetSelectedElements().FirstOrDefault();
-            if (layoutPointElement != null && layoutPointElement is GraphicElement ge)
-            {
-              if (layoutPointElement.CanApplyStyle(pointStyleItem))
-              {
-                //The magic happens here
-                //for Graphic Elements such as Point, Lines, Polys, text, preserve size.           
-                ge.ApplyStyle(pointStyleItem, true);
               }
             }
+            });
+          }
+          #endregion
+
+          // cref: ArcGIS.Core.CIM.CIMGraticule
+          // cref: ArcGIS.Core.CIM.CIMMapGrid
+          // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition()
+          // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition(ArcGIS.Core.CIM.CIMElement)
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
+          #region Apply a style to Grid and Graticules
+          {
+            var project = Project.Current;
+            await QueuedTask.Run(() =>
+            {
+              //Get the Style project items in the project
+              var styleProjectItems = project?.GetItems<StyleProjectItem>();
+              //Get the ArcGIS 2D Style Project Item
+              var styleProjectItem =
+              styleProjectItems.OfType<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS 2D");
+              if (styleProjectItem == null)
+              {
+                return;
+              }
+              //Get the grid style item you need
+              var gridStyleItem =
+              styleProjectItem.SearchSymbols(StyleItemType.Grid, "Blue Vertical Label Graticule").FirstOrDefault();
+              if (gridStyleItem == null)
+              {
+                return;
+              }
+
+              var symbolItemName = gridStyleItem.Name;
+              var girdGraticuleObject = gridStyleItem.GetObject() as CIMMapGrid;
+              var cmf = mapFrame.GetDefinition() as CIMMapFrame;
+              //note, if page units are _not_ inches then grid's gridline
+              //lengths and offsets would need to be converted to the page units
+              var mapGrids = new List<CIMMapGrid>();
+              if (cmf.Grids != null)
+              {
+                mapGrids.AddRange(cmf.Grids);
+              }
+
+              switch (girdGraticuleObject)
+              {
+                case CIMGraticule:
+                  var gridGraticule = girdGraticuleObject as CIMGraticule;
+                  gridGraticule.Name = symbolItemName;
+                  gridGraticule.SetGeographicCoordinateSystem(mapFrame.Map.SpatialReference);
+                  //assign grid to the frame
+                  mapGrids.Add(gridGraticule);
+
+                  break;
+                case CIMMeasuredGrid:
+                  var gridMeasure = girdGraticuleObject as CIMMeasuredGrid;
+                  gridMeasure.Name = symbolItemName;
+                  gridMeasure.SetProjectedCoordinateSystem(mapFrame.Map.SpatialReference);
+                  //assign grid to the frame
+                  mapGrids.Add(gridMeasure);
+
+                  break;
+                case CIMReferenceGrid:
+                  var gridReference = girdGraticuleObject as CIMReferenceGrid;
+                  gridReference.Name = symbolItemName;
+                  //assign grid to the frame
+                  mapGrids.Add(gridReference);
+                  break;
+              }
+              cmf.Grids = mapGrids.ToArray();
+              mapFrame.SetDefinition(cmf);
+            });
+          }
+          #endregion
+
+          // cref: ArcGIS.Desktop.Layouts.GraphicElement.ApplyStyle(ArcGIS.Desktop.Mapping.StyleItem,System.Boolean)
+          // cref: ArcGIS.Desktop.Layouts.Layout.GetSelectedElements()
+          // cref: ArcGIS.Desktop.Layouts.Element.CanApplyStyle(ArcGIS.Desktop.Mapping.StyleItem)
+          #region Apply a style to a Graphic Element
+          {
+            var project = Project.Current;
+            await QueuedTask.Run(() =>
+            {
+              //Get the Style project items in the project
+              var styleProjectItems = project?.GetItems<StyleProjectItem>();
+              //Get the ArcGIS 2D Style Project Item
+              var styleProjectItem =
+              styleProjectItems.OfType<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS 2D");
+              if (styleProjectItem == null)
+              {
+                return;
+              }
+              //Get the north arrow style item you need
+              var pointStyleItem =
+              styleProjectItem.SearchSymbols(StyleItemType.PointSymbol, "Circle 3").FirstOrDefault();
+              if (pointStyleItem == null)
+              {
+                return;
+              }
+              //Select a North arrow layout element
+              var layoutPointElement = layout.GetSelectedElements().FirstOrDefault();
+              if (layoutPointElement != null && layoutPointElement is GraphicElement ge)
+              {
+                if (layoutPointElement.CanApplyStyle(pointStyleItem))
+                {
+                  //The magic happens here
+                  //for Graphic Elements such as Point, Lines, Polys, text, preserve size.
+                  ge.ApplyStyle(pointStyleItem, true);
+                }
+              }
+            });
           }
           #endregion
 
@@ -2651,7 +2906,7 @@ namespace ProSnippets.LayoutsSnippets
           // cref: ArcGIS.Desktop.Layouts.LayoutSnapMode
           #region Configure Snapping - Application SnapModes
           {
-            // sets only the Guide snapping mode 
+            // sets only the Guide snapping mode
             ArcGIS.Desktop.Layouts.LayoutSnapping.SetSnapModes(new[] { LayoutSnapMode.Guide });
             // sets only Element and Page snapping modes
             ArcGIS.Desktop.Layouts.LayoutSnapping.SetSnapModes(new[] { LayoutSnapMode.Element, LayoutSnapMode.Page });
@@ -2662,7 +2917,7 @@ namespace ProSnippets.LayoutsSnippets
             // set snap modes one at a time
             ArcGIS.Desktop.Layouts.LayoutSnapping.SetSnapMode(LayoutSnapMode.Margins, true);
             ArcGIS.Desktop.Layouts.LayoutSnapping.SetSnapMode(LayoutSnapMode.Guide, true);
-            /// LayoutSnapping.SetSnapModes(new[]{ LayoutSnapMode.Guide }); // sets only the Guide snapping mode 
+            /// LayoutSnapping.SetSnapModes(new[]{ LayoutSnapMode.Guide }); // sets only the Guide snapping mode
 
             // get current snap modes
             var snapModes = ArcGIS.Desktop.Layouts.LayoutSnapping.SnapModes;
@@ -2674,19 +2929,22 @@ namespace ProSnippets.LayoutsSnippets
 
           #region ProSnippet Group: Layout Metadata
           #endregion
-          // cref: ArcGIS.Desktop.Layouts.Layout.GetMetadata
-          // cref: ArcGIS.Desktop.Layouts.Layout.GetCanEditMetadata
-          // cref: ArcGIS.Desktop.Layouts.Layout.SetMetadata
+          // cref: ArcGIS.Desktop.Layouts.Layout.GetMetadata()
+          // cref: ArcGIS.Desktop.Layouts.Layout.GetCanEditMetadata()
+          // cref: ArcGIS.Desktop.Layouts.Layout.SetMetadata(System.String)
           #region Layout Metadata
           {
-            //Note: Must be on QueuedTask.Run
-
-            //Gets the Layout metadata.
-            var layout_xml = layout.GetMetadata();
-            //Can metadata be edited?
-            if (layout.GetCanEditMetadata())
-              //Set the metadata back
-              layout.SetMetadata(layout_xml);
+            await QueuedTask.Run(() =>
+            {
+              //Gets the Layout metadata.
+              var layout_xml = layout.GetMetadata();
+              //Can metadata be edited?
+              if (layout.GetCanEditMetadata())
+              {
+                //Set the metadata back
+                layout.SetMetadata(layout_xml);
+              }
+            });
           }
           #endregion
 
@@ -2695,23 +2953,29 @@ namespace ProSnippets.LayoutsSnippets
           #endregion
 
           // cref: ArcGIS.Desktop.Layouts.MapFrame.SetMap(ArcGIS.Desktop.Mapping.Map)
+          // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
           #region Change the map associated with a map frame
           {
-            //Change the map associated with a map frame
-            //Find a map frame element from a layout by the map frame's element name
-            MapFrame mfrm = layout.FindElement("Map Frame") as MapFrame;
+            var project = Project.Current;
+            await QueuedTask.Run(() =>
+            {
+              //Change the map associated with a map frame
+              //Find a map frame element from a layout by the map frame's element name
+              MapFrame mfrm = layout.FindElement("Map Frame") as MapFrame;
 
-            //Note: Must be on QueuedTask.Run
-            //Reference map from the project item 
-            Map myMap = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(m => m.Name.Equals("Map1")).GetMap();
+              //Reference map from the project item
+              Map myMap = project.GetItems<MapProjectItem>().FirstOrDefault(m => m.Name.Equals("Map1")).GetMap();
 
-            //Set the map to the map frame
-            mfrm.SetMap(map);
+              //Set the map to the map frame
+              mfrm.SetMap(map);
+            });
           }
           #endregion
 
           // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(ArcGIS.Desktop.Mapping.Camera)
           // cref: ArcGIS.Desktop.Mapping.Camera.Scale
+          // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.Camera
           #region Change map frame camera settings
           {
             //Change a map frame's camera settings.
@@ -2730,83 +2994,92 @@ namespace ProSnippets.LayoutsSnippets
 
           // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(ArcGIS.Desktop.Mapping.Layer,System.Boolean)
           // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
-          // cref: ArcGIS.Desktop.Mapping.Map.FindLayers
+          // cref: ArcGIS.Desktop.Mapping.Map.FindLayers(System.String,System.Boolean)
           #region Zoom map frame to extent of a single layer
           {
             //Zoom map frame to the extent of a single layer.
+            await QueuedTask.Run(() =>
+            {
+              //Reference map and layer
+              Map m = mapFrame.Map;
+              FeatureLayer lyr = m.FindLayers("GreatLakes").First() as FeatureLayer;
 
-            //Note: Must be on QueuedTask.Run
-            //Reference map and layer
-            Map m = mapFrame.Map;
-            FeatureLayer lyr = m.FindLayers("GreatLakes").First() as FeatureLayer;
-
-            //Set the map frame extent to all features in the layer
-            mapFrame.SetCamera(lyr, false);
+              //Set the map frame extent to all features in the layer
+              mapFrame.SetCamera(lyr, false);
+            });
           }
           #endregion
 
           // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Mapping.Layer},System.Boolean)
-          // cref: ArcGIS.Desktop.Mapping.Map.FindLayers
+          // cref: ArcGIS.Desktop.Mapping.Map.FindLayers(System.String,System.Boolean)
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
           #region Change map frame extent to selected features in multiple layers
           {
             //Change the extent of a map frame to the selected features multiple layers.
-            //Note: Must be on QueuedTask.Run
-            //Reference MapFrame
+            await QueuedTask.Run(() =>
+            {
+              //Reference MapFrame
 
-            //Reference map, layers and create layer list
-            Map m = mapFrame.Map;
-            FeatureLayer fl_1 = m.FindLayers("GreatLakes").First() as FeatureLayer;
-            FeatureLayer fl_2 = m.FindLayers("States_WithRegions").First() as FeatureLayer;
-            var layers = new[] { fl_1, fl_2 };
-            //IEnumerable<Layer> layers = m.Layers;  //This creates a list of ALL layers in map.
+              //Reference map, layers and create layer list
+              Map m = mapFrame.Map;
+              FeatureLayer fl_1 = m.FindLayers("GreatLakes").First() as FeatureLayer;
+              FeatureLayer fl_2 = m.FindLayers("States_WithRegions").First() as FeatureLayer;
+              var layers = new[] { fl_1, fl_2 };
+              //IEnumerable<Layer> layers = m.Layers;  //This creates a list of ALL layers in map.
 
-            //Set the map frame extent to the selected features in the list of layers
-            mapFrame.SetCamera(layers, true);
+              //Set the map frame extent to the selected features in the list of layers
+              mapFrame.SetCamera(layers, true);
+            });
           }
           #endregion
 
-          // cref: ArcGIS.Desktop.Mapping.Map.FindLayers
-          // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera
-          // cref: ArcGIS.Core.Data.Feature.GetShape
+          // cref: ArcGIS.Desktop.Mapping.Map.FindLayers(System.String,System.Boolean)
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(ArcGIS.Core.Geometry.Envelope)
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.SetCamera(ArcGIS.Desktop.Mapping.Camera)
+          // cref: ArcGIS.Core.Data.Feature.GetShape()
           // cref: ArcGIS.Desktop.Mapping.Camera.Scale
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.Camera
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
           #region Change map frame extent to single feature with 15 percent buffer
           {
             //Change map frame extent to single feature with 10 percent buffer
-
-            //Note: Must be on QueuedTask.Run
-
-            //Reference the mapframe and its associated map
-            Map m = mapFrame.Map;
-
-            //Reference a feature layer and build a query (to return a single feature)
-            FeatureLayer fl = m.FindLayers("GreatLakes").First() as FeatureLayer;
-            QueryFilter qf = new QueryFilter();
-            string whereClause = "NAME = 'Lake Erie'";
-            qf.WhereClause = whereClause;
-
-            //Zoom to the feature
-            using (ArcGIS.Core.Data.RowCursor rowCursor = fl.Search(qf))
+            await QueuedTask.Run(() =>
             {
-              while (rowCursor.MoveNext())
-              {
-                //Get the shape from the row and set extent
-                using (var feature = rowCursor.Current as ArcGIS.Core.Data.Feature)
-                {
-                  Polygon polygon = feature.GetShape() as Polygon;
-                  Envelope env = polygon.Extent as Envelope;
-                  mapFrame.SetCamera(env);
+              //Reference the mapframe and its associated map
+              Map m = mapFrame.Map;
 
-                  //Zoom out 15 percent
-                  Camera cam = mapFrame.Camera;
-                  cam.Scale = cam.Scale * 1.15;
-                  mapFrame.SetCamera(cam);
+              //Reference a feature layer and build a query (to return a single feature)
+              FeatureLayer fl = m.FindLayers("GreatLakes").First() as FeatureLayer;
+              QueryFilter qf = new QueryFilter();
+              string whereClause = "NAME = 'Lake Erie'";
+              qf.WhereClause = whereClause;
+
+              //Zoom to the feature
+              using (ArcGIS.Core.Data.RowCursor rowCursor = fl.Search(qf))
+              {
+                while (rowCursor.MoveNext())
+                {
+                  //Get the shape from the row and set extent
+                  using (var feature = rowCursor.Current as ArcGIS.Core.Data.Feature)
+                  {
+                    Polygon polygon = feature.GetShape() as Polygon;
+                    Envelope env = polygon.Extent as Envelope;
+                    mapFrame.SetCamera(env);
+
+                    //Zoom out 15 percent
+                    Camera cam = mapFrame.Camera;
+                    cam.Scale = cam.Scale * 1.15;
+                    mapFrame.SetCamera(cam);
+                  }
                 }
               }
-            }
+            });
           }
           #endregion
-          // cref: ArcGIS.Desktop.Layouts.LayoutView.CanActivateMapFrame
-          // cref: ArcGIS.Desktop.Layouts.LayoutView.ActivateMapFrame
+          // cref: ArcGIS.Desktop.Layouts.LayoutView.CanActivateMapFrame(ArcGIS.Desktop.Layouts.MapFrame)
+          // cref: ArcGIS.Desktop.Layouts.LayoutView.ActivateMapFrame(ArcGIS.Desktop.Layouts.MapFrame)
+          // cref: ArcGIS.Desktop.Layouts.Element.Name
+          // cref: ArcGIS.Desktop.Layouts.Layout.GetElementsAsFlattenedList()
           #region Activate Map Frame
           {
 
@@ -2816,16 +3089,20 @@ namespace ProSnippets.LayoutsSnippets
             var map_frame = layout.GetElementsAsFlattenedList()
                                 .OfType<MapFrame>().FirstOrDefault(mf => mf.Name == "Map 1");
             if (map_frame == null)
+            {
               return;
+            }
             //can we activate the map frame?
             if (layoutView.CanActivateMapFrame(map_frame))
+            {
               //activate it - Note: we are on the UI thread!
               layoutView.ActivateMapFrame(map_frame);
+            }
           }
           #endregion
 
           // cref: ArcGIS.Desktop.Layouts.LayoutView.ActivatedMapFrame
-          // cref: ArcGIS.Desktop.Layouts.LayoutView.DeactivateMapFrame
+          // cref: ArcGIS.Desktop.Layouts.LayoutView.DeactivateMapFrame()
           #region Deactivate Map Frame
           {
             //Deactivate any activated map frame
@@ -2834,19 +3111,24 @@ namespace ProSnippets.LayoutsSnippets
 
             //or - check if a  map frame is activated first...
             if (layoutView.ActivatedMapFrame != null)
+            {
               //Note: we are on the UI thread!
               layoutView.DeactivateMapFrame();
+            }
           }
           #endregion
 
           // cref: ArcGIS.Desktop.Layouts.LayoutView.ActivatedMapFrame
           // cref: ArcGIS.Desktop.Layouts.LayoutView.ActivatedMapView
+          // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
           #region Get the Activated Map Frame and MapView
           {
             //The active view must be a layout view.
             var lv = LayoutView.Active;
             if (lv == null)
+            {
               return;
+            }
 
             var map_view = lv.ActivatedMapView;
             if (map_view != null)
@@ -2860,68 +3142,73 @@ namespace ProSnippets.LayoutsSnippets
             }
           }
           #endregion
-          // cref: ArcGIS.Desktop.Layouts.Element.GetBounds
-          // cref: ArcGIS.Desktop.Layouts.MapFrame.PageToMap
-          // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement 
-          #region Translates a point in page coordinates to a point in map coordinates. 
+          // cref: ArcGIS.Desktop.Layouts.Element.GetBounds(System.Boolean)
+          // cref: ArcGIS.Desktop.Layouts.MapFrame.PageToMap(ArcGIS.Core.Geometry.MapPoint)
+          // cref: ArcGIS.Desktop.Mapping.GraphicsLayerExtensions.AddElement(ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+          #region Translates a point in page coordinates to a point in map coordinates.
           {
             var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.BlackRGB, 8);
-            var graphicsLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<GraphicsLayer>().FirstOrDefault();
-            //Note: Must be on QueuedTask.Run
-
-            //Get a point in the center of the Map frame
-            var mapFrameCenterPoint = mapFrame.GetBounds().CenterCoordinate;
-            //Convert to MapPoint
-            var pointInMapFrame = MapPointBuilderEx.CreateMapPoint(mapFrameCenterPoint);
-
-            //Find the corresponding point in the MapView
-            var pointOnMap = mapFrame.PageToMap(pointInMapFrame);
-
-            //Create a point graphic on the MapView.
-            var cimGraphicElement = new CIMPointGraphic
+            var activeMapView = MapView.Active;
+            await QueuedTask.Run(() =>
             {
-              Location = pointOnMap,
-              Symbol = pointSymbol.MakeSymbolReference()
-            };
-            graphicsLayer.AddElement(cimGraphicElement);
+              var graphicsLayer = activeMapView.Map.GetLayersAsFlattenedList().OfType<GraphicsLayer>().FirstOrDefault();
+
+              //Get a point in the center of the Map frame
+              var mapFrameCenterPoint = mapFrame.GetBounds().CenterCoordinate;
+              //Convert to MapPoint
+              var pointInMapFrame = MapPointBuilderEx.CreateMapPoint(mapFrameCenterPoint);
+
+              //Find the corresponding point in the MapView
+              var pointOnMap = mapFrame.PageToMap(pointInMapFrame);
+
+              //Create a point graphic on the MapView.
+              var cimGraphicElement = new CIMPointGraphic
+              {
+                Location = pointOnMap,
+                Symbol = pointSymbol.MakeSymbolReference()
+              };
+              graphicsLayer.AddElement(cimGraphicElement);
+            });
           }
           #endregion
         }
       }
 
-      // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.ONTOOLMOUSEDOWN
-      // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.HandleMouseDownAsync
-      // cref: ARCGIS.DESKTOP.MAPPING.MapViewMouseButtonEventArgs
-      // cref: ARCGIS.DESKTOP.MAPPING.MapView.ClientToMap
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.MapToPage
-      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.CreateSimpleGraphic
-      // cref: ArcGIS.Desktop.Layouts.ElementFactory.CreateGraphicElement
+      // cref: ArcGIS.Desktop.Mapping.MapView.ClientToMap(System.Windows.Point)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.MapToPage(ArcGIS.Core.Geometry.MapPoint)
+      // cref: ArcGIS.Desktop.Layouts.IGraphicFactory.CreateSimpleGraphic(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMSymbol)
+      // cref: ArcGIS.Desktop.Layouts.IElementFactory.CreateGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.CIM.CIMGraphic,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Layouts.ElementFactory.Instance
+      // cref: ArcGIS.Desktop.Layouts.GraphicFactory.Instance
       #region Translates a point in map coordinates to a point in page coordinates
       {
-        //Note: Must be on QueuedTask.Run
         var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.BlackRGB, 8);
+        var activeMapView = MapView.Active;
         //Convert the clicked point in client coordinates to the corresponding map coordinates.
         //clicked point can be from a Map Tool's HandleMouseDownAsync callback.
         //MapViewMouseButtonEventArgs ClientPoint property.
-        Point clickedPoint;
-        var clickedMapPoint = MapView.Active.ClientToMap(clickedPoint);
+        Point clickedPoint = new Point();
+        await QueuedTask.Run(() =>
+        {
+          var clickedMapPoint = activeMapView.ClientToMap(clickedPoint);
+          //Get the corresponding layout point
+          var pointOnLayoutFrame = mapFrame.MapToPage(mapPoint);
+
+          //Create a point graphic on the Layout.
+          var cimGraphicElement = new CIMPointGraphic
+          {
+            Location = pointOnLayoutFrame,
+            Symbol = pointSymbol.MakeSymbolReference()
+          };
+          //Or use GraphicFactory
+          var cimGraphicElement2 = GraphicFactory.Instance.CreateSimpleGraphic(
+                  pointOnLayoutFrame, pointSymbol);
+
+          ElementFactory.Instance.CreateGraphicElement(layout, cimGraphicElement);
+          ElementFactory.Instance.CreateGraphicElement(layout, cimGraphicElement2);
+        });
         ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(string.Format("X: {0} Y: {1} Z: {2}",
             mapPoint.X, mapPoint.Y, mapPoint.Z), "Map Coordinates");
-        //Get the corresponding layout point
-        var pointOnLayoutFrame = mapFrame.MapToPage(mapPoint);
-
-        //Create a point graphic on the Layout.
-        var cimGraphicElement = new CIMPointGraphic
-        {
-          Location = pointOnLayoutFrame,
-          Symbol = pointSymbol.MakeSymbolReference()
-        };
-        //Or use GraphicFactory
-        var cimGraphicElement2 = GraphicFactory.Instance.CreateSimpleGraphic(
-                pointOnLayoutFrame, pointSymbol);
-
-        ElementFactory.Instance.CreateGraphicElement(layout, cimGraphicElement);
-        ElementFactory.Instance.CreateGraphicElement(layout, cimGraphicElement2);
       }
       #endregion
 
@@ -2929,59 +3216,62 @@ namespace ProSnippets.LayoutsSnippets
       #region ProSnippet Group: Layout MapSeries
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapSeries
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.SortField
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.SortAscending
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.PageNumberField
-      // cref: ArcGIS.Desktop.Layouts.Layout.SetMapSeries
+      // cref: ArcGIS.Desktop.Layouts.Layout.SetMapSeries(ArcGIS.Desktop.Layouts.MapSeries)
+      // cref: ArcGIS.Desktop.Layouts.Layout.MapSeries
       #region Modify an existing map series
       {
         //Modify the currently active map series and changes its sort field and page number field.
-        //Note: Must be on QueuedTask.Run
-        SpatialMapSeries SMS = layout.MapSeries as SpatialMapSeries; //cast as spatial map series for additional members
-        SMS.SortField = "State_Name";
-        SMS.SortAscending = true;
-        SMS.PageNumberField = "PageNum";
+        await QueuedTask.Run(() =>
+        {
+          SpatialMapSeries SMS = layout.MapSeries as SpatialMapSeries; //cast as spatial map series for additional members
+          SMS.SortField = "State_Name";
+          SMS.SortAscending = true;
+          SMS.PageNumberField = "PageNum";
 
-        //Overwrite the current map series with these new settings
-        layout.SetMapSeries(SMS);
+          //Overwrite the current map series with these new settings
+          layout.SetMapSeries(SMS);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.MapSeries.CreateSpatialMapSeries(ArcGIS.Desktop.Layouts.Layout,ArcGIS.Desktop.Layouts.MapFrame,ArcGIS.Desktop.Mapping.BasicFeatureLayer,System.String)
-      // cref: ArcGIS.Desktop.Layouts.MapFrame
       // cref: ArcGIS.Desktop.Layouts.MapSeries
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.SortField
-      // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.SortAscending
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.CategoryField
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.ExtentOptions
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.MarginType
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.MarginUnits
       // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.ScaleRounding
-      // cref: ArcGIS.Desktop.Layouts.Layout.SetMapSeries
+      // cref: ArcGIS.Desktop.Layouts.Layout.SetMapSeries(ArcGIS.Desktop.Layouts.MapSeries)
       // cref: ArcGIS.Core.CIM.UnitType
       // cref: ArcGIS.Core.CIM.ExtentFitType
       // cref: ArcGIS.Core.Geometry.LinearUnit
+      // cref: ArcGIS.Desktop.Layouts.SpatialMapSeries.Margin
       #region Create a new spatial map series
       {
-        // This example create a new spatial map series and then applies it to the active layout. This will automatically 
+        // This example create a new spatial map series and then applies it to the active layout. This will automatically
         // overwrite an existing map series if one is already present.
-        //Note: Must be on QueuedTask.Run;
-        //SpatialMapSeries constructor - required parameters
-        BasicFeatureLayer indexLyr = map.FindLayers("Countries").FirstOrDefault() as BasicFeatureLayer;
-        SpatialMapSeries SMS = MapSeries.CreateSpatialMapSeries(layout, mapFrame, indexLyr, "Name");
+        await QueuedTask.Run(() =>
+        {
+          //SpatialMapSeries constructor - required parameters
+          BasicFeatureLayer indexLyr = map.FindLayers("Countries").FirstOrDefault() as BasicFeatureLayer;
+          SpatialMapSeries SMS = MapSeries.CreateSpatialMapSeries(layout, mapFrame, indexLyr, "Name");
 
-        //Set optional, non-default values
-        SMS.CategoryField = "Continent";
-        SMS.SortField = "Population";
-        SMS.ExtentOptions = ExtentFitType.BestFit;
-        SMS.MarginType = ArcGIS.Core.CIM.UnitType.PageUnits;
-        SMS.MarginUnits = ArcGIS.Core.Geometry.LinearUnit.Centimeters;
-        SMS.Margin = 1;
-        SMS.ScaleRounding = 1000;
-        layout.SetMapSeries(SMS);  //Overwrite existing map series.
+          //Set optional, non-default values
+          SMS.CategoryField = "Continent";
+          SMS.SortField = "Population";
+          SMS.ExtentOptions = ExtentFitType.BestFit;
+          SMS.MarginType = ArcGIS.Core.CIM.UnitType.PageUnits;
+          SMS.MarginUnits = ArcGIS.Core.Geometry.LinearUnit.Centimeters;
+          SMS.Margin = 1;
+          SMS.ScaleRounding = 1000;
+          layout.SetMapSeries(SMS);  //Overwrite existing map series.
+        });
       }
       #endregion
 
@@ -2989,19 +3279,18 @@ namespace ProSnippets.LayoutsSnippets
       #region ProSnippet Group: Layout Export
       #endregion
       // cref: ArcGIS.Desktop.Layouts.Layout.Export(ArcGIS.Desktop.Mapping.ExportFormat)
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.DoCompressVectorGraphics
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.DoEmbedFonts
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.HasGeoRefInfo
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.ImageCompression
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.ImageQuality
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.LayersAndAttributes
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.OutputFileName
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.VALIDATEOUTPUTFILEPATH
-      // cref: ARCGIS.DESKTOP.MAPPING.ImageCompression
-      // cref: ARCGIS.DESKTOP.MAPPING.ImageQuality
-      // cref: ARCGIS.DESKTOP.MAPPING.LayersAndAttributes
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.DoCompressVectorGraphics
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.DoEmbedFonts
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.HasGeoRefInfo
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.ImageCompression
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.ImageQuality
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.LayersAndAttributes
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.OutputFileName
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.ValidateOutputFilePath()
+      // cref: ArcGIS.Desktop.Mapping.ImageCompression
+      // cref: ArcGIS.Desktop.Mapping.ImageQuality
+      // cref: ArcGIS.Desktop.Mapping.LayersAndAttributes
       #region Export a layout to PDF
       {
         //Export a single page layout to PDF.
@@ -3024,23 +3313,22 @@ namespace ProSnippets.LayoutsSnippets
         //Check to see if the path is valid and export
         if (PDF.ValidateOutputFilePath())
         {
-          //Note: Must be on QueuedTask.Run
-          layout.Export(PDF);  //Export the layout to PDF on the worker thread
+          await QueuedTask.Run(() => layout.Export(PDF));  //Export the layout to PDF on the worker thread
         }
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.MapFrame.Export(ArcGIS.Desktop.Mapping.ExportFormat)
-      // cref: ARCGIS.DESKTOP.MAPPING.JPEGFormat
-      // cref: ARCGIS.DESKTOP.MAPPING.JPEGFormat.HasWorldFile
-      // cref: ARCGIS.DESKTOP.MAPPING.JPEGFormat.ColorMode
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.OutputFileName
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.VALIDATEOUTPUTFILEPATH
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.Resolution
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.Height
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.Width
-      // cref: ARCGIS.DESKTOP.MAPPING.JPEGColorMode
+      // cref: ArcGIS.Desktop.Mapping.JPEGFormat
+      // cref: ArcGIS.Desktop.Mapping.JPEGFormat.HasWorldFile
+      // cref: ArcGIS.Desktop.Mapping.JPEGFormat.ColorMode
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.OutputFileName
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.ValidateOutputFilePath()
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.Resolution
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.Height
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.Width
+      // cref: ArcGIS.Desktop.Mapping.JPEGColorMode
+      // cref: ArcGIS.Desktop.Layouts.Layout.FindElement(System.String)
       #region Export a map frame to JPG
       {
         //Export a map frame to JPG.
@@ -3057,30 +3345,30 @@ namespace ProSnippets.LayoutsSnippets
           Width = 1200
         };
 
-        //Reference the map frame
-        MapFrame mf = layout.FindElement("MyMapFrame") as MapFrame;
-
         //Export on the worker thread
-        //Note: Must be on QueuesTask.Run
-        //Check to see if the path is valid and export
-        if (JPG.ValidateOutputFilePath())
+        await QueuedTask.Run(() =>
         {
-          mf.Export(JPG);  //Export the map frame to JPG
-        }
+          //Reference the map frame
+          MapFrame mf = layout.FindElement("MyMapFrame") as MapFrame;
+
+          //Check to see if the path is valid and export
+          if (JPG.ValidateOutputFilePath())
+          {
+            mf.Export(JPG);  //Export the map frame to JPG
+          }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.MapFrame.GetMapView(ArcGIS.Desktop.Layouts.LayoutView)
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.Export(ArcGIS.Desktop.Mapping.ExportFormat)
-      // cref: ARCGIS.DESKTOP.MAPPING.BMPFormat
-      // cref: ARCGIS.DESKTOP.MAPPING.BMPFormat.HasWorldFile
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.OutputFileName
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.VALIDATEOUTPUTFILEPATH
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.Resolution
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.Height
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.Width
-      // cref: ARCGIS.DESKTOP.MAPPING.MapView.Export
+      // cref: ArcGIS.Desktop.Mapping.BMPFormat
+      // cref: ArcGIS.Desktop.Mapping.BMPFormat.HasWorldFile
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.OutputFileName
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.ValidateOutputFilePath()
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.Resolution
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.Height
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.Width
+      // cref: ArcGIS.Desktop.Mapping.MapView.Export(ArcGIS.Desktop.Mapping.ExportFormat)
       #region Export the map view associated with a map frame to BMP
       {
         //Export the map view associated with a map frame to BMP.
@@ -3117,22 +3405,20 @@ namespace ProSnippets.LayoutsSnippets
       // cref: ArcGIS.Desktop.Layouts.MapSeriesExportOptions.CustomPages
       // cref: ArcGIS.Desktop.Layouts.MapSeriesExportOptions.ExportFileOptions
       // cref: ArcGIS.Desktop.Layouts.MapSeriesExportOptions.ShowSelectedSymbology
-      // cref: ArcGIS.Desktop.Layouts.Layout.Export(ArcGIS.Desktop.Mapping.ExportFormat)
+      // cref: ArcGIS.Desktop.Layouts.Layout.Export(ArcGIS.Desktop.Mapping.ExportFormat,ArcGIS.Desktop.Layouts.MapSeriesExportOptions)
       // cref: ArcGIS.Desktop.Layouts.ExportPages
-      // cref: ArcGIS.Desktop.MAPPING.ExportFileOptions
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.DoCompressVectorGraphics
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.DoEmbedFonts
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.HasGeoRefInfo
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.ImageCompression
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.ImageQuality
-      // cref: ARCGIS.DESKTOP.MAPPING.PDFFORMAT.LayersAndAttributes
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.OutputFileName
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.VALIDATEOUTPUTFILEPATH
-      // cref: ARCGIS.DESKTOP.MAPPING.ImageCompression
-      // cref: ARCGIS.DESKTOP.MAPPING.ImageQuality
-      // cref: ARCGIS.DESKTOP.MAPPING.LayersAndAttributes
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.DoCompressVectorGraphics
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.DoEmbedFonts
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.HasGeoRefInfo
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.ImageCompression
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.ImageQuality
+      // cref: ArcGIS.Desktop.Mapping.PDFFormat.LayersAndAttributes
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.OutputFileName
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.ValidateOutputFilePath()
+      // cref: ArcGIS.Desktop.Mapping.ImageCompression
+      // cref: ArcGIS.Desktop.Mapping.ImageQuality
+      // cref: ArcGIS.Desktop.Mapping.LayersAndAttributes
       #region Export a map series to single PDF
       {
         //Export a map series with multiple pages to a single PDF.
@@ -3160,11 +3446,10 @@ namespace ProSnippets.LayoutsSnippets
         };
 
         //Export on the worker thread
-        //Note: Must be on QueuedTask.Run
         //Check to see if the path is valid and export
         if (MS_PDF.ValidateOutputFilePath())
         {
-          layout.Export(MS_PDF, MS_ExportOptions);  //Export to PDF
+          await QueuedTask.Run(() => layout.Export(MS_PDF, MS_ExportOptions));  //Export to PDF
         }
       }
       #endregion
@@ -3173,18 +3458,16 @@ namespace ProSnippets.LayoutsSnippets
       // cref: ArcGIS.Desktop.Layouts.MapSeriesExportOptions.ExportPages
       // cref: ArcGIS.Desktop.Layouts.MapSeriesExportOptions.ExportFileOptions
       // cref: ArcGIS.Desktop.Layouts.MapSeriesExportOptions.ShowSelectedSymbology
-      // cref: ArcGIS.Desktop.Layouts.Layout.Export(ArcGIS.Desktop.Mapping.ExportFormat)
+      // cref: ArcGIS.Desktop.Layouts.Layout.Export(ArcGIS.Desktop.Mapping.ExportFormat,ArcGIS.Desktop.Layouts.MapSeriesExportOptions)
       // cref: ArcGIS.Desktop.Layouts.ExportPages
-      // cref: ArcGIS.Desktop.MAPPING.ExportFileOptions
-      // cref: ARCGIS.DESKTOP.MAPPING.TIFFFormat
-      // cref: ARCGIS.DESKTOP.MAPPING.TIFFFormat.ColorMode
-      // cref: ARCGIS.DESKTOP.MAPPING.TIFFFormat.ImageCompression
-      // cref: ARCGIS.DESKTOP.MAPPING.TIFFFormat.HasWorldFile
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.OutputFileName
-      // cref: ARCGIS.DESKTOP.MAPPING.EXPORTFORMAT.VALIDATEOUTPUTFILEPATH
-      // cref: ARCGIS.DESKTOP.MAPPING.TIFFColorMode
-      // cref: ARCGIS.DESKTOP.MAPPING.TIFFImageCompression
+      // cref: ArcGIS.Desktop.Mapping.TIFFFormat
+      // cref: ArcGIS.Desktop.Mapping.TIFFFormat.ColorMode
+      // cref: ArcGIS.Desktop.Mapping.TIFFFormat.ImageCompression
+      // cref: ArcGIS.Desktop.Mapping.TIFFFormat.HasWorldFile
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.OutputFileName
+      // cref: ArcGIS.Desktop.Mapping.ExportFormat.ValidateOutputFilePath()
+      // cref: ArcGIS.Desktop.Mapping.TIFFColorMode
+      // cref: ArcGIS.Desktop.Mapping.TIFFImageCompression
       #region Export a map series to individual TIFF files
       {
         //Export each page of a map series to an individual TIFF file.
@@ -3209,12 +3492,10 @@ namespace ProSnippets.LayoutsSnippets
         };
 
         //Export on the worker thread
-        //Note: Must be on the QueuedTask.Run()
-
         //Check to see if the path is valid and export
         if (TIFF.ValidateOutputFilePath())
         {
-          layout.Export(TIFF, MSExportOptions_TIFF);  //Export to TIFF
+          await QueuedTask.Run(() => layout.Export(TIFF, MSExportOptions_TIFF));  //Export to TIFF
         }
       }
       #endregion
@@ -3225,7 +3506,6 @@ namespace ProSnippets.LayoutsSnippets
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.LayoutOptions
-      // cref: ArcGIS.Desktop.Core.LayoutOptions
       // cref: ArcGIS.Desktop.Core.LayoutOptions.KeepLastToolActive
       // cref: ArcGIS.Desktop.Core.LayoutOptions.WarnAboutAssociatedSurrounds
       // cref: ArcGIS.Desktop.Core.LayoutOptions.LayoutTemplatePath
@@ -3237,18 +3517,16 @@ namespace ProSnippets.LayoutsSnippets
         //eg <Install_Path>\Resources\LayoutTemplates\en-US
         var gallery_path = ApplicationOptions.LayoutOptions.LayoutTemplatePath;
         var defaultGuideColor = ApplicationOptions.LayoutOptions.DefaultGuideColor;
-        //Note: Must be on QueuedTask.Run.
-        var guideColor = ApplicationOptions.LayoutOptions.GetGuideColor();
+        var guideColor = await QueuedTask.Run(() => ApplicationOptions.LayoutOptions.GetGuideColor());
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.LayoutOptions
-      // cref: ArcGIS.Desktop.Core.LayoutOptions
       // cref: ArcGIS.Desktop.Core.LayoutOptions.KeepLastToolActive
       // cref: ArcGIS.Desktop.Core.LayoutOptions.WarnAboutAssociatedSurrounds
       // cref: ArcGIS.Desktop.Core.LayoutOptions.LayoutTemplatePath
-      // cref: ArcGIS.Desktop.Core.LayoutOptions.SetGuideColor
+      // cref: ArcGIS.Desktop.Core.LayoutOptions.SetGuideColor(ArcGIS.Core.CIM.CIMColor)
       #region Set LayoutOptions
       {
         //keep graphic element insert tool active
@@ -3258,10 +3536,12 @@ namespace ProSnippets.LayoutsSnippets
         //path to .pagx files used as templates
         ApplicationOptions.LayoutOptions.LayoutTemplatePath = @"D:\data\layout_templates";
 
-        var guideColor = ApplicationOptions.LayoutOptions.GetGuideColor();
-        // set guide color
-        //Note: Must be on QueuedTask.Run
-        ApplicationOptions.LayoutOptions.SetGuideColor(ColorFactory.Instance.RedRGB);
+        await QueuedTask.Run(() =>
+        {
+          var guideColor = ApplicationOptions.LayoutOptions.GetGuideColor();
+          // set guide color
+          ApplicationOptions.LayoutOptions.SetGuideColor(ColorFactory.Instance.RedRGB);
+        });
       }
       #endregion
 
@@ -3269,116 +3549,124 @@ namespace ProSnippets.LayoutsSnippets
       #endregion
       // cref: ArcGIS.Desktop.Core.ApplicationOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.TextAndGraphicsElementsOptions
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetAvailableFonts
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetAvailableFonts()
       #region Get All Available Fonts
       {
         //Note: see also SymbolFactory.Instance.GetAvailableFonts() which returns the
         //same list. Use for TextAndGraphicsElementsOptions.GetAvailableFonts() convenience
         //A list of tuples of Font name + associated Font Styles, one tuple per
         //font, is returned
-        //Note: Must be on QueuedTask.Run
-        var fonts = ApplicationOptions.TextAndGraphicsElementsOptions.GetAvailableFonts();
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine("Pro Fonts\r\n============================");
-        foreach (var font in fonts)
+        await QueuedTask.Run(() =>
         {
-          var styles = string.Join(",", font.fontStyles);
-          sb.AppendLine($"{font.fontName}, [{styles}]");
-        }
-        System.Diagnostics.Debug.WriteLine(sb.ToString());
+          var fonts = ApplicationOptions.TextAndGraphicsElementsOptions.GetAvailableFonts();
+          StringBuilder sb = new StringBuilder();
+          sb.AppendLine("Pro Fonts\r\n============================");
+          foreach (var font in fonts)
+          {
+            var styles = string.Join(",", font.fontStyles);
+            sb.AppendLine($"{font.fontName}, [{styles}]");
+          }
+          System.Diagnostics.Debug.WriteLine(sb.ToString());
+        });
       }
 
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.TextAndGraphicsElementsOptions
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultFont
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultPointSymbol
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultLineSymbol
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultPolygonSymbol
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultTextSymbol
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultFont()
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultPointSymbol()
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultLineSymbol()
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultPolygonSymbol()
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.GetDefaultTextSymbol()
       #region Get TextAndGraphicsElementsOptions
       {
-        //Note: Must be on QueuedTask.Run
-        //Get the default font (see also 'SymbolFactory.Instance.DefaultFont')
-        var def_font = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultFont();
-        System.Diagnostics.Debug.WriteLine(
-          $"\r\ndefault font: {def_font.fontName}, {def_font.styleName}");
+        await QueuedTask.Run(() =>
+        {
+          //Get the default font (see also 'SymbolFactory.Instance.DefaultFont')
+          var def_font = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultFont();
+          System.Diagnostics.Debug.WriteLine(
+            $"\r\ndefault font: {def_font.fontName}, {def_font.styleName}");
 
-        //Get the default graphics element symbols - point, line, poly, text
-        var ptSymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultPointSymbol();
-        var lineSymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultLineSymbol();
-        var polySymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultPolygonSymbol();
-        var textSymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultTextSymbol();
+          //Get the default graphics element symbols - point, line, poly, text
+          var ptSymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultPointSymbol();
+          var lineSymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultLineSymbol();
+          var polySymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultPolygonSymbol();
+          var textSymbol = ApplicationOptions.TextAndGraphicsElementsOptions.GetDefaultTextSymbol();
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.TextAndGraphicsElementsOptions
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultPointSymbol
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultLineSymbol
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultPolygonSymbol
-      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultTextSymbol
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultPointSymbol(ArcGIS.Core.CIM.CIMPointSymbol)
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultLineSymbol(ArcGIS.Core.CIM.CIMLineSymbol)
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultPolygonSymbol(ArcGIS.Core.CIM.CIMPolygonSymbol)
+      // cref: ArcGIS.Desktop.Core.TextAndGraphicsElementsOptions.SetDefaultTextSymbol(ArcGIS.Core.CIM.CIMTextSymbol)
       #region Set TextAndGraphicsElementsOptions
       {
-        //Note: Must be on QueuedTask.Run
-        //Set a default font. Use its default style
-        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma");
-        //or specify an explicit style
-        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma", "bold");
+        await QueuedTask.Run(() =>
+        {
+          //Set a default font. Use its default style
+          ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma");
+          //or specify an explicit style
+          ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultFont("tahoma", "bold");
 
-        //Create symbols
-        var ptSymbol2 = SymbolFactory.Instance.ConstructPointSymbol(
-          ColorFactory.Instance.RedRGB, 14, SimpleMarkerStyle.Diamond);
-        var lineSymbol2 = SymbolFactory.Instance.ConstructLineSymbol(
-          ColorFactory.Instance.RedRGB, 2, SimpleLineStyle.Dash);
-        var polySymbol2 = SymbolFactory.Instance.ConstructPolygonSymbol(
-          ColorFactory.Instance.RedRGB, SimpleFillStyle.DiagonalCross);
-        var textSymbol2 = SymbolFactory.Instance.ConstructTextSymbol(
-          ColorFactory.Instance.RedRGB, 12);
+          //Create symbols
+          var ptSymbol2 = SymbolFactory.Instance.ConstructPointSymbol(
+            ColorFactory.Instance.RedRGB, 14, SimpleMarkerStyle.Diamond);
+          var lineSymbol2 = SymbolFactory.Instance.ConstructLineSymbol(
+            ColorFactory.Instance.RedRGB, 2, SimpleLineStyle.Dash);
+          var polySymbol2 = SymbolFactory.Instance.ConstructPolygonSymbol(
+            ColorFactory.Instance.RedRGB, SimpleFillStyle.DiagonalCross);
+          var textSymbol2 = SymbolFactory.Instance.ConstructTextSymbol(
+            ColorFactory.Instance.RedRGB, 12);
 
-        //Set default point, line, poly, text graphics element symbols
-        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultPointSymbol(ptSymbol2);
-        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultLineSymbol(lineSymbol2);
-        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultPolygonSymbol(polySymbol2);
-        ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultTextSymbol(textSymbol2);
+          //Set default point, line, poly, text graphics element symbols
+          ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultPointSymbol(ptSymbol2);
+          ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultLineSymbol(lineSymbol2);
+          ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultPolygonSymbol(polySymbol2);
+          ApplicationOptions.TextAndGraphicsElementsOptions.SetDefaultTextSymbol(textSymbol2);
+        });
       }
       #endregion
 
       #region ProSnippet Group: MapFrame Display Constraints
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.AutoCameraSource
       #region SetAutoCameraNone
       {
-        //Note: Must be on QueuedTask.Run
-        var autoCamera = mapFrame.GetAutoCamera();
-        autoCamera.Source = AutoCameraSource.None;
-        if (mapFrame.ValidateAutoCamera(autoCamera) &&
-          !mapFrame.IsMapSeriesMapFrame())
-          mapFrame.SetAutoCamera(autoCamera);
+        await QueuedTask.Run(() =>
+        {
+          var autoCamera = mapFrame.GetAutoCamera();
+          autoCamera.Source = AutoCameraSource.None;
+          if (mapFrame.ValidateAutoCamera(autoCamera) &&
+            !mapFrame.IsMapSeriesMapFrame())
+          {
+            mapFrame.SetAutoCamera(autoCamera);
+          }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetViewExtent
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetViewExtent()
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Extent
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region SetAutoCameraFixedExtent
       {
         var autoCamera = mapFrame.GetAutoCamera();
@@ -3393,56 +3681,9 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
-          mapFrame.SetAutoCamera(autoCamera);
-      }
-      #endregion
-
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetViewCenter
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetMapView
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
-      // cref: ArcGIS.Core.CIM.AutoCameraType
-      // cref: ArcGIS.Core.CIM.AutoCameraSource
-      // cref: ArcGIS.Core.CIM.CIMViewCamera
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
-      // cref: ArcGIS.Desktop.Mapping.MapView.Camera
-      #region SetAutoCameraFixedCenter
-      {
-        //Note: run within the QueuedTask
-        var autoCamera = mapFrame.GetAutoCamera();
-        autoCamera.Source = AutoCameraSource.Fixed;
-        autoCamera.AutoCameraType = AutoCameraType.Center;
-
-        var camera = mapFrame.GetMapView(LayoutView.Active).Camera;
-        var center = mapFrame.GetViewCenter();
-
-        //var extent = EnvelopeBuilderEx.CreateEnvelope(
-        //	400748.62, 800296.4, 1310669.05, 1424520.74, mf.Map.SpatialReference);
-        //autoCamera.Extent = extent;
-
-        var camera2 = new CIMViewCamera()
         {
-          Heading = 0,
-          Pitch = -90,
-          Roll = 0,
-          Scale = 21169571,
-          X = 855708,
-          Y = 1112409,
-          Z = double.NaN
-        };
-        autoCamera.Camera = camera2;
-        var states = mapFrame.Map.GetLayersAsFlattenedList().First(l => l.Name == "State_Polygons");
-        autoCamera.IntersectLayerPath = states.URI;
-
-        if (mapFrame.ValidateAutoCamera(autoCamera) &&
-          !mapFrame.IsMapSeriesMapFrame())
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
 
@@ -3461,46 +3702,53 @@ namespace ProSnippets.LayoutsSnippets
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
       // cref: ArcGIS.Desktop.Mapping.MapView.Camera
-      #region SetAutoCameraFixedCenterAndScale
+      // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
+      #region SetAutoCameraFixedCenter
       {
-        //Note: run within the QueuedTask
-        var autoCamera = mapFrame.GetAutoCamera();
-        autoCamera.Source = AutoCameraSource.Fixed;
-        autoCamera.AutoCameraType = AutoCameraType.CenterAndScale;
+        var activeLayoutView = LayoutView.Active;
+        await QueuedTask.Run(() =>
+        {
+          var autoCamera = mapFrame.GetAutoCamera();
+          autoCamera.Source = AutoCameraSource.Fixed;
+          autoCamera.AutoCameraType = AutoCameraType.Center;
 
-        var camera = mapFrame.GetMapView(LayoutView.Active).Camera;
-        var center = mapFrame.GetViewCenter();
+          var camera = mapFrame.GetMapView(activeLayoutView).Camera;
+          var center = mapFrame.GetViewCenter();
 
         //var extent = EnvelopeBuilderEx.CreateEnvelope(
         //	400748.62, 800296.4, 1310669.05, 1424520.74, mf.Map.SpatialReference);
         //autoCamera.Extent = extent;
 
-        var camera2 = new CIMViewCamera()
-        {
-          Heading = 0,
-          Pitch = -90,
-          Roll = 0,
-          Scale = 21169571,
-          X = 1310669.0 + ((400748.5 - 1310669.0) / 2.0),
-          Y = 800296.4 + ((1424520.74 - 800296.4) / 2.0),
-          Z = double.NaN
-        };
-        autoCamera.Camera = camera2;
-        var states = mapFrame.Map.GetLayersAsFlattenedList().First(l => l.Name == "State_Polygons");
-        //autoCamera.IntersectLayerPath = states.URI;
-        if (mapFrame.ValidateAutoCamera(autoCamera) &&
-          !mapFrame.IsMapSeriesMapFrame())
-          mapFrame.SetAutoCamera(autoCamera);
-      }
+          var camera2 = new CIMViewCamera()
+          {
+            Heading = 0,
+            Pitch = -90,
+            Roll = 0,
+            Scale = 21169571,
+            X = 855708,
+            Y = 1112409,
+            Z = double.NaN
+          };
+          autoCamera.Camera = camera2;
+          var states = mapFrame.Map.GetLayersAsFlattenedList().First(l => l.Name == "State_Polygons");
+          autoCamera.IntersectLayerPath = states.URI;
 
+          if (mapFrame.ValidateAutoCamera(autoCamera) &&
+            !mapFrame.IsMapSeriesMapFrame())
+          {
+            mapFrame.SetAutoCamera(autoCamera);
+          }
+        });
+      }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetViewCenter
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetMapView
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetViewCenter()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetMapView(ArcGIS.Desktop.Layouts.LayoutView)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
@@ -3508,55 +3756,113 @@ namespace ProSnippets.LayoutsSnippets
       // cref: ArcGIS.Core.CIM.AutoCameraSource
       // cref: ArcGIS.Core.CIM.CIMViewCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
       // cref: ArcGIS.Desktop.Mapping.MapView.Camera
-      #region SetAutoCameraFixedScale
+      // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
+      #region SetAutoCameraFixedCenterAndScale
       {
-        //Note: run within the QueuedTask
+        var activeLayoutView = LayoutView.Active;
+        await QueuedTask.Run(() =>
+        {
+          var autoCamera = mapFrame.GetAutoCamera();
+          autoCamera.Source = AutoCameraSource.Fixed;
+          autoCamera.AutoCameraType = AutoCameraType.CenterAndScale;
 
-        var autoCamera = mapFrame.GetAutoCamera();
-        autoCamera.Source = AutoCameraSource.Fixed;
-        autoCamera.AutoCameraType = AutoCameraType.Scale;
-
-        var camera = mapFrame.GetMapView(LayoutView.Active).Camera;
-        var center = mapFrame.GetViewCenter();
+          var camera = mapFrame.GetMapView(activeLayoutView).Camera;
+          var center = mapFrame.GetViewCenter();
 
         //var extent = EnvelopeBuilderEx.CreateEnvelope(
         //	400748.62, 800296.4, 1310669.05, 1424520.74, mf.Map.SpatialReference);
         //autoCamera.Extent = extent;
 
-        var camera2 = new CIMViewCamera()
-        {
-          Heading = 0,
-          Pitch = -90,
-          Roll = 0,
-          Scale = 20000571,
-          X = 1310669.0 + ((400748.5 - 1310669.0) / 2.0),
-          Y = 800296.4 + ((1424520.74 - 800296.4) / 2.0),
-          Z = double.NaN
-        };
-        autoCamera.Camera = camera2;
-        var states = mapFrame.Map.GetLayersAsFlattenedList().First(l => l.Name == "State_Polygons");
-        //autoCamera.IntersectLayerPath = states.URI;
-
-        if (mapFrame.ValidateAutoCamera(autoCamera) &&
-          !mapFrame.IsMapSeriesMapFrame())
-          mapFrame.SetAutoCamera(autoCamera);
-
+          var camera2 = new CIMViewCamera()
+          {
+            Heading = 0,
+            Pitch = -90,
+            Roll = 0,
+            Scale = 21169571,
+            X = 1310669.0 + ((400748.5 - 1310669.0) / 2.0),
+            Y = 800296.4 + ((1424520.74 - 800296.4) / 2.0),
+            Z = double.NaN
+          };
+          autoCamera.Camera = camera2;
+          var states = mapFrame.Map.GetLayersAsFlattenedList().First(l => l.Name == "State_Polygons");
+          //autoCamera.IntersectLayerPath = states.URI;
+          if (mapFrame.ValidateAutoCamera(autoCamera) &&
+            !mapFrame.IsMapSeriesMapFrame())
+          {
+            mapFrame.SetAutoCamera(autoCamera);
+          }
+        });
       }
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetViewCenter()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetMapView(ArcGIS.Desktop.Layouts.LayoutView)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
+      // cref: ArcGIS.Core.CIM.CIMViewCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
+      // cref: ArcGIS.Desktop.Mapping.MapView.Camera
+      // cref: ArcGIS.Desktop.Layouts.LayoutView.Active
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
+      #region SetAutoCameraFixedScale
+      {
+        var activeLayoutView = LayoutView.Active;
+        await QueuedTask.Run(() =>
+        {
+          var autoCamera = mapFrame.GetAutoCamera();
+          autoCamera.Source = AutoCameraSource.Fixed;
+          autoCamera.AutoCameraType = AutoCameraType.Scale;
+
+          var camera = mapFrame.GetMapView(activeLayoutView).Camera;
+          var center = mapFrame.GetViewCenter();
+
+        //var extent = EnvelopeBuilderEx.CreateEnvelope(
+        //	400748.62, 800296.4, 1310669.05, 1424520.74, mf.Map.SpatialReference);
+        //autoCamera.Extent = extent;
+
+          var camera2 = new CIMViewCamera()
+          {
+            Heading = 0,
+            Pitch = -90,
+            Roll = 0,
+            Scale = 20000571,
+            X = 1310669.0 + ((400748.5 - 1310669.0) / 2.0),
+            Y = 800296.4 + ((1424520.74 - 800296.4) / 2.0),
+            Z = double.NaN
+          };
+          autoCamera.Camera = camera2;
+          var states = mapFrame.Map.GetLayersAsFlattenedList().First(l => l.Name == "State_Polygons");
+          //autoCamera.IntersectLayerPath = states.URI;
+
+          if (mapFrame.ValidateAutoCamera(autoCamera) &&
+            !mapFrame.IsMapSeriesMapFrame())
+          {
+            mapFrame.SetAutoCamera(autoCamera);
+          }
+        });
+      }
+
+      #endregion
+
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Core.CIM.CIMAutoCamera
+      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
+      // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
+      // cref: ArcGIS.Core.CIM.AutoCameraType
+      // cref: ArcGIS.Core.CIM.AutoCameraSource
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.MapFrameLinkName
       #region SetAutoCameraLinkedExtent
       {
@@ -3567,22 +3873,24 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
+        {
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.MapFrameLinkName
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region SetAutoCameraLinkedCenter
       {
         var autoCamera = mapFrame.GetAutoCamera();
@@ -3594,22 +3902,24 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
+        {
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.MapFrameLinkName
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region SetAutoCameraLinkedCenterAndScale
       {
         var autoCamera = mapFrame.GetAutoCamera();
@@ -3621,22 +3931,24 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
+        {
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.MapFrameLinkName
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region SetAutoCameraLinkedScale
       {
         var autoCamera = mapFrame.GetAutoCamera();
@@ -3648,20 +3960,22 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
+        {
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region SetAutoCameraLinkedMapSeriesShape
       {
         var autoCamera = mapFrame.GetAutoCamera();
@@ -3673,20 +3987,22 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
+        {
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame
-      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.GetAutoCamera()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.SetAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.IsMapSeriesMapFrame()
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.ValidateAutoCamera(ArcGIS.Core.CIM.CIMAutoCamera)
       // cref: ArcGIS.Core.CIM.CIMAutoCamera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.Source
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraType
       // cref: ArcGIS.Core.CIM.AutoCameraSource
-      // cref: ArcGIS.Core.CIM.CIMAutoCamera.Camera
       // cref: ArcGIS.Core.CIM.CIMAutoCamera.IntersectLayerPath
+      // cref: ArcGIS.Desktop.Layouts.MapFrame.Map
       #region SetAutoCameraLinkedMapSeriesCenter
       {
         var autoCamera = mapFrame.GetAutoCamera();
@@ -3698,21 +4014,31 @@ namespace ProSnippets.LayoutsSnippets
 
         if (mapFrame.ValidateAutoCamera(autoCamera) &&
           !mapFrame.IsMapSeriesMapFrame())
+        {
           mapFrame.SetAutoCamera(autoCamera);
+        }
       }
       #endregion
 
       #region ProSnippets Group: Layer visibility overrides in MapFrames
+      {
+      }
       #endregion
       // cref: ArcGIS.Core.CIM.CIMMapFrame.OverrideLayerVisibility
       // cref: ArcGIS.Core.CIM.CIMMapFrame.LayerVisibilityOverrides
       // cref: ArcGIS.Core.CIM.CIMLayerOverrideSet
+      // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition()
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition(ArcGIS.Core.CIM.CIMElement)
+      // cref: ArcGIS.Desktop.Layouts.Layout.Elements
       #region Set Layer Visibility Overrides in MapFrames
       {
-        //Note: Run this code within a QueuedTask
-        //Get the USA States map from the project
-        //This map has both States and Cities layers
-        var usaMap = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(m => m.Name == "USA States")?.GetMap();
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
+        {
+          //Get the USA States map from the project
+          //This map has both States and Cities layers
+          var usaMap = project.GetItems<MapProjectItem>().FirstOrDefault(m => m.Name == "USA States")?.GetMap();
 
         //The layout has two map frames - one for States and one for Cities
         //We will set layer visibility overrides on each map frame, so that only the relevant layer is visible in each map frame
@@ -3764,29 +4090,34 @@ namespace ProSnippets.LayoutsSnippets
         //Assign the layer override sets to the cities map frame definition
         mapFrameDefinitionCities.LayerVisibilityOverrides = layerOverrideSetsCities.ToArray();
         //Set the modified definition back to the cities map frame
-        citiesMapFrame.SetDefinition(mapFrameDefinitionCities);
+          citiesMapFrame.SetDefinition(mapFrameDefinitionCities);
+        });
       }
       #endregion
       // cref: ArcGIS.Core.CIM.CIMMapFrame.OverrideLayerVisibility
       // cref: ArcGIS.Core.CIM.CIMMapFrame.LayerVisibilityOverrides
+      // cref: ArcGIS.Desktop.Layouts.Element.GetDefinition()
+      // cref: ArcGIS.Desktop.Layouts.Element.SetDefinition(ArcGIS.Core.CIM.CIMElement)
+      // cref: ArcGIS.Desktop.Layouts.Layout.Elements
       #region Remove Layer Visibility Overrides in MapFrames
       {
-        //Note: Run this code within a QueuedTask
-        //Get all map frames in the layout
-        var mapFrames = layout.Elements.OfType<MapFrame>();
-        //Iterate through each map frame in the layout
-        foreach (var mapFrameInLayout in mapFrames)
+        await QueuedTask.Run(() =>
         {
-          //Get the map frame definition
-          var mapFrameDefinition = mapFrame.GetDefinition() as CIMMapFrame;
-          //Remove all layer visibility overrides
-          mapFrameDefinition.OverrideLayerVisibility = false;
-          mapFrameDefinition.LayerVisibilityOverrides = null;
-          mapFrame.SetDefinition(mapFrameDefinition);
-        }
+          //Get all map frames in the layout
+          var mapFrames = layout.Elements.OfType<MapFrame>();
+          //Iterate through each map frame in the layout
+          foreach (var mapFrameInLayout in mapFrames)
+          {
+            //Get the map frame definition
+            var mapFrameDefinition = mapFrame.GetDefinition() as CIMMapFrame;
+            //Remove all layer visibility overrides
+            mapFrameDefinition.OverrideLayerVisibility = false;
+            mapFrameDefinition.LayerVisibilityOverrides = null;
+            mapFrame.SetDefinition(mapFrameDefinition);
+          }
+        });
       }
       #endregion
     }
   }
 }
-

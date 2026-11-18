@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -19,15 +19,6 @@
 
 // Ignore Spelling: Dockpane Addin Cancelable Progressor Uninitialize
 
-using ArcGIS.Core.Events;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Core.Events;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Framework.Controls;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Desktop.Mapping.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +28,15 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ArcGIS.Core.Events;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Core.Events;
+using ArcGIS.Desktop.Framework;
+using ArcGIS.Desktop.Framework.Contracts;
+using ArcGIS.Desktop.Framework.Controls;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
+using ArcGIS.Desktop.Mapping.Events;
 
 namespace ProSnippets.FrameworkSnippets
 {
@@ -59,7 +59,7 @@ namespace ProSnippets.FrameworkSnippets
     /// framework. It includes operations such as subscribing to and unsubscribing from events, executing commands,
     /// setting tools, activating tabs and states, checking application status, and managing dock panes. The examples
     /// are intended to guide developers in using the ArcGIS Pro SDK effectively.</remarks>
-    public static void FrameworkProSnippets()
+    public static async Task FrameworkProSnippetsAsync()
     {
       #region ignore - Variable initialization
       bool activate = true;
@@ -67,6 +67,7 @@ namespace ProSnippets.FrameworkSnippets
       bool isVisible = true;
       string paneID = "Map"; // example pane caption
       string dockPaneID = "MySample_Dockpane"; // example dockpane DAML id
+      DockPane pane = null;
 
       string resourceName = "Dino32.png"; // example image in the Images folder of your add-in
       string resourceName2 = "T-Rex32.png"; // example image in the Images folder of your add-in
@@ -86,9 +87,9 @@ namespace ProSnippets.FrameworkSnippets
       string DisabledTooltip = string.Empty;
 
       #endregion ignore - Variable initialization
-      #region ProSnippet Group: Commands 
+      #region ProSnippet Group: Commands
       #endregion
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(System.String,System.Boolean)
       // cref: ArcGIS.Desktop.Framework.IPlugInWrapper
       #region Execute a command
       {
@@ -96,11 +97,13 @@ namespace ProSnippets.FrameworkSnippets
         // tool and command(Button) supports this
 
         if (wrapper is ICommand command && command.CanExecute(null))
+        {
           command.Execute(null);
+        }
       }
       #endregion
 
-      #region ProSnippet Group: ArcGIS Pro status 
+      #region ProSnippet Group: ArcGIS Pro status
       #endregion
 
       // cref: ArcGIS.Core.SystemCore.Connectivity.IsInAirplaneMode()
@@ -117,7 +120,7 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.SystemCore.Connectivity.GetInternetConnectionStatus()
+      // cref: ArcGIS.Core.SystemCore.Connectivity.GetInternetConnectionStatus(System.Int32)
       // cref: ArcGIS.Core.SystemCore.Connectivity.ConnectionStatus
       #region Determine the system's internet connection status
       {
@@ -141,18 +144,17 @@ namespace ProSnippets.FrameworkSnippets
       // cref: ArcGIS.Desktop.Framework.FrameworkApplication.IsBusy
       #region Determine if the application is busy
       {
-        // The application is considered busy if a task is currently running on the main worker thread or any 
-        // pane or dock pane reports that it is busy or initializing.   
+        // The application is considered busy if a task is currently running on the main worker thread or any
+        // pane or dock pane reports that it is busy or initializing.
 
         // Many Pro styles (such as Esri_SimpleButton) ensure that a button is disabled when FrameworkApplication.IsBusy is true
         // You would use this property to bind to the IsEnabled property of a control (such as a listbox) on a dockpane or pane in order
-        // to disable it from user interaction while the application is busy. 
+        // to disable it from user interaction while the application is busy.
 
         bool isbusy = FrameworkApplication.IsBusy;
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication
       #region Get the Application main window
       {
         Window window = Application.Current.MainWindow;
@@ -164,21 +166,22 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.SetCurrentToolAsync
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper
-      // cref: ArcGIS.Desktop.Framework.IPlugInWrapper
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.SetCurrentToolAsync(System.String)
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(System.String,System.Boolean)
       #region Set the current tool
       {
         // use SetCurrentToolAsync with await
-        FrameworkApplication.SetCurrentToolAsync("esri_mapping_selectByRectangleTool").Wait();
+        await FrameworkApplication.SetCurrentToolAsync("esri_mapping_selectByRectangleTool");
 
         // or use ICommand.Execute
         if (FrameworkApplication.GetPlugInWrapper("esri_mapping_selectByRectangleTool") is ICommand cmd && cmd.CanExecute(null))
+        {
           cmd.Execute(null);
+        }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.ActivateTab
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.ActivateTab(System.String)
       #region Activate a tab
       {
         FrameworkApplication.ActivateTab("esri_mapping_insertTab");
@@ -186,16 +189,21 @@ namespace ProSnippets.FrameworkSnippets
       #endregion
       // cref: ArcGIS.Desktop.Framework.State.Activate(System.String)
       // cref: ArcGIS.Desktop.Framework.State.Deactivate(System.String)
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.State
       #region Activate/Deactivate a state - to modify a condition
       {
-        // Define the condition in the DAML file based on the state 
+        // Define the condition in the DAML file based on the state
         if (activate)
+        {
           FrameworkApplication.State.Activate("someState");
+        }
         else
+        {
           FrameworkApplication.State.Deactivate("someState");
+        }
       }
       #endregion
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.Close
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.Close()
       #region Close ArcGIS Pro
       {
         FrameworkApplication.Close();
@@ -209,7 +217,7 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      #region ProWindow Position on Screen 
+      #region ProWindow Position on Screen
       {
         double left = 250; //Window's left edge, in relation to the desktop
         double top = 150; //Window's top edge, in relation to the desktop
@@ -251,10 +259,8 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.Contracts.Module.CanUnload
       // cref: ArcGIS.Desktop.Framework.Events.ApplicationClosingEvent
-      // cref: ArcGIS.Desktop.Framework.Events.ApplicationClosingEvent.Subscribe
-      // cref: ArcGIS.Desktop.Framework.Events.ApplicationClosingEvent.Unsubscribe
+      // cref: ArcGIS.Desktop.Framework.Events.ApplicationClosingEvent.Subscribe(System.Func{System.ComponentModel.CancelEventArgs,System.Threading.Tasks.Task},System.Boolean)
       #region Prevent ArcGIS Pro from Closing
       {
         // There are two ways to prevent ArcGIS Pro from closing
@@ -295,10 +301,8 @@ namespace ProSnippets.FrameworkSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Events.ProjectOpenedEvent
-      // cref: ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Unsubscribe
-      // cref: ArcGIS.Desktop.Framework.Contracts.Module.Initialize
-      // cref: ArcGIS.Desktop.Framework.Contracts.Module.Uninitialize
+      // cref: ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Subscribe(System.Action{ArcGIS.Desktop.Core.Events.ProjectEventArgs},System.Boolean)
+      // cref: ArcGIS.Desktop.Core.Events.ProjectOpenedEvent.Unsubscribe(System.Action{ArcGIS.Desktop.Core.Events.ProjectEventArgs})
       #region How to determine when a project is opened
       {
         // override the Initialize and Uninitialize methods of your add-in's module to subscribe and unsubscribe to the ProjectOpenedEvent
@@ -314,13 +318,11 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.CoreModule
-      // cref: ArcGIS.Desktop.Core.CoreModule.GetSuggestedCMDIDs
       #region Suggested command options in CommandSearch when a tab is activated.
       {
         //In the module class..
 
-        //Return the static list of daml ids you want to be the (suggested) 
+        //Return the static list of daml ids you want to be the (suggested)
         //defaults relevant to the given tab. It can be none, some, or all of the
         //commands associated with the activeTabID.
         //In this example, there are two tabs. This example arbitrarily
@@ -343,7 +345,9 @@ namespace ProSnippets.FrameworkSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Framework.FrameworkApplication.Panes
-      // cref: ArcGIS.Desktop.Framework.PaneCollection.ClosePane
+      // cref: ArcGIS.Desktop.Framework.PaneCollection.ClosePane(System.UInt32)
+      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.ContentID
+      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.InstanceID
       #region Close a specific pane
       {
         List<uint> myPaneInstanceIDs = [];
@@ -351,7 +355,7 @@ namespace ProSnippets.FrameworkSnippets
         {
           if (p.ContentID == paneID)
           {
-            myPaneInstanceIDs.Add(p.InstanceID); //InstanceID of your pane, could be multiple, so build the collection                    
+            myPaneInstanceIDs.Add(p.InstanceID); //InstanceID of your pane, could be multiple, so build the collection
           }
         }
         foreach (var instanceID in myPaneInstanceIDs) //close each of "your" panes.
@@ -362,7 +366,8 @@ namespace ProSnippets.FrameworkSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Framework.FrameworkApplication.Panes
-      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Activate
+      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Activate()
+      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Caption
       #region Activate a pane
       {
         var mapPanes = FrameworkApplication.Panes.OfType<IMapPane>();
@@ -377,22 +382,23 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find
+      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find(System.String)
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.DockPaneManager
       #region Find a dockpane
-      // in order to find a dockpane you need to know its DAML id
-      var pane = FrameworkApplication.DockPaneManager.Find(dockPaneID);
+      {
+        // in order to find a dockpane you need to know its DAML id
+        pane = FrameworkApplication.DockPaneManager.Find(dockPaneID);
+      }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find
+      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find(System.String)
       // cref: ArcGIS.Desktop.Framework.Contracts.DockPaneState
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Activate
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.DockState
       // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Activate()
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Activate(Bool)
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Pin
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Hide
+      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.DockState
+      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Hide()
+      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.IsVisible
+      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Pin()
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.DockPaneManager
       #region Dockpane operations
       {
         // in order to find a dockpane you need to know its DAML id
@@ -415,15 +421,15 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.OperationManager
+      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find(System.String)
       // cref: ArcGIS.Desktop.Framework.OperationManager.CanRedo
       // cref: ArcGIS.Desktop.Framework.OperationManager.CanUndo
-      // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync
-      // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync
-      // cref: ArcGIS.Desktop.Framework.OperationManager.ClearUndoCategory
-      // cref: ArcGIS.Desktop.Framework.OperationManager.ClearRedoCategory
+      // cref: ArcGIS.Desktop.Framework.OperationManager.UndoAsync()
+      // cref: ArcGIS.Desktop.Framework.OperationManager.RedoAsync()
+      // cref: ArcGIS.Desktop.Framework.OperationManager.ClearUndoCategory(System.String)
+      // cref: ArcGIS.Desktop.Framework.OperationManager.ClearRedoCategory(System.String)
+      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.OperationManager
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.DockPaneManager
       #region Dockpane undo / redo
       {
         // in order to find a dockpane you need to know its DAML id
@@ -436,11 +442,15 @@ namespace ProSnippets.FrameworkSnippets
           // undo an operation
           // Use await with UndoAsync and RedoAsync
           if (manager.CanUndo)
-            manager.UndoAsync().Wait();
+          {
+            await manager.UndoAsync();
+          }
 
           // redo an operation
           if (manager.CanRedo)
-            manager.RedoAsync().Wait();
+          {
+            await manager.RedoAsync();
+          }
 
           // clear the undo and redo stack of operations of a particular category
           manager.ClearUndoCategory("Some category");
@@ -449,12 +459,13 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find
+      // cref: ArcGIS.Desktop.Framework.DockPaneManager.Find(System.String)
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.DockPaneManager
       #region Find a dockpane and obtain its ViewModel
       {
         // Here is a DAML example with a dockpane defined. Once you have found the dockpane you can cast it
-        // to the dockpane viewModel which is defined by the className attribute. 
-        // 
+        // to the dockpane viewModel which is defined by the className attribute.
+        //
         //<dockPanes>
         //  <dockPane id="MySample_Dockpane" caption="Dockpane 1" className="Dockpane1ViewModel" dock="bottom" height="5">
         //    <content className="Dockpane1View" />
@@ -465,7 +476,6 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.Contracts.DockPane.OnShow
       #region How to subscribe and unsubscribe to events when the dockpane is visible or hidden
       {
         // Override the OnShow method of a dockpane to subscribe and unsubscribe to events
@@ -490,8 +500,22 @@ namespace ProSnippets.FrameworkSnippets
       #region ProSnippet Group: ArcGIS Pro addins
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetAddInInfos
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetAddInInfos()
       // cref: ArcGIS.Desktop.Framework.AddInInfo
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.Author
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.Company
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.Date
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.Description
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.DigitalSignature
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.ErrorMsg
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.FullPath
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.ID
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.ImagePath
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.IsCompatible
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.IsDeleted
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.Name
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.TargetVersion
+      // cref: ArcGIS.Desktop.Framework.AddInInfo.Version
       #region Get Information on the Currently Installed Add-ins
       {
         var addin_infos = FrameworkApplication.GetAddInInfos();
@@ -500,7 +524,9 @@ namespace ProSnippets.FrameworkSnippets
         foreach (var info in addin_infos)
         {
           if (info == null)
+          {
             break;//no add-ins probed
+          }
 
           sb.AppendLine($"Addin: {info.Name}");
           sb.AppendLine($"Description {info.Description}");
@@ -526,7 +552,7 @@ namespace ProSnippets.FrameworkSnippets
       #region ProSnippet Group: ArcGIS Pro backstage
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.OpenBackstage
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.OpenBackstage(System.String)
       #region Open the Backstage tab
       {
         //Opens the Backstage to the "About ArcGIS Pro" tab.
@@ -563,9 +589,7 @@ namespace ProSnippets.FrameworkSnippets
       #region ProSnippet Group: ArcGIS Pro messages and notifications
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.Notification
-      // cref: ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Window,String,String,MessageBoxButton,MessageBoxImage,MessageBoxResult,String,String,String)
-      // cref: ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(Boolean@,String,Window,String,String,MessageBoxButton,MessageBoxImage,MessageBoxResult,String,String,String)
+      // cref: ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(System.String,System.String,System.Windows.MessageBoxButton,System.Windows.MessageBoxImage,System.Windows.MessageBoxResult)
       #region Display a Pro MessageBox
       {
         ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Some Message", "Some title", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
@@ -576,7 +600,7 @@ namespace ProSnippets.FrameworkSnippets
       // cref: ArcGIS.Desktop.Framework.Notification.Title
       // cref: ArcGIS.Desktop.Framework.Notification.Message
       // cref: ArcGIS.Desktop.Framework.Notification.ImageSource
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.AddNotification
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.AddNotification(ArcGIS.Desktop.Framework.Notification)
       #region Add a toast notification
       {
         Notification notification = new()
@@ -593,9 +617,10 @@ namespace ProSnippets.FrameworkSnippets
       #region ProSnippet Group: ArcGIS Pro tooltips and tools
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(System.String,System.Boolean)
       // cref: ArcGIS.Desktop.Framework.IPlugInWrapper.SmallImage
       // cref: ArcGIS.Desktop.Framework.IPlugInWrapper.LargeImage
+      // cref: ArcGIS.Desktop.Framework.IPlugInWrapper.Caption
       #region Change a buttons caption or image
       {
         IPlugInWrapper wrapper = FrameworkApplication.GetPlugInWrapper("MyAddin_MyCustomButton");
@@ -603,7 +628,7 @@ namespace ProSnippets.FrameworkSnippets
         {
           wrapper.Caption = "new caption";
 
-          // ensure that T-Rex16 and T-Rex32 are included in your add-in under the images folder and have 
+          // ensure that T-Rex16 and T-Rex32 are included in your add-in under the images folder and have
           // BuildAction = Resource and Copy to OutputDirectory = Do not copy
           wrapper.SmallImage = buildImage;
           wrapper.LargeImage = buildImage2;
@@ -611,38 +636,37 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.Contracts.Plugin
-      // cref: ArcGIS.Desktop.Framework.Contracts.Plugin.Enabled
-      // cref: ArcGIS.Desktop.Framework.Contracts.Plugin.DisabledTooltip
-      // cref: ArcGIS.Desktop.Framework.Contracts.Plugin.OnUpdate
       #region Customize the disabledText property of a button or tool
       {
-        //Set the tool's loadOnClick attribute to "false" in the config.daml. 
+        //Set the tool's loadOnClick attribute to "false" in the config.daml.
         //This will allow the tool to be created when Pro launches, so that the disabledText property can display customized text at startup.
         //Remove the "condition" attribute from the tool. Use the OnUpdate method(below) to set the enable\disable state of the tool.
         //Add the OnUpdate method to the tool.
-        //Note: since OnUpdate is called very frequently, you should avoid lengthy operations in this method 
+        //Note: since OnUpdate is called very frequently, you should avoid lengthy operations in this method
         //as this would reduce the responsiveness of the application user interface.
         {
-          bool enableState = true; //TODO: Code your enabled state  
-          bool criteria = true;  //TODO: Evaluate criteria for disabledText  
+          bool enableState = true; //TODO: Code your enabled state
+          bool criteria = true;  //TODO: Evaluate criteria for disabledText
 
           if (enableState)
           {
-            Enabled = true;  //tool is enabled  
+            Enabled = true;  //tool is enabled
           }
           else
           {
-            Enabled = false;  //tool is disabled  
-                              //customize your disabledText here  
+            Enabled = false;  //tool is disabled
+                              //customize your disabledText here
             if (criteria)
+            {
               DisabledTooltip = "Missing criteria 1";
+            }
           }
         }
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Framework.IPlugInWrapper.TooltipHeading
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(System.String,System.Boolean)
       #region Get a button's tooltip heading
       {
         //Pass in the id of your button. Or pass in any Pro button ID.
@@ -652,7 +676,7 @@ namespace ProSnippets.FrameworkSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent
-      // cref: ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe
+      // cref: ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Subscribe(System.Action{ArcGIS.Desktop.Framework.Events.ToolEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Framework.Events.ToolEventArgs.PreviousID
       // cref: ArcGIS.Desktop.Framework.Events.ToolEventArgs.CurrentID
       #region Subscribe to Active Tool Changed Event
@@ -665,7 +689,7 @@ namespace ProSnippets.FrameworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Unsubscribe
+      // cref: ArcGIS.Desktop.Framework.Events.ActiveToolChangedEvent.Unsubscribe(System.Action{ArcGIS.Desktop.Framework.Events.ToolEventArgs})
       // cref: ArcGIS.Desktop.Framework.Events.ToolEventArgs.PreviousID
       // cref: ArcGIS.Desktop.Framework.Events.ToolEventArgs.CurrentID
       #region Unsubscribe to Active Tool Changed Event
@@ -681,16 +705,17 @@ namespace ProSnippets.FrameworkSnippets
       #region ProSnippet Group: ArcGIS Pro progress indicators
       #endregion
 
-      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.Progressor
       // cref: ArcGIS.Desktop.Framework.Threading.Tasks.ProgressorSource
-      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(FUNC{TASK},Progressor,TASKCREATIONOPTIONS)
-      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(ACTION,Progressor,TASKCREATIONOPTIONS)
+      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(System.Action,ArcGIS.Desktop.Framework.Threading.Tasks.Progressor,System.Threading.Tasks.TaskCreationOptions)
+      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.ProgressorSource.Progressor
       #region Progressor - Simple and non-cancelable
       {
+        //Note: delayed display disabled to ensure progress will show
         ProgressorSource ps = new("Doing my thing...", false);
 
         int numSecondsDelay = 5;
         //If you run this in the DEBUGGER you will NOT see the dialog
+        //simulating work only
         QueuedTask.Run(() => Task.Delay(numSecondsDelay * 1000).Wait(), ps.Progressor);
       }
       #endregion
@@ -699,12 +724,13 @@ namespace ProSnippets.FrameworkSnippets
       // cref: ArcGIS.Desktop.Framework.Threading.Tasks.Progressor.Status
       // cref: ArcGIS.Desktop.Framework.Threading.Tasks.Progressor.Message
       // cref: ArcGIS.Desktop.Framework.Threading.Tasks.Progressor.Max
-      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.CancelableProgressor
       // cref: ArcGIS.Desktop.Framework.Threading.Tasks.CancelableProgressorSource
-      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(FUNC{TASK},Progressor,TASKCREATIONOPTIONS)
-      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(ACTION,Progressor,TASKCREATIONOPTIONS)
+      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.QueuedTask.Run(System.Action,ArcGIS.Desktop.Framework.Threading.Tasks.CancelableProgressor,System.Threading.Tasks.TaskCreationOptions)
+      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.CancelableProgressor.CancellationToken
+      // cref: ArcGIS.Desktop.Framework.Threading.Tasks.CancelableProgressorSource.Progressor
       #region Cancelable Progressor
       {
+        //Note: delayed display disabled to ensure progress will show
         CancelableProgressorSource cps =
           new("Doing my thing - cancelable", "Canceled");
 
@@ -728,10 +754,15 @@ namespace ProSnippets.FrameworkSnippets
               System.Diagnostics.Debug.WriteLine(string.Format("RunCancelableProgress Loop{0}", cps.Progressor.Value));
             }
             //are we done?
-            if (cps.Progressor.Value == cps.Progressor.Max) break;
+            if (cps.Progressor.Value == cps.Progressor.Max)
+            {
+              break;
+            }
             //block the CIM for a second
+            //simulating work only
             Task.Delay(1000).Wait();
           }
+          cps.Progressor.CancellationToken.ThrowIfCancellationRequested();
           System.Diagnostics.Debug.WriteLine(string.Format("RunCancelableProgress: Canceled {0}",
                                               cps.Progressor.CancellationToken.IsCancellationRequested));
 
@@ -744,10 +775,6 @@ namespace ProSnippets.FrameworkSnippets
   internal class ProSnippetMapTool
   {
     private readonly string OverlayControlID = null;
-    // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.OVERLAYCONTROLID
-    // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.ONTOOLMOUSEDOWN
-    // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.HANDLEMOUSEDOWNASYNC
-    // cref: ArcGIS.Desktop.Mapping.MapTool.OverlayControlPositionRatio
     #region How to position an embeddable control inside a MapView
     public ProSnippetMapTool()
     {
@@ -759,7 +786,9 @@ namespace ProSnippets.FrameworkSnippets
     protected static void OnToolMouseDown(MapViewMouseButtonEventArgs e)
     {
       if (e.ChangedButton == MouseButton.Left)
+      {
         e.Handled = true;
+      }
     }
 
     // Override the MapTool base class' HandleMouseDownAsync method to set the position of the embeddable control

@@ -16,6 +16,10 @@
    limitations under the License.
 
 */
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Editing;
@@ -23,10 +27,6 @@ using ArcGIS.Desktop.Editing.Attributes;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -44,7 +44,7 @@ namespace ProSnippets.EditingSnippets
     /// Demonstrates various operations on annotation features within a map, including creating, updating, and modifying
     /// annotations.
     /// </summary>
-    public static async Task ProSnippetsAnnotations()
+    public static async Task ProSnippetsAnnotationsAsync()
     {
       #region ignore - Variable initialization
 
@@ -56,23 +56,30 @@ namespace ProSnippets.EditingSnippets
 
       #endregion
 
-      // cref: ARCGIS.DESKTOP.FRAMEWORK.FRAMEWORKAPPLICATION.GETPLUGINWRAPPER
-      // cref: ARCGIS.DESKTOP.FRAMEWORK.IPLUGINWRAPPER
+      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.GetPlugInWrapper(System.String,System.Boolean)
+      // cref: ArcGIS.Desktop.Framework.IPlugInWrapper
       #region Programmatically start Edit Annotation
       // programmatically activates the Edit Annotation tool by invoking the corresponding
       // plugin. The tool must be enabled for the operation to succeed.
       {
         var plugin = FrameworkApplication.GetPlugInWrapper("esri_editing_EditVerticesText");
         if (plugin.Enabled)
+        {
           ((ICommand)plugin).Execute(null);
+        }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties()
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties.TextString
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties.Color
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties(ArcGIS.Desktop.Editing.AnnotationProperties)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.AnnotationProperties.HorizontalAlignment
+      // cref: ArcGIS.Desktop.Editing.AnnotationProperties.Shape
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadSchema(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
       #region Programmatically Create an Annotation Feature
       await QueuedTask.Run(() =>
         {
@@ -84,7 +91,7 @@ namespace ProSnippets.EditingSnippets
           insp.LoadSchema(annotationLayer);
           // get the annotation properties from the inspector
           AnnotationProperties annoProperties = insp.GetAnnotationProperties();
-          // change the annotation text 
+          // change the annotation text
           annoProperties.TextString = DateTime.Now.ToLongTimeString();
           // change font color to green
           annoProperties.Color = ColorFactory.Instance.GreenRGB;
@@ -102,11 +109,15 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties()
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties.TextString
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties(ArcGIS.Desktop.Editing.AnnotationProperties)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
-      #region Update Annotation Text 
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      #region Update Annotation Text
       // Updates the text of an annotation feature in the specified annotation layer.
       await QueuedTask.Run(() =>
       {
@@ -131,10 +142,14 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties()
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties.Shape
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties(ArcGIS.Desktop.Editing.AnnotationProperties)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Modify Annotation Shape
       // Modifies the geometry of an annotation feature in the specified annotation layer.
       await QueuedTask.Run(() =>
@@ -172,17 +187,23 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Core.CIM.HorizontalAlignment
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties.LoadFromTextGraphic(ArcGIS.Core.CIM.CIMTextGraphic)
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties.TextGraphic
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties()
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties(ArcGIS.Desktop.Editing.AnnotationProperties)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Modify Annotation Text Graphic
       // Modifies the text graphic of a selected annotation feature in the specified annotation layer.
       await QueuedTask.Run(() =>
       {
         var selection = annotationLayer.GetSelection();
         if (selection.GetCount() == 0)
+        {
           return;
-        // use the first selected feature 
+        }
+        // use the first selected feature
         var insp = new Inspector();
         insp.Load(annotationLayer, selection.GetObjectIDs().FirstOrDefault());
         // getAnnoProperties should return null if not an annotation feature
@@ -199,7 +220,7 @@ namespace ProSnippets.EditingSnippets
         textSymbol.HorizontalAlignment = HorizontalAlignment.Center;
         // load the updated textGraphic
         annoProperties.LoadFromTextGraphic(textGraphic);
-        // assign the annotation properties back 
+        // assign the annotation properties back
         insp.SetAnnotationProperties(annoProperties);
         EditOperation op = new EditOperation
         {
@@ -214,11 +235,6 @@ namespace ProSnippets.EditingSnippets
       #endregion
     }
 
-    // cref: ARCGIS.DESKTOP.MAPPING.MAPTOOL.ONSKETCHCOMPLETEASYNC
-    // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
-    // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties(ArcGIS.Desktop.Editing.AnnotationProperties)
-    // cref: ArcGIS.Desktop.Editing.AnnotationProperties
-    // cref: ArcGIS.Core.CIM.HorizontalAlignment
     #region Annotation Construction Tool
 
     //In your config.daml...set the categoryRefID
@@ -240,7 +256,9 @@ namespace ProSnippets.EditingSnippets
       protected async override Task<bool> OnSketchCompleteAsync(Geometry geometry)
       {
         if (CurrentTemplate == null || geometry == null)
+        {
           return false;
+        }
         // Create an edit operation
         var createOperation = new EditOperation
         {
@@ -269,7 +287,9 @@ namespace ProSnippets.EditingSnippets
             return createOperation.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not
           }
           else
+          {
             return false;
+          }
         });
         return result;
       }
@@ -278,4 +298,3 @@ namespace ProSnippets.EditingSnippets
 
   }
 }
-

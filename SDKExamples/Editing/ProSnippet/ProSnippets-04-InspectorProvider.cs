@@ -16,12 +16,12 @@
    limitations under the License.
 
 */
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Editing.Attributes;
-using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArcGIS.Desktop.Editing;
+using ArcGIS.Desktop.Editing.Attributes;
+using ArcGIS.Desktop.Mapping;
 using Attribute = ArcGIS.Desktop.Editing.Attributes.Attribute;
 
 namespace ProSnippets.EditingSnippets
@@ -31,7 +31,6 @@ namespace ProSnippets.EditingSnippets
     #region ProSnippet Group: Inspector Provider Class
     #endregion
 
-    // cref: ArcGIS.Desktop.Editing.InspectorProvider
     #region How to create a custom Feature inspector provider class
     /// <summary>
     /// Provides a custom implementation of an InspectorProvider for feature inspection in ArcGIS Pro.
@@ -39,8 +38,13 @@ namespace ProSnippets.EditingSnippets
     public class MyProvider : InspectorProvider
     {
       private readonly Guid guid = Guid.NewGuid();
-      internal MyProvider() { }
-      public override Guid SharedFieldColumnSizeID() { return guid; }
+      internal MyProvider()
+      {
+      }
+      public override Guid SharedFieldColumnSizeID()
+      {
+        return guid;
+      }
       public override string CustomName(ArcGIS.Desktop.Editing.Attributes.Attribute attr)
       {
         //Giving a custom name to be displayed for the field FeatureID
@@ -80,16 +84,26 @@ namespace ProSnippets.EditingSnippets
       {
         var errors = new List<ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError>();
         if (attr.FieldName == "FeatureID" && attr.CurrentValue.ToString() == "2")
+        {
           errors.Add(ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError.Create("Value not allowed", Severity.Low));
+        }
+
         if (attr.FieldName == "FeatureID" && attr.CurrentValue.ToString() == "-1")
+        {
           errors.Add(ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError.Create("Invalid value", Severity.High));
+        }
+
         return errors;
       }
     }
     #endregion
 
-    // cref: ArcGIS.Desktop.Editing.InspectorProvider
     // cref: ArcGIS.Desktop.Editing.InspectorProvider.Create()
+    // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldName
+    // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.IsHighlighted
+    // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.IsVisible
+    // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.CreateEmbeddableControl()
+    // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
     #region Using the custom inspector provider class
     /// <summary>
     /// Demonstrates the use of a custom InspectorProvider to create and load an inspector for a specific feature.

@@ -6,14 +6,19 @@
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <NoWarn>CA1416, CS0162, CS0168, CS0219, CS0414, CS1998, CS4014, CS8321, CS8632, VSSpell001, CA1806,  IDE0017,  IDE0028,  IDE0059,  IDE0063</NoWarn>
+    <NoWarn>CA1416, CS0162, CS0168, CS0219, CS0414, CS8321, CS8632, CS4014, VSSpell001, CA1806, IDE0017, IDE0028, IDE0059, IDE0063</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Framework\ProSnippet\DAML\ProSnippets DAML.daml" />    
+    <Compile Remove="Framework\ProSnippet\ProWindowSample.xaml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Framework\ProSnippet\ProWindowSample.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Framework\ProSnippet\DAML\ProSnippets DAML.daml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.IO.Ports" Version="10.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ArcGIS.CoreHost">
@@ -99,6 +104,9 @@
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\ESRI.ArcGIS.ItemIndex.dll</HintPath>
       <CopyLocal>False</CopyLocal>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IO.Ports">
+      <HintPath>..\..\..\..\..\..\..\Program Files\ArcGIS\Pro\bin\System.IO.Ports.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
