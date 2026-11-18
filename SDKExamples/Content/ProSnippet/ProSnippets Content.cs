@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -16,10 +16,13 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Core.Internal.Geometry;
 using ArcGIS.Desktop.Catalog;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Core.Events;
@@ -30,12 +33,6 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.GeoProcessing;
 using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProSnippets.ContentSnippets
 {
@@ -62,7 +59,7 @@ namespace ProSnippets.ContentSnippets
     private static FolderConnectionProjectItem projectfolderConnection;
     private static readonly GDBProjectItem folderToAdd = Project.Current.GetItems<GDBProjectItem>().First();
 
-    public static void ContentProSnippets()
+    public static async Task ContentProSnippetsAsync()
     {
       #region ignore - Variable initialization
       projectfolderConnection = Project.Current.GetItems<FolderConnectionProjectItem>().First();
@@ -100,6 +97,7 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Catalog.ItemDialog.InitialLocation
       // cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog
+      // cref: ArcGIS.Desktop.Catalog.ItemFilters.Composite_AddToMap
       #region OpenItemDialog
       {
         // Variables not used in samples
@@ -115,10 +113,13 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //OpenItemDialog
 
-      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog
-      // cref: ArcGIS.Desktop.Catalog.SaveItemDialog.ShowDialog
+      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog()
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.Items
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.MultiSelect
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Filter
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.InitialLocation
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
+      // cref: ArcGIS.Desktop.Catalog.ItemFilters.Composite_Maps_Import
       #region Show OpenItemDialog
       {
         OpenItemDialog addToProjectDialog = new()
@@ -135,7 +136,9 @@ namespace ProSnippets.ContentSnippets
         {
           IEnumerable<Item> selectedItems = addToProjectDialog.Items;
           foreach (Item selectedItem in selectedItems)
+          {
             MapFactory.Instance.CreateMapFromItem(selectedItem);
+          }
         }
       }
       #endregion //Show OpenItemDialog
@@ -144,6 +147,7 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Catalog.ItemDialog.InitialLocation
       // cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
       // cref: ArcGIS.Desktop.Catalog.SaveItemDialog
+      // cref: ArcGIS.Desktop.Catalog.ItemFilters.Files_All
       #region SaveItemDialog
       {
         SaveItemDialog saveLayerFileDialog = new()
@@ -158,6 +162,11 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Catalog.SaveItemDialog.DefaultExt
       // cref: ArcGIS.Desktop.Catalog.SaveItemDialog.FilePath
       // cref: ArcGIS.Desktop.Catalog.SaveItemDialog.OverwritePrompt
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Filter
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.InitialLocation
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
+      // cref: ArcGIS.Desktop.Catalog.ItemFilters.Maps_All
+      // cref: ArcGIS.Desktop.Catalog.SaveItemDialog.ShowDialog()
       #region Show SaveItemDialog
       {
         SaveItemDialog saveMapFileDialog = new()
@@ -179,7 +188,12 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.Items
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog
-      // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateMapFromItem(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateMapFromItem(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Filter
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
+      // cref: ArcGIS.Desktop.Catalog.ItemFilters.Composite_Maps_Import
+      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.MultiSelect
+      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog()
       #region BrowseDialogItems
       {
         OpenItemDialog addToProjectDialog = new()
@@ -193,7 +207,9 @@ namespace ProSnippets.ContentSnippets
         {
           IEnumerable<Item> selectedDialogItems = addToProjectDialog.Items;
           foreach (Item selectedDialogItem in selectedDialogItems)
+          {
             MapFactory.Instance.CreateMapFromItem(selectedDialogItem);
+          }
         }
       }
       #endregion //BrowseDialogItems
@@ -201,8 +217,9 @@ namespace ProSnippets.ContentSnippets
       #region ProSnippet Group: Retrieving Project Items
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get MapProjectItems
       {
         // not to be included in sample regions
@@ -213,8 +230,9 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //GetMapProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get FolderConnectionProjectItems
       {
         // Get all the folder connections in a project
@@ -223,8 +241,9 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //GetFolderConnectiontProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Catalog.ServerConnectionProjectItem
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get ServerConnectionProjectItems
       {
         // Get all the server connections in a project
@@ -233,8 +252,9 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //Get ServerConnectionProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Catalog.LocatorsConnectionProjectItem
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get LocatorConnectionProjectItems
       {
         // Get all the locator connections in a project
@@ -243,19 +263,20 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //Get LocatorConnectionProjectItems
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Item.GetItems
+      // cref: ArcGIS.Desktop.Core.Item.GetItems()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get Project Items by ProjectItem type
       {
-        // Get all the items that can be accessed from a folder connection. The items immediately 
+        // Get all the items that can be accessed from a folder connection. The items immediately
         // contained by a folder, that is, the folder's children, are returned including folders
-        // and individual items that can be used in ArcGIS Pro. This method does not return all 
+        // and individual items that can be used in ArcGIS Pro. This method does not return all
         // items contained by any sub-folder that can be accessed from the folder connection.
         FolderConnectionProjectItem folderConnection = Project.Current.GetItems<FolderConnectionProjectItem>()
                                                             .FirstOrDefault(folder => folder.Name.Equals("Data"));
-        //Note: Needs QueuedTask to run
-        IEnumerable<Item> folderContents = folderConnection.GetItems();
+        IEnumerable<Item> folderContents = await QueuedTask.Run(() => folderConnection.GetItems());
       }
       #endregion //GetProjectItems
 
@@ -263,84 +284,99 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Add Folder to Project as IProjectItem
       {
         // Add a folder connection to a project
 
         Item folderToAdd = ItemFactory.Instance.Create(@"C:\Data\Oregon\Counties\Streets");
-        // Note: Needs QueuedTask to run
-        bool wasAdded = Project.Current.AddItem(folderToAdd as IProjectItem);
+        var project = Project.Current;
+        bool wasAdded = await QueuedTask.Run(() => project.AddItem(folderToAdd as IProjectItem));
         // use wasAdded;
       }
       #endregion //AddFolderConnectionProjectItem
 
-      // cref: ArcGIS.Desktop.Catalog.GDBProjectItem
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.Item.GetItems()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Add GDBProjectItem to Project as IProjectItem
       {
         // Add a file geodatabase or a SQLite or enterprise database connection to a project
         Item gdbToAdd = folderToAdd.GetItems().FirstOrDefault(folderItem => folderItem.Name.Equals("CountyData.gdb"));
-        // Note: Needs QueuedTask to run
-        var addedGeodatabase = Project.Current.AddItem(gdbToAdd as IProjectItem);
+        var project = Project.Current;
+        var addedGeodatabase = await QueuedTask.Run(() => project.AddItem(gdbToAdd as IProjectItem));
         // use addedGeodatabase;
       }
       #endregion //AddGDBProjectItem
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.RemoveItem
+      // cref: ArcGIS.Desktop.Core.Project.RemoveItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       #region Remove FolderConnection From Project
       {
-        // Remove a folder connection from a project; the folder stored on the local disk 
+        // Remove a folder connection from a project; the folder stored on the local disk
         // or the network is not deleted
 
-        //Note: Needs QueuedTask to run
+        var project = Project.Current;
+        await QueuedTask.Run(() =>
         {
           bool result = false;
-          FolderConnectionProjectItem folderToRemove = Project.Current.GetItems<FolderConnectionProjectItem>()
+          FolderConnectionProjectItem folderToRemove = project.GetItems<FolderConnectionProjectItem>()
             .FirstOrDefault(folder => folder.Name.Equals("Data"));
           if (folderToRemove != null)
-            result = Project.Current.RemoveItem(folderToRemove as IProjectItem);
+          {
+            result = project.RemoveItem(folderToRemove as IProjectItem);
+          }
           // use result
-        }
+        });
       }
       #endregion //RemoveFolderConnectionFromProject
 
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.RemoveItem
+      // cref: ArcGIS.Desktop.Core.Project.RemoveItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       #region Remove Map From Project
       {
         // Remove a map from a project; the map is deleted
         IProjectItem mapToRemove = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(map => map.Name.Equals("OldStreetRoutes"));
-        // Note: Needs QueuedTask to run
-        var removedMapProjectItemResult = Project.Current.RemoveItem(mapToRemove);
+        var project = Project.Current;
+        var removedMapProjectItemResult = await QueuedTask.Run(() => project.RemoveItem(mapToRemove));
         // Use removedMapProjectItemResult
       }
       #endregion //RemoveMapFromProject
 
       // cref: ArcGIS.Desktop.Core.ItemFactory
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Importing Maps To Project
       {
         // Import a mxd
         Item mxdToImport = ItemFactory.Instance.Create(@"C:\Projects\RegionalSurvey\LatestResults.mxd");
-        // Note: Needs QueuedTask to run
-        var addedMxd = Project.Current.AddItem(mxdToImport as IProjectItem);
+        var project = Project.Current;
+        var addedMxd = await QueuedTask.Run(() => project.AddItem(mxdToImport as IProjectItem));
 
         // Add map package
         Item mapPackageToAdd = ItemFactory.Instance.Create(@"c:\Data\Map.mpkx");
-        // Note: Needs QueuedTask to run
-        var addedMapPackage = Project.Current.AddItem(mapPackageToAdd as IProjectItem);
+        var addedMapPackage = await QueuedTask.Run(() => project.AddItem(mapPackageToAdd as IProjectItem));
 
         // Add an exported Pro map
         Item proMapToAdd = ItemFactory.Instance.Create(@"C:\ExportedMaps\Election\Districts.mapx");
-        // Note: Needs QueuedTask to run
-        var addedMapProjectItem = Project.Current.AddItem(proMapToAdd as IProjectItem);
+        var addedMapProjectItem = await QueuedTask.Run(() => project.AddItem(proMapToAdd as IProjectItem));
       }
       #endregion //ImportToProject
 
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.Item
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Create An Item
       {
         Item mxdItem = ItemFactory.Instance.Create(@"C:\Projects\RegionalSurvey\LatestResults.mxd");
@@ -348,9 +384,9 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion //CreateAnItem
 
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.ItemFactory.ItemType
-      // cref: ArcGIS.Desktop.Core.Portal.PortalItem
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Create A PortalItem
       {
         // Creates an Item from an existing portal item base on its ID
@@ -360,9 +396,9 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.ItemFactory.ItemType
-      // cref: ArcGIS.Desktop.Core.Portal.PortalItem 
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Create A PortalFolder
       {
         // Creates an Item from an existing portal folder base on its ID
@@ -372,8 +408,10 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
-      // cref: ArcGIS.Desktop.Core.Portal.PortalItem 
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.GetItems()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get Folder Item Content from Project PortalItem
       {
         FolderConnectionProjectItem projectfolderConnection = Project.Current.GetItems<FolderConnectionProjectItem>().First();
@@ -388,7 +426,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
-      //cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Activate
+      //cref: ArcGIS.Desktop.Framework.Contracts.DockPane.Activate()
       #region Set the catalog dockpane as the active window
       {
         //cast ICatalogWindow to ArcGIS.Desktop.Framework.Contracts.DockPane
@@ -399,6 +437,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Core.ICatalogWindow.IsActiveWindow
+      //cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
       #region Check if the Catalog Window is the active window
       {
         var catalogWindow = Project.GetCatalogPane() as ICatalogWindow;
@@ -411,7 +450,7 @@ namespace ProSnippets.ContentSnippets
 
       //cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
       //cref: ArcGIS.Desktop.Core.ICatalogWindow
-      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType()
       //cref: ArcGIS.Desktop.Core.CatalogContentType
       #region Get the catalog content type currently being shown
       {
@@ -422,9 +461,11 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType()
       //cref: ArcGIS.Desktop.Core.CatalogContentType
       //cref: ArcGIS.Desktop.Core.ICatalogWindow.SetContentTypeAsync(ArcGIS.Desktop.Core.CatalogContentType)
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.IsActiveWindow
+      //cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
       #region Set the catalog content type
       {
         //Gets the Catalog pane
@@ -439,16 +480,20 @@ namespace ProSnippets.ContentSnippets
         catContentType++;
 
         if (catContentType > (int)CatalogContentType.Favorites)
+        {
           catContentType = (int)CatalogContentType.Project;
+        }
 
         //Must be on the UI - no QueuedTask!
         catalogWindow.SetContentTypeAsync((CatalogContentType)catContentType);
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentSecondaryPortalContentType
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentSecondaryPortalContentType()
       //cref: ArcGIS.Desktop.Core.CatalogContentType
       //cref: ArcGIS.Desktop.Core.CatalogSecondaryPortalContentType
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType()
+      //cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
       #region Get the secondary portal catalog content
       {
         //Gets the Catalog pane
@@ -465,11 +510,13 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType
-      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentSecondaryPortalContentType
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentContentType()
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.GetCurrentSecondaryPortalContentType()
       //cref: ArcGIS.Desktop.Core.CatalogContentType
       //cref: ArcGIS.Desktop.Core.CatalogSecondaryPortalContentType
       //cref: ArcGIS.Desktop.Core.ICatalogWindow.SetSecondaryPortalContentTypeAsync(ArcGIS.Desktop.Core.CatalogSecondaryPortalContentType)
+      //cref: ArcGIS.Desktop.Core.ICatalogWindow.IsActiveWindow
+      //cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
       #region Set the secondary portal catalog content
       {
         //Gets the Catalog pane
@@ -488,7 +535,9 @@ namespace ProSnippets.ContentSnippets
           //advance to the next tab
           portalContentType++;
           if (portalContentType > (int)CatalogSecondaryPortalContentType.LivingAtlas)
+          {
             portalContentType = (int)CatalogSecondaryPortalContentType.UserContent;
+          }
 
           //set the secondary portal content type
           //Must be on the UI - no QueuedTask!
@@ -498,12 +547,22 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      #region ProSnippet Group: Geodatabase Content 
+      #region ProSnippet Group: Geodatabase Content
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.OpenItemDialog
-      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog
+      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog()
       // cref: ArcGIS.Desktop.Core.BrowseProjectFilter
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.BrowseFilter
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.InitialLocation
+      // cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
+      // cref: ArcGIS.Desktop.Catalog.ItemFilters.GeodatabaseItems_All
+      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.Items
+      // cref: ArcGIS.Desktop.Catalog.OpenItemDialog.MultiSelect
+      // cref: ArcGIS.Desktop.Core.BrowseProjectFilter.GetFilter(System.String)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.CanGetDataset(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.GetDataset(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Geodatabase Content from Browse Dialog
       {
         var openDlg = new OpenItemDialog
@@ -520,99 +579,111 @@ namespace ProSnippets.ContentSnippets
           // nothing selected, leave
         }
 
-        // Note: Needs QueuedTask to run
-        // get the item
-        var item = openDlg.Items.First();
-        // see if the item has a dataset
-        if (ItemFactory.Instance.CanGetDataset(item))
+        var mapView = MapView.Active;
+        await QueuedTask.Run(() =>
         {
-          // get it
-          using var ds = ItemFactory.Instance.GetDataset(item);
-          // access some properties
-          var name = ds.GetName();
-          var path = ds.GetPath();
-          // if it's a featureclass
-          if (ds is FeatureClass fc)
+          // get the item
+          var item = openDlg.Items.First();
+          // see if the item has a dataset
+          if (ItemFactory.Instance.CanGetDataset(item))
           {
-            // create a layer 
-            var featureLayerParams = new FeatureLayerCreationParams(fc)
+            // get it
+            using var ds = ItemFactory.Instance.GetDataset(item);
+            // access some properties
+            var name = ds.GetName();
+            var path = ds.GetPath();
+            // if it's a featureclass
+            if (ds is FeatureClass fc)
             {
-              MapMemberIndex = 0
-            };
-            var layer = LayerFactory.Instance.CreateLayer<FeatureLayer>(featureLayerParams, MapView.Active.Map);
+              // create a layer
+              var featureLayerParams = new FeatureLayerCreationParams(fc)
+              {
+                MapMemberIndex = 0
+              };
+              var layer = LayerFactory.Instance.CreateLayer<FeatureLayer>(featureLayerParams, mapView.Map);
 
-            // continue
+              // continue
+            }
           }
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Events.ProjectWindowSelectedItemsChangedEventArgs
       // cref: ArcGIS.Desktop.Core.Events.ProjectWindowSelectedItemsChangedEvent
-      // cref: ArcGIS.Desktop.Core.Events.ProjectWindowSelectedItemsChangedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.IItemFactory.CanGetDataset
-      // cref: ArcGIS.Desktop.Core.ItemFactory.CanGetDataset
+      // cref: ArcGIS.Desktop.Core.Events.ProjectWindowSelectedItemsChangedEvent.Subscribe(System.Action{ArcGIS.Desktop.Core.Events.ProjectWindowSelectedItemsChangedEventArgs},System.Boolean)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.CanGetDataset(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.Events.ProjectWindowSelectedItemsChangedEventArgs.IProjectWindow
+      // cref: ArcGIS.Desktop.Core.IItemFactory.CanGetDefinition(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.GetDataset(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.GetDatasetType(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.GetDefinition(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.IProjectWindow.SelectedItems
+      // cref: ArcGIS.Desktop.Core.IProjectWindow.SelectionCount
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Geodatabase Content from Catalog selection
       {
         // subscribe to event
-        ProjectWindowSelectedItemsChangedEvent.Subscribe(args =>
+        ProjectWindowSelectedItemsChangedEvent.Subscribe(async args =>
         {
           if (args.IProjectWindow.SelectionCount > 0)
           {
             // get the first selected item
             var selectedItem = args.IProjectWindow.SelectedItems.First();
+            var mapView = MapView.Active;
 
-            // Note: Needs QueuedTask to run
-            // datasetType
-            var dataType = ItemFactory.Instance.GetDatasetType(selectedItem);
-            // get the dataset Definition
-            if (ItemFactory.Instance.CanGetDefinition(selectedItem))
+            await QueuedTask.Run(() =>
             {
-              using var def = ItemFactory.Instance.GetDefinition(selectedItem);
-              if (def is FeatureClassDefinition fcDef)
+              // datasetType
+              var dataType = ItemFactory.Instance.GetDatasetType(selectedItem);
+              // get the dataset Definition
+              if (ItemFactory.Instance.CanGetDefinition(selectedItem))
               {
-                var oidField = fcDef.GetObjectIDField();
-                var shapeField = fcDef.GetShapeField();
-                var shapeType = fcDef.GetShapeType();
-              }
-              else if (def is ArcGIS.Core.Data.Parcels.ParcelFabricDefinition pfDef)
-              {
-                string ver = pfDef.GetSchemaVersion();
-                bool enabled = pfDef.GetTopologyEnabled();
-              }
-            }
-            // get the dataset
-            if (ItemFactory.Instance.CanGetDataset(selectedItem))
-            {
-              using var ds = ItemFactory.Instance.GetDataset(selectedItem);
-              if (ds is FeatureDataset fds)
-              {
-                // open featureclasses within the feature dataset
-                // var fcPoint = fds.OpenDataset<FeatureClass>("Point");
-                // var fcPolyline = fds.OpenDataset<FeatureClass>("Polyline");
-              }
-              else if (ds is FeatureClass fc)
-              {
-                var name = fc.GetName() + "_copy";
-                // create
-                var featureLayerParams = new FeatureLayerCreationParams(fc)
+                using var def = ItemFactory.Instance.GetDefinition(selectedItem);
+                if (def is FeatureClassDefinition fcDef)
                 {
-                  Name = name,
-                  MapMemberIndex = 0
-                };
-                LayerFactory.Instance.CreateLayer<FeatureLayer>(featureLayerParams, MapView.Active.Map);
-              }
-              else if (ds is Table table)
-              {
-                var name = table.GetName() + "_copy";
-                var tableParams = new StandaloneTableCreationParams(table)
+                  var oidField = fcDef.GetObjectIDField();
+                  var shapeField = fcDef.GetShapeField();
+                  var shapeType = fcDef.GetShapeType();
+                }
+                else if (def is ArcGIS.Core.Data.Parcels.ParcelFabricDefinition pfDef)
                 {
-                  Name = name
-                };
-                // create
-                StandaloneTableFactory.Instance.CreateStandaloneTable(tableParams, MapView.Active.Map);
+                  string ver = pfDef.GetSchemaVersion();
+                  bool enabled = pfDef.GetTopologyEnabled();
+                }
               }
-            }
+              // get the dataset
+              if (ItemFactory.Instance.CanGetDataset(selectedItem))
+              {
+                using var ds = ItemFactory.Instance.GetDataset(selectedItem);
+                if (ds is FeatureDataset fds)
+                {
+                  // open featureclasses within the feature dataset
+                  // var fcPoint = fds.OpenDataset<FeatureClass>("Point");
+                  // var fcPolyline = fds.OpenDataset<FeatureClass>("Polyline");
+                }
+                else if (ds is FeatureClass fc)
+                {
+                  var name = fc.GetName() + "_copy";
+                  // create
+                  var featureLayerParams = new FeatureLayerCreationParams(fc)
+                  {
+                    Name = name,
+                    MapMemberIndex = 0
+                  };
+                  LayerFactory.Instance.CreateLayer<FeatureLayer>(featureLayerParams, mapView.Map);
+                }
+                else if (ds is Table table)
+                {
+                  var name = table.GetName() + "_copy";
+                  var tableParams = new StandaloneTableCreationParams(table)
+                  {
+                    Name = name
+                  };
+                  // create
+                  StandaloneTableFactory.Instance.CreateStandaloneTable(tableParams, mapView.Map);
+                }
+              }
+            });
           }
         });
       }
@@ -621,9 +692,12 @@ namespace ProSnippets.ContentSnippets
       #region ProSnippet Group: Favorites
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite(ArcGIS.Desktop.Core.Item)
       // cref: ArcGIS.Desktop.Core.FavoritesManager.AddFavorite(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Add a Favorite - Folder
       {
         var itemFolder = ItemFactory.Instance.Create(@"d:\data");
@@ -640,10 +714,12 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.InsertFavorite(ArcGIS.Desktop.Core.Item,System.Int32)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite(ArcGIS.Desktop.Core.Item)
       // cref: ArcGIS.Desktop.Core.FavoritesManager.InsertFavorite(ArcGIS.Desktop.Core.Item,System.Int32,System.Boolean)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Insert a Favorite - Geodatabase path
       {
         gdbPath = "@C:\\myDataFolder\\myData.gdb";
@@ -655,14 +731,19 @@ namespace ProSnippets.ContentSnippets
         if (favorite != null)
         {
           if (FavoritesManager.Current.CanAddAsFavorite(itemGDB))
+          {
             FavoritesManager.Current.InsertFavorite(itemGDB, 1, true);
+          }
         }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.CanAddAsFavorite(ArcGIS.Desktop.Core.Item)
       // cref: ArcGIS.Desktop.Core.FavoritesManager.AddFavorite(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       #region Add a Favorite - Style project item
       {
         StyleProjectItem styleItem = Project.Current.GetItems<StyleProjectItem>().
@@ -675,9 +756,14 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.ClearIsAddedToAllNewProjects
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.SetIsAddedToAllNewProjects
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorite(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.ClearIsAddedToAllNewProjects(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.SetIsAddedToAllNewProjects(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.Favorite.IsAddedToAllNewProjects
+      // cref: ArcGIS.Desktop.Core.Favorite.Item
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Toggle the flag IsAddedToAllNewProjects for a favorite
       {
         var newItemFolder = ItemFactory.Instance.Create(@"d:\data");
@@ -687,14 +773,23 @@ namespace ProSnippets.ContentSnippets
         if (favorite != null)
         {
           if (favorite.IsAddedToAllNewProjects)
+          {
             FavoritesManager.Current.ClearIsAddedToAllNewProjects(favorite.Item);
+          }
           else
+          {
             FavoritesManager.Current.SetIsAddedToAllNewProjects(favorite.Item);
+          }
         }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorites
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorites()
+      // cref: ArcGIS.Desktop.Core.Favorite.IsAddedToAllNewProjects
+      // cref: ArcGIS.Desktop.Core.Favorite.Item
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
+      // cref: ArcGIS.Desktop.Core.Item.Path
+      // cref: ArcGIS.Desktop.Core.Item.TypeID
       #region Get the set of favorites and iterate
       {
         var favorites = FavoritesManager.Current.GetFavorites();
@@ -716,24 +811,29 @@ namespace ProSnippets.ContentSnippets
           else if (item is GDBProjectItem)
           {
           }
-          // else 
+          // else
         }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorites
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorites()
       // cref: ArcGIS.Desktop.Core.FavoritesManager.RemoveFavorite(ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.Favorite.Item
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
       #region Remove All Favorites
       {
         var favorites = FavoritesManager.Current.GetFavorites();
         foreach (var favorite in favorites)
+        {
           FavoritesManager.Current.RemoveFavorite(favorite.Item);
+        }
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Events.FavoritesChangedEvent
-      // cref: ArcGIS.Desktop.Core.Events.FavoritesChangedEvent.Subscribe
-      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorites
+      // cref: ArcGIS.Desktop.Core.Events.FavoritesChangedEvent.Subscribe(System.Action{System.EventArgs},System.Boolean)
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.GetFavorites()
+      // cref: ArcGIS.Desktop.Core.FavoritesManager.Current
       #region FavoritesChangedEvent
       {
         FavoritesChangedEvent.Subscribe((args) =>
@@ -748,6 +848,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.IMetadata
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Item: Get its IMetadata interface
       {
         Item gdbItem = ItemFactory.Instance.Create(@"C:\projectAlpha\GDBs\regionFive.gdb");
@@ -755,13 +857,11 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.IMetadata.GetXml
-      // cref: ArcGIS.Desktop.Core.Item.GetXml
+      // cref: ArcGIS.Desktop.Core.IMetadata.GetXml()
       #region Item: Get an item's metadata: GetXML
       {
         string gdbXMLMetadataXmlAsString = string.Empty;
-        // Note: Needs QueuedTask to run
-        gdbXMLMetadataXmlAsString = gdbMetadataItem.GetXml();
+        gdbXMLMetadataXmlAsString = await QueuedTask.Run(() => gdbMetadataItem.GetXml());
         //check metadata was returned
         if (!string.IsNullOrEmpty(gdbXMLMetadataXmlAsString))
         {
@@ -771,60 +871,53 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.IMetadata.SetXml(System.String)
-      // cref: ArcGIS.Desktop.Core.Item.SetXml(System.String)
-      // cref: ArcGIS.Desktop.Core.Project.SetXml(System.String)
-      // cref: ArcGIS.Desktop.Core.Item.CanEdit
+      // cref: ArcGIS.Desktop.Core.IMetadata.CanEdit()
       #region Item: Set the metadata of an item: SetXML
       {
-        // Note: Needs QueuedTask to run
         var xmlMetadata = File.ReadAllText(@"E:\Data\Metadata\MetadataForFeatClass.xml");
-        //Will throw InvalidOperationException if the metadata cannot be changed
-        //so check "CanEdit" first
-        if (featureClassMetadataItem.CanEdit())
-          featureClassMetadataItem.SetXml(xmlMetadata);
+        await QueuedTask.Run(() =>
+        {
+          //Will throw InvalidOperationException if the metadata cannot be changed
+          //so check "CanEdit" first
+          if (featureClassMetadataItem.CanEdit())
+          {
+            featureClassMetadataItem.SetXml(xmlMetadata);
+          }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.IMetadata.CanEdit
-      // cref: ArcGIS.Desktop.Core.Item.CanEdit
-      // cref: ArcGIS.Desktop.Core.Project.CanEdit
+      // cref: ArcGIS.Desktop.Core.IMetadata.CanEdit()
       #region Item: Check the metadata can be edited: CanEdit
       {
         bool canEdit;
         //Call CanEdit before calling SetXml
-        // Note: Needs QueuedTask to run
-        canEdit = metadataItemToCheck.CanEdit();
+        canEdit = await QueuedTask.Run(() => metadataItemToCheck.CanEdit());
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.IMetadata.Synchronize
-      // cref: ArcGIS.Desktop.Core.Item.Synchronize
-      // cref: ArcGIS.Desktop.Core.Project.Synchronize
+      // cref: ArcGIS.Desktop.Core.IMetadata.Synchronize()
       #region Item: Updates metadata with the current properties of the item: Synchronize
       {
         string syncedMetadataXml = string.Empty;
-        // Note: Needs QueuedTask to run
-        syncedMetadataXml = metadataItemToSync.Synchronize();
+        syncedMetadataXml = await QueuedTask.Run(() => metadataItemToSync.Synchronize());
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.IMetadata.CopyMetadataFromItem(ArcGIS.Desktop.Core.Item)
-      // cref: ArcGIS.Desktop.Core.Item.CopyMetadataFromItem(ArcGIS.Desktop.Core.Item)
-      // cref: ArcGIS.Desktop.Core.Project.CopyMetadataFromItem(ArcGIS.Desktop.Core.Item)
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Item: Copy metadata from the source item's metadata: CopyMetadataFromItem
       {
         Item featureClassItem = ItemFactory.Instance.Create(@"C:\projectAlpha\GDBs\regionFive.gdb\SourceFeatureClass");
-        // Note: Needs QueuedTask to run
-        metadataCopyFrom.CopyMetadataFromItem(featureClassItem);
+        await QueuedTask.Run(() => metadataCopyFrom.CopyMetadataFromItem(featureClassItem));
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.MDDeleteContentOption
-      // cref: ArcGIS.Desktop.Core.IMetadata.DeleteMetadataContent(ArcGIS.Desktop.Core.MDDeleteContentOption)
       // cref: ArcGIS.Desktop.Core.Item.DeleteMetadataContent(ArcGIS.Desktop.Core.MDDeleteContentOption)
-      // cref: ArcGIS.Desktop.Core.Project.DeleteMetadataContent(ArcGIS.Desktop.Core.MDDeleteContentOption)
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Item: Delete certain content from the metadata of the current item: DeleteMetadataContent
       {
         Item featureClassWithMetadataItem = ItemFactory.Instance.Create(@"C:\projectBeta\GDBs\regionFive.gdb\SourceFeatureClass");
@@ -835,16 +928,11 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.MDImportExportOption
       // cref: ArcGIS.Desktop.Core.IMetadata.ImportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption)
-      // cref: ArcGIS.Desktop.Core.IMetadata.ImportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,System.String)
-      // cref: ArcGIS.Desktop.Core.Item.ImportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption)
-      // cref: ArcGIS.Desktop.Core.Item.ImportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,System.String)
-      // cref: ArcGIS.Desktop.Core.Project.ImportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption)
-      // cref: ArcGIS.Desktop.Core.Project.ImportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,System.String)
       #region Item: Updates metadata with the imported metadata - the input path can be the path to an item with metadata, or a URI to a XML file: ImportMetadata
       {
         // the input path can be the path to an item with metadata, or a URI to an XML file
-        // Note: Needs QueuedTask to run
-        metadataItemImport.ImportMetadata(@"E:\YellowStone.gdb\MyDataset\MyFeatureClass", MDImportExportOption.esriCurrentMetadataStyle);
+        await QueuedTask.Run(() => metadataItemImport.ImportMetadata(
+          @"E:\YellowStone.gdb\MyDataset\MyFeatureClass", MDImportExportOption.esriCurrentMetadataStyle));
       }
       #endregion
 
@@ -853,8 +941,9 @@ namespace ProSnippets.ContentSnippets
       #region Item: Updates metadata with the imported metadata: ImportMetadata
       {
         // the input path can be the path to an item with metadata, or a URI to an XML file
-        // Note: Needs QueuedTask to run
-        metadataItemImport.ImportMetadata(@"E:\YellowStone.gdb\MyDataset\MyFeatureClass", MDImportExportOption.esriCustomizedStyleSheet, @"E:\StyleSheets\Import\MyImportStyleSheet.xslt");
+        await QueuedTask.Run(() => metadataItemImport.ImportMetadata(
+          @"E:\YellowStone.gdb\MyDataset\MyFeatureClass", MDImportExportOption.esriCustomizedStyleSheet,
+          @"E:\StyleSheets\Import\MyImportStyleSheet.xslt"));
       }
       #endregion
 
@@ -862,23 +951,19 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.MDExportRemovalOption
       // cref: ArcGIS.Desktop.Core.IMetadata.ExportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,ArcGIS.Desktop.Core.MDExportRemovalOption)
       // cref: ArcGIS.Desktop.Core.IMetadata.ExportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,ArcGIS.Desktop.Core.MDExportRemovalOption,System.String)
-      // cref: ArcGIS.Desktop.Core.Item.ExportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,ArcGIS.Desktop.Core.MDExportRemovalOption)
-      // cref: ArcGIS.Desktop.Core.Item.ExportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,ArcGIS.Desktop.Core.MDExportRemovalOption,System.String)
-      // cref: ArcGIS.Desktop.Core.Project.ExportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,ArcGIS.Desktop.Core.MDExportRemovalOption)
-      // cref: ArcGIS.Desktop.Core.Project.ExportMetadata(System.String,ArcGIS.Desktop.Core.MDImportExportOption,ArcGIS.Desktop.Core.MDExportRemovalOption,System.String)
       #region Item: export the metadata of the currently selected item: ExportMetadata
       {
-        // Note: Needs QueuedTask to run
-        metadataItemExport.ExportMetadata(@"E:\Temp\OutputXML.xml", MDImportExportOption.esriCustomizedStyleSheet, MDExportRemovalOption.esriExportExactCopy, @"E:\StyleSheets\Export\MyExportStyleSheet.xslt");
-        // Or export using the current metadata style
-        metadataItemExport.ExportMetadata(@"E:\Temp\OutputXML.xml", MDImportExportOption.esriCurrentMetadataStyle, MDExportRemovalOption.esriExportExactCopy);
+        await QueuedTask.Run(() =>
+        {
+          metadataItemExport.ExportMetadata(@"E:\Temp\OutputXML.xml", MDImportExportOption.esriCustomizedStyleSheet, MDExportRemovalOption.esriExportExactCopy, @"E:\StyleSheets\Export\MyExportStyleSheet.xslt");
+          // Or export using the current metadata style
+          metadataItemExport.ExportMetadata(@"E:\Temp\OutputXML.xml", MDImportExportOption.esriCurrentMetadataStyle, MDExportRemovalOption.esriExportExactCopy);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.MDSaveAsXMLOption
       // cref: ArcGIS.Desktop.Core.IMetadata.SaveMetadataAsXML(System.String,ArcGIS.Desktop.Core.MDSaveAsXMLOption)
-      // cref: ArcGIS.Desktop.Core.Item.SaveMetadataAsXML(System.String,ArcGIS.Desktop.Core.MDSaveAsXMLOption)
-      // cref: ArcGIS.Desktop.Core.Project.SaveMetadataAsXML(System.String,ArcGIS.Desktop.Core.MDSaveAsXMLOption)
       #region Item: Save the metadata of the current item as XML: SaveMetadataAsXML
       {
         metadataItemToSaveAsXML.SaveMetadataAsXML(@"E:\Temp\OutputXML.xml", MDSaveAsXMLOption.esriExactCopy);
@@ -887,34 +972,29 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.MDSaveAsHTMLOption
       // cref: ArcGIS.Desktop.Core.IMetadata.SaveMetadataAsHTML(System.String,ArcGIS.Desktop.Core.MDSaveAsHTMLOption)
-      // cref: ArcGIS.Desktop.Core.Item.SaveMetadataAsHTML(System.String,ArcGIS.Desktop.Core.MDSaveAsHTMLOption)
-      // cref: ArcGIS.Desktop.Core.Project.SaveMetadataAsHTML(System.String,ArcGIS.Desktop.Core.MDSaveAsHTMLOption)
       #region Item: Save the metadata of the current item as HTML: SaveMetadataAsHTML
       {
-        // Note: Needs QueuedTask to run
-        metadataItemToSaveAsHTML.SaveMetadataAsHTML(@"E:\Temp\OutputHTML.html", MDSaveAsHTMLOption.esriCurrentMetadataStyle);
+        await QueuedTask.Run(() => metadataItemToSaveAsHTML.SaveMetadataAsHTML(
+          @"E:\Temp\OutputHTML.html", MDSaveAsHTMLOption.esriCurrentMetadataStyle));
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.IMetadata.SaveMetadataAsUsingCustomXSLT(System.String,System.String)
-      // cref: ArcGIS.Desktop.Core.Item.SaveMetadataAsUsingCustomXSLT(System.String,System.String)
-      // cref: ArcGIS.Desktop.Core.Project.SaveMetadataAsUsingCustomXSLT(System.String,System.String)
       #region Item: Save the metadata of the current item using customized XSLT: SaveMetadataAsUsingCustomXSLT
       {
-        // Note: Needs QueuedTask to run
-        metadataItemToSaveAsUsingCustomXSLT.SaveMetadataAsUsingCustomXSLT(@"E:\Data\Metadata\CustomXSLT.xsl", @"E:\Temp\OutputXMLCustom.xml");
+        await QueuedTask.Run(() => metadataItemToSaveAsUsingCustomXSLT.SaveMetadataAsUsingCustomXSLT(
+          @"E:\Data\Metadata\CustomXSLT.xsl", @"E:\Temp\OutputXMLCustom.xml"));
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.MDUpgradeOption
-      // cref: ArcGIS.Desktop.Core.IMetadata.UpgradeMetadata(ArcGIS.Desktop.Core.MDUpgradeOption)
       // cref: ArcGIS.Desktop.Core.Item.UpgradeMetadata(ArcGIS.Desktop.Core.MDUpgradeOption)
-      // cref: ArcGIS.Desktop.Core.Project.UpgradeMetadata(ArcGIS.Desktop.Core.MDUpgradeOption)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Item: Upgrade the metadata of the current item: UpgradeMetadata
       {
         var fgdcItem = ItemFactory.Instance.Create(@"C:\projectAlpha\GDBs\testData.gdb");
-        // Note: Needs QueuedTask to run
-        fgdcItem.UpgradeMetadata(MDUpgradeOption.esriUpgradeFgdcCsdgm);
+        await QueuedTask.Run(() => fgdcItem.UpgradeMetadata(MDUpgradeOption.esriUpgradeFgdcCsdgm));
       }
       #endregion
 
@@ -926,8 +1006,13 @@ namespace ProSnippets.ContentSnippets
       //cref: ArcGIS.Desktop.Core.Project
       //cref: ArcGIS.Desktop.Core.ArcGISPortalManager
       //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.GetPortal(System.Uri)
-      //cref: ArcGIS.Desktop.Core.ArcGISPortal.GetSignOnUsername
-      //cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetUserContentAsync
+      //cref: ArcGIS.Desktop.Core.ArcGISPortal.IsSignedOn()
+      //cref: ArcGIS.Desktop.Core.ArcGISPortal.PortalUri
+      //cref: ArcGIS.Desktop.Core.ArcGISPortal.SignIn()
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.Current
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.GetActivePortal()
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.SetActivePortal(ArcGIS.Desktop.Core.ArcGISPortal)
+      //cref: ArcGIS.Desktop.Core.SignInResult.success
       #region Workflow to open an ArcGIS Pro project
       {
         projectPath = @"https://<userName>.<domain>.com/portal/sharing/rest/content/items/1a434faebbe7424d9982f57d00223baa";
@@ -961,12 +1046,12 @@ namespace ProSnippets.ContentSnippets
             var activePortal = ArcGISPortalManager.Current.GetActivePortal();
             //Compare to see if the active Portal is the same as the portal of the project
             bool isSamePortal = activePortal != null && activePortal.PortalUri.ToString() == portalUrlOfProjectToOpen;
-            if (!isSamePortal) //not the same. 
+            if (!isSamePortal) //not the same.
             {
               //Set new active portal to be the portal of the project
               //Find the portal to sign in with using its Uri...
               var projectPortal = ArcGISPortalManager.Current.GetPortal(new Uri(portalUrlOfProjectToOpen, UriKind.Absolute));
-              // Note: Needs QueuedTask to run
+              bool returnAfterSignIn = await QueuedTask.Run(() =>
               {
                 if (!projectPortal.IsSignedOn())
                 {
@@ -976,12 +1061,15 @@ namespace ProSnippets.ContentSnippets
                   {
                     //Set this portal as my active portal
                     ArcGISPortalManager.Current.SetActivePortal(projectPortal);
-                    return;
+                    return true;
                   }
                 }
                 //Set this portal as my active portal
                 ArcGISPortalManager.Current.SetActivePortal(projectPortal);
-              }
+                return false;
+              });
+              if (returnAfterSignIn)
+                return;
               //Now try opening the project again
               if (Project.CanOpen(projectPath, out docVer))
               {
@@ -997,7 +1085,7 @@ namespace ProSnippets.ContentSnippets
               System.Diagnostics.Debug.WriteLine("The project cannot be opened.");
             }
           }
-          else //Project is on disk and cannot be opened. 
+          else //Project is on disk and cannot be opened.
           {
             System.Diagnostics.Debug.WriteLine("The project cannot be opened.");
           }
@@ -1005,9 +1093,9 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Core.Project.IsPortalProject
       //cref: ArcGIS.Desktop.Core.Project.Current
       //cref: ArcGIS.Desktop.Core.Project
+      //cref: ArcGIS.Desktop.Core.Project.Url
       #region Determine if the project is a portal project from a project's path
       {
         projectPath = Project.Current.Url;
@@ -1035,13 +1123,16 @@ namespace ProSnippets.ContentSnippets
       #region Determine if the project is a portal project from a project object
       {
         var isPortalProject = Project.Current.IsPortalProject;
-        // Use isPortalProject; 
+        // Use isPortalProject;
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Core.Project.CanOpen(System.String,System.String@)
-      //cref: ArcGIS.Desktop.Core.Project.OpenAsync(System.String)
       //cref: ArcGIS.Desktop.Core.Project
+      //cref: ArcGIS.Desktop.Core.ArcGISPortal.PortalUri
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.Current
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.GetPortal(System.Uri)
+      //cref: ArcGIS.Desktop.Core.Project.Current
+      //cref: ArcGIS.Desktop.Core.Project.Url
       #region Get the portal from a portal project's path
       {
         projectPath = Project.Current.Url;
@@ -1068,9 +1159,14 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       //cref: ArcGIS.Desktop.Catalog.OpenItemDialog
-      //cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog
+      //cref: ArcGIS.Desktop.Catalog.OpenItemDialog.ShowDialog()
       //cref: ArcGIS.Desktop.Core.BrowseProjectFilter
       //cref: ArcGIS.Desktop.Core.BrowseProjectFilter.AddFilter(ArcGIS.Desktop.Core.BrowseProjectFilter)
+      //cref: ArcGIS.Desktop.Catalog.ItemDialog.BrowseFilter
+      //cref: ArcGIS.Desktop.Catalog.ItemDialog.Title
+      //cref: ArcGIS.Desktop.Catalog.OpenItemDialog.Items
+      //cref: ArcGIS.Desktop.Catalog.OpenItemDialog.MultiSelect
+      //cref: ArcGIS.Desktop.Core.BrowseProjectFilter.GetFilter(System.String)
       #region Workflow to open an ArcGIS Pro project using the OpenItemDialog
       {
         BrowseProjectFilter portalAndLocalProjectsFilter = new();
@@ -1091,7 +1187,10 @@ namespace ProSnippets.ContentSnippets
         //Check if the user clicked OK and selected an item
         bool? ok = openDlg.ShowDialog();
         if (!ok.HasValue || openDlg.Items.Count == 0)
+        {
           return; //nothing selected
+        }
+
         var selectedItem = openDlg.Items.FirstOrDefault();
         //Open the project use the OpenAsync method.
       }
@@ -1102,19 +1201,20 @@ namespace ProSnippets.ContentSnippets
       //cref: ArcGIS.Desktop.Core.Project
       //cref: ArcGIS.Desktop.Core.ArcGISPortalManager
       //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.GetPortal(System.Uri)
-      //cref: ArcGIS.Desktop.Core.ArcGISPortal.GetSignOnUsername
-      //cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetUserContentAsync
+      //cref: ArcGIS.Desktop.Core.ArcGISPortal.GetSignOnUsername()
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalExtensions.GetUserContentAsync(System.String,System.String)
+      //cref: ArcGIS.Desktop.Core.ArcGISPortalManager.Current
+      //cref: ArcGIS.Desktop.Core.Portal.PortalItem.ItemUri
+      //cref: ArcGIS.Desktop.Core.Portal.PortalItem.PortalItemType
+      //cref: ArcGIS.Desktop.Core.Portal.PortalUserContent.PortalItems
       #region Retrieve a project item from a portal and open it
       {
         var projectPortal = ArcGISPortalManager.Current.GetPortal(new Uri(@"https://<serverName>.<domain>.com/portal/", UriKind.Absolute));
         string owner = string.Empty;
-        // Note: Needs QueuedTask to run
-        {
-          //Get the signed on user name
-          owner = projectPortal.GetSignOnUsername();
-        }
+        //Get the signed on user name
+        owner = await QueuedTask.Run(() => projectPortal.GetSignOnUsername());
         //Get the user content from the portal
-        PortalUserContent userContent = projectPortal.GetUserContentAsync(owner).Result;
+        PortalUserContent userContent = await projectPortal.GetUserContentAsync(owner);
         //Get the first portal project item
         var firstPortalProject = userContent.PortalItems.FirstOrDefault(pi => pi.PortalItemType == PortalItemType.ProProject);
         var portalProjectUri = firstPortalProject.ItemUri.ToString();
@@ -1124,17 +1224,17 @@ namespace ProSnippets.ContentSnippets
         {
           Project.OpenAsync(portalProjectUri);
         }
-        //Note: If Project.CanOpen returns false, the project cannot be opened. One reason could be 
+        //Note: If Project.CanOpen returns false, the project cannot be opened. One reason could be
         // the active portal is not the same as the portal of the project. Refer to the snippet: [Workflow to open an ArcGIS Pro project](ProSnippets-sharing#workflow-to-open-an-arcgis-pro-project)
       }
       #endregion
 
-      //cref: ArcGIS.Desktop.Core.Project.GetRecentProjectsEx
+      //cref: ArcGIS.Desktop.Core.Project.GetRecentProjectsEx()
       #region Retrieve the list of recently opened projects
       {
         IReadOnlyList<Tuple<string, string>> result = [];
         //A list of Tuple instances containing two strings.
-        //The first string: full path to the .aprx. In case of Portal projects, 
+        //The first string: full path to the .aprx. In case of Portal projects,
         //this is the cached location of the project on the local machine.
         //Second string:  url for portal projects
         result = Project.GetRecentProjectsEx();
@@ -1165,23 +1265,23 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
-      // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings
+      // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings()
       #region Create a new project
       {
         //Create a new project using Pro's default settings
         var defaultProjectSettings = Project.GetDefaultProjectSettings();
-        var project = Project.CreateAsync(defaultProjectSettings).Result;
+        var project = await Project.CreateAsync(defaultProjectSettings);
 
         // Use project
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.CreateAsync
+      // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       #region Create an empty project
       {
         //Create an empty project. The project will be created in the default folder
         //It will be named MyProject1, MyProject2, or similar...
-        var project = Project.CreateAsync().Result;
+        var project = await Project.CreateAsync();
 
         // Use project
       }
@@ -1189,6 +1289,7 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.Name
       #region Create a new project with specified name
       {
         //Settings used to create a new project
@@ -1199,7 +1300,7 @@ namespace ProSnippets.ContentSnippets
           Name = projectName
         };
         //Create the new project
-        var project = Project.CreateAsync(projectSettings).Result;
+        var project = await Project.CreateAsync(projectSettings);
 
         // Use project
       }
@@ -1207,13 +1308,13 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
-      // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings
+      // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings()
       #region Create new project using Pro's default settings
       {
         //Get Pro's default project settings.
         var defaultProjectSettings = Project.GetDefaultProjectSettings();
         //Create a new project using the default project settings
-        var project = Project.CreateAsync(defaultProjectSettings).Result;
+        var project = await Project.CreateAsync(defaultProjectSettings);
 
         // Use project
       }
@@ -1221,6 +1322,9 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.LocationPath
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.Name
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.TemplatePath
       #region New project using a custom template file
       {
         //Settings used to create a new project
@@ -1234,7 +1338,7 @@ namespace ProSnippets.ContentSnippets
           TemplatePath = @"C:\Data\MyProject1\CustomTemplate.aptx"
         };
         //Create the new project
-        var project = Project.CreateAsync(projectSettings).Result;
+        var project = await Project.CreateAsync(projectSettings);
 
         // Use project
       }
@@ -1243,6 +1347,8 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
       // cref: ArcGIS.Desktop.Core.TemplateType
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.LocationPath
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.Name
       #region Create a project using template available with ArcGIS Pro
       {
         //Settings used to create a new project
@@ -1259,7 +1365,7 @@ namespace ProSnippets.ContentSnippets
           //TemplateType = TemplateType.Map
         };
         //Create the new project
-        var project = Project.CreateAsync(proTemplateSettings).Result;
+        var project = await Project.CreateAsync(proTemplateSettings);
 
         // Use project
       }
@@ -1270,12 +1376,12 @@ namespace ProSnippets.ContentSnippets
       {
         //Opens an existing project or project package
         // example: @"C:\Data\MyProject1\MyProject1.aprx"
-        var project = Project.OpenAsync(projectPath).Result;
+        var project = await Project.OpenAsync(projectPath);
         // Use project
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.Current 
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get the Current project
       {
         //Gets the current project
@@ -1288,7 +1394,7 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.Project.URI
       #region Get location of current project
       {
-        //Gets the location of the current project; that is, the path to the current project file (*.aprx)  
+        //Gets the location of the current project; that is, the path to the current project file (*.aprx)
         projectPath = Project.Current.URI;
         // Use projectPath
       }
@@ -1306,6 +1412,11 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.Project.SetDefaultGeoDatabasePath(System.String)
       // cref: ArcGIS.Desktop.Core.Project.RemoveItem(ArcGIS.Desktop.Core.IProjectItem)
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.Item.Path
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       #region Change the Project's default gdb path
       {
         //Create a new GDB item and add it to the project
@@ -1317,7 +1428,9 @@ namespace ProSnippets.ContentSnippets
         var success = Project.Current.AddItem(newGDBItem);
         //make the newly added GDB item the default
         if (success)
+        {
           Project.Current.SetDefaultGeoDatabasePath(newGDDItemPath);
+        }
         //Now remove the old item
         if (Project.Current.GetItems<Item>().FirstOrDefault(i => i.Path == oldGDBItemPath) is not IProjectItem oldGDBItem)
         {
@@ -1328,12 +1441,12 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.SaveAsync
+      // cref: ArcGIS.Desktop.Core.Project.SaveAsync()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Save project
       {
         //Saves the project
-        var project = Project.Current.SaveAsync().Result;
-        // Use project
+        var success = await Project.Current.SaveAsync();
       }
       #endregion
 
@@ -1341,35 +1454,37 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.Project.IsDirty
       #region Check if project needs to be saved
       {
-        //The project's dirty state indicates changes made to the project have not yet been saved. 
+        //The project's dirty state indicates changes made to the project have not yet been saved.
         bool isProjectDirty = Project.Current.IsDirty;
         // Use isProjectDirty;
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.SaveAsAsync
+      // cref: ArcGIS.Desktop.Core.Project.SaveAsAsync(System.String,System.Boolean)
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region SaveAs project
       {
-        //Saves a copy of the current project file (*.aprx) to the specified location with the specified file name, 
+        //Saves a copy of the current project file (*.aprx) to the specified location with the specified file name,
         //then opens the new project file
-        var project = Project.Current.SaveAsAsync(newProjectPath).Result;
+        var success = await Project.Current.SaveAsAsync(newProjectPath);
 
-        // Use project
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.OpenAsync(System.String)
       #region Close a project
-      //A project cannot be closed using the ArcGIS Pro API. 
-      //A project is only closed when another project is opened, a new one is created, or the application is shutdown.
+      {
+        //A project cannot be closed using the ArcGIS Pro API.
+        //A project is only closed when another project is opened, a new one is created, or the application is shutdown.
+      }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateMap(System.String,ArcGIS.Core.CIM.MapType,ArcGIS.Core.CIM.MapViewingMode,ArcGIS.Desktop.Mapping.Basemap)
+      // cref: ArcGIS.Desktop.Mapping.IMapFactory.CreateMap(System.String,ArcGIS.Core.CIM.MapType,ArcGIS.Core.CIM.MapViewingMode,ArcGIS.Desktop.Mapping.Basemap)
+      // cref: ArcGIS.Desktop.Core.FrameworkExtender.CreateMapPaneAsync(ArcGIS.Desktop.Mapping.Map,System.Nullable{ArcGIS.Core.CIM.MapViewingMode},ArcGIS.Desktop.Mapping.TimeRange)
       #region How to add a new map to a project
       {
-        // Note: Needs QueuedTask to run
         //Note: see also MapFactory in ArcGIS.Desktop.Mapping
-        var map = MapFactory.Instance.CreateMap("New Map", MapType.Map, MapViewingMode.Map, Basemap.Oceans);
+        var map = await QueuedTask.Run(() =>
+          MapFactory.Instance.CreateMap("New Map", MapType.Map, MapViewingMode.Map, Basemap.Oceans));
         ArcGIS.Desktop.Framework.FrameworkApplication.Panes.CreateMapPaneAsync(map);
       }
       #endregion
@@ -1470,8 +1585,10 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ItemFactory
-      // cref: ArcGIS.Desktop.Core.IItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Add a folder connection item to the current project
       {
         //Adding a folder connection
@@ -1479,52 +1596,62 @@ namespace ProSnippets.ContentSnippets
         //Create the folder connection project item
         var item = ItemFactory.Instance.Create(folderPath) as IProjectItem;
 
-        // Note: Needs QueuedTask to run
-        var folder = Project.Current.AddItem(item) ? item as FolderConnectionProjectItem : null;
+        var folder = await QueuedTask.Run(() =>
+          Project.Current.AddItem(item) ? item as FolderConnectionProjectItem : null);
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ItemFactory
-      // cref: ArcGIS.Desktop.Core.IItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.Project.AddItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Add a geodatabase item to the current project
       {
         //Adding a Geodatabase:
-        //Create the File GDB project item
-        // Note: Needs QueuedTask to run
-        var item = ItemFactory.Instance.Create(gdbPath) as IProjectItem;
-        var newlyAddedGDB = Project.Current.AddItem(item) ? item as GDBProjectItem : null;
+        await QueuedTask.Run(() =>
+        {
+          //Create the File GDB project item
+          var item = ItemFactory.Instance.Create(gdbPath) as IProjectItem;
+          var newlyAddedGDB = Project.Current.AddItem(item) ? item as GDBProjectItem : null;
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all project items
       {
         IEnumerable<Item> allProjectItems = Project.Current.GetItems<Item>();
         foreach (var pi in allProjectItems)
         {
-          //Do Something 
+          //Do Something
         }
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all MapProjectItems for a project
       {
         var project = Project.Current;
         IEnumerable<MapProjectItem> newMapItemsContainer = project.GetItems<MapProjectItem>();
-        // Note: Needs QueuedTask to run
-        foreach (var mp in newMapItemsContainer)
+        await QueuedTask.Run(() =>
         {
-          //Do Something with the map. For Example:
-          Map myMap = mp.GetMap();
-        }
+          foreach (var mp in newMapItemsContainer)
+          {
+            //Do Something with the map. For Example:
+            Map myMap = mp.GetMap();
+          }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get a specific MapProjectItem
       {
         MapProjectItem mapProjItem = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(item => item.Name.Equals("EuropeMap"));
@@ -1533,7 +1660,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all StyleProjectItems
       {
         IEnumerable<StyleProjectItem> newStyleItemsContainer = null;
@@ -1546,7 +1674,9 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get a specific StyleProjectItem
       {
         var container = Project.Current.GetItems<StyleProjectItem>();
@@ -1563,17 +1693,23 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Item.GetItems()
+      // cref: ArcGIS.Desktop.Core.Item.TypeID
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetProjectItemContainer(System.String)
       #region Get the Favorite StyleProjectItem
       {
-        // Note: Needs QueuedTask to run
-        var containerStyle = Project.Current.GetProjectItemContainer("Style");
-        var fav_style_item = containerStyle.GetItems().OfType<StyleProjectItem>().First(item => item.TypeID == "personal_style");
+        await QueuedTask.Run(() =>
+        {
+          var containerStyle = Project.Current.GetProjectItemContainer("Style");
+          var fav_style_item = containerStyle.GetItems().OfType<StyleProjectItem>().First(item => item.TypeID == "personal_style");
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.GDBProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all GDBProjectItems
       {
         IEnumerable<GDBProjectItem> newGDBItemsContainer = null;
@@ -1586,7 +1722,9 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.GDBProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get a specific GDBProjectItem
       {
         GDBProjectItem gdbProjItem = Project.Current.GetItems<GDBProjectItem>().FirstOrDefault(item => item.Name.Equals("myGDB"));
@@ -1595,7 +1733,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.ServerConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all ServerConnectionProjectItems
       {
         IEnumerable<ServerConnectionProjectItem> newServerConnections = null;
@@ -1609,7 +1748,9 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.ServerConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get a specific ServerConnectionProjectItem
       {
         ServerConnectionProjectItem serverProjItem = Project.Current.GetItems<ServerConnectionProjectItem>().FirstOrDefault(item => item.Name.Equals("myServer"));
@@ -1618,7 +1759,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all folder connections in a project
       {
         //Gets all the folder connections in the current project
@@ -1631,7 +1773,9 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get a specific folder connection
       {
         FolderConnectionProjectItem folderProjItem = Project.Current.GetItems<FolderConnectionProjectItem>().FirstOrDefault(item => item.Name.Equals("myDataFolder"));
@@ -1640,18 +1784,25 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.RemoveItem
+      // cref: ArcGIS.Desktop.Core.Project.RemoveItem(ArcGIS.Desktop.Core.IProjectItem)
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       #region Remove a specific folder connection
       {
         // Remove a folder connection from a project; the folder stored on the local disk or the network is not deleted
         FolderConnectionProjectItem folderToRemove = Project.Current.GetItems<FolderConnectionProjectItem>().FirstOrDefault(myfolder => myfolder.Name.Equals("PlantSpecies"));
         if (folderToRemove != null)
+        {
           Project.Current.RemoveItem(folderToRemove as IProjectItem);
+        }
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Gets a specific LayoutProjectItem
       {
         LayoutProjectItem layoutProjItem = Project.Current.GetItems<LayoutProjectItem>().FirstOrDefault(item => item.Name.Equals("myLayout"));
@@ -1660,7 +1811,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Layouts.LayoutProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all layouts in a project
       {
         //Gets all the layouts in the current project
@@ -1673,7 +1825,9 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.GeoProcessing.GeoprocessingProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get a specific GeoprocessingProjectItem
       {
         //Gets a specific GeoprocessingProjectItem in the current project
@@ -1684,7 +1838,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.GeoProcessing.GeoprocessingProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Get all GeoprocessingProjectItems in a project
       {
         //Gets all the GeoprocessingProjectItem in the current project
@@ -1697,7 +1852,9 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.GetItems()
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Search project for a specific item
       {
         List<Item> _mxd = [];
@@ -1709,9 +1866,9 @@ namespace ProSnippets.ContentSnippets
           foreach (var folderItem in allFoldersItem)
           {
             //Search for mxd files in that folder connection and add it to the List<T>
-            //Note:ArcGIS Pro automatically creates and dynamically updates a searchable index as you build and work with projects. 
+            //Note:ArcGIS Pro automatically creates and dynamically updates a searchable index as you build and work with projects.
             //Items are indexed when they are added to a project.
-            //The first time a folder or database is indexed, indexing may take a while if it contains a large number of items. 
+            //The first time a folder or database is indexed, indexing may take a while if it contains a large number of items.
             //While the index is being created, searches will not return any results.
             _mxd.AddRange(folderItem.GetItems());
           }
@@ -1720,7 +1877,7 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings.LocationPath
-      // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings
+      // cref: ArcGIS.Desktop.Core.Project.GetDefaultProjectSettings()
       #region Get the Default Project Folder
       {
         //Get Pro's default project settings.
@@ -1737,16 +1894,17 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Catalog.FolderConnectionProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
-      // cref: ArcGIS.Desktop.Core.Item.Refresh
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Item.Refresh()
+      // cref: ArcGIS.Desktop.Core.Item.IsMainThreadRequired
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Refresh the child item for a folder connection Item
       {
         var contentItem = Project.Current.GetItems<FolderConnectionProjectItem>().First();
         //Check if the MCT is required for Refresh()
         if (contentItem.IsMainThreadRequired)
         {
-          // Note: Needs QueuedTask to run
-          contentItem.Refresh();
+          await QueuedTask.Run(() => contentItem.Refresh());
         }
         else
         {
@@ -1763,6 +1921,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Item.ItemCategories
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
+      // cref: ArcGIS.Desktop.Core.ItemFactory.Instance
       #region Get Item Categories
       {
         // Get the ItemCategories with which an item is associated
@@ -1773,6 +1933,8 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ItemCategory.Items(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Core.Item})
+      // cref: ArcGIS.Desktop.Core.Item.GetItems()
+      // cref: ArcGIS.Desktop.Core.Item.ItemCategories
       #region Using Item Categories
       {
         // Browse items using an ItemCategory as a filter
@@ -1784,6 +1946,9 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.Project.CreateAsync(ArcGIS.Desktop.Core.CreateProjectSettings)
       // cref: ArcGIS.Desktop.Core.CreateProjectSettings
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.LocationPath
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.Name
+      // cref: ArcGIS.Desktop.Core.CreateProjectSettings.TemplatePath
       #region Create Project with Template
       {
         var projectFolder = Path.Combine(
@@ -1796,13 +1961,15 @@ namespace ProSnippets.ContentSnippets
           LocationPath = projectFolder,
           TemplatePath = templatePath
         };
-        var project = Project.CreateAsync(ps).Result;
+        var project = await Project.CreateAsync(ps);
         //Use project;
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Project.ProjectItemContainers
       // cref: ArcGIS.Desktop.Core.Project.GetProjectItemContainer(System.String)
+      // cref: ArcGIS.Desktop.Core.Item.Path
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Select project containers - for use with SelectItemAsync
       {
         //Use Project.Current.ProjectItemContainers
@@ -1829,6 +1996,9 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Mapping.MapProjectItem
       // cref: ArcGIS.Desktop.Mapping.StyleProjectItem
       // cref: ArcGIS.Desktop.Core.Project.FindItem(System.String)
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Project.Current
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
       #region ProjectItem: Get an Item or Find an Item
       {
         //GetItems searches project content
@@ -1848,11 +2018,14 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
-      // cref: ArcGIS.Desktop.Core.Project.GetCatalogPane
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.GetCatalogPane(System.Boolean)
       // cref: ArcGIS.Desktop.Core.IProjectWindow
       // cref: ArcGIS.Desktop.Core.Project.ProjectItemContainers
-      // cref: ArcGIS.Desktop.Core.IProjectWindow.SelectItemAsync
+      // cref: ArcGIS.Desktop.Core.IProjectWindow.SelectItemAsync(ArcGIS.Desktop.Core.Item,System.Boolean,System.Boolean,ArcGIS.Desktop.Core.Item)
+      // cref: ArcGIS.Desktop.Core.Item.Name
+      // cref: ArcGIS.Desktop.Core.Item.Path
+      // cref: ArcGIS.Desktop.Core.Project.Current
       #region Select an item in the Catalog pane
       {
         //Get the catalog pane
@@ -1864,13 +2037,13 @@ namespace ProSnippets.ContentSnippets
         string gpName = "Interacting with Maps.tbx";
         var toolbox = Project.Current.GetItems<GeoprocessingProjectItem>().FirstOrDefault(tbx => tbx.Name == gpName);
         //Select it under Toolboxes
-        projectWindow.SelectItemAsync(toolbox, true, true, null);//null selects it in the first container - optionally await
+        await projectWindow.SelectItemAsync(toolbox, true, true, null);//null selects it in the first container
                                                                  //Note: Project.Current.GetProjectItemContainer("GP") would get toolbox container...
 
         //assume toolbox is also under Folders container. Select it under Folders instead of Toolboxes
         var foldersContainer = Project.Current.ProjectItemContainers.First(c => c.Path == "FolderConnection");
         //We must specify the container because Folders comes second (after Toolboxes)
-        projectWindow.SelectItemAsync(toolbox, true, true, foldersContainer);//optionally await
+        await projectWindow.SelectItemAsync(toolbox, true, true, foldersContainer);
 
         //Find a map and select it
         var mapItem = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(m => m.Name == "Map");
@@ -1884,10 +2057,14 @@ namespace ProSnippets.ContentSnippets
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetPredefinedProjectUnitFormats
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetPredefinedProjectUnitFormats(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.DisplayName
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.UnitCode
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Get The Full List of All Available Unit Formats
       {
-        //Note: Must be on the QueuedTask.Run()
+        await QueuedTask.Run(() =>
+        {
         var unit_formats = Enum.GetValues(typeof(UnitFormatType))
                       .OfType<UnitFormatType>().ToList();
         System.Diagnostics.Debug.WriteLine("All available units\r\n");
@@ -1904,15 +2081,20 @@ namespace ProSnippets.ContentSnippets
           }
           System.Diagnostics.Debug.WriteLine("");
         }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.DisplayName
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.UnitCode
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Get The List of Unit Formats for the Current Project
       {
-        // Note: Must be on the QueuedTask.Run()
+        await QueuedTask.Run(() =>
+        {
         var unit_formats = Enum.GetValues(typeof(UnitFormatType))
                         .OfType<UnitFormatType>().ToList();
         System.Diagnostics.Debug.WriteLine("Project units\r\n");
@@ -1928,30 +2110,38 @@ namespace ProSnippets.ContentSnippets
           }
           System.Diagnostics.Debug.WriteLine("");
         }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Get A Specific List of Unit Formats for the Current Project
       {
-        //Must be on the QueuedTask.Run()
+        await QueuedTask.Run(() =>
+        {
 
-        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance, 
+        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance,
         //UnitFormatType.Direction, UnitFormatType.Location, UnitFormatType.Page
         //UnitFormatType.Symbol2D, UnitFormatType.Symbol3D
         var units = DisplayUnitFormats.Instance.GetProjectUnitFormats(UnitFormatType.Distance);
         // Use units;
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetDefaultProjectUnitFormat
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetDefaultProjectUnitFormat(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.DisplayName
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.UnitCode
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Get The List of Default Formats for the Current Project
       {
-        // Note: Must be on the QueuedTask.Run()
+        await QueuedTask.Run(() =>
+        {
         var unit_formats = Enum.GetValues(typeof(UnitFormatType))
                             .OfType<UnitFormatType>().ToList();
         System.Diagnostics.Debug.WriteLine("Default project units\r\n");
@@ -1963,32 +2153,39 @@ namespace ProSnippets.ContentSnippets
           System.Diagnostics.Debug.WriteLine(line);
         }
         System.Diagnostics.Debug.WriteLine("");
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetDefaultProjectUnitFormat
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetDefaultProjectUnitFormat(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Get A Specific Default Unit Format for the Current Project
       {
-        // Note: Must be on the QueuedTask.Run()
-        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance, 
+        await QueuedTask.Run(() =>
+        {
+        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance,
         //UnitFormatType.Direction, UnitFormatType.Location, UnitFormatType.Page
         //UnitFormatType.Symbol2D, UnitFormatType.Symbol3D
         var default_unit = DisplayUnitFormats.Instance.GetDefaultProjectUnitFormat(
                                                          UnitFormatType.Distance);
         // Use default_unit;
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetPredefinedProjectUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.SetProjectUnitFormats
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetPredefinedProjectUnitFormats(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.SetProjectUnitFormats(System.Collections.Generic.IList{ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat},ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.UnitCode
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Set a Specific List of Unit Formats for the Current Project
       {
-        // Note: Must be on the QueuedTask.Run()
-        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance, 
+        await QueuedTask.Run(() =>
+        {
+        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance,
         //UnitFormatType.Direction, UnitFormatType.Location
 
         //Get the full list of all available location units
@@ -2006,16 +2203,23 @@ namespace ProSnippets.ContentSnippets
 
         //Note: UnitFormatType.Page, UnitFormatType.Symbol2D, UnitFormatType.Symbol3D
         //cannot be set.
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetDefaultProjectUnitFormat
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.SetDefaultProjectUnitFormat
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetDefaultProjectUnitFormat(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.SetDefaultProjectUnitFormat(ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.DisplayName
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.UnitCode
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.UnitName
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
       #region Set the Defaults for the Project Unit Formats
       {
-        // Note: Must be on the QueuedTask.Run()
+        await QueuedTask.Run(() =>
+        {
         var unit_formats = Enum.GetValues(typeof(UnitFormatType)).OfType<UnitFormatType>().ToList();
         foreach (var unit_type in unit_formats)
         {
@@ -2031,16 +2235,20 @@ namespace ProSnippets.ContentSnippets
           System.Diagnostics.Debug.WriteLine($" Current default: {line}");
           System.Diagnostics.Debug.WriteLine($" Replacement default: {line2}");
         }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.UnitFormats.UnitFormatType
       // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats
-      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.SetProjectUnitFormats
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.GetProjectUnitFormats(ArcGIS.Desktop.Core.UnitFormats.UnitFormatType)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.IDisplayUnitFormats.SetProjectUnitFormats(System.Collections.Generic.IList{ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat},ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat)
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.Abbreviation
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormat.DisplayName
+      // cref: ArcGIS.Desktop.Core.UnitFormats.DisplayUnitFormats.Instance
       #region Update Unit Formats for the Project
       {
-        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance, 
+        //UnitFormatType.Angular, UnitFormatType.Area, UnitFormatType.Distance,
         //UnitFormatType.Direction, UnitFormatType.Location
         var angle_units = DisplayUnitFormats.Instance.GetProjectUnitFormats(UnitFormatType.Angular);
 
@@ -2055,11 +2263,10 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      #region ProSnippet Group: Application Options 
+      #region ProSnippet Group: Application Options
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.GeneralOptions
-      // cref: ArcGIS.Desktop.Core.GeneralOptions
       // cref: ArcGIS.Desktop.Core.GeneralOptions.StartupOption
       // cref: ArcGIS.Desktop.Core.GeneralOptions.StartupProjectPath
       // cref: ArcGIS.Desktop.Core.GeneralOptions.HomeFolderOption
@@ -2088,7 +2295,6 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.GeneralOptions
-      // cref: ArcGIS.Desktop.Core.GeneralOptions
       // cref: ArcGIS.Desktop.Core.GeneralOptions.StartupOption
       // cref: ArcGIS.Desktop.Core.GeneralOptions.StartupProjectPath
       // cref: ArcGIS.Desktop.Core.GeneralOptions.HomeFolderOption
@@ -2097,33 +2303,43 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.GeneralOptions.CustomDefaultGeodatabase
       // cref: ArcGIS.Desktop.Core.GeneralOptions.DefaultToolboxOption
       // cref: ArcGIS.Desktop.Core.GeneralOptions.CustomDefaultToolbox
-      // cref: ArcGIS.Desktop.Core.GeneralOptions.ProjectCreateInFolder
       #region Set GeneralOptions to Use Custom Settings
       {
         //Set the application to use a custom project, home folder, gdb, and toolbox
-        //In each case, the custom _path_ must be set _first_ before 
-        //setting the "option". This ensures the application remains 
+        //In each case, the custom _path_ must be set _first_ before
+        //setting the "option". This ensures the application remains
         //in a consistent state. This is the same behavior as on the Pro UI.
         if (string.IsNullOrEmpty(ApplicationOptions.GeneralOptions.StartupProjectPath))
+        {
           ApplicationOptions.GeneralOptions.StartupProjectPath = @"D:\data\usa.aprx";//custom project path first
+        }
+
         ApplicationOptions.GeneralOptions.StartupOption = StartProjectMode.WithDefaultProject;//option to use it second
 
         if (string.IsNullOrEmpty(ApplicationOptions.GeneralOptions.CustomHomeFolder))
+        {
           ApplicationOptions.GeneralOptions.CustomHomeFolder = @"D:\home_folder";//custom home folder first
+        }
+
         ApplicationOptions.GeneralOptions.HomeFolderOption = OptionSetting.UseCustom;//option to use it second
 
         if (string.IsNullOrEmpty(ApplicationOptions.GeneralOptions.CustomDefaultGeodatabase))
+        {
           ApplicationOptions.GeneralOptions.CustomDefaultGeodatabase = @"D:\data\usa.gdb";//custom gdb path first
+        }
+
         ApplicationOptions.GeneralOptions.DefaultGeodatabaseOption = OptionSetting.UseCustom;//option to use it second
 
         if (string.IsNullOrEmpty(ApplicationOptions.GeneralOptions.CustomDefaultToolbox))
+        {
           ApplicationOptions.GeneralOptions.CustomDefaultToolbox = @"D:\data\usa.tbx";//custom toolbox path first
+        }
+
         ApplicationOptions.GeneralOptions.DefaultToolboxOption = OptionSetting.UseCustom;//option to use it second
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.GeneralOptions
-      // cref: ArcGIS.Desktop.Core.GeneralOptions
       // cref: ArcGIS.Desktop.Core.GeneralOptions.StartupOption
       // cref: ArcGIS.Desktop.Core.GeneralOptions.StartupProjectPath
       // cref: ArcGIS.Desktop.Core.GeneralOptions.HomeFolderOption
@@ -2132,7 +2348,6 @@ namespace ProSnippets.ContentSnippets
       // cref: ArcGIS.Desktop.Core.GeneralOptions.CustomDefaultGeodatabase
       // cref: ArcGIS.Desktop.Core.GeneralOptions.DefaultToolboxOption
       // cref: ArcGIS.Desktop.Core.GeneralOptions.CustomDefaultToolbox
-      // cref: ArcGIS.Desktop.Core.GeneralOptions.ProjectCreateInFolder
       // cref: ArcGIS.Desktop.Core.StartProjectMode
       // cref: ArcGIS.Desktop.Core.OptionSetting
       #region Set GeneralOptions to Use Defaults
@@ -2145,21 +2360,40 @@ namespace ProSnippets.ContentSnippets
         ApplicationOptions.GeneralOptions.DefaultGeodatabaseOption = OptionSetting.UseDefault;
         ApplicationOptions.GeneralOptions.DefaultToolboxOption = OptionSetting.UseDefault;//set default option first
 
-        //path values can (optionally) be set (back) to null if their 
+        //path values can (optionally) be set (back) to null if their
         //"companion" option setting is the default option.
         if (ApplicationOptions.GeneralOptions.StartupOption != StartProjectMode.WithDefaultProject)
+        {
           ApplicationOptions.GeneralOptions.StartupProjectPath = null;
+        }
+
         if (ApplicationOptions.GeneralOptions.HomeFolderOption == OptionSetting.UseDefault)
+        {
           ApplicationOptions.GeneralOptions.CustomHomeFolder = null;
+        }
+
         if (ApplicationOptions.GeneralOptions.DefaultGeodatabaseOption == OptionSetting.UseDefault)
+        {
           ApplicationOptions.GeneralOptions.CustomDefaultGeodatabase = null;
+        }
+
         if (ApplicationOptions.GeneralOptions.DefaultToolboxOption == OptionSetting.UseDefault)
+        {
           ApplicationOptions.GeneralOptions.CustomDefaultToolbox = null;
+        }
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.DownloadOptions
-      // cref: ArcGIS.Desktop.Core.DownloadOptions
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.AskForOfflineMapsLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.AskForUnpackOtherLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.AskForUnpackPPKXLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.OfflineMapsLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.OfflineMapsToProjectLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.StagingLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.UnpackOtherLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.UnpackOtherToProjectLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.UnpackPPKXLocation
       #region Get DownloadOptions
       {
         var staging = ApplicationOptions.DownloadOptions.StagingLocation;
@@ -2177,23 +2411,24 @@ namespace ProSnippets.ContentSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.DownloadOptions
       // cref: ArcGIS.Desktop.Core.DownloadOptions.StagingLocation
+      // cref: ArcGIS.Desktop.Core.ApplicationOptions.DownloadOptions
       #region Set Staging Location for Sharing and Publishing
       {
         ApplicationOptions.DownloadOptions.StagingLocation = @"D:\data\staging";
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.DownloadOptions
       // cref: ArcGIS.Desktop.Core.DownloadOptions.AskForUnpackPPKXLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.UnpackPPKXLocation
+      // cref: ArcGIS.Desktop.Core.ApplicationOptions.DownloadOptions
       #region Set DownloadOptions for PPKX
       {
         //Options are mutually exclusive.
 
         //Setting ApplicationOptions.DownloadOptions.AskForUnpackPPKXLocation = true
         //supersedes any value in ApplicationOptions.DownloadOptions.UnpackPPKXLocation
-        //and will prompt the user on an unpack. The value of 
+        //and will prompt the user on an unpack. The value of
         //ApplicationOptions.DownloadOptions.UnpackPPKXLocation will be unaffected
         //and is ignored. This is the same behavior as on the Pro UI.
         ApplicationOptions.DownloadOptions.AskForUnpackPPKXLocation = true;//override location
@@ -2208,12 +2443,16 @@ namespace ProSnippets.ContentSnippets
         //contains a valid path, set ApplicationOptions.DownloadOptions.AskForUnpackPPKXLocation
         //explicitly to false to use the UnpackPPKXLocation
         if (!string.IsNullOrEmpty(ApplicationOptions.DownloadOptions.UnpackPPKXLocation))
+        {
           ApplicationOptions.DownloadOptions.AskForUnpackPPKXLocation = false;
+        }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.DownloadOptions
       // cref: ArcGIS.Desktop.Core.DownloadOptions.UnpackOtherLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.AskForUnpackOtherLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.UnpackOtherToProjectLocation
+      // cref: ArcGIS.Desktop.Core.ApplicationOptions.DownloadOptions
       #region Set DownloadOptions for UnpackOther
       {
         //UnpackOther settings control unpacking of anything _other than_
@@ -2227,7 +2466,7 @@ namespace ProSnippets.ContentSnippets
         ApplicationOptions.DownloadOptions.UnpackOtherLocation = @"D:\data\for_other";
 
         //or...to use a location already stored in UnpackOtherLocation as the
-        //default without changing it, 
+        //default without changing it,
         //set ApplicationOptions.DownloadOptions.AskForUnpackOtherLocation and
         //ApplicationOptions.DownloadOptions.UnpackOtherToProjectLocation to false
         //explicitly. This is the same behavior as on the Pro UI.
@@ -2238,21 +2477,23 @@ namespace ProSnippets.ContentSnippets
         }
 
         //Setting ApplicationOptions.DownloadOptions.AskForUnpackOtherLocation to
-        //true overrides any UnpackOtherLocation value and sets 
+        //true overrides any UnpackOtherLocation value and sets
         //ApplicationOptions.DownloadOptions.UnpackOtherToProjectLocation to false.
         //This is the same behavior as on the Pro UI.
         ApplicationOptions.DownloadOptions.AskForUnpackOtherLocation = true;
 
         //Setting ApplicationOptions.DownloadOptions.UnpackOtherToProjectLocation to
-        //true overrides any UnpackOtherLocation value and sets 
+        //true overrides any UnpackOtherLocation value and sets
         //ApplicationOptions.DownloadOptions.AskForUnpackOtherLocation to false.
         //This is the same behavior as on the Pro UI.
         ApplicationOptions.DownloadOptions.UnpackOtherToProjectLocation = false;
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.DownloadOptions
       // cref: ArcGIS.Desktop.Core.DownloadOptions.OfflineMapsLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.AskForOfflineMapsLocation
+      // cref: ArcGIS.Desktop.Core.DownloadOptions.OfflineMapsToProjectLocation
+      // cref: ArcGIS.Desktop.Core.ApplicationOptions.DownloadOptions
       #region Set DownloadOptions for OfflineMaps
       {
         //OfflineMaps settings control where map content that is taken
@@ -2266,7 +2507,7 @@ namespace ProSnippets.ContentSnippets
         ApplicationOptions.DownloadOptions.OfflineMapsLocation = @"D:\data\for_offline";
 
         //or...to use a location already stored in OfflineMapsLocation as the
-        //default without changing it, 
+        //default without changing it,
         //set ApplicationOptions.DownloadOptions.AskForOfflineMapsLocation and
         //ApplicationOptions.DownloadOptions.OfflineMapsToProjectLocation to false
         //explicitly.
@@ -2277,13 +2518,13 @@ namespace ProSnippets.ContentSnippets
         }
 
         //Setting ApplicationOptions.DownloadOptions.AskForOfflineMapsLocation to
-        //true overrides any OfflineMapsLocation value and sets 
+        //true overrides any OfflineMapsLocation value and sets
         //ApplicationOptions.DownloadOptions.OfflineMapsToProjectLocation to false.
         //This is the same behavior as on the Pro UI.
         ApplicationOptions.DownloadOptions.AskForOfflineMapsLocation = true;
 
         //Setting ApplicationOptions.DownloadOptions.OfflineMapsToProjectLocation to
-        //true overrides any OfflineMapsLocation value and sets 
+        //true overrides any OfflineMapsLocation value and sets
         //ApplicationOptions.DownloadOptions.AskForOfflineMapsLocation to false.
         //This is the same behavior as on the Pro UI.
         ApplicationOptions.DownloadOptions.OfflineMapsToProjectLocation = true;
@@ -2291,7 +2532,6 @@ namespace ProSnippets.ContentSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.GeneralOptions
-      // cref: ArcGIS.Desktop.Core.GeneralOptions
       // cref: ArcGIS.Desktop.Core.GeneralOptions.PortalProjectCustomHomeFolder
       // cref: ArcGIS.Desktop.Core.GeneralOptions.PortalProjectCustomDefaultGeodatabase
       // cref: ArcGIS.Desktop.Core.GeneralOptions.PortalProjectCustomDefaultToolbox

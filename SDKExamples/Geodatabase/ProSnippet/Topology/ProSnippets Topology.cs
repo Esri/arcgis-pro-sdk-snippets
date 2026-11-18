@@ -1,9 +1,9 @@
-﻿using ArcGIS.Core.Data.Topology;
-using ArcGIS.Core.Data;
-using ArcGIS.Core.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArcGIS.Core.Data;
+using ArcGIS.Core.Data.Topology;
+using ArcGIS.Core.Geometry;
 
 namespace ProSnippets.GeoDatabaseSnippets.Topology
 {
@@ -22,11 +22,15 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
     public static void ProSnippetsTopologyAsync()
     {
       // cref: ArcGIS.Core.Data.Topology.Topology
-      // cref: ArcGIS.Core.Data.Topology.Topology.GetDefinition
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetDefinition()
       // cref: ArcGIS.Core.Data.Topology.TopologyDefinition
-      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetFeatureClassNames
-      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetClusterTolerance
-      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetZClusterTolerance
+      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetFeatureClassNames()
+      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetClusterTolerance()
+      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetZClusterTolerance()
+      // cref: ArcGIS.Core.Data.Dataset.GetName()
+      // cref: ArcGIS.Core.Data.FeatureClassDefinition.GetShapeType()
+      // cref: ArcGIS.Core.Data.Geodatabase.GetDefinition``1(System.String)
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
       #region Open topology and process definition
       {
         static void OpenTopologyAndProcessDefinition()
@@ -49,7 +53,7 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
 
           static void ProcessDefinition(Geodatabase geodatabase, ArcGIS.Core.Data.Topology.Topology topology)
           {
-            // Similar to the rest of the Definition objects in the Core.Data API, there are two ways to open a dataset's 
+            // Similar to the rest of the Definition objects in the Core.Data API, there are two ways to open a dataset's
             // definition -- via the Topology dataset itself or via the Geodatabase.
             using (TopologyDefinition definitionViaTopology = topology.GetDefinition())
             {
@@ -85,7 +89,7 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
       #endregion Open topology and process definition
 
 
-      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetRules
+      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetRules()
       // cref: ArcGIS.Core.Data.Topology.TopologyRule
       // cref: ArcGIS.Core.Data.Topology.TopologyRule.ID
       // cref: ArcGIS.Core.Data.Topology.TopologyRule.OriginClass
@@ -93,6 +97,9 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
       // cref: ArcGIS.Core.Data.Topology.TopologyRule.DestinationClass
       // cref: ArcGIS.Core.Data.Topology.TopologyRule.DestinationSubtype
       // cref: ArcGIS.Core.Data.Topology.TopologyRule.RuleType
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.Subtype.GetName()
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetDefinition()
       #region Get topology rules
       {
         static void GetTopologyRules()
@@ -124,11 +131,20 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
       #endregion Get topology rules
 
 
-      // cref: ArcGIS.Core.Data.Topology.ValidationDescription.#ctor
       // cref: ArcGIS.Core.Data.Topology.Topology.Validate(ArcGIS.Core.Data.Topology.ValidationDescription)
-      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent
-      // cref: ArcGIS.Core.Data.Topology.Topology.GetState
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent()
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetState()
       // cref: ArcGIS.Core.Data.Topology.ValidationResult
+      // cref: ArcGIS.Core.Data.Feature.GetShape()
+      // cref: ArcGIS.Core.Data.Feature.GetTable()
+      // cref: ArcGIS.Core.Data.FeatureClass.CreateRow(ArcGIS.Core.Data.RowBuffer)
+      // cref: ArcGIS.Core.Data.FeatureClass.GetDefinition()
+      // cref: ArcGIS.Core.Data.FeatureClassDefinition.GetShapeField()
+      // cref: ArcGIS.Core.Data.Geodatabase.ApplyEdits(System.Action)
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.Row.Delete()
+      // cref: ArcGIS.Core.Data.Table.CreateRowBuffer()
+      // cref: ArcGIS.Core.Data.Topology.ValidationResult.AffectedArea
       #region Validate topology
       {
         static void ValidateTopology()
@@ -163,7 +179,7 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
                 }
               }
 
-              // After creating a new feature in the 'Campsites' participating feature class, the topology's state should be 
+              // After creating a new feature in the 'Campsites' participating feature class, the topology's state should be
               // "Unanalyzed" because it has not been validated.
               Console.WriteLine($"The topology state after an edit has been applied => {topology.GetState()}");
 
@@ -206,6 +222,8 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
       // cref: ArcGIS.Core.Data.Topology.TopologyError.IsException
       // cref: ArcGIS.Core.Data.Topology.TopologyError.Shape
       // cref: ArcGIS.Core.Data.Topology.TopologyError.RuleID
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent()
       #region Process topology errors
       {
         static void ProcessTopologyErrors()
@@ -234,15 +252,16 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
 
       // cref: ArcGIS.Core.Data.Topology.Topology.MarkAsException(ArcGIS.Core.Data.Topology.TopologyError)
       // cref: ArcGIS.Core.Data.Topology.Topology.UnmarkAsException(ArcGIS.Core.Data.Topology.TopologyError)
-      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent
-      // cref: ArcGIS.Core.Data.Topology.Topology.GetErrors
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent()
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetErrors(ArcGIS.Core.Data.Topology.ErrorDescription)
       // cref: ArcGIS.Core.Data.Topology.TopologyRule.RuleType
-      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetRules
+      // cref: ArcGIS.Core.Data.Topology.TopologyDefinition.GetRules()
       // cref: ArcGIS.Core.Data.Topology.TopologyRuleType
       // cref: ArcGIS.Core.Data.Topology.ErrorDescription.TopologyRule
       // cref: ArcGIS.Core.Data.Topology.ErrorDescription.ErrorType
       // cref: ArcGIS.Core.Data.Topology.ErrorType
       // cref: ArcGIS.Core.Data.Topology.TopologyError
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetDefinition()
       #region Mark and unmark errors or exceptions
       {
         static void MarkAndUnmarkAsErrors(ArcGIS.Core.Data.Topology.Topology topology)
@@ -295,15 +314,17 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
 
 
       // cref: ArcGIS.Core.Data.Topology.Topology.BuildGraph(ArcGIS.Core.Geometry.Geometry,System.Action{ArcGIS.Core.Data.Topology.TopologyGraph})
-      // cref: ArcGIS.Core.Data.Topology.TopologyGraph.GetEdges
-      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetFromNode
-      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetToNode
-      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetLeftParentFeatures
-      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetRightParentFeatures
+      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetFromNode()
+      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetToNode()
+      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetLeftParentFeatures(System.Boolean)
+      // cref: ArcGIS.Core.Data.Topology.TopologyEdge.GetRightParentFeatures(System.Boolean)
       // cref: ArcGIS.Core.Data.Topology.TopologyNode
       // cref: ArcGIS.Core.Data.Topology.FeatureInfo
-      // cref: ArcGIS.Core.Data.Topology.FeatureInfo.FeatureClassName
-      // cref: ArcGIS.Core.Data.Topology.FeatureInfo.ObjectID
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.Topology.FeatureInfo.GetFeature()
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent()
+      // cref: ArcGIS.Core.Data.Topology.TopologyGraph.GetNodes(ArcGIS.Core.Data.Feature)
+      // cref: ArcGIS.Core.Data.Topology.TopologyNode.GetEdges(System.Boolean)
       #region Explore topology graph
       {
         static void ExploreTopologyGraph()
@@ -375,12 +396,14 @@ namespace ProSnippets.GeoDatabaseSnippets.Topology
 
 
       // cref: ArcGIS.Core.Data.Topology.TopologyGraph.FindClosestElement``1(ArcGIS.Core.Geometry.MapPoint,System.Double)
-      // cref: ArcGIS.Core.Data.Topology.Topology.BuildGraph
-      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent
+      // cref: ArcGIS.Core.Data.Topology.Topology.BuildGraph(ArcGIS.Core.Geometry.Geometry,System.Action{ArcGIS.Core.Data.Topology.TopologyGraph})
+      // cref: ArcGIS.Core.Data.Topology.Topology.GetExtent()
       // cref: ArcGIS.Core.Data.Topology.TopologyElement
-      // cref: ArcGIS.Core.Data.Topology.TopologyElement.GetParentFeatures
+      // cref: ArcGIS.Core.Data.Topology.TopologyElement.GetParentFeatures()
       // cref: ArcGIS.Core.Data.Topology.FeatureInfo.FeatureClassName
       // cref: ArcGIS.Core.Data.Topology.FeatureInfo.ObjectID
+      // cref: ArcGIS.Core.Data.Feature.GetShape()
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
       #region Find closest element from a topology graph
       {
         static void FindClosestElement()

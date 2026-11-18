@@ -30,18 +30,21 @@ namespace ProSnippets.EditingSnippets
 
     public static async void ProSnippetContextMenu()
     {
-      // cref: ArcGIS.Desktop.Framework.FrameworkApplication.ContextMenuDataContextAs``1
-      #region Retrieve SelectionSet from command added to Attribute Pane Context Menu  
-      // Retrieves the SelectionSet from a command that was added and executed from the Attribute Pane Context Menu 
+      #region Retrieve SelectionSet from command added to Attribute Pane Context Menu
+      // Retrieves the SelectionSet from a command that was added and executed from the Attribute Pane Context Menu
+      var selSet = FrameworkApplication.ContextMenuDataContextAs<SelectionSet>();
+      if (selSet == null)
+      {
+        return;
+      }
+
       await QueuedTask.Run(async () =>
       {
-        var selSet = FrameworkApplication.ContextMenuDataContextAs<SelectionSet>();
-        if (selSet == null)
-          return;
-
         int count = selSet.Count;
         if (count == 0)
+        {
           return;
+        }
 
         var op = new EditOperation
         {

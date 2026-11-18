@@ -16,22 +16,18 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Editing.Attributes;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProSnippets.MapAuthoringSnippets.Scene
 {
@@ -41,7 +37,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
   /// <remarks>
   /// The code snippets in this class are intended to be used as examples of how to work with Scenes in ArcGIS Pro.
   /// Each region in the method contains a specific code snippet that demonstrates a particular functionality.
-  /// Note that some methods may require to be launched on the ArcGIS Pro's Main CIM thread. These methods are marked in the code comments as requiring a QueuedTask to run.
+  /// Thread-affine operations are implemented with awaited <see cref="QueuedTask.Run"/> calls.
   /// CRefs are used for internal purposes only. Please ignore them in the context of this example.
   /// </remarks>
   public static partial class ProSnippetsMapAuthoring
@@ -53,7 +49,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
     /// layers such as  <see cref="BuildingSceneLayer"/>, <see cref="FeatureSceneLayer"/>, and <see
     /// cref="PointCloudSceneLayer"/>. It covers operations like setting filters, editing attributes, and managing
     /// renderers.  The method is intended to be run within the context of a queued task in ArcGIS Pro.</remarks>
-    public static void ProSnippetsScenes()
+    public static async Task ProSnippetsScenesAsync()
     {
       #region ignore - Variable initialization
       var sceneLayerUrl = @"https://myportal.com/server/rest/services/Hosted/SceneLayerServiceName/SceneServer";
@@ -75,13 +71,19 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.LayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
-      // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.#ctor(Uri)
+      // cref: ArcGIS.Desktop.Mapping.ILayerFactory.CreateLayer``1(ArcGIS.Desktop.Mapping.LayerCreationParams,ArcGIS.Desktop.Mapping.ILayerContainerEdit)
       // cref: ArcGIS.Desktop.Mapping.LayerCreationParams.IsVisible
       // cref: ArcGIS.Desktop.Mapping.LayerFactory
+      // cref: ArcGIS.Desktop.Mapping.LayerFactory.Instance
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Create a Scene Layer
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Create with initial visibility set to false. Add to current scene
           var createparams = new LayerCreationParams(new Uri(sceneLayerUrl, UriKind.Absolute))
@@ -91,13 +93,13 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
           //cast to specific type of scene layer being created - in this case FeatureSceneLayer
           var sceneLayer = LayerFactory.Instance.CreateLayer<Layer>(
-                   createparams, MapView.Active.Map) as FeatureSceneLayer;
+                   createparams, map) as FeatureSceneLayer;
           //or...specify the cast directly
           var sceneLayer2 = LayerFactory.Instance.CreateLayer<FeatureSceneLayer>(
-                   createparams, MapView.Active.Map);
+                   createparams, map);
           //ditto for BuildingSceneLayer, PointCloudSceneLayer, IntegratedMeshSceneLayer
           //...
-        }
+        });
       }
       #endregion
 
@@ -105,7 +107,11 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.BuildingDisciplineSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.BuildingDisciplineSceneLayer.GetDiscipline
+      // cref: ArcGIS.Desktop.Mapping.BuildingDisciplineSceneLayer.GetDiscipline()
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Get BuildingDisciplineSceneLayer Discipline
       {
         var bsl_discipline = MapView.Active.Map.GetLayersAsFlattenedList().OfType<BuildingDisciplineSceneLayer>().FirstOrDefault(l => l.Name == "Architectural");
@@ -115,9 +121,13 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
       // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer
       // cref: ArcGIS.Desktop.Mapping.BuildingDisciplineSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.BuildingDisciplineSceneLayer.GetDiscipline
-      // cref: ARCGIS.DESKTOP.MAPPING.COMPOSITELAYER.LAYERS
-      // cref: ARCGIS.DESKTOP.MAPPING.COMPOSITELAYER.FINDLAYERS
+      // cref: ArcGIS.Desktop.Mapping.BuildingDisciplineSceneLayer.GetDiscipline()
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayer.Layers
+      // cref: ArcGIS.Desktop.Mapping.CompositeLayer.FindLayers(System.String,System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Enumerate the Discipline Layers from a Building SceneLayer
       {
         var bldgLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<BuildingSceneLayer>().First();
@@ -156,7 +166,10 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
       // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer
       // cref: ArcGIS.Desktop.Mapping.MapMember.Name
-      #region Name of BuildingSceneLayer 
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
+      #region Name of BuildingSceneLayer
       {
         bsl = MapView.Active.Map.GetLayersAsFlattenedList()
               .OfType<BuildingSceneLayer>().FirstOrDefault();
@@ -164,10 +177,10 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetAvailableFieldsAndValues
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetAvailableFieldsAndValues()
       #region Query Building Scene Layer for available Types and Values
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var dict = bsl.GetAvailableFieldsAndValues();
 
@@ -182,17 +195,17 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           //get a list of existing floors or "levels"
           var floors = dict.SingleOrDefault(
                    kvp => kvp.Key == "BldgLevel").Value ?? new List<string>();
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.CreateDefaultFilter
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.CreateDefaultFilter()
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.FilterBlockDefinitions
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetFilters
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetFilters()
       // cref: ArcGIS.Desktop.Mapping.FilterBlockDefinition.SelectedValues
       #region Create a Default Filter and Get Filter Count
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var filter1 = bsl.CreateDefaultFilter();
           var values = filter1.FilterBlockDefinitions[0].SelectedValues;
@@ -201,17 +214,17 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
           //There will be at least one filter after "CreateDefaultFilter()" call
           var filtersCount = bsl.GetFilters().Count;
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetFilters
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetFilters()
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.FilterBlockDefinitions
       // cref: ArcGIS.Desktop.Mapping.FilterBlockDefinition.FilterBlockMode
       // cref: ArcGIS.Core.CIM.Object3DRenderingMode
       #region Get all the Filters that Contain WireFrame Blocks
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Note: wire_frame_filters can be null in this example
           var wire_frame_filters = bsl.GetFilters().Where(
@@ -222,32 +235,35 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           //fb.FilterBlockMode == Object3DRenderingMode.Wireframe &&
           //fb.FilterBlockMode == Object3DRenderingMode.None
           //for blocks with both
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.HasFilter
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.SetActiveFilter
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetActiveFilter
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.ClearActiveFilter
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.HasFilter(System.String)
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.SetActiveFilter(System.String)
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetActiveFilter()
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.ClearActiveFilter()
+      // cref: ArcGIS.Desktop.Mapping.FilterDefinition.ID
       #region Set and Clear Active Filter for BuildingSceneLayer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Note: Use HasFilter to check if a given filter id exists in the layer
           if (bsl.HasFilter(filter.ID))
+          {
             bsl.SetActiveFilter(filter.ID);
+          }
+
           var activeFilter = bsl.GetActiveFilter();
 
           //Clear the active filter
           bsl.ClearActiveFilter();
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetFilter
-      // cref: ArcGIS.Desktop.Mapping.FilterDefinition.ID
-      #region Get BuildingSceneLayer Filter ID and Filter    
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetFilter(System.String)
+      #region Get BuildingSceneLayer Filter ID and Filter
       {
         var filterDefinition = bsl.GetFilter(filterID);
         //or via Linq
@@ -255,24 +271,24 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.UpdateFilter
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.UpdateFilter(ArcGIS.Desktop.Mapping.FilterDefinition)
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.Name
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.Description
       #region Modify BuildingSceneLayer Filter Name and Description
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
 
           filter.Name = "Updated Filter Name";
           filter.Description = "Updated Filter description";
           bsl.UpdateFilter(filter);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetAvailableFieldsAndValues
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.UpdateFilter
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.SetActiveFilter
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.GetAvailableFieldsAndValues()
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.UpdateFilter(ArcGIS.Desktop.Mapping.FilterDefinition)
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.SetActiveFilter(System.String)
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.Name
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.Description
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.ID
@@ -282,7 +298,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       // cref: ArcGIS.Desktop.Mapping.FilterBlockDefinition.SelectedValues
       #region Create a Filter using Building Level and Category
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //refer to "Query Building Scene Layer for available Types and Values
           var dict = bsl.GetAvailableFieldsAndValues();
@@ -317,18 +333,18 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           bsl.UpdateFilter(fd);
           //Set it active. The ID is auto-generated
           bsl.SetActiveFilter(fd.ID);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.UpdateFilter
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.UpdateFilter(ArcGIS.Desktop.Mapping.FilterDefinition)
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.FilterBlockDefinitions
       // cref: ArcGIS.Desktop.Mapping.FilterBlockDefinition.FilterBlockMode
       // cref: ArcGIS.Desktop.Mapping.FilterBlockDefinition.SelectedValues
       // cref: ArcGIS.Core.CIM.Object3DRenderingMode
       #region Modify BuildingSceneLayer Filter Block
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var filterBlock = new FilterBlockDefinition();
           filterBlock.FilterBlockMode = Object3DRenderingMode.Wireframe;
@@ -342,24 +358,26 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           //Overwrite
           filter.FilterBlockDefinitions = new List<FilterBlockDefinition>() { filterBlock };
           bsl.UpdateFilter(filter);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.HasFilter
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.RemoveFilter
-      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.RemoveAllFilters
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.HasFilter(System.String)
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.RemoveFilter(System.String)
+      // cref: ArcGIS.Desktop.Mapping.BuildingSceneLayer.RemoveAllFilters()
       // cref: ArcGIS.Desktop.Mapping.FilterDefinition.ID
       #region Remove BuildingSceneLayer Filter
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Note: Use HasFilter to check if a given filter id exists in the layer
           if (bsl.HasFilter(filter.ID))
+          {
             bsl.RemoveFilter(filter.ID);
+          }
           //Or remove all filters
           bsl.RemoveAllFilters();
-        }
+        });
       }
       #endregion
 
@@ -368,6 +386,9 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.IsEditable
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Determine if a FeatureSceneLayer supports editing
       {
         featSceneLayer = MapView.Active.Map.GetLayersAsFlattenedList()
@@ -383,7 +404,6 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.IsEditable
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.ShapeType
       #region Create a new Point feature in FeatureSceneLayer
       {
         //must support editing!
@@ -411,14 +431,16 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.IsEditable
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetSelection
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetSelection()
       // cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
       #region Delete all the selected features in FeatureSceneLayer
       {
         if (!featSceneLayer.HasAssociatedFeatureService ||
           !featSceneLayer.IsEditable)
+        {
           return;
-        // Note: call within QueuedTask.Run()
+        }
+        await QueuedTask.Run(() =>
         {
           var delOp = new EditOperation()
           {
@@ -427,22 +449,24 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           //Assuming we have a selection on the layer...
           delOp.Delete(featSceneLayer, featSceneLayer.GetSelection().GetObjectIDs());
           delOp.ExecuteAsync();
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.IsEditable
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
       #region Edit the attributes of a FeatureSceneLayer
       {
         //must support editing!
         if (!featSceneLayer.HasAssociatedFeatureService ||
             !featSceneLayer.IsEditable)
+        {
           return;
+        }
 
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var editOp = new EditOperation()
           {
@@ -456,7 +480,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           inspector["PermitNotes"] = "test";//modify
           editOp.Modify(inspector);
           editOp.Execute();//synchronous flavor
-        }
+        });
       }
       #endregion
 
@@ -464,7 +488,11 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer
-      #region Name of FeatureSceneLayer 
+      // cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
+      #region Name of FeatureSceneLayer
       {
         featSceneLayer = MapView.Active.Map.GetLayersAsFlattenedList()
                          .OfType<FeatureSceneLayer>().FirstOrDefault();
@@ -474,10 +502,10 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
 
       // cref: ArcGIS.Desktop.Mapping.SceneLayerDataSourceType
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetDataSourceType
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetDataSourceType()
       #region Get the Data Source type
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var dataSourceType = featSceneLayer?.GetDataSourceType() ??
                                    SceneLayerDataSourceType.Unknown;
@@ -489,15 +517,15 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           {
             //Hosted service - can have live attributes - check HasAssociatedFeatureService
           }
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetFeatureClass
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetFeatureClass()
       #region Get the Associated Feature class
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           if (featSceneLayer.HasAssociatedFeatureService)
           {
@@ -506,24 +534,24 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
               //TODO query underlying feature class
             }
           }
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetFieldDescriptions
-      // cref: ARCGIS.DESKTOP.MAPPING.FIELDDESCRIPTION.ISREADONLY
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetFieldDescriptions()
+      // cref: ArcGIS.Desktop.Mapping.FieldDescription.IsReadOnly
       #region Get Field Definitions
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Get only the readonly fields
           var readOnlyFields = featSceneLayer.GetFieldDescriptions()
                                     .Where(fdesc => fdesc.IsReadOnly);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.SetDefinitionQuery
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.SetDefinitionQuery(System.String)
       #region Set a Definition Query
       {
         featSceneLayer.SetDefinitionQuery("Name = 'Ponderosa Pine'");
@@ -531,18 +559,24 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
-      // cref: ArcGIS.Desktop.Mapping.MapView.SelectFeaturesEx
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load
+      // cref: ArcGIS.Desktop.Mapping.MapView.SelectFeaturesEx(ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.SelectionCombinationMethod,System.Boolean,System.Boolean)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary``1()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
       #region Select features via the MapView
       {
-        //assume the geometry used in SelectFeaturesEx() is coming from a 
+        //assume the geometry used in SelectFeaturesEx() is coming from a
         //map tool...
         //SketchType = SketchGeometryType.Rectangle;
         //SketchOutputMode = SketchOutputMode.Screen;
 
-        // Note: call within QueuedTask.Run()
+        var mapView = MapView.Active;
+        if (mapView == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
-          var result = MapView.Active.SelectFeaturesEx(geometry);
+          var result = mapView.SelectFeaturesEx(geometry);
           //Get scene layers with selections
           var scene_layers = result.ToDictionary<FeatureSceneLayer>();
           foreach (var kvp in scene_layers)
@@ -560,7 +594,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
               }
             }
           }
-        }
+        });
       }
       #endregion
 
@@ -577,18 +611,20 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.FeatureSceneLayerType
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.Search
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.Search(ArcGIS.Core.Data.QueryFilter)
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayerType
       #region Search Rows on the FeatureSceneLayer
       {
         if (!featSceneLayer.HasAssociatedFeatureService)
+        {
           return;//Search and Select not supported
+        }
 
         //Multipatch (Object3D) or point?
-        //var is3dObject = ((ISceneLayerInfo)featSceneLayer).SceneServiceLayerType 
+        //var is3dObject = ((ISceneLayerInfo)featSceneLayer).SceneServiceLayerType
         //                                  == esriSceneServiceLayerType.Object3D;
         var is3dObject = featSceneLayer.FeatureSceneLayerType == FeatureSceneLayerType.Object3D;
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var queryFilter = new QueryFilter
           {
@@ -619,22 +655,23 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
               }
             }
           }
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HideSelectedFeatures
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.ShowHiddenFeatures
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HideSelectedFeatures()
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.ShowHiddenFeatures()
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.SelectionCount
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.Select
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayerType
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.Select(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.SelectionCombinationMethod)
       #region Hide Selected features and Show Hidden features
       {
         if (featSceneLayer.HasAssociatedFeatureService)
+        {
           return;//Search and Select not supported
+        }
 
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           QueryFilter qf = new QueryFilter()
           {
@@ -648,22 +685,28 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
           featSceneLayer.ShowHiddenFeatures();
           selectionCount = featSceneLayer.SelectionCount;
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.MapView.SelectFeaturesEx
-      // cref: ArcGIS.Desktop.Mapping.MapView.GetViewSize
-      // cref: ArcGIS.Desktop.Mapping.Map.ClearSelection
+      // cref: ArcGIS.Desktop.Mapping.MapView.SelectFeaturesEx(ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Mapping.SelectionCombinationMethod,System.Boolean,System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.MapView.GetViewSize()
+      // cref: ArcGIS.Desktop.Mapping.Map.ClearSelection()
+      // cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Use MapView Selection SelectFeaturesEx or GetFeaturesEx
       {
         var sname = featSceneLayer.Name;
+        var mapView = MapView.Active;
+        if (mapView == null)
+          return;
 
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Select all features within the current map view
-          var sz = MapView.Active.GetViewSize();
+          var sz = mapView.GetViewSize();
 
           var c_ll = new Coordinate2D(0, 0);
           var c_ur = new Coordinate2D(sz.Width, sz.Height);
@@ -672,96 +715,109 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
 
           //HasAssociatedFeatureService does not matter for SelectFeaturesEx
           //or GetFeaturesEx
-          var result = MapView.Active.SelectFeaturesEx(env);
-          //var result = MapView.Active.GetFeaturesEx(env);
+          var result = mapView.SelectFeaturesEx(env);
+          //var result = mapView.GetFeaturesEx(env);
 
           //The list of object ids from SelectFeaturesEx
           var oids1 = result.ToDictionary().Where(kvp => kvp.Key.Name == sname).First().Value;
           //TODO - use the object ids
 
-          MapView.Active.Map.ClearSelection();
-        }
+          mapView.Map.ClearSelection();
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.HasAssociatedFeatureService
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetFeatureClass
-      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.Search
-      // cref: ArcGIS.Core.Data.FeatureClass.GetDefinition
-      // cref: ArcGIS.Core.Data.FeatureClassDefinition.GetSpatialReference
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Project
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.GetFeatureClass()
+      // cref: ArcGIS.Core.Data.FeatureClass.GetDefinition()
+      // cref: ArcGIS.Core.Data.FeatureClassDefinition.GetSpatialReference()
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.Project(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.SpatialReference)
       // cref: ArcGIS.Core.Data.SpatialQueryFilter
       // cref: ArcGIS.Core.Data.SpatialQueryFilter.FilterGeometry
       // cref: ArcGIS.Core.Data.SpatialQueryFilter.SpatialRelationship
       // cref: ArcGIS.Core.Data.QueryFilter.SubFields
       // cref: ArcGIS.Core.Data.SpatialRelationship
-      // cref: ArcGIS.Core.Data.Selection.Search
-      // cref: ArcGIS.Core.Data.Selection.GetCount
-      // cref: ArcGIS.Desktop.Mapping.MapView.GetViewSize
-      // cref: ArcGIS.Desktop.Mapping.MapView.ClientToMap
-      // cref: ArcGIS.Desktop.Mapping.Map.ClearSelection
+      // cref: ArcGIS.Core.Data.Selection.Search(ArcGIS.Core.Data.QueryFilter,System.Boolean)
+      // cref: ArcGIS.Core.Data.Selection.GetCount()
+      // cref: ArcGIS.Desktop.Mapping.MapView.GetViewSize()
+      // cref: ArcGIS.Desktop.Mapping.MapView.ClientToMap(System.Windows.Point)
+      // cref: ArcGIS.Desktop.Mapping.Map.ClearSelection()
+      // cref: ArcGIS.Desktop.Mapping.FeatureSceneLayer.Select(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.SelectionCombinationMethod)
+      // cref: ArcGIS.Desktop.Mapping.Map.SpatialReference
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Use Select or Search with a Spatial Query
-      // Note: call within QueuedTask.Run()
       {
-        if (!featSceneLayer.HasAssociatedFeatureService)
-          return;//no search or select
+        var mapView = MapView.Active;
+        if (mapView == null)
+          return;
 
-        //Select all features within the current map view
-        var sz = MapView.Active.GetViewSize();
-        var map_pt1 = MapView.Active.ClientToMap(new System.Windows.Point(0, sz.Height));
-        var map_pt2 = MapView.Active.ClientToMap(new System.Windows.Point(sz.Width, 0));
-
-        //Convert to an envelope
-        var temp_env = EnvelopeBuilderEx.CreateEnvelope(map_pt1, map_pt2, MapView.Active.Map.SpatialReference);
-
-        //Project if needed to the layer spatial ref
-        SpatialReference sr = null;
-        using (var fc = featSceneLayer.GetFeatureClass())
-        using (var fdef = fc.GetDefinition())
-          sr = fdef.GetSpatialReference();
-
-        var env = GeometryEngine.Instance.Project(temp_env, sr) as Envelope;
-
-        //Set up a query filter
-        var sf = new SpatialQueryFilter()
+        await QueuedTask.Run(() =>
         {
-          FilterGeometry = env,
-          SpatialRelationship = SpatialRelationship.Intersects,
-          SubFields = "*"
-        };
-
-        //Select against the feature service
-        var select = featSceneLayer.Select(sf);
-        if (select.GetCount() > 0)
-        {
-          //enumerate over the selected features
-          using (var rc = select.Search())
+          if (!featSceneLayer.HasAssociatedFeatureService)
           {
-            while (rc.MoveNext())
+            return;//no search or select
+          }
+
+          //Select all features within the current map view
+          var sz = mapView.GetViewSize();
+          var map_pt1 = mapView.ClientToMap(new System.Windows.Point(0, sz.Height));
+          var map_pt2 = mapView.ClientToMap(new System.Windows.Point(sz.Width, 0));
+
+          //Convert to an envelope
+          var temp_env = EnvelopeBuilderEx.CreateEnvelope(map_pt1, map_pt2, mapView.Map.SpatialReference);
+
+          //Project if needed to the layer spatial ref
+          SpatialReference sr = null;
+          using (var fc = featSceneLayer.GetFeatureClass())
+          using (var fdef = fc.GetDefinition())
+          {
+            sr = fdef.GetSpatialReference();
+          }
+
+          var env = GeometryEngine.Instance.Project(temp_env, sr) as Envelope;
+
+          //Set up a query filter
+          var sf = new SpatialQueryFilter()
+          {
+            FilterGeometry = env,
+            SpatialRelationship = SpatialRelationship.Intersects,
+            SubFields = "*"
+          };
+
+          //Select against the feature service
+          var select = featSceneLayer.Select(sf);
+          if (select.GetCount() > 0)
+          {
+            //enumerate over the selected features
+            using (var rc = select.Search())
             {
-              using (var feature = rc.Current as Feature)
+              while (rc.MoveNext())
               {
-                oid = feature.GetObjectID();
-                //etc.
+                using (var feature = rc.Current as Feature)
+                {
+                  oid = feature.GetObjectID();
+                  //etc.
+                }
               }
             }
           }
-        }
-        MapView.Active.Map.ClearSelection();
+          mapView.Map.ClearSelection();
+        });
       }
       #endregion
 
       #region ProSnippet Group: PointCloudSceneLayer
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer
-      #region Name of PointCloudSceneLayer 
+      // cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      #region Name of PointCloudSceneLayer
       {
         var scenelayerName = pointCloudSceneLayer?.Name;
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetDataSourceType
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetDataSourceType()
       // cref: ArcGIS.Desktop.Mapping.SceneLayerDataSourceType
       #region Get Data Source type for PointCloudSceneLayer
       {
@@ -777,27 +833,27 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailableClassCodesAndLabels
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailableClassCodesAndLabels()
       #region Query all class codes and labels in the PointCloudSceneLayer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           Dictionary<int, string> classCodesAndLabels =
                           pointCloudSceneLayer.GetAvailableClassCodesAndLabels();
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailableClassCodesAndLabels
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailableClassCodesAndLabels()
       // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition
       // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ClassCodes
       // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ReturnValues
-      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ToCIM
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetFilters
+      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ToCIM()
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetFilters(System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMPointCloudFilter})
       // cref: ArcGIS.Core.CIM.PointCloudReturnType
       #region Set a Filter for PointCloudSceneLayer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Retrieve the available classification codes
           var dict = pointCloudSceneLayer.GetAvailableClassCodesAndLabels();
@@ -812,18 +868,20 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           };
           //apply the filter
           pointCloudSceneLayer.SetFilters(filterDef.ToCIM());
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ClassFlags
-      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.FromCIM
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetFilters
+      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.FromCIM(System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMPointCloudFilter})
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetFilters(System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMPointCloudFilter})
       // cref: ArcGIS.Desktop.Mapping.ClassFlag
       // cref: ArcGIS.Desktop.Mapping.ClassFlagOption
+      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ToCIM()
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetFilters()
       #region Update the ClassFlags for PointCloudSceneLayer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var filters = pointCloudSceneLayer.GetFilters();
           PointCloudFilterDefinition fdef = null;
@@ -848,13 +906,13 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           }
           //apply
           pointCloudSceneLayer.SetFilters(fdef.ToCIM());
-        }
+        });
       }
       #endregion
 
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.FromCIM
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetFilters
+      // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.FromCIM(System.Collections.Generic.IEnumerable{ArcGIS.Core.CIM.CIMPointCloudFilter})
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetFilters()
       // cref: ArcGIS.Desktop.Mapping.PointCloudFilterDefinition.ReturnValues
       // cref: ArcGIS.Core.CIM.PointCloudReturnType
       // cref: ArcGIS.Core.CIM.CIMPointCloudFilter
@@ -863,7 +921,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       // cref: ArcGIS.Core.CIM.CIMPointCloudBitFieldFilter
       #region Get the filters for PointCloudSceneLayer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           IReadOnlyList<CIMPointCloudFilter> updatedFilter = pointCloudSceneLayer.GetFilters();
           foreach (var f in updatedFilter)
@@ -885,63 +943,69 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
               // do something
             }
           }
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.ClearFilters
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.ClearFilters()
       #region Clear filters in PointCloudSceneLayer
       {
-        // Note: call within QueuedTask.Run()
-        pointCloudSceneLayer.ClearFilters();
+        await QueuedTask.Run(() =>
+        {
+          pointCloudSceneLayer.ClearFilters();
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetRenderer
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetRenderer()
       // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.RendererType
       // cref: ArcGIS.Desktop.Mapping.PointCloudRendererType
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer
       #region Get PointCloudSceneLayer Renderer and RendererType
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           CIMPointCloudRenderer cimGetPCLRenderer = pointCloudSceneLayer.GetRenderer();
           //Can be one of Unknown, Stretch, ClassBreaks, UniqueValue, RGB
           PointCloudRendererType pclRendererType = pointCloudSceneLayer.RendererType;
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailablePointCloudRendererFields
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailablePointCloudRendererFields(ArcGIS.Desktop.Mapping.PointCloudRendererType)
       // cref: ArcGIS.Desktop.Mapping.PointCloudRendererType
       #region Query PointCloudSceneLayer Renderer fields
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           IReadOnlyList<string> flds = pointCloudSceneLayer.GetAvailablePointCloudRendererFields(
                                 PointCloudRendererType.UniqueValueRenderer);
           var fldCount = flds.Count;
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailablePointCloudRendererFields
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailablePointCloudRendererFields(ArcGIS.Desktop.Mapping.PointCloudRendererType)
       // cref: ArcGIS.Desktop.Mapping.PointCloudRendererType
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.CreateRenderer
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetRenderer
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.CreateRenderer(ArcGIS.Desktop.Mapping.PointCloudRendererDefinition)
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetRenderer(ArcGIS.Core.CIM.CIMPointCloudRenderer)
       // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem
       // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem.ColorRamp
       // cref: ArcGIS.Core.CIM.CIMPointCloudStretchRenderer
       // cref: ArcGIS.Core.CIM.CIMPointCloudStretchRenderer.ColorRamp
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer.ColorModulation
-      // cref: ArcGIS.Core.CIM.CIMColorRamp
       // cref: ArcGIS.Core.CIM.CIMColorModulationInfo
       // cref: ArcGIS.Core.CIM.CIMColorModulationInfo.MinValue
       // cref: ArcGIS.Core.CIM.CIMColorModulationInfo.MaxValue
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.SEARCHCOLORRAMPS
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchColorRamps(System.String)
+      // cref: ArcGIS.Desktop.Mapping.PointCloudRendererDefinition.Field
       #region Create and Set a Stretch Renderer
       {
-        // Note: call within QueuedTask.Run()
+        var currentProject = Project.Current;
+        if (currentProject == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           var fields = pointCloudSceneLayer.GetAvailablePointCloudRendererFields(
                                   PointCloudRendererType.StretchRenderer);
@@ -955,7 +1019,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           var stretchRenderer = pointCloudSceneLayer.CreateRenderer(stretchDef)
                                               as CIMPointCloudStretchRenderer;
           //Apply a color ramp
-          var style = Project.Current.GetItems<StyleProjectItem>()
+          var style = currentProject.GetItems<StyleProjectItem>()
                                           .First(s => s.Name == "ArcGIS Colors");
           var colorRamp = style.SearchColorRamps("").First();
           stretchRenderer.ColorRamp = colorRamp.ColorRamp;
@@ -967,28 +1031,33 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           };
           //apply the renderer
           pointCloudSceneLayer.SetRenderer(stretchRenderer);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailablePointCloudRendererFields
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.CreateRenderer
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetRenderer
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.GetAvailablePointCloudRendererFields(ArcGIS.Desktop.Mapping.PointCloudRendererType)
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.CreateRenderer(ArcGIS.Desktop.Mapping.PointCloudRendererDefinition)
+      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer.SetRenderer(ArcGIS.Core.CIM.CIMPointCloudRenderer)
       // cref: ArcGIS.Desktop.Mapping.PointCloudRendererType
       // cref: ArcGIS.Desktop.Mapping.PointCloudRendererDefinition.Field
       // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem
       // cref: ArcGIS.Desktop.Mapping.ColorRampStyleItem.ColorRamp
-      // cref: ARCGIS.DESKTOP.MAPPING.STYLEHELPER.LOOKUPITEM
-      // cref: ArcGIS.Desktop.Mapping.ColorFactory.GenerateColorsFromColorRamp
+      // cref: ArcGIS.Desktop.Mapping.StyleHelper.LookupItem(ArcGIS.Desktop.Mapping.StyleItemType,System.String)
+      // cref: ArcGIS.Desktop.Mapping.IColorFactory.GenerateColorsFromColorRamp(ArcGIS.Core.CIM.CIMColorRamp,System.Int32)
       // cref: ArcGIS.Core.CIM.CIMPointCloudClassBreaksRenderer
       // cref: ArcGIS.Core.CIM.CIMPointCloudClassBreaksRenderer.Breaks
       // cref: ArcGIS.Core.CIM.CIMColorClassBreak
       // cref: ArcGIS.Core.CIM.CIMColorClassBreak.UpperBound
       // cref: ArcGIS.Core.CIM.CIMColorClassBreak.Label
       // cref: ArcGIS.Core.CIM.CIMColorClassBreak.Color
+      // cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
       #region Create and Set a ClassBreaks Renderer
       {
-        // Note: call within QueuedTask.Run()
+        var currentProject = Project.Current;
+        if (currentProject == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           var fields = pointCloudSceneLayer.GetAvailablePointCloudRendererFields(
                              PointCloudRendererType.ClassBreaksRenderer);
@@ -1002,7 +1071,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           var cbr = pointCloudSceneLayer.CreateRenderer(classBreakDef)
                                     as CIMPointCloudClassBreaksRenderer;
           //Set up a color scheme to use
-          var style = Project.Current.GetItems<StyleProjectItem>()
+          var style = currentProject.GetItems<StyleProjectItem>()
                                      .First(s => s.Name == "ArcGIS Colors");
           var rampStyle = style.LookupItem(
             StyleItemType.ColorRamp, "Spectrum By Wavelength-Full Bright_Multi-hue_2")
@@ -1033,16 +1102,15 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           }
           cbr.Breaks = classBreaks.ToArray();
           pointCloudSceneLayer.SetRenderer(cbr);
-        }
+        });
       }
       #endregion
 
       #region ProSnippet Group: PointCloudSceneLayer Extended Properties
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition
-      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       // cref: ArcGIS.Core.CIM.CIMPointCloudLayer
       // cref: ArcGIS.Core.CIM.CIMPointCloudLayer.Renderer
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer.ColorModulation
@@ -1051,13 +1119,15 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       // cref: ArcGIS.Core.CIM.CIMColorModulationInfo.MaxValue
       #region Edit Color Modulation
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var def = pointCloudSceneLayer.GetDefinition() as CIMPointCloudLayer;
           //Get the ColorModulation off the renderer
           var modulation = def.Renderer.ColorModulation;
           if (modulation == null)
+          {
             modulation = new CIMColorModulationInfo();
+          }
           //Set the minimum and maximum intensity as needed
           modulation.MinValue = 0;
           modulation.MaxValue = 100.0;
@@ -1065,13 +1135,12 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           def.Renderer.ColorModulation = modulation;
           //Commit changes back to the CIM
           pointCloudSceneLayer.SetDefinition(def);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition
-      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       // cref: ArcGIS.Core.CIM.CIMPointCloudLayer.Renderer
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer.PointSizeAlgorithm
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer.PointShape
@@ -1081,7 +1150,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       // cref: ArcGIS.Core.CIM.CIMPointCloudFixedSizeAlgorithm.Size
       #region Edit The Renderer to use Fixed Size
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var def = pointCloudSceneLayer.GetDefinition() as CIMPointCloudLayer;
 
@@ -1095,13 +1164,12 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           def.Renderer.PointSizeAlgorithm = pointSize;
           //Commit changes back to the CIM
           pointCloudSceneLayer.SetDefinition(def);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition
-      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       // cref: ArcGIS.Core.CIM.CIMPointCloudLayer.Renderer
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer.PointSizeAlgorithm
       // cref: ArcGIS.Core.CIM.CIMPointCloudRenderer.PointShape
@@ -1111,7 +1179,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
       // cref: ArcGIS.Core.CIM.CIMPointCloudSplatAlgorithm.ScaleFactor
       #region Edit the Renderer to Scale Size
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var def = pointCloudSceneLayer.GetDefinition() as CIMPointCloudLayer;
 
@@ -1125,18 +1193,17 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           def.Renderer.PointSizeAlgorithm = scaleSize;
           //Commit changes back to the CIM
           pointCloudSceneLayer.SetDefinition(def);
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.PointCloudSceneLayer
-      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition
-      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       // cref: ArcGIS.Core.CIM.CIMPointCloudLayer.PointsBudget
       // cref: ArcGIS.Core.CIM.CIMPointCloudLayer.PointsPerInch
       #region Edit Density settings
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           var def = pointCloudSceneLayer.GetDefinition() as CIMPointCloudLayer;
           //PointsBudget - corresponds to Display Limit on the UI
@@ -1148,7 +1215,7 @@ namespace ProSnippets.MapAuthoringSnippets.Scene
           def.PointsPerInch = 15;
           //Commit changes back to the CIM
           pointCloudSceneLayer.SetDefinition(def);
-        }
+        });
       }
       #endregion
 

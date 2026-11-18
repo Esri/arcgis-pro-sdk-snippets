@@ -18,9 +18,9 @@
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace ProSnippets.GeometrySnippets.Engine
 {
@@ -38,7 +38,7 @@ namespace ProSnippets.GeometrySnippets.Engine
     #region ProSnippet Group: GeometryEngine functions
     #endregion
 
-    public static void GeometryEngineProSnippets()
+    public static async Task GeometryEngineProSnippetsAsync()
     {
       #region ignore - Variable initialization
       Polyline polyline;
@@ -48,13 +48,16 @@ namespace ProSnippets.GeometrySnippets.Engine
 
       #endregion Variable initialization
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.AccelerateForRelationalOperations(ArcGIS.Core.Geometry.Geometry)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.AccelerateForRelationalOperations(ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.Contains(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.Crosses(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.Within(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
       #region Accelerate Geometries
       {
-        // Use acceleration to speed up relational operations.  Accelerate your source geometry only if you are going to test many other geometries against it. 
+        // Use acceleration to speed up relational operations.  Accelerate your source geometry only if you are going to test many other geometries against it.
         // Acceleration is applicable for polylines and polygons only. Note that accelerated geometries take more memory so if you aren't going to get any
-        // benefit from accelerating it, don't do it. 
+        // benefit from accelerating it, don't do it.
 
         // The performance of the following GeometryEngine functions are the only ones which can be improved with an accelerated geometry.
         //    GeometryEngine.Instance.Contains
@@ -68,7 +71,7 @@ namespace ProSnippets.GeometrySnippets.Engine
         //    GeometryEngine.Instance.Within
 
 
-        // Note: Needs QueuedTask to run
+        await QueuedTask.Run(() =>
         {
           // accelerate the geometry to test
           var acceleratedPoly = GeometryEngine.Instance.AccelerateForRelationalOperations(polygon);
@@ -82,12 +85,14 @@ namespace ProSnippets.GeometrySnippets.Engine
 
             // do something with the results...
           }
-        }
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Area(ArcGIS.Core.Geometry.Geometry)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.Area(ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.IGeometryEngine.SimplifyAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.FromJson(System.String)
       #region Determine area of a polygon
       {
         var g1 = PolygonBuilderEx.FromJson("{\"rings\": [ [ [0, 0], [10, 0], [10, 10], [0, 10] ] ] }");
@@ -98,8 +103,10 @@ namespace ProSnippets.GeometrySnippets.Engine
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Boundary(ArcGIS.Core.Geometry.Geometry)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.Boundary(ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.MultipartBuilderEx.AddPart(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D})
+      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.ToGeometry()
       #region Determine the boundary of a multi-part Polygon
       {
         // create a donut polygon.  Must use the PolygonBuilderEx object
@@ -129,7 +136,7 @@ namespace ProSnippets.GeometrySnippets.Engine
         // get the polygon
         donut = pb.ToGeometry();
 
-        // get the boundary 
+        // get the boundary
         Geometry g = GeometryEngine.Instance.Boundary(donut);
         Polyline boundary = g as Polyline;
 
@@ -137,8 +144,10 @@ namespace ProSnippets.GeometrySnippets.Engine
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Buffer(ArcGIS.Core.Geometry.Geometry,System.Double)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.Buffer(ArcGIS.Core.Geometry.Geometry,System.Double)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
       #region Buffer a MapPoint
       {
         // buffer a point
@@ -148,9 +157,11 @@ namespace ProSnippets.GeometrySnippets.Engine
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Buffer(ArcGIS.Core.Geometry.Geometry,System.Double)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.Buffer(ArcGIS.Core.Geometry.Geometry,System.Double)
       // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.CreateCircularArc(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
       #region Buffer a Circular Arc
       {
         // create the circular arc
@@ -166,8 +177,9 @@ namespace ProSnippets.GeometrySnippets.Engine
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Buffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.Buffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
       #region Buffer multiple MapPoints
       {
         // creates a buffer around each MapPoint
@@ -185,8 +197,12 @@ namespace ProSnippets.GeometrySnippets.Engine
       }
       #endregion
 
-      // cref: ArcGIS.Core.Geometry.GeometryEngine.Buffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double)
       // cref: ArcGIS.Core.Geometry.IGeometryEngine.Buffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double)
+      // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+      // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
       #region Buffer many different Geometry Types
       {
         List<Coordinate2D> coords =
@@ -210,8 +226,10 @@ namespace ProSnippets.GeometrySnippets.Engine
       #endregion
 
       {
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.CalculateNonSimpleZs(ArcGIS.Core.Geometry.Multipart,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.CalculateNonSimpleZs(ArcGIS.Core.Geometry.Multipart,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Interpolate Z values on a polyline
         {
           List<Coordinate3D> coords2 =
@@ -230,9 +248,9 @@ namespace ProSnippets.GeometrySnippets.Engine
 
           // polyline.HasZ = true
           // polyline.Points[1].HasZ = true
-          // polyline.Points[1].Z  = NaN   
+          // polyline.Points[1].Z  = NaN
           // polyline.Points[4].HasZ = true
-          // polyline.Points[4].Z  = NaN   
+          // polyline.Points[4].Z  = NaN
 
           Polyline polylineNoNaNZs = GeometryEngine.Instance.CalculateNonSimpleZs(polyline, 0) as Polyline;
 
@@ -243,8 +261,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.CalculateNonSimpleMs(ArcGIS.Core.Geometry.Multipart,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.CalculateNonSimpleMs(ArcGIS.Core.Geometry.Multipart,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Interpolate M values on a polygon
         {
           List<MapPoint> coords =
@@ -270,8 +292,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         #endregion
 
         // cref: ArcGIS.Core.Geometry.Envelope.CenterAt(System.Double,System.Double)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.CenterAt(ArcGIS.Core.Geometry.Envelope,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.CenterAt(ArcGIS.Core.Geometry.Envelope,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
         #region Center an envelope around X,Y
         {
           Envelope env = EnvelopeBuilderEx.CreateEnvelope(1.0, 1.0, 5.0, 5.0);
@@ -294,8 +317,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Centroid(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Centroid(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Find the centroid of geometries
         {
           // simple polygon
@@ -341,8 +369,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Clip(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Envelope)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Clip(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Envelope)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
         #region Clip a Polyline
         {
           // clip a polyline by an envelope
@@ -355,10 +386,14 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Clip(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Envelope)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Clip(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Envelope)
         // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.Multipart.Extent
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Clip a Polyline by a Polygon
         {
           // clip a polyline by a polygon
@@ -386,8 +421,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         // ConstructMultipatchExtrudeToZ
         //      see Multipatch above
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ConstructGeodeticLineFromDistance(ArcGIS.Core.Geometry.GeodeticCurveType,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.CurveDensifyMethod,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ConstructGeodeticLineFromDistance(ArcGIS.Core.Geometry.GeodeticCurveType,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.CurveDensifyMethod,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
         #region Construct a geodetic line with specified distance and azimuth
         {
           var sr = SpatialReferenceBuilder.CreateSpatialReference(4326);
@@ -398,8 +435,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ConstructGeodeticLineFromPoints(ArcGIS.Core.Geometry.GeodeticCurveType,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.CurveDensifyMethod,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ConstructGeodeticLineFromPoints(ArcGIS.Core.Geometry.GeodeticCurveType,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.CurveDensifyMethod,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
         #region Construct a geodetic line connecting points
         {
           var sr = SpatialReferenceBuilder.CreateSpatialReference(4326);
@@ -415,8 +454,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ConstructPointFromAngleDistance(ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ConstructPointFromAngleDistance(ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Construct a Point at a distance and angle from an existing Point
         {
           MapPoint inPoint = MapPointBuilderEx.CreateMapPoint(3, 4);
@@ -438,8 +479,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ConstructPolygonsFromPolylines(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polyline})
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ConstructPolygonsFromPolylines(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polyline})
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
         #region Construct a Polygon from a set of Polylines
         {
           List<Coordinate2D> firstLinePts = [new Coordinate2D(1.0, 1.0), new Coordinate2D(1.0, 4.0)];
@@ -467,12 +509,16 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Contains(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Contains(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.ReadOnlyPointCollection.Item(System.Int32)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.Multipart.Points
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Polygon contains MapPoints, Polylines, Polygons
         {
-          // build a polygon      
+          // build a polygon
           List<MapPoint> pts =
           [
             MapPointBuilderEx.CreateMapPoint(1.0, 1.0),
@@ -511,8 +557,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ConvexHull(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ConvexHull(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine convex hull
         {
           //
@@ -546,9 +596,9 @@ namespace ProSnippets.GeometrySnippets.Engine
           // hullPoly.Area = 1
           // hullPoly.PointCount = 5
 
-          // 
+          //
           // convex hull around a line - returns a polyline or polygon
-          // 
+          //
 
           List<MapPoint> polylineList = [MapPointBuilderEx.CreateMapPoint(1.0, 1.0), MapPointBuilderEx.CreateMapPoint(2.0, 2.0)];
 
@@ -607,8 +657,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Crosses(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Crosses(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine if two geometries cross
         {
           //
@@ -621,9 +676,9 @@ namespace ProSnippets.GeometrySnippets.Engine
           bool crosses = GeometryEngine.Instance.Crosses(pt, pt2);         // crosses = false
           crosses = GeometryEngine.Instance.Crosses(pt, pt);               // crosses = false
 
-          // 
+          //
           // pt and line
-          // 
+          //
 
           List<MapPoint> list =
           [
@@ -653,7 +708,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           crosses = GeometryEngine.Instance.Crosses(poly1, pt);              // crosses = false
           crosses = GeometryEngine.Instance.Crosses(pt, poly1);              // crosses = false
 
-          // 
+          //
           // line and line
           //
           List<MapPoint> list2 =
@@ -680,8 +735,16 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Cut(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.Polyline)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Cut(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.Polyline)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.Multipart.Parts
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Cut a geometry with a polyline
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -725,15 +788,19 @@ namespace ProSnippets.GeometrySnippets.Engine
           // segments1[1].StartCoordinate = 4, 4
           // segments1[1].EndCoordinate = 4, 1
 
-          // polygon 
+          // polygon
           polygon = PolygonBuilderEx.CreatePolygon(list);
           isSimple = GeometryEngine.Instance.IsSimpleAsFeature(polygon);
           cutGeometries = GeometryEngine.Instance.Cut(polygon, cutter) as List<Geometry>;
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.DensifyByLength(ArcGIS.Core.Geometry.Geometry,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.DensifyByLength(ArcGIS.Core.Geometry.Geometry,System.Double)
+        // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.ToSegment()
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
         #region Densify by Length
         {
           // densify a line segment
@@ -758,8 +825,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Difference(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Difference(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Difference between two Polygons
         {
           List<MapPoint> polyPts =
@@ -785,10 +856,19 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Disjoint(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Disjoint(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Disjoint3D(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Disjoint3D(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.AddPoint(ArcGIS.Core.Geometry.MapPoint)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.HasZ
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Determine if two Geometries are disjoint
         {
           //
@@ -807,9 +887,9 @@ namespace ProSnippets.GeometrySnippets.Engine
 
           disjoint = GeometryEngine.Instance.Disjoint(multiPoint, pt);     // result is false
 
-          // 
+          //
           // pt and line
-          // 
+          //
 
           List<MapPoint> list =
           [
@@ -841,7 +921,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           disjoint = GeometryEngine.Instance.Disjoint(poly1, pt);          // result is true
           disjoint = GeometryEngine.Instance.Disjoint(pt, poly1);          // result is true
 
-          // 
+          //
           // line and line
           //
 
@@ -889,8 +969,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Distance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Distance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine distance between two Geometries
         {
           MapPoint pt1 = MapPointBuilderEx.CreateMapPoint(1.0, 1.0);
@@ -898,7 +983,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           MapPoint pt3 = MapPointBuilderEx.CreateMapPoint(4.0, 2.0);
 
           //
-          // pt and pt 
+          // pt and pt
           //
           double d = GeometryEngine.Instance.Distance(pt1, pt2);         // d = Math.Sqrt(2)
 
@@ -952,11 +1037,14 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Distance3D(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Distance3D(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.Intersects(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine 3D distance between two Geometries
         {
-          // between points 
+          // between points
           MapPoint pt1 = MapPointBuilderEx.CreateMapPoint(1, 1, 1);
           MapPoint pt2 = MapPointBuilderEx.CreateMapPoint(2, 2, 2);
           MapPoint pt3 = MapPointBuilderEx.CreateMapPoint(10, 2, 1);
@@ -995,10 +1083,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Expand(ArcGIS.Core.Geometry.Envelope,System.Double,System.Double,System.Boolean)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Expand(ArcGIS.Core.Geometry.Envelope,System.Double,System.Double,System.Double,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Expand(ArcGIS.Core.Geometry.Envelope,System.Double,System.Double,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Expand(ArcGIS.Core.Geometry.Envelope,System.Double,System.Double,System.Double,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
         #region Expand envelopes
         {
           Envelope env = EnvelopeBuilderEx.CreateEnvelope(100.0, 100.0, 500.0, 500.0);
@@ -1047,8 +1137,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Extend(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.ExtendFlags)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Extend(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.ExtendFlags)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Extend a polyline
         {
           // build a polyline
@@ -1092,7 +1185,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           // result.Parts[0].Points[2] = 0, 0, 10, 20
           // result.Parts[0].Points[3] = 1, -1, 10, 20
 
-          // extend with no intersection 
+          // extend with no intersection
 
           polyline = PolylineBuilderEx.CreatePolyline(
           [
@@ -1117,10 +1210,9 @@ namespace ProSnippets.GeometrySnippets.Engine
 
         Polyline polylineWithZ = null;
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Generalize(ArcGIS.Core.Geometry.Geometry,System.Double,System.Boolean,System.Boolean)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Generalize3D(ArcGIS.Core.Geometry.Geometry,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Generalize(ArcGIS.Core.Geometry.Geometry,System.Double,System.Boolean,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Generalize3D(ArcGIS.Core.Geometry.Geometry,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
         #region Generalize
         {
           Polyline generalizedPolyline = GeometryEngine.Instance.Generalize(polylineWithZ, 200) as Polyline;
@@ -1134,10 +1226,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicArea(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.AreaUnit)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicArea(ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicArea(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.AreaUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicArea(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicArea(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.AreaUnit)
+        // cref: ArcGIS.Core.Geometry.AreaUnit.SquareKilometers
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Calculate the Geodesic Area of a polygon
         {
           polygon = PolygonBuilderEx.CreatePolygon(
@@ -1152,18 +1247,24 @@ namespace ProSnippets.GeometrySnippets.Engine
           // area is close to 255032810857732.31
 
           area = GeometryEngine.Instance.GeodesicArea(polygon, AreaUnit.SquareKilometers);
-          // area is close to 255032810.85953, 
+          // area is close to 255032810.85953,
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicBuffer(ArcGIS.Core.Geometry.Geometry,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicBuffer(ArcGIS.Core.Geometry.Geometry,System.Double)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicBuffer(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LinearUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicBuffer(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LinearUnit)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double,ArcGIS.Core.Geometry.LinearUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double,ArcGIS.Core.Geometry.LinearUnit)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicDistance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Miles
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Millimeters
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.Multipart.Points
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReference.XYTolerance
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Create a buffer polygon at the specified geodesic distance
         {
           // buffer a point
@@ -1221,10 +1322,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicDistance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicDistance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicDistance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicDistance(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Feet
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Determine geodesic distance between two Geometries
         {
           var point1 = MapPointBuilderEx.CreateMapPoint(-170, 45, SpatialReferences.WGS84);
@@ -1246,8 +1349,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         // cref: ArcGIS.Core.Geometry.GeodesicEllipseParameter.SemiAxis2Length
         // cref: ArcGIS.Core.Geometry.GeodesicEllipseParameter.VertexCount
         // cref: ArcGIS.Core.Geometry.GeodesicEllipseParameter.OutGeometryType
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicEllipse(ArcGIS.Core.Geometry.GeodesicEllipseParameter,ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicEllipse(ArcGIS.Core.Geometry.GeodesicEllipseParameter,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Meters
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region GeodesicEllipse
         {
           GeodesicEllipseParameter param = new()
@@ -1270,10 +1375,15 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.Project(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Miles
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Determine geodesic length of a line
         {
           polyline = PolylineBuilderEx.CreatePolyline(
@@ -1305,8 +1415,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         // cref: ArcGIS.Core.Geometry.GeodesicSectorParameter.SemiAxis1Length
         // cref: ArcGIS.Core.Geometry.GeodesicSectorParameter.SemiAxis2Length
         // cref: ArcGIS.Core.Geometry.GeodesicSectorParameter.StartDirection
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicSector(ArcGIS.Core.Geometry.GeodesicSectorParameter,ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicSector(ArcGIS.Core.Geometry.GeodesicSectorParameter,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Meters
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region GeodesicSector
         {
           GeodesicSectorParameter param = new()
@@ -1332,8 +1444,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodeticDensifyByDeviation(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.GeodeticCurveType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodeticDensifyByDeviation(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.GeodeticCurveType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Kilometers
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Meters
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region GeodeticDensifyByDeviation - polyline
         {
           List<Coordinate2D> coords =
@@ -1360,10 +1476,16 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodesicLength(ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodeticDensifyByLength(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.GeodeticCurveType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodeticDensifyByLength(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LinearUnit,ArcGIS.Core.Geometry.GeodeticCurveType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Kilometers
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Meters
+        // cref: ArcGIS.Core.Geometry.Multipart.Parts
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.ReadOnlySegmentCollection.Count
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region GeodeticDensifyByLength - polygon
         {
           List<Coordinate2D> coords =
@@ -1403,10 +1525,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodeticDistanceAndAzimuth(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.GeodeticCurveType,System.Double@,System.Double@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodeticDistanceAndAzimuth(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.GeodeticCurveType,System.Double@,System.Double@)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodeticDistanceAndAzimuth(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.GeodeticCurveType,ArcGIS.Core.Geometry.LinearUnit,System.Double@,System.Double@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodeticDistanceAndAzimuth(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.GeodeticCurveType,ArcGIS.Core.Geometry.LinearUnit,System.Double@,System.Double@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Miles
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Calculate geodetic distance, azimuth between two points
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -1446,8 +1570,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GeodeticMove(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference,System.Double,ArcGIS.Core.Geometry.LinearUnit,System.Double,ArcGIS.Core.Geometry.GeodeticCurveType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GeodeticMove(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference,System.Double,ArcGIS.Core.Geometry.LinearUnit,System.Double,ArcGIS.Core.Geometry.GeodeticCurveType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Meters
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Miles
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Perform Geodetic Move on a set of MapPoints
         {
           SpatialReference sr = SpatialReferences.WebMercator;
@@ -1472,11 +1600,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetPredefinedCoordinateSystemList(ArcGIS.Core.Geometry.CoordinateSystemFilter)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetPredefinedCoordinateSystemList(ArcGIS.Core.Geometry.CoordinateSystemFilter)
         // cref: ArcGIS.Core.Geometry.CoordinateSystemListEntry.Category
         // cref: ArcGIS.Core.Geometry.CoordinateSystemListEntry.Name
         // cref: ArcGIS.Core.Geometry.CoordinateSystemListEntry.Wkid
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
         #region Retrieve coordinate systems
         {
           // get all the geographic coordinate systems
@@ -1499,12 +1627,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetPredefinedGeographicTransformationList
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetPredefinedGeographicTransformationList
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetPredefinedGeographicTransformationList()
         // cref: ArcGIS.Core.Geometry.GeographicTransformationListEntry.FromSRWkid
         // cref: ArcGIS.Core.Geometry.GeographicTransformationListEntry.Name
         // cref: ArcGIS.Core.Geometry.GeographicTransformationListEntry.ToSRWkid
         // cref: ArcGIS.Core.Geometry.GeographicTransformationListEntry.Wkid
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
         #region Retrieve system geographic transformations
         {
           // a geographic transformation is the definition of how to project from one spatial reference to another
@@ -1520,10 +1648,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetSubCurve(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetSubCurve3D(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetSubCurve(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetSubCurve3D(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.Multipart.Points
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Get Sub-curve of a polyline or polygon
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -1573,8 +1704,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GraphicBuffer(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LineJoinType,ArcGIS.Core.Geometry.LineCapType,System.Double,System.Double,System.Int32)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GraphicBuffer(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.LineJoinType,ArcGIS.Core.Geometry.LineCapType,System.Double,System.Double,System.Int32)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region GraphicBuffer
         {
           // mitered join and butt caps
@@ -1597,8 +1732,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GraphicBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double,ArcGIS.Core.Geometry.LineJoinType,ArcGIS.Core.Geometry.LineCapType,System.Double,System.Double,System.Int32)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GraphicBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},System.Double,ArcGIS.Core.Geometry.LineJoinType,ArcGIS.Core.Geometry.LineCapType,System.Double,System.Double,System.Int32)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region GraphicBuffer Many
         {
           // round join and round caps
@@ -1611,12 +1749,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Intersection(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.GeometryDimensionType)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Intersection(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Intersects(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Intersection(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.GeometryDimensionType)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.Intersection(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Intersects(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Intersection between two Polylines
         {
           // determine intersection between two polylines
@@ -1648,8 +1785,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         #endregion
 
         // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Intersection(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Intersection(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
         #region Intersection between two Polygons
         {
           // determine intersection between two polygons
@@ -1664,8 +1802,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.LabelPoint(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.LabelPoint(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine label point for a Polygon
         {
           // create a polygon
@@ -1683,10 +1823,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Length(ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Length3D(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Length(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Length3D(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
         #region Determine Length, Length3D of line
         {
           MapPoint c1 = MapPointBuilderEx.CreateMapPoint(1, 2, 3);
@@ -1709,15 +1851,17 @@ namespace ProSnippets.GeometrySnippets.Engine
 
         // GetMinMaxM, GetMMonotonic, GetPointsAtM, GetSubCurveBetweenMs, GetNormalsAtM, SetMsAsDistance, SetAndInterpolateMsBetween
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetMinMaxM(ArcGIS.Core.Geometry.Multipart,System.Double@,System.Double@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetMinMaxM(ArcGIS.Core.Geometry.Multipart,System.Double@,System.Double@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.FromJson(System.String)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get the minimum and maximum M values - GetMinMaxM
         {
           string json = "{\"hasM\":true,\"rings\":[[[-3000,-2000,10],[-2000,-2000,15],[-1000,-2000,20],[0,-2000,0],[1000,-2000,-20],[2000,-2000,-30],[3000,-2000,10],[4000,-2000,5]]],\"spatialReference\":{\"wkid\":3857}}";
           polygon = PolygonBuilderEx.FromJson(json);
 
           GeometryEngine.Instance.GetMinMaxM(polygon, out double minM, out double maxM);
-          // minM = -30 
+          // minM = -30
           // maxM = 20
 
           json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,10],[-2000,-2000,null],[-1000,-2000,null]]]}";
@@ -1736,8 +1880,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetMMonotonic(ArcGIS.Core.Geometry.Multipart)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetMMonotonic(ArcGIS.Core.Geometry.Multipart)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Determine whether Ms are monotonic and whether ascending or descending - GetMMonotonic
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,10],[-2000,-2000,15],[-1000,-2000,20]]]}";
@@ -1760,8 +1905,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetPointsAtM(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetPointsAtM(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get a multipoint corresponding to the locations where the specified M values occur along the geometry - GetPointsAtM
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,10],[-2000,-2000,15],[-1000,-2000,20],[0,-2000,0],[1000,-2000,20],[2000,-2000,30],[3000,-2000,10],[4000,-2000,5]]],\"spatialReference\":{\"wkid\":3857}}";
@@ -1776,8 +1922,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetSubCurveBetweenMs(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetSubCurveBetweenMs(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get a polyline corresponding to the subcurves between specified M values - GetSubCurveBetweenMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[-2000,0,1],[-1000,1000,2],[-1000,0,3],[1000,1000,4],[2000,1000,5],[2000,2000,6],[3000,2000,7],[4000,0,8]]],\"spatialReference\":{\"wkid\":3857}}";
@@ -1797,8 +1944,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetNormalsAtM(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetNormalsAtM(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.Multipart.Parts
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Get line segments corresponding to the normal at the locations where the specified M values occur along the geometry - GetNormalsAtM
         {
           IList<MapPoint> inPoints =
@@ -1850,8 +2000,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetMsAtDistance(ArcGIS.Core.Geometry.Multipart,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double@,System.Double@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetMsAtDistance(ArcGIS.Core.Geometry.Multipart,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double@,System.Double@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get the M values at the specified distance along the multipart
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,-3],[-2000,-2000,-2]],[[-2000,-2000,1],[-2000,1000,2]]],\"spatialReference\":{\"wkid\":3857}}";
@@ -1873,8 +2024,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.InsertMAtDistance(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Boolean,System.Boolean@,System.Int32@,System.Int32@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.InsertMAtDistance(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Boolean,System.Boolean@,System.Int32@,System.Int32@)
+        // cref: ArcGIS.Core.Geometry.Geometry.ToJson(System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Insert M value at the given distance - InsertMAtDistance
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,-3],[-2000,-2000,-2],[-1000,-2000,null]]]}";
@@ -1917,14 +2070,20 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.CalibrateByMs(ArcGIS.Core.Geometry.Multipart,System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.UpdateMMethod,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.CalibrateByMs(ArcGIS.Core.Geometry.Multipart,System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.UpdateMMethod,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.M
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.X
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.Y
+        // cref: ArcGIS.Core.Geometry.Multipart.Length
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Calibrate M values using M values from input points - CalibrateByMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[0,0,-1],[1,0,0],[1,1,1],[1,2,2],[3,1,3],[5,3,4],[9,5,5],[7,6,6]]],\"spatialReference\":{\"wkid\":4326}}";
           polyline = PolylineBuilderEx.FromJson(json);
 
-          // Interpolate using points (0, 0, 17), (1, 0, 42), (7, 6, 18) 
+          // Interpolate using points (0, 0, 17), (1, 0, 42), (7, 6, 18)
           List<MapPoint> updatePoints = new(3);
           MapPointBuilderEx builder = new(0, 0)
           {
@@ -1984,8 +2143,14 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.CalibrateMsByDistance(ArcGIS.Core.Geometry.Multipart,System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.UpdateMMethod,System.Boolean,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.CalibrateMsByDistance(ArcGIS.Core.Geometry.Multipart,System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.UpdateMMethod,System.Boolean,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.HasM
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.M
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.SetValues(System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.Multipart.Length
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.AttributeFlags,ArcGIS.Core.Geometry.SpatialReference)
         #region Calibrate M-values using segment lengths and M values from input points - CalibrateMsByDistance
         {
           List<MapPoint> points = [];
@@ -2062,8 +2227,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.DropMs(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.DropMs(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Set all the M-values to NaN - DropMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[-4,2,1],[-4,5,2],[-2,5,3],[-2,7,4],[2,7,5]],[[4,1,-1],[2,1,-2],[2,-2,-3],[-3,-2,-4],[-3,0,-5]]]}}";
@@ -2074,8 +2240,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ExtrapolateMs(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.ExtrapolateMMethod,System.Int32,System.Int32,System.Int32,System.Int32)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ExtrapolateMs(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.ExtrapolateMMethod,System.Int32,System.Int32,System.Int32,System.Int32)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Extrapolate M-values based on a range defined by part and vertex indices - ExtrapolateMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[2,0,50],[2,1,40],[3,1,30],[3,5,60],[7,5,12],[7,1,20],[9,1,28],[9,3,10]]],\"spatialReference\":{\"wkid\":4326}}";
@@ -2099,8 +2266,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetDistancesAtM(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetDistancesAtM(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get a list of distances along the multipart at points with the specified M-value - GetDistancesAtM
         {
           string json = "{\"hasM\":true,\"paths\":[[[-4,1,1],[-4,3,2],[-2,3,3],[-2,5,1]],[[3,5,1],[3,2,2],[6,2,3],[6,-2,2]]]}";
@@ -2111,7 +2279,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           // distances.Count = 4
           // distances[0] = 2 measured to the point (-4, 3, 2)
           // distances[1] = 5 measured to the point (-2, 4, 2). Its M-value is interpolated from the segment (-2, 3, 3) -> (-2, 5, 1)
-          // distances[2] = 9 measured to the point (3, 2, 2) 
+          // distances[2] = 9 measured to the point (3, 2, 2)
           // distances[3] = 16 measured to the point (6, -2, 2)
 
           // Get the distances as a ratio of the distance measured from the start of the multipart and the total length of the multipart
@@ -2122,8 +2290,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         #endregion
 
         // cref: ArcGIS.Core.Geometry.MSubCurveRelation
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetSubCurveBetweenMsEx(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.MSubCurveRelation@,ArcGIS.Core.Geometry.MSubCurveRelation@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetSubCurveBetweenMsEx(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double,ArcGIS.Core.Geometry.MSubCurveRelation@,ArcGIS.Core.Geometry.MSubCurveRelation@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get a polyline and other details corresponding to the subcurves between the specified M-values GetSubCurveBetweenMsEx
         {
           string json = "{\"hasM\":true,\"paths\":[[[-2000,0,1],[-1000,1000,-1],[-1000,0,3],[1000,1000,4],[2000,1000,5],[2000,2000,6],[3000,2000,7],[4000,0,8]]],\"spatialReference\":{\"wkid\":3857}}";
@@ -2144,8 +2313,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.GetMMonotonicity(ArcGIS.Core.Geometry.Multipart)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetMMonotonicity(ArcGIS.Core.Geometry.Multipart)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get a combination of monotonicity values that describes all trends in the M-values over the length of the multipart - GetMMonotonicity
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,10],[-2000,-2000,5],[-1000,-2000,0]]]}";
@@ -2175,8 +2346,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.InterpolateMsBetween(ArcGIS.Core.Geometry.Multipart,System.Int32,System.Int32,System.Int32,System.Int32)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.InterpolateMsBetween(ArcGIS.Core.Geometry.Multipart,System.Int32,System.Int32,System.Int32,System.Int32)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Generates M-values by linear interpolation over a range of points - InterpolateMsBetween
         {
           string json = "{\"hasM\":true,\"paths\":[[[0,0,-1],[1,0,0],[1,1,1],[1,2,2],[3,1,3],[5,3,4],[9,5,5],[7,6,6]]],\"spatialReference\":{\"wkid\":4326}}";
@@ -2189,8 +2361,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.IsMSimple(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsMSimple(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipartBuilderEx.HasM
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.AttributeFlags,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.ToGeometry()
         #region Determine if all the M-values are numbers - IsMSimple
         {
           Coordinate2D[] coords = [new Coordinate2D(-2, 2), new Coordinate2D(3, 5), new Coordinate2D(7, 2)];
@@ -2212,8 +2389,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.MultiplyMs(ArcGIS.Core.Geometry.Geometry,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.MultiplyMs(ArcGIS.Core.Geometry.Geometry,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.HasM
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.Ms
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.ToGeometry()
         #region Multiply all M-values by a factor - MultiplyMs
         {
           // Create a multipoint and multiply M-values by 6
@@ -2235,8 +2415,15 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.OffsetMs(ArcGIS.Core.Geometry.Geometry,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.OffsetMs(ArcGIS.Core.Geometry.Geometry,System.Double)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.MMax
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.MMin
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.M
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.SetValues(System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.AttributeFlags,ArcGIS.Core.Geometry.SpatialReference)
         #region Add an offset value to each of the M-values - OffsetMs
         {
           // Create a polyline and add an offset of 2 to each of the M-values
@@ -2250,7 +2437,8 @@ namespace ProSnippets.GeometrySnippets.Engine
           pointBuilder.M = 3;
           MapPoint point2 = pointBuilder.ToGeometry();
 
-          polyline = PolylineBuilderEx.CreatePolyline([point1, point2], AttributeFlags.HasM); ;
+          polyline = PolylineBuilderEx.CreatePolyline([point1, point2], AttributeFlags.HasM);
+          ;
 
           Polyline outPolyline = GeometryEngine.Instance.OffsetMs(polyline, 2) as Polyline;
           // The xy-values of the points in outPolyline are the same as the points in the input polyline.
@@ -2275,8 +2463,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.OrientByMs(ArcGIS.Core.Geometry.Polyline)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.OrientByMs(ArcGIS.Core.Geometry.Polyline)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Reorient a polyline such that all M-values are non-decreasing, if possible - OrientByMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[0,0,1],[0,1,0],[1,1,-1],[1,0,-2]]]}";
@@ -2294,8 +2483,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryFirstLastM(ArcGIS.Core.Geometry.Polyline,System.Double@,System.Double@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryFirstLastM(ArcGIS.Core.Geometry.Polyline,System.Double@,System.Double@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Get the first and last defined M-values in a polyline - QueryFirstLastM
         {
           string json = "{\"hasM\":true,\"paths\":[[[5,4,6],[6,4,5],[8,6,7]],[[0,0,1],[0,1,0],[1,1,-1],[1,0,-2]]]}";
@@ -2324,20 +2514,23 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ReverseMs(ArcGIS.Core.Geometry.Multipart)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ReverseMs(ArcGIS.Core.Geometry.Multipart)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Reverse the order of the M-values along a multipart - ReverseMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[5,4,6],[6,4,5],[8,6,7]]],\"spatialReference\":{\"wkid\":4326}}";
           polyline = PolylineBuilderEx.FromJson(json);
           Polyline outputPolyline = GeometryEngine.Instance.ReverseMs(polyline) as Polyline;
-          // The xy-coordinates in outputPolyline are not changed. 
+          // The xy-coordinates in outputPolyline are not changed.
           // The M-values in outputPolyline are: { 7, 5, 6 }
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SetAndInterpolateMsBetween(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SetAndInterpolateMsBetween(ArcGIS.Core.Geometry.Multipart,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.Multipart.Points
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Set Ms at the beginning and end of the geometry and interpolate M-values between the two values - SetAndInterpolateMsBetween
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000],[-2000,-2000],[-1000,-2000],[0,-2000],[1000,-2000],[2000,-2000],[3000,-2000],[4000,-2000]]],\"spatialReference\":{\"wkid\":3857}}";
@@ -2349,16 +2542,18 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SetMsAsDistance(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.AsRatioOrLength)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SetMsAsDistance(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.AsRatioOrLength)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.FromJson(System.String)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Set the M-values to the cumulative length of the start of the multipart - SetMsAtDistance
         {
           string json = "{\"hasM\":true,\"paths\":[[[-3000,-2000,1],[-2000,-2000,2],[-1000,-2000,3],[0,-2000,null],[1000,-2000,4],[2000,-2000,5],[3000,-2000,10],[4000,-2000,11],[5000,-2000,12],[6000,-2000,13],[7000,-2000,14]]],\"spatialReference\":{\"wkid\":3857}}";
           polyline = PolylineBuilderEx.FromJson(json);
 
           Polyline outPolyline = GeometryEngine.Instance.SetMsAsDistance(polyline, AsRatioOrLength.AsLength) as Polyline;
-          // The xy-coordinates don't change. 
-          // The M-values of the vertices in outPolyline are (x, y, m): 
+          // The xy-coordinates don't change.
+          // The M-values of the vertices in outPolyline are (x, y, m):
           // { 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000 }
 
           json = "{\"hasM\":true,\"rings\":[[[0,0],[0,3000],[4000,3000],[4000,0],[0,0]]],\"spatialReference\":{\"wkid\":3857}}";
@@ -2369,8 +2564,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SetMsAsDistance(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.Coordinate2D,System.Double,System.Double,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SetMsAsDistance(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.Coordinate2D,System.Double,System.Double,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Set the M-values of the vertices as scaled and offset distances measured along a polyline - SetMsAsDistance
         {
           string json = "{\"hasM\":true,\"paths\":[[[0,0,1],[3,0,2],[3,6,3],[7,6,4]]],\"spatialReference\":{\"wkid\":4326}}";
@@ -2379,20 +2575,25 @@ namespace ProSnippets.GeometrySnippets.Engine
 
           Polyline outputPolyline = GeometryEngine.Instance.SetMsAsDistance(polyline, origin, 0.5, 1, true) as Polyline;
           // The xy-coordinates of the polyline don't change.
-          // The points of outputPolyline are (x, y, m): 
+          // The points of outputPolyline are (x, y, m):
           // (0, 0, 1), (3, 0, 2.5), (3, 6, 5.5), (7, 6, 7.5)
 
           // Measurements will start at the end of the polyline, point (7, 6)
           origin = new Coordinate2D(4, 6);
 
           outputPolyline = GeometryEngine.Instance.SetMsAsDistance(polyline, origin, 0.5, 1, true) as Polyline;
-          // The points of outputPolyline are (x, y, m): 
+          // The points of outputPolyline are (x, y, m):
           // (0, 0, 7.5), (3, 0, 6), (3, 6, 3), (7, 6, 1)
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SnapMsToSpatialReference(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SnapMsToSpatialReference(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.M
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.AttributeFlags,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Snap the M-values to the M-precision of the spatial reference - SnapMsToSpatialReference
         {
           SpatialReference sr = SpatialReferences.WebMercator;  // precision = 1 / MScale = 0.0001
@@ -2425,8 +2626,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.UpdateAllMsByMs(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.Coordinate2D,System.Double,System.Double,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.UpdateAllMsByMs(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.Coordinate2D,System.Double,System.Double,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Set the M-values of the vertices as scaled and offset M distances measured along a polyline - UpdateAllMsByMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[-8,2,1],[-8,5,8],[-5,5,0],[-5,7,12]],[[3,2,20],[7,2,30],[7,4,10],[13,4,5]]]}";
@@ -2434,7 +2636,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           Coordinate2D origin = new(-5, 6);
 
           Polyline outputPolyline = GeometryEngine.Instance.UpdateAllMsByMs(polyline, origin, 1, 0, true);
-          // The xy-coordinates don't change. 
+          // The xy-coordinates don't change.
           // The M-values of the vertices in part 0 of outputPolyline are { 27, 20, 12, 0 }
           // The M-values of the vertices in part 1 of outputPolyline are { 27, 37, 57, 62 }
 
@@ -2444,8 +2646,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.UpdateMsByDistance(ArcGIS.Core.Geometry.Polyline,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double,ArcGIS.Core.Geometry.UpdateMMethod,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.UpdateMsByDistance(ArcGIS.Core.Geometry.Polyline,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double,ArcGIS.Core.Geometry.UpdateMMethod,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Update M-values along the shortest path between the specified vertices - UpdateMsByDistance
         {
           string json = "{\"hasM\":true,\"paths\":[[[-8,2,1],[-8,5,8],[-5,5,0],[-5,7,12]]],\"spatialReference\":{\"wkid\":4326}}";
@@ -2464,8 +2667,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.UpdateMsByMs(ArcGIS.Core.Geometry.Polyline,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double,ArcGIS.Core.Geometry.UpdateMMethod)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.UpdateMsByMs(ArcGIS.Core.Geometry.Polyline,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double,ArcGIS.Core.Geometry.UpdateMMethod)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region Update M-values with the interpolation ratio determined by existing M-values and the input M-values - UpdateMsByMs
         {
           string json = "{\"hasM\":true,\"paths\":[[[-8,2,1],[-8,5,8],[-5,5,0],[-5,7,12]]],\"spatialReference\":{\"wkid\":4326}}";
@@ -2477,8 +2681,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Move(ArcGIS.Core.Geometry.Geometry,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Move(ArcGIS.Core.Geometry.Geometry,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
         #region Move a MapPoint
         {
           MapPoint pt = MapPointBuilderEx.CreateMapPoint(1.0, 3.0);
@@ -2487,8 +2692,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Move(ArcGIS.Core.Geometry.Geometry,System.Double,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Move(ArcGIS.Core.Geometry.Geometry,System.Double,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
         #region Move a z-aware MapPoint
         {
           MapPoint zPt = MapPointBuilderEx.CreateMapPoint(1.0, 3.0, 2.0);
@@ -2497,8 +2703,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Move(ArcGIS.Core.Geometry.Geometry,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Move(ArcGIS.Core.Geometry.Geometry,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Move a Polyline
         {
           List<MapPoint> pts =
@@ -2520,8 +2728,18 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.MovePointAlongLine(ArcGIS.Core.Geometry.Multipart,System.Double,System.Boolean,System.Double,ArcGIS.Core.Geometry.SegmentExtensionType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.MovePointAlongLine(ArcGIS.Core.Geometry.Multipart,System.Double,System.Boolean,System.Double,ArcGIS.Core.Geometry.SegmentExtensionType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region MovePointAlongLine
         {
           LineSegment line = LineBuilderEx.CreateLineSegment(MapPointBuilderEx.CreateMapPoint(0, 3), MapPointBuilderEx.CreateMapPoint(5.0, 3.0));
@@ -2635,8 +2853,12 @@ namespace ProSnippets.GeometrySnippets.Engine
 
         Polygon multipartPolygon = null;
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.MultipartToSinglePart(ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.MultipartToSinglePart(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryBagBuilderEx.CreateGeometryBag(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Separate components of a geometry into single component geometries
         {
           List<Coordinate2D> coords2D =
@@ -2650,7 +2872,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           Multipoint multipoint = MultipointBuilderEx.CreateMultipoint(coords2D, SpatialReferences.WGS84);
 
           IReadOnlyList<Geometry> result = GeometryEngine.Instance.MultipartToSinglePart(multipoint);
-          // result.Count = 4, 
+          // result.Count = 4,
 
           // 'explode' a multipart polygon
           result = GeometryEngine.Instance.MultipartToSinglePart(multipartPolygon);
@@ -2667,10 +2889,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.NearestPoint(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.NearestVertex(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.NearestPoint(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.NearestVertex(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Nearest Point versus Nearest Vertex
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -2707,8 +2931,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.NearestPoint3D(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.NearestPoint3D(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine Nearest Point in 3D
         {
           MapPoint pt1 = MapPointBuilderEx.CreateMapPoint(1, 1, 1);
@@ -2726,9 +2952,9 @@ namespace ProSnippets.GeometrySnippets.Engine
           // result.PointIndex = 0
           // result.RightSide = false
 
-          // 
+          //
           // multipoint built from pt1, pt2.   should be closer to pt2
-          // 
+          //
           Multipoint multipoint = MultipointBuilderEx.CreateMultipoint([pt1, pt2]);
           result = GeometryEngine.Instance.NearestPoint3D(multipoint, pt3);
           // result.Point = 2, 2, 2
@@ -2740,8 +2966,15 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Offset(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.OffsetType,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Offset(ArcGIS.Core.Geometry.Geometry,System.Double,ArcGIS.Core.Geometry.OffsetType,System.Double)
+        // cref: ArcGIS.Core.Geometry.Coordinate2D.ToMapPoint(ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.EllipticArcBuilderEx.CreateCircularArc(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Calculate a geometry offset from the source
         {
           List<MapPoint> linePts =
@@ -2804,8 +3037,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Overlaps(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Overlaps(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Determine if geometries overlap
         {
           MapPoint pt1 = MapPointBuilderEx.CreateMapPoint(1.5, 1.5);
@@ -2818,8 +3054,8 @@ namespace ProSnippets.GeometrySnippets.Engine
           //
           bool overlaps = GeometryEngine.Instance.Overlaps(pt1, pt2);        // overlaps = false
           overlaps = GeometryEngine.Instance.Overlaps(pt1, pt1);             // overlaps = false
-                                                                             // Two geometries overlap if the region of their intersection is of the same dimension as the geometries involved and 
-                                                                             // is not equivalent to either of the geometries.  
+                                                                             // Two geometries overlap if the region of their intersection is of the same dimension as the geometries involved and
+                                                                             // is not equivalent to either of the geometries.
 
           List<MapPoint> pts = [pt1, pt2, pt3];
 
@@ -2841,9 +3077,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Project(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Project(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Project from WGS84 to WebMercator
         {
           MapPoint pt = MapPointBuilderEx.CreateMapPoint(1.0, 3.0, SpatialReferences.WGS84);
@@ -2852,11 +3090,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
         // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Project(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.SpatialReference)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Project(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Project from WGS84
         {
           // create the polygon
@@ -2873,17 +3113,18 @@ namespace ProSnippets.GeometrySnippets.Engine
           bool isSimple = GeometryEngine.Instance.IsSimpleAsFeature(polygon);
 
           // create the spatial reference to project to
-          SpatialReference northPole = SpatialReferenceBuilder.CreateSpatialReference(102018);   // north pole stereographic 
+          SpatialReference northPole = SpatialReferenceBuilder.CreateSpatialReference(102018);   // north pole stereographic
 
           // project
           Geometry geometry = GeometryEngine.Instance.Project(polygon, northPole);
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryNormal(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryNormal(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryNormal(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryNormal(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.Multipart.Parts
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.FromJson(System.String)
         #region QueryNormal
         {
           string json = "{\"curvePaths\":[[[-13046586.8335,4036570.6796000004]," +
@@ -2926,10 +3167,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryPoint(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryPoint(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryPoint(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryPoint(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region QueryPoint
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -2958,10 +3201,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryPointAndDistance(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double@,System.Double@,ArcGIS.Core.Geometry.LeftOrRightSide@)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryPointAndDistance(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double@,System.Double@,ArcGIS.Core.Geometry.LeftOrRightSide@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryPointAndDistance(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double@,System.Double@,ArcGIS.Core.Geometry.LeftOrRightSide@)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryPointAndDistance(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double@,System.Double@,ArcGIS.Core.Geometry.LeftOrRightSide@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region QueryPointAndDistance
         {
           // Horizontal line segment
@@ -3002,10 +3247,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryTangent(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.QueryTangent(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryTangent(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.QueryTangent(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SegmentExtensionType,System.Double,ArcGIS.Core.Geometry.AsRatioOrLength,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
         #region QueryTangent
         {
           LineSegment line = LineBuilderEx.CreateLineSegment(new Coordinate2D(0, 0), new Coordinate2D(1, 0));
@@ -3033,8 +3277,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ReflectAboutLine(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LineSegment)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ReflectAboutLine(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LineSegment)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Reflect a polygon about a line
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -3056,13 +3303,21 @@ namespace ProSnippets.GeometrySnippets.Engine
           // reflect a polygon about the line
           Polygon reflectedPolygon = GeometryEngine.Instance.ReflectAboutLine(polygon, line) as Polygon;
 
-          // reflectedPolygon points are 
+          // reflectedPolygon points are
           //    (2, -1), (4, -1), (4, 1), (2, -1)
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Relate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry,System.String)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Relate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry,System.String)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LineBuilderEx.CreateLineSegment(ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.Coordinate2D,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(ArcGIS.Core.Geometry.Segment,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Segment},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Determine relationship between two geometries
         {
           // set up some geometries
@@ -3076,7 +3331,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           List<MapPoint> points = [point0, point1, point2];
           Multipoint multipoint = MultipointBuilderEx.CreateMultipoint(points, SpatialReferences.WGS84);
 
-          // polygon 
+          // polygon
           List<Coordinate2D> polygonCoords =
           [
               new Coordinate2D(-10, 0),
@@ -3150,8 +3405,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ReplaceNaNZs(ArcGIS.Core.Geometry.Geometry,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ReplaceNaNZs(ArcGIS.Core.Geometry.Geometry,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
         #region Replace NaN Zs in a polygon
         {
           List<Coordinate3D> coordsZ =
@@ -3172,8 +3428,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Reshape(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.Polyline)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Reshape(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.Polyline)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.ExportToJson(ArcGIS.Core.Geometry.JsonExportFlags,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.Multipart.Parts
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
         #region Reshape a polygon
         {
           List<Coordinate2D> polygon1Coords =
@@ -3219,8 +3480,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ReverseOrientation(ArcGIS.Core.Geometry.Multipart)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ReverseOrientation(ArcGIS.Core.Geometry.Multipart)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
         #region Reverse the order of points in a Polygon
         {
           List<Coordinate2D> list2D =
@@ -3245,8 +3507,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Rotate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Rotate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
         #region Rotate a MapPoint
         {
           MapPoint pt = MapPointBuilderEx.CreateMapPoint(1.0, 3.0);
@@ -3257,8 +3520,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         // result point is (3, 1)
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Rotate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Rotate(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Rotate a Polyline
         {
           // rotate a polyline
@@ -3278,10 +3543,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Scale(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,System.Double)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Scale(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.Scale(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Scale(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.Scale(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.MapPoint,System.Double,System.Double,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Scale a geometry
         {
           List<MapPoint> pts =
@@ -3317,8 +3584,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SetConstantZ(ArcGIS.Core.Geometry.Multipart,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SetConstantZ(ArcGIS.Core.Geometry.Multipart,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
         #region Set all Zs in a polyline
         {
           List<Coordinate3D> coordsZ =
@@ -3356,10 +3624,17 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ShapePreservingArea(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.AreaUnit)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ShapePreservingArea(ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.ShapePreservingArea(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.AreaUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ShapePreservingArea(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.ShapePreservingArea(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.AreaUnit)
+        // cref: ArcGIS.Core.Geometry.AreaUnit.SquareMiles
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Calculate area of geometry on surface of Earth's ellipsoid - ShapePreservingArea
         {
           // pt
@@ -3405,10 +3680,17 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ShapePreservingLength(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.ShapePreservingLength(ArcGIS.Core.Geometry.Geometry)
-        // cref: ArcGIS.Core.Geometry.IGeometryEngine.ShapePreservingLength(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.ShapePreservingLength(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.ShapePreservingLength(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.LinearUnit)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.LinearUnit.Miles
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WebMercator
         #region Calculate length of geometry on surface of Earth's ellipsoid - ShapePreservingLength
         {
           // pt
@@ -3450,8 +3732,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SideBuffer(ArcGIS.Core.Geometry.Polyline,System.Double,ArcGIS.Core.Geometry.LeftOrRightSide,ArcGIS.Core.Geometry.LineCapType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SideBuffer(ArcGIS.Core.Geometry.Polyline,System.Double,ArcGIS.Core.Geometry.LeftOrRightSide,ArcGIS.Core.Geometry.LineCapType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
         #region SideBuffer
         {
           // right side, round caps
@@ -3470,8 +3754,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SideBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polyline},System.Double,ArcGIS.Core.Geometry.LeftOrRightSide,ArcGIS.Core.Geometry.LineCapType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SideBuffer(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Polyline},System.Double,ArcGIS.Core.Geometry.LeftOrRightSide,ArcGIS.Core.Geometry.LineCapType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
         #region SideBuffer Many
         {
           SpatialReference spatialReference = SpatialReferenceBuilder.CreateSpatialReference(102010);
@@ -3497,9 +3783,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SimplifyAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SimplifyAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
-        #region Simplify a polygon 
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.Area(ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.FromJson(System.String)
+        #region Simplify a polygon
         {
           var g1 = PolygonBuilderEx.FromJson("{\"rings\": [ [ [0, 0], [10, 0], [10, 10], [0, 10] ] ] }");
           var result = GeometryEngine.Instance.Area(g1);      // result = -100.0   - negative due to wrong ring orientation
@@ -3511,6 +3799,11 @@ namespace ProSnippets.GeometrySnippets.Engine
 
         // cref: ArcGIS.Core.Geometry.NonSimpleReason
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.GetNonSimpleReason(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.NonSimpleReason@,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReference.XYResolution
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Get Non Simple Reason
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -3540,8 +3833,12 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SimplifyPolyline(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.SimplifyType,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SimplifyPolyline(ArcGIS.Core.Geometry.Polyline,ArcGIS.Core.Geometry.SimplifyType,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.Multipart.Parts
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Simplify a polyline with intersections, overlaps
         {
           List<Coordinate2D> coords =
@@ -3577,7 +3874,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           // simpleSegments.Count = 5
 
           // simplify it (with force = true)
-          // detection of intersections, overlaps occur 
+          // detection of intersections, overlaps occur
           simplePolyline = GeometryEngine.Instance.SimplifyPolyline(polyline, SimplifyType.Planar, true);
           // simplePolyline.PartCount = 3
           simpleParts = simplePolyline.Parts;
@@ -3587,10 +3884,15 @@ namespace ProSnippets.GeometrySnippets.Engine
         #endregion
 
         // cref: ArcGIS.Core.Geometry.NonSimpleReason
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.IsSimpleOgc(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.NonSimpleReason@,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleOgc(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.NonSimpleReason@,System.Boolean)
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SimplifyOgc(ArcGIS.Core.Geometry.Geometry,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SimplifyOgc(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MultipointBuilderEx.CreateMultipoint(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReference.XYResolution
+        // cref: ArcGIS.Core.Geometry.SpatialReference.ZTolerance
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region SimplifyOGC
         {
           SpatialReference sr = SpatialReferences.WGS84;
@@ -3630,8 +3932,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SlicePolygonIntoEqualParts(ArcGIS.Core.Geometry.Polygon,System.Int32,System.Double,ArcGIS.Core.Geometry.SliceType)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SlicePolygonIntoEqualParts(ArcGIS.Core.Geometry.Polygon,System.Int32,System.Double,ArcGIS.Core.Geometry.SliceType)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
         #region Slice a Polygon into equal parts
         {
           var slices = GeometryEngine.Instance.SlicePolygonIntoEqualParts(polygon, 3, 0, SliceType.Blocks);
@@ -3649,7 +3952,7 @@ namespace ProSnippets.GeometrySnippets.Engine
           Polygon p = PolygonBuilderEx.CreatePolygon(list2D);
           slices = GeometryEngine.Instance.SlicePolygonIntoEqualParts(p, 2, 0, SliceType.Strips);
 
-          // slice[0] coordinates - (1.0, 1.0), (1.0, 1.5), (2.0, 1.5), (2.0, 1.0), (1.0, 1.0) 
+          // slice[0] coordinates - (1.0, 1.0), (1.0, 1.5), (2.0, 1.5), (2.0, 1.0), (1.0, 1.0)
           // slice[1] coordinates - (1.0, 1.5), (1.0, 2.0), (2.0, 2.0), (2.0, 1.5), (1.0, 1.5)
 
           slices = GeometryEngine.Instance.SlicePolygonIntoEqualParts(p, 2, Math.PI / 4, SliceType.Strips);
@@ -3659,8 +3962,8 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Smooth(ArcGIS.Core.Geometry.Multipart,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Smooth(ArcGIS.Core.Geometry.Multipart,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
         #region Smooth a multipart
         {
           // smooth with a maxDeviation of 0
@@ -3680,8 +3983,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.SplitAtPoint(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.MapPoint,System.Boolean,System.Boolean,System.Boolean@,System.Int32@,System.Int32@)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.SplitAtPoint(ArcGIS.Core.Geometry.Multipart,ArcGIS.Core.Geometry.MapPoint,System.Boolean,System.Boolean,System.Boolean@,System.Int32@,System.Int32@)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.MultipartBuilderEx.AddPart(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D})
+        // cref: ArcGIS.Core.Geometry.MultipartBuilderEx.HasZ
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.ToGeometry()
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Split multipart at point
         {
           // define a polyline
@@ -3793,8 +4101,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Touches(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Touches(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
         #region Polygon touches another Polygon
         {
           // two disjoint polygons
@@ -3814,8 +4125,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Transform2D(ArcGIS.Core.Geometry.Coordinate2D[],ArcGIS.Core.Geometry.ProjectionTransformation,ArcGIS.Core.Geometry.Coordinate2D[]@,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Transform2D(ArcGIS.Core.Geometry.Coordinate2D[],ArcGIS.Core.Geometry.ProjectionTransformation,ArcGIS.Core.Geometry.Coordinate2D[]@,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.ProjectionTransformation.Create(ArcGIS.Core.Geometry.SpatialReference,ArcGIS.Core.Geometry.SpatialReference,ArcGIS.Core.Geometry.Envelope)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Transform2D
         {
           // Not all of the input points are transformed as some of them are outside of the GCS horizon.
@@ -3869,8 +4183,11 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Transform3D(ArcGIS.Core.Geometry.Coordinate3D[],ArcGIS.Core.Geometry.ProjectionTransformation,ArcGIS.Core.Geometry.Coordinate3D[]@,System.Boolean)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Transform3D(ArcGIS.Core.Geometry.Coordinate3D[],ArcGIS.Core.Geometry.ProjectionTransformation,ArcGIS.Core.Geometry.Coordinate3D[]@,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.ProjectionTransformation.Create(ArcGIS.Core.Geometry.SpatialReference,ArcGIS.Core.Geometry.SpatialReference,ArcGIS.Core.Geometry.Envelope)
+        // cref: ArcGIS.Core.Geometry.SpatialReferenceBuilder.CreateSpatialReference(System.Int32)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Transform3D
         {
           // Not all of the input points are transformed as some of them are outside of the GCS horizon.
@@ -3907,8 +4224,9 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Union(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Union(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
         #region Union two MapPoints - creates a Multipoint
         {
           MapPoint pt1 = MapPointBuilderEx.CreateMapPoint(1.0, 1.0);
@@ -3919,8 +4237,13 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Union(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Union(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.IGeometryEngine.IsSimpleAsFeature(ArcGIS.Core.Geometry.Geometry,System.Boolean)
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region Union two Polygons
         {
           // union two polygons
@@ -3945,8 +4268,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Union(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry})
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Union(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry})
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate2D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Union many Polylines
         {
           // union many polylines
@@ -3971,8 +4296,10 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Union(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry})
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Union(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Geometry})
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.Coordinate3D},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.SpatialReferences.WGS84
         #region Union many Polygons
         {
           // union many polygons
@@ -3997,8 +4324,8 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Weed(ArcGIS.Core.Geometry.Multipart,System.Double)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Weed(ArcGIS.Core.Geometry.Multipart,System.Double)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
         #region Generalize a multipart - Weed
         {
           // generalize with a maxDeviation of 0
@@ -4012,11 +4339,15 @@ namespace ProSnippets.GeometrySnippets.Engine
         }
         #endregion
 
-        // cref: ArcGIS.Core.Geometry.GeometryEngine.Within(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
         // cref: ArcGIS.Core.Geometry.IGeometryEngine.Within(ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.Geometry.Geometry)
+        // cref: ArcGIS.Core.Geometry.EnvelopeBuilderEx.CreateEnvelope(ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.MapPoint,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.GeometryEngine.Instance
+        // cref: ArcGIS.Core.Geometry.MapPointBuilderEx.CreateMapPoint(System.Double,System.Double,ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolygonBuilderEx.CreatePolygon(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
+        // cref: ArcGIS.Core.Geometry.PolylineBuilderEx.CreatePolyline(System.Collections.Generic.IEnumerable{ArcGIS.Core.Geometry.MapPoint},ArcGIS.Core.Geometry.SpatialReference)
         #region MapPoints, Polylines, Polygons within Polygon
         {
-          // build a polygon      
+          // build a polygon
           List<MapPoint> pts =
           [
             MapPointBuilderEx.CreateMapPoint(1.0, 1.0),

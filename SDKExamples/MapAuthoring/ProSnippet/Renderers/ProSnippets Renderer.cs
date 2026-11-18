@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -20,19 +20,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
-using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Catalog;
 using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Extensions;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
@@ -49,21 +41,37 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
   /// Crefs are used for internal purposes only. Please ignore them in the context of this example.
   public static partial class ProSnippetsMapAuthoring
   {
-    public static void ProSnippetsRenderers()
+    public static async Task ProSnippetsRenderersAsync()
     {
+      var activeMap = MapView.Active?.Map;
+      var project = Project.Current;
+
       #region ignore - Variable initialization
       //Get a ColorRamp
-      StyleProjectItem style =
-              Project.Current.GetItems<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS Colors");
-      var colorRampList = style.SearchColorRamps("Heat Map 4 - Semitransparent");
-
-      CIMColorRamp colorRamp = colorRampList[0].ColorRamp;
+      CIMColorRamp colorRamp = await QueuedTask.Run(() =>
+      {
+        StyleProjectItem style =
+                project.GetItems<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS Colors");
+        var colorRampList = style.SearchColorRamps("Heat Map 4 - Semitransparent");
+        return colorRampList[0].ColorRamp;
+      });
       #endregion
 
       #region ProSnippet Group: Chart Renderers
       #endregion
       //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition
-      //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition.#ctor
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.ChartFields
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.DisplayIn3D
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition.FieldName
+      //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition.FixedSize
+      //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition.Orientation
+      //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition.ShowOutline
+      //cref: ArcGIS.Desktop.Mapping.PieChartRendererDefinition.SizeOption
       #region Pie chart renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using Pie chart symbols to represent data
@@ -72,15 +80,16 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
         }
-        //Note: Run within a QueuedTask
-        //Fields to use for the pie chart slices
-        var chartFields = new List<string>
+        await QueuedTask.Run(() =>
         {
+          //Fields to use for the pie chart slices
+          var chartFields = new List<string>
+          {
                 "WHITE10",
                  "BLACK10",
                  "AMERIND10",
@@ -92,27 +101,40 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
                  "HPACIFIC10",
                  "HBLACK10",
                   "HOTHRACE10"
-        };
+          };
 
-        PieChartRendererDefinition pieChartRendererDefn = new PieChartRendererDefinition()
-        {
-          ChartFields = chartFields,
-          ColorRamp = colorRamp,
-          SizeOption = PieChartSizeOptions.Field,
-          FieldName = "BLACK10",
-          FixedSize = 36.89,
-          DisplayIn3D = true,
-          ShowOutline = true,
-          Orientation = PieChartOrientation.CounterClockwise,
-        };
-        //Creates a "Renderer"
-        var pieChartRenderer = featureLayer.CreateRenderer(pieChartRendererDefn);
+          PieChartRendererDefinition pieChartRendererDefn = new PieChartRendererDefinition()
+          {
+            ChartFields = chartFields,
+            ColorRamp = colorRamp,
+            SizeOption = PieChartSizeOptions.Field,
+            FieldName = "BLACK10",
+            FixedSize = 36.89,
+            DisplayIn3D = true,
+            ShowOutline = true,
+            Orientation = PieChartOrientation.CounterClockwise,
+          };
+          //Creates a "Renderer"
+          var pieChartRenderer = featureLayer.CreateRenderer(pieChartRendererDefn);
 
-        //Sets the renderer to the feature layer
-        featureLayer.SetRenderer(pieChartRenderer);
+          //Sets the renderer to the feature layer
+          featureLayer.SetRenderer(pieChartRenderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Desktop.Mapping.BarChartRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.BarChartRendererDefinition.BarSpacing
+      //cref: ArcGIS.Desktop.Mapping.BarChartRendererDefinition.BarWidth
+      //cref: ArcGIS.Desktop.Mapping.BarChartRendererDefinition.MaximumBarLength
+      //cref: ArcGIS.Desktop.Mapping.BarChartRendererDefinition.Orientation
+      //cref: ArcGIS.Desktop.Mapping.BarChartRendererDefinition.ShowAxes
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.ChartFields
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.DisplayIn3D
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
       #region Bar Chart Value renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using Bar chart symbols to represent data
@@ -121,7 +143,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -140,27 +162,41 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
                 "HBLACK10",
                 "HOTHRACE10"
           };
-        //Note: Run within QueuedTask
-        BarChartRendererDefinition barChartRendererDefn = new BarChartRendererDefinition()
+        await QueuedTask.Run(() =>
         {
-          ChartFields = chartFields,
-          BarWidth = 12,
-          BarSpacing = 1,
-          MaximumBarLength = 65,
-          Orientation = ChartOrientation.Vertical,
-          DisplayIn3D = true,
-          ShowAxes = true,
-          ColorRamp = colorRamp
+          BarChartRendererDefinition barChartRendererDefn = new BarChartRendererDefinition()
+          {
+            ChartFields = chartFields,
+            BarWidth = 12,
+            BarSpacing = 1,
+            MaximumBarLength = 65,
+            Orientation = ChartOrientation.Vertical,
+            DisplayIn3D = true,
+            ShowAxes = true,
+            ColorRamp = colorRamp
 
-        };
-        //Creates a "Renderer"
-        var barChartChartRenderer = featureLayer.CreateRenderer(barChartRendererDefn);
+          };
+          //Creates a "Renderer"
+          var barChartChartRenderer = featureLayer.CreateRenderer(barChartRendererDefn);
 
-        //Sets the renderer to the feature layer
-        featureLayer.SetRenderer(barChartChartRenderer);
+          //Sets the renderer to the feature layer
+          featureLayer.SetRenderer(barChartChartRenderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Desktop.Mapping.StackedChartRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.ChartFields
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.ChartRendererDefinition.DisplayIn3D
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.StackedChartRendererDefinition.Orientation
+      //cref: ArcGIS.Desktop.Mapping.StackedChartRendererDefinition.ShowOutline
+      //cref: ArcGIS.Desktop.Mapping.StackedChartRendererDefinition.SizeOption
+      //cref: ArcGIS.Desktop.Mapping.StackedChartRendererDefinition.StackLength
+      //cref: ArcGIS.Desktop.Mapping.StackedChartRendererDefinition.StackWidth
       #region Stacked bar chart renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using stacked bar chart symbols to represent data
@@ -169,7 +205,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -201,17 +237,27 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           ColorRamp = colorRamp
 
         };
-        //Note: Run within QueuedTask
-        //Creates a "Renderer"
-        var stackedBarChartChartRenderer = featureLayer.CreateRenderer(barChartpieChartRendererDefn);
+        await QueuedTask.Run(() =>
+        {
+          //Creates a "Renderer"
+          var stackedBarChartChartRenderer = featureLayer.CreateRenderer(barChartpieChartRendererDefn);
 
-        //Sets the renderer to the feature layer
-        featureLayer.SetRenderer(stackedBarChartChartRenderer);
+          //Sets the renderer to the feature layer
+          featureLayer.SetRenderer(stackedBarChartChartRenderer);
+        });
       }
       #endregion
       #region ProSnippet Group: ClassBreak Renderers
       #endregion
       //cref: ArcGIS.Desktop.Mapping.GraduatedColorsRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.BreakCount
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ClassificationField
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ClassificationMethod
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
       #region Class Breaks renderer with graduated colors.
       /// <summary>
       /// Renders a feature layer using graduated colors to draw quantities.
@@ -220,7 +266,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -233,22 +279,32 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           BreakCount = 5,
           ColorRamp = colorRamp,
         };
-        //Note: Run within QueuedTask
-        CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(gcDef);
-        featureLayer?.SetRenderer(renderer);
+        await QueuedTask.Run(() =>
+        {
+          CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(gcDef);
+          featureLayer?.SetRenderer(renderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Desktop.Mapping.GraduatedColorsRendererDefinition
       //cref: ArcGIS.Core.CIM.CIMVisualVariable
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.BreakCount
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ClassificationField
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ClassificationMethod
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
       #region Class Breaks renderer with graduated colors and outline
       /// <summary>
       /// Renders a feature layer using graduated colors to draw quantities. The outline width is varied based on attributes.
-      /// ![graduatedColorOutline.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/graduatedColorOutline.png "Graduated colors with natural breaks renderer.") 
+      /// ![graduatedColorOutline.png](https://ArcGIS.github.io/arcgis-pro-sdk/images/Renderers/graduatedColorOutline.png "Graduated colors with natural breaks renderer.")
       /// </summary>
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -256,7 +312,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         //Gets the first numeric field of the feature layer
         var firstNumericFieldOfFeatureLayer = "NumericFieldInFeatureLayer";
         //Gets the min and max value of the field
-        var minMax = GetFieldMinMax(featureLayer, firstNumericFieldOfFeatureLayer);
+        var minMax = await GetFieldMinMaxAsync(featureLayer, firstNumericFieldOfFeatureLayer);
         GraduatedColorsRendererDefinition gcDef = new GraduatedColorsRendererDefinition()
         {
           ClassificationField = "NumericFieldInFeatureLayer",
@@ -264,7 +320,8 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           BreakCount = 5,
           ColorRamp = colorRamp
         };
-        CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(gcDef);
+        CIMClassBreaksRenderer renderer = await QueuedTask.Run(() =>
+          (CIMClassBreaksRenderer)featureLayer.CreateRenderer(gcDef));
         //Create array of CIMVisualVariables to hold the outline information.
         var visualVariables = new CIMVisualVariable[] {
                     new CIMSizeVisualVariable
@@ -292,11 +349,24 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
 
                 };
         renderer.VisualVariables = visualVariables;
-        //Note: Run within QueuedTask
-        featureLayer?.SetRenderer(renderer);
+        await QueuedTask.Run(() => featureLayer?.SetRenderer(renderer));
       }
       #endregion
       //cref: ArcGIS.Desktop.Mapping.GraduatedSymbolsRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.BreakCount
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ClassificationField
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ClassificationMethod
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.ClassBreaksRendererDefinition.SymbolTemplate
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.GraduatedSymbolsRendererDefinition.MaximumSymbolSize
+      //cref: ArcGIS.Desktop.Mapping.GraduatedSymbolsRendererDefinition.MinimumSymbolSize
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Class Breaks renderer with graduated symbols.
       /// <summary>
       /// Renders a feature layer using graduated symbols and natural breaks to draw quantities.
@@ -305,7 +375,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -320,12 +390,24 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           BreakCount = 5,
           ColorRamp = colorRamp, //getting a color ramp
         };
-        //Note: Run within QueuedTask
-        CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(gsDef);
-        featureLayer?.SetRenderer(renderer);
+        await QueuedTask.Run(() =>
+        {
+          CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(gsDef);
+          featureLayer?.SetRenderer(renderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition.Field
+      //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition.LowerColorStop
+      //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition.LowerLabel
+      //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition.UpperColorStop
+      //cref: ArcGIS.Desktop.Mapping.UnclassedColorsRendererDefinition.UpperLabel
       #region UnClassed graduated color renderer.
       /// <summary>
       /// Renders a feature layer using an unclassed color gradient.
@@ -334,7 +416,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. National Transportation Atlas Interstate Highways");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. National Transportation Atlas Interstate Highways");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the U.S. National Transportation Atlas Interstate Highways feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -343,7 +425,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         var firstNumericFieldOfFeatureLayer = "NumericFieldInFeatureLayer";
         //Gets the min and max value of the field
         //Refer to the GetFieldMinMax function below
-        var labels = GetFieldMinMax(featureLayer, firstNumericFieldOfFeatureLayer);
+        var labels = await GetFieldMinMaxAsync(featureLayer, firstNumericFieldOfFeatureLayer);
         UnclassedColorsRendererDefinition ucDef = new UnclassedColorsRendererDefinition()
         {
           Field = firstNumericFieldOfFeatureLayer,
@@ -353,12 +435,25 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           UpperLabel = labels.Item2,
           LowerLabel = labels.Item1,
         };
-        //Note: Run within QueuedTask
-        CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(ucDef);
-        featureLayer?.SetRenderer(renderer);
+        await QueuedTask.Run(() =>
+        {
+          CIMClassBreaksRenderer renderer = (CIMClassBreaksRenderer)featureLayer.CreateRenderer(ucDef);
+          featureLayer?.SetRenderer(renderer);
+        });
       }
       #endregion
-      //cref: ArcGIS.Core.CIM.ClassificationMethod.Manual
+      //cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.GreenRGB
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.GreyRGB
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.WhiteRGB
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Class Breaks renderer with Manual Intervals
       /// <summary>
       /// Renders a feature layer using graduated colors and manual intervals to draw quantities.
@@ -367,7 +462,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -408,16 +503,26 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           Field = "NumericFieldInLayer",
           //Important to add the Minimum break for your data to be classified correctly.
           //This is vital especially if you have data with negative values.
-          //MinimumBreak = 
+          //MinimumBreak =
           Breaks = listClassBreaks.ToArray()
         };
-        //Note: Run within QueuedTask
-        featureLayer?.SetRenderer(cimClassBreakRenderer);
+        await QueuedTask.Run(() => featureLayer?.SetRenderer(cimClassBreakRenderer));
       }
       #endregion
       #region ProSnippet Group: DotDensity Renderer
       #endregion
       //cref: ArcGIS.Desktop.Mapping.DotDensityRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.GetTable()
+      //cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.GreyRGB
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructMarker(ArcGIS.Core.CIM.CIMColor,System.Double)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Dot Density renderer.
       /// <summary>
       /// Renders a polygon feature layer with Dot Density symbols to represent quantities.
@@ -426,7 +531,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -435,27 +540,31 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         int dotSize = 3;
         //Check if the TOTPOP10 field exists
         int idxField = -1;
-        using (var table = featureLayer.GetTable())
+        idxField = await QueuedTask.Run(() =>
         {
+          using var table = featureLayer.GetTable();
           var def = table.GetDefinition();
-          idxField = def.FindField("TOTPOP10");
-        }
+          return def.FindField("TOTPOP10");
+        });
         // "TOTPOP10" field was not found
         if (idxField == -1)
+        {
           return;
+        }
 
         //array of fields to be represented in the renderer
         var valueFields = new List<string> { "TOTPOP10" };
-        //Note: Run within QueuedTask
-        //Create the DotDensityRendererDefinition object
-        var dotDensityDef = new DotDensityRendererDefinition(valueFields, colorRamp,
+        await QueuedTask.Run(() =>
+        {
+          //Create the DotDensityRendererDefinition object
+          var dotDensityDef = new DotDensityRendererDefinition(valueFields, colorRamp,
                                                                           dotSize, 30000, "Dot", "people");
         //Create the renderer using the DotDensityRendererDefinition
         CIMDotDensityRenderer dotDensityRndr = (CIMDotDensityRenderer)featureLayer.CreateRenderer(dotDensityDef);
 
         //if you want to customize the dot symbol for the renderer, create a "DotDensitySymbol" which is an
         //Amalgamation of 3 symbol layers: CIMVectorMarker, CIMSolidFill and CIMSolidStroke
-        //Define CIMVectorMarker layer          
+        //Define CIMVectorMarker layer
         var cimMarker = SymbolFactory.Instance.ConstructMarker(ColorFactory.Instance.RedRGB, dotSize);
         var dotDensityMarker = cimMarker as CIMVectorMarker;
         //Define the placement
@@ -478,12 +587,23 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         dotDensityRndr.DotDensitySymbol = dotDensitySymbol.MakeSymbolReference();
 
         //Apply the renderer to the polygon Feature Layer.
-        featureLayer.SetRenderer(dotDensityRndr);
+          featureLayer.SetRenderer(dotDensityRndr);
+        });
       }
       #endregion
       #region ProSnippet Group: Heat Map Renderers
       #endregion
       //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition.LowerLabel
+      //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition.Radius
+      //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition.RendereringQuality
+      //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition.UpperLabel
+      //cref: ArcGIS.Desktop.Mapping.HeatMapRendererDefinition.WeightField
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
       #region Heat map renderer
       /// <summary>
       /// Renders a point feature layer using a continuous color gradient to represent density of points.
@@ -492,7 +612,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the U.S. Cities feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. Cities");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. Cities");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the U.S. Cities feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -507,14 +627,25 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           UpperLabel = "High Density",
           LowerLabel = "Low Density"
         };
-        //Note: Run within QueuedTask
-        CIMHeatMapRenderer heatMapRndr = (CIMHeatMapRenderer)featureLayer.CreateRenderer(heatMapDef);
-        featureLayer.SetRenderer(heatMapRndr);
+        await QueuedTask.Run(() =>
+        {
+          CIMHeatMapRenderer heatMapRndr = (CIMHeatMapRenderer)featureLayer.CreateRenderer(heatMapDef);
+          featureLayer.SetRenderer(heatMapRndr);
+        });
       }
       #endregion
       #region ProSnippet Group: Proportional Renderers
       #endregion
       //cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition.Field
+      //cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition.LowerSizeStop
+      //cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition.MaximumSymbolSize
+      //cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition.MinimumSymbolSize
+      //cref: ArcGIS.Desktop.Mapping.ProportionalRendererDefinition.UpperSizeStop
       #region Proportional symbols renderer.
       /// <summary>
       /// Renders a feature layer using proportional symbols to draw quantities.
@@ -523,7 +654,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -531,7 +662,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         //Gets the first numeric field of the feature layer
         var firstNumericFieldOfFeatureLayer = "NumericFieldInLayer";
         //Gets the min and max value of the field
-        var sizes = GetFieldMinMax(featureLayer, firstNumericFieldOfFeatureLayer);
+        var sizes = await GetFieldMinMaxAsync(featureLayer, firstNumericFieldOfFeatureLayer);
         ProportionalRendererDefinition prDef = new ProportionalRendererDefinition()
         {
           Field = firstNumericFieldOfFeatureLayer,
@@ -540,9 +671,11 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
           LowerSizeStop = Convert.ToDouble(sizes.Item1),
           UpperSizeStop = Convert.ToDouble(sizes.Item2)
         };
-        //Note: Run within QueuedTask
-        CIMProportionalRenderer propRndr = (CIMProportionalRenderer)featureLayer.CreateRenderer(prDef);
-        featureLayer.SetRenderer(propRndr);
+        await QueuedTask.Run(() =>
+        {
+          CIMProportionalRenderer propRndr = (CIMProportionalRenderer)featureLayer.CreateRenderer(prDef);
+          featureLayer.SetRenderer(propRndr);
+        });
       }
       #endregion
 
@@ -550,6 +683,17 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #endregion
 
       //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
+      //cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer()
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.BlueRGB
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.CreateRGBColor(System.Double,System.Double,System.Double,System.Double)
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPolygonSymbol(ArcGIS.Core.CIM.CIMColor,ArcGIS.Desktop.Mapping.SimpleFillStyle,ArcGIS.Core.CIM.CIMStroke)
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructStroke(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Simple Renderer for a Polygon feature layer.
       /// <summary>
       /// Renders a Polygon feature layer using a single symbol.
@@ -558,7 +702,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -568,18 +712,29 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
               ColorFactory.Instance.BlueRGB, 2.0, SimpleLineStyle.Solid);
         CIMPolygonSymbol fillWithOutline = SymbolFactory.Instance.ConstructPolygonSymbol(
               ColorFactory.Instance.CreateRGBColor(255, 190, 190), SimpleFillStyle.Solid, outline);
-        //Get the layer's current renderer
-        //Note: Run within QueuedTask
-        CIMSimpleRenderer renderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
+        await QueuedTask.Run(() =>
+        {
+          //Get the layer's current renderer
+          CIMSimpleRenderer renderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
 
-        //Update the symbol of the current simple renderer
-        renderer.Symbol = fillWithOutline.MakeSymbolReference();
+          //Update the symbol of the current simple renderer
+          renderer.Symbol = fillWithOutline.MakeSymbolReference();
 
-        //Update the feature layer renderer
-        featureLayer.SetRenderer(renderer);
+          //Update the feature layer renderer
+          featureLayer.SetRenderer(renderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
+      //cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.ShapeType
+      //cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer()
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructPointSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleMarkerStyle)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region Simple Renderer for a Point feature layer.
       /// <summary>
       /// Renders a Point feature layer using a single symbol.
@@ -588,7 +743,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.ShapeType == esriGeometryType.esriGeometryPoint);
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.ShapeType == esriGeometryType.esriGeometryPoint);
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with a point feature layer", "Data missing");
@@ -596,18 +751,29 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         //Create a circle marker
         var pointSymbol = SymbolFactory.Instance.ConstructPointSymbol(ColorFactory.Instance.RedRGB, 8, SimpleMarkerStyle.Circle);
 
-        //Get the layer's current renderer
-        //Note: Run within QueuedTask
-        CIMSimpleRenderer renderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
+        await QueuedTask.Run(() =>
+        {
+          //Get the layer's current renderer
+          CIMSimpleRenderer renderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
 
-        //Update the symbol of the current simple renderer
-        renderer.Symbol = pointSymbol.MakeSymbolReference();
+          //Update the symbol of the current simple renderer
+          renderer.Symbol = pointSymbol.MakeSymbolReference();
 
-        //Update the feature layer renderer
-        featureLayer.SetRenderer(renderer);
+          //Update the feature layer renderer
+          featureLayer.SetRenderer(renderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
+      //cref: ArcGIS.Desktop.Mapping.ColorFactory.Instance
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer()
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.IColorFactory.RedRGB
+      //cref: ArcGIS.Desktop.Mapping.ISymbolFactory.ConstructLineSymbol(ArcGIS.Core.CIM.CIMColor,System.Double,ArcGIS.Desktop.Mapping.SimpleLineStyle)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolFactory.Instance
       #region  Simple Renderer for a Line feature layer.
       /// <summary>
       /// Renders a Line feature layer using a single symbol.
@@ -616,7 +782,7 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. National Transportation Atlas Interstate Highways");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. National Transportation Atlas Interstate Highways");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the U.S. National Transportation Atlas Interstate Highways feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
@@ -624,18 +790,27 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
         //Create a circle marker
         var lineSymbol = SymbolFactory.Instance.ConstructLineSymbol(ColorFactory.Instance.RedRGB, 2, SimpleLineStyle.DashDotDot);
 
-        //Get the layer's current renderer
-        //Note: Run within QueuedTask
-        CIMSimpleRenderer renderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
+        await QueuedTask.Run(() =>
+        {
+          //Get the layer's current renderer
+          CIMSimpleRenderer renderer = featureLayer.GetRenderer() as CIMSimpleRenderer;
 
-        //Update the symbol of the current simple renderer
-        renderer.Symbol = lineSymbol.MakeSymbolReference();
+          //Update the symbol of the current simple renderer
+          renderer.Symbol = lineSymbol.MakeSymbolReference();
 
-        //Update the feature layer renderer
-        featureLayer.SetRenderer(renderer);
+          //Update the feature layer renderer
+          featureLayer.SetRenderer(renderer);
+        });
       }
       #endregion
       //cref: ArcGIS.Core.CIM.CIMSimpleRenderer
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.GetRenderer()
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.StyleHelper.SearchSymbols(ArcGIS.Desktop.Mapping.StyleItemType,System.String)
+      //cref: ArcGIS.Desktop.Mapping.SymbolExtensionMethods.MakeSymbolReference()
+      //cref: ArcGIS.Desktop.Mapping.SymbolStyleItem.Symbol
       #region Simple Renderer for a Line feature layer using a style from a StyleProjectItem.
       /// <summary>
       /// Renders a Line feature layer using a style from a StyleProjectItem.
@@ -644,26 +819,31 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. National Transportation Atlas Interstate Highways");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "U.S. National Transportation Atlas Interstate Highways");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the U.S. National Transportation Atlas Interstate Highways feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
         }
         //Get all styles in the project
-        var styleProjectItem2D = Project.Current.GetItems<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS 2D");
+        var styleProjectItem2D = project.GetItems<StyleProjectItem>().FirstOrDefault(s => s.Name == "ArcGIS 2D");
 
         //Get a specific style in the project by name
         var arrowLineSymbol = styleProjectItem2D.SearchSymbols(StyleItemType.LineSymbol, "Arrow Line 2 (Mid)")[0];
-        if (arrowLineSymbol == null) return;
-        //Note: Run within QueuedTask
-        //Get the layer's current renderer
-        var renderer = featureLayer?.GetRenderer() as CIMSimpleRenderer;
+        if (arrowLineSymbol == null)
+        {
+          return;
+        }
+        await QueuedTask.Run(() =>
+        {
+          //Get the layer's current renderer
+          var renderer = featureLayer?.GetRenderer() as CIMSimpleRenderer;
 
-        //Update the symbol of the current simple renderer
-        renderer.Symbol = arrowLineSymbol.Symbol.MakeSymbolReference();
+          //Update the symbol of the current simple renderer
+          renderer.Symbol = arrowLineSymbol.Symbol.MakeSymbolReference();
 
-        //Update the feature layer renderer
-        featureLayer.SetRenderer(renderer);
+          //Update the feature layer renderer
+          featureLayer.SetRenderer(renderer);
+        });
       }
       #endregion
 
@@ -671,6 +851,13 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       #region ProSnippet Group: Unique Value Renderers
       #endregion
       //cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.CreateRenderer(ArcGIS.Desktop.Mapping.RendererDefinition)
+      //cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
+      //cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      //cref: ArcGIS.Desktop.Mapping.Map.GetLayersAsFlattenedList()
+      //cref: ArcGIS.Desktop.Mapping.MapMember.Name
+      //cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition.ColorRamp
+      //cref: ArcGIS.Desktop.Mapping.UniqueValueRendererDefinition.ValueFields
       #region Unique Value Renderer for a feature layer
       /// <summary>
       /// Renders a feature layer using unique values from one or multiple fields
@@ -679,69 +866,85 @@ namespace ProSnippets.MapAuthoringSnippets.Renderers
       {
         //Check feature layer name
         //Code works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data
-        var featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
+        var featureLayer = activeMap.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(f => f.Name == "USDemographics");
         if (featureLayer == null)
         {
           MessageBox.Show("This renderer works with the USDemographics feature layer available with the ArcGIS Pro SDK Sample data", "Data missing");
         }
-        //construct unique value renderer definition                
+        //construct unique value renderer definition
         UniqueValueRendererDefinition uvr = new
                  UniqueValueRendererDefinition()
         {
           //Refer to the function below to get a display field of the feature layer
-          ValueFields = new List<string> { GetDisplayField(featureLayer) }, //multiple fields in the array if needed.
+          ValueFields = new List<string> { await GetDisplayFieldAsync(featureLayer) }, //multiple fields in the array if needed.
           ColorRamp = colorRamp, //Specify color ramp
         };
 
         //Creates a "Renderer"
-        var cimRenderer = featureLayer.CreateRenderer(uvr);
+        await QueuedTask.Run(() =>
+        {
+          var cimRenderer = featureLayer.CreateRenderer(uvr);
 
-        //Sets the renderer to the feature layer
-        featureLayer.SetRenderer(cimRenderer);
+          //Sets the renderer to the feature layer
+          featureLayer.SetRenderer(cimRenderer);
+        });
 
         //Function to get the display field of a feature layer
-        static string GetDisplayField(FeatureLayer featureLayer)
+        static Task<string> GetDisplayFieldAsync(FeatureLayer featureLayer)
         {
-          // get the CIM definition from the layer
-          var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMBasicFeatureLayer;
-          // get the view of the source table underlying the layer
-          var cimDisplayTable = cimFeatureDefinition.FeatureTable;
-          // this field is used as the 'label' to represent the row
-          return cimDisplayTable.DisplayField;
+          return QueuedTask.Run(() =>
+          {
+            // get the CIM definition from the layer
+            var cimFeatureDefinition = featureLayer.GetDefinition() as ArcGIS.Core.CIM.CIMBasicFeatureLayer;
+            // get the view of the source table underlying the layer
+            var cimDisplayTable = cimFeatureDefinition.FeatureTable;
+            // this field is used as the 'label' to represent the row
+            return cimDisplayTable.DisplayField;
+          });
         }
       }
       #endregion
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.GetTable()
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.Search(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.TimeRange,ArcGIS.Desktop.Mapping.RangeExtent,ArcGIS.Core.CIM.CIMFloorFilterSettings)
       #region get the min and max value of a field in a feature layer
       //Function to get the min and max value of a field in a feature layer
-      static Tuple<string, string> GetFieldMinMax(FeatureLayer featureLayer, string fieldName)
+      static Task<Tuple<string, string>> GetFieldMinMaxAsync(FeatureLayer featureLayer, string fieldName)
       {
-        //Get the file gdb from the feature layer
-        var tableDef = featureLayer.GetTable().GetDefinition();
-        var fields = tableDef.GetFields();
-        //var fieldName = fields[2].Name;
-        //var field = tableDef.GetFields().First(f => f.Name == "FID_1");
+        return QueuedTask.Run(() =>
+        {
+          //Get the file gdb from the feature layer
+          var tableDef = featureLayer.GetTable().GetDefinition();
+          var fields = tableDef.GetFields();
+          //var fieldName = fields[2].Name;
+          //var field = tableDef.GetFields().First(f => f.Name == "FID_1");
 
-        QueryFilter queryFilter = new QueryFilter()
-        {
-          WhereClause = "1 = 1",
-        };
-        using (var rowCursor = featureLayer.Search(queryFilter))
-        {
-          long iMin = -1;
-          long iMax = -1;
-          while (rowCursor.MoveNext())
+          QueryFilter queryFilter = new QueryFilter()
           {
-            using (Row currentRow = rowCursor.Current)
+            WhereClause = "1 = 1",
+          };
+          using (var rowCursor = featureLayer.Search(queryFilter))
+          {
+            long iMin = -1;
+            long iMax = -1;
+            while (rowCursor.MoveNext())
             {
-              var iVal = Convert.ToInt64(currentRow[fieldName]);
-              if ((iMin > iVal) || (iMin == -1))
-                iMin = iVal;
-              if ((iMax < iVal) || (iMax == -1))
-                iMax = iVal;
+              using (Row currentRow = rowCursor.Current)
+              {
+                var iVal = Convert.ToInt64(currentRow[fieldName]);
+                if ((iMin > iVal) || (iMin == -1))
+                {
+                  iMin = iVal;
+                }
+
+                if ((iMax < iVal) || (iMax == -1))
+                {
+                  iMax = iVal;
+                }
+              }
             }
+            return new Tuple<string, string>(iMin.ToString(), iMax.ToString());
           }
-          return new Tuple<string, string>(iMin.ToString(), iMax.ToString());
-        }
+        });
       }
       #endregion
     }

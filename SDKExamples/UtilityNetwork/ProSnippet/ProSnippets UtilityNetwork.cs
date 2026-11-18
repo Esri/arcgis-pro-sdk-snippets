@@ -16,6 +16,12 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.NetworkDiagrams;
@@ -25,12 +31,6 @@ using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using Envelope = ArcGIS.Core.Geometry.Envelope;
 using Geometry = ArcGIS.Core.Geometry.Geometry;
 using NetworkAttribute = ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute;
@@ -165,8 +165,8 @@ namespace ProSnippets.UtilityNetworkSnippets
       // cref: ArcGIS.Core.Data.UtilityNetwork.Element
       // cref: ArcGIS.Core.Data.UtilityNetwork.Element.NetworkSource
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTable(ArcGIS.Core.Data.UtilityNetwork.Element.NetworkSource)
-      // cref: ArcGIS.Core.Data.QueryFilter.#ctor
-      // cref: ArcGIS.Core.Data.Table.Search
+      // cref: ArcGIS.Core.Data.Table.Search(ArcGIS.Core.Data.QueryFilter,System.Boolean)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.ObjectID
       #region Fetching a Row from an Element
       {
         static Row FetchRowFromElement(UtilityNetwork utilityNetwork, Element element)
@@ -195,6 +195,7 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       #endregion
 
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.ObjectID
       #region Get percentage along a polyline
       {
         static double GetPolylineStartingPercentage(Element startingPointElement, Geometry clickedPoint, FeatureLayer featureLayer)
@@ -254,10 +255,8 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.AssetType
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.CreateElement(ArcGIS.Core.Data.UtilityNetwork.AssetType, System.Guid)
-      // cref: ArcGIS.Desktop.Editing.RowHandle.#ctor(ArcGIS.Core.Data.UtilityNetwork.Element, ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork)
       // cref: ArcGIS.Core.Data.UtilityNetwork.AssociationType
       // cref: ArcGIS.Desktop.Editing.AssociationDescription
-      // cref: ArcGIS.Desktop.Editing.AssociationDescription.#ctor(ArcGIS.Core.Data.UtilityNetwork.AssociationType, ArcGIS.Desktop.Editing.RowHandle, ArcGIS.Desktop.Editing.RowHandle)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.AssociationDescription)
       #region Create a utility network association
       {
@@ -288,9 +287,6 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.RowToken
-      // cref: ArcGIS.Desktop.Editing.RowHandle.#ctor(ArcGIS.Desktop.Editing.RowToken)
-      // cref: ArcGIS.Desktop.Editing.AssociationDescription.#ctor(ArcGIS.Core.Data.UtilityNetwork.AssociationType, ArcGIS.Desktop.Editing.RowHandle, ArcGIS.Desktop.Editing.RowHandle)
-      // cref: ArcGIS.Desktop.Editing.AssociationDescription.#ctor
       #region Create utility network features and associations in a single edit operation
       {
         // This routine creates a pole and a transformer bank, and then creates a structural attachment association between them, all in a single edit operation
@@ -327,7 +323,6 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraversalDirection
-      // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsDescription.#ctor(ArcGIS.Core.Data.UtilityNetwork.TraversalDirection,System.Int32)
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.TraverseAssociations(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Element},ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsDescription)
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsResult
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsResult.Associations
@@ -353,12 +348,12 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraversalDirection
-      // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsDescription.#ctor(ArcGIS.Core.Data.UtilityNetwork.TraversalDirection,System.Int32)
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.TraverseAssociations(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Element},ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsDescription)
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsResult
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsResult.Associations
       // cref: ArcGIS.Core.Data.UtilityNetwork.Association
       // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsResult.AdditionalFieldValues
+      // cref: ArcGIS.Core.Data.UtilityNetwork.TraverseAssociationsDescription.AdditionalFields
       #region Get traverse associations result from upward traversal with depth limit
       {
         // This routine demonstrates how to get the associations involved in an upward traversal from a set of starting elements, up to a specified depth limit
@@ -402,7 +397,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       #region ProSnippet Group: Subnetworks and Tiers
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetDomainNetwork(System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork
       // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork.GetTier(System.String)
@@ -420,7 +415,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       // cref: ArcGIS.Core.Data.UtilityNetwork.Tier
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetSubnetworkManager()
       // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager.UpdateAllSubnetworks(ArcGIS.Core.Data.UtilityNetwork.Tier, System.Boolean)
-      // cref: ArcGIS.Desktop.Mapping.MapView.Redraw
+      // cref: ArcGIS.Desktop.Mapping.MapView.Redraw(System.Boolean)
       #region Update all dirty subnetworks in a tier
       {
         // This routine updates all dirty subnetworks in a given tier and refreshes the map view
@@ -434,11 +429,17 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.EnableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager, ArcGIS.Core.Data.UtilityNetwork.Tier, ArcGIS.Core.Data.UtilityNetwork.Element, System.String, System.String, System.String, System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.EnableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.Tier,ArcGIS.Core.Data.UtilityNetwork.Element,System.String,System.String,System.String,System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update()
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.DisableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager,ArcGIS.Core.Data.UtilityNetwork.Element)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update(ArcGIS.Core.Data.UtilityNetwork.SubnetworkUpdateOptions)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.DisableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.Element)
       // cref: ArcGIS.Desktop.Mapping.MapView.Redraw(System.Boolean)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.IncludeDomainDescriptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.ServiceSynchronizationType
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Export(System.Uri,ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.SetAcknowledged
+      // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.SubnetworkExportResultTypes
       #region Life cycle for a simple radial subnetwork with one controller
       {
         // This routine demonstrates the life cycle of a simple radial subnetwork with one controller
@@ -452,7 +453,7 @@ namespace ProSnippets.UtilityNetworkSnippets
           // ...
 
           // Update the subnetwork and refresh the map
-          subnetworkRadial1.Update();
+          subnetworkRadial1.Update(new SubnetworkUpdateOptions());
           MapView.Active.Redraw(true);
 
           // ...
@@ -463,7 +464,7 @@ namespace ProSnippets.UtilityNetworkSnippets
           subnetworkManager.DisableControllerInEditOperation(elementR1);
 
           // At this point, the subnetwork is deleted, but all of the rows that have been labeled with the subnetwork ID need to be updated
-          subnetworkRadial1.Update();
+          subnetworkRadial1.Update(new SubnetworkUpdateOptions());
           MapView.Active.Redraw(true);
 
           // The final step is to notify external systems (if any) by exporting the subnetwork
@@ -494,9 +495,15 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager.EnableController(ArcGIS.Core.Data.UtilityNetwork.Tier, ArcGIS.Core.Data.UtilityNetwork.Element, System.String, System.String, System.String, System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update(ArcGIS.Core.Data.UtilityNetwork.SubnetworkUpdateOptions)
       // cref: ArcGIS.Desktop.Mapping.MapView.Redraw(System.Boolean)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.DisableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager,ArcGIS.Core.Data.UtilityNetwork.Element)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.DisableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.Element)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.IncludeDomainDescriptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.ServiceSynchronizationType
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Export(System.Uri,ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.SetAcknowledged
+      // cref: ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.SubnetworkExportResultTypes
       #region Life cycle for a mesh subnetwork with multiple controllers
       {
         // This routine demonstrates the life cycle of a mesh subnetwork with multiple controllers
@@ -509,7 +516,7 @@ namespace ProSnippets.UtilityNetworkSnippets
           subnetworkManager.EnableController(lowVoltageMeshTier, elementM2, "Mesh1", "M2", "my description", "my notes");
           Subnetwork subnetworkMesh1 = subnetworkManager.EnableController(lowVoltageMeshTier, elementM3, "Mesh1", "M3",
             "my description", "my notes");
-          subnetworkMesh1.Update();
+          subnetworkMesh1.Update(new SubnetworkUpdateOptions());
           MapView.Active.Redraw(true);
 
           // ...
@@ -520,7 +527,7 @@ namespace ProSnippets.UtilityNetworkSnippets
           subnetworkManager.DisableControllerInEditOperation(elementM3);
 
           // After the subnetwork is deleted, all of the rows that have been labeled with the subnetwork ID need to be updated
-          subnetworkMesh1.Update();
+          subnetworkMesh1.Update(new SubnetworkUpdateOptions());
           MapView.Active.Redraw(true);
 
           // The final step is to notify external systems (if any) by exporting the subnetwork
@@ -548,10 +555,10 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.EnableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager, ArcGIS.Core.Data.UtilityNetwork.Tier, ArcGIS.Core.Data.UtilityNetwork.Element, System.String, System.String, System.String, System.String)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.DisableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager,ArcGIS.Core.Data.UtilityNetwork.Element)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.EnableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.Tier,ArcGIS.Core.Data.UtilityNetwork.Element,System.String,System.String,System.String,System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkExtensions.DisableControllerInEditOperation(ArcGIS.Core.Data.UtilityNetwork.Element)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update(ArcGIS.Core.Data.UtilityNetwork.SubnetworkUpdateOptions)
       // cref: ArcGIS.Desktop.Mapping.MapView.Redraw(System.Boolean)
       #region Life cycle for a multifeed radial subnetwork with two controllers
       {
@@ -575,14 +582,28 @@ namespace ProSnippets.UtilityNetworkSnippets
           Subnetwork subnetworkR3 = subnetworkManager.EnableControllerInEditOperation(mediumVoltageTier, elementR3, "R3",
             "R3", "my description", "my notes");
 
-          subnetworkR2.Update();
-          subnetworkR3.Update();
+          subnetworkR2.Update(new SubnetworkUpdateOptions());
+          subnetworkR3.Update(new SubnetworkUpdateOptions());
           MapView.Active.Redraw(true);
         }
       }
       #endregion
 
-      // cref:ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Export
+      // cref:ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Export(System.Uri,ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions)
+      // cref:ArcGIS.Core.Data.UtilityNetwork.ExportOptions.IncludeDomainDescriptions
+      // cref:ArcGIS.Core.Data.UtilityNetwork.ExportOptions.ServiceSynchronizationType
+      // cref:ArcGIS.Core.Data.UtilityNetwork.NetworkSource.ID
+      // cref:ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref:ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.IncludeGeometry
+      // cref:ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.ResultFieldsByNetworkSourceID
+      // cref:ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.ResultNetworkAttributes
+      // cref:ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.SetAcknowledged
+      // cref:ArcGIS.Core.Data.UtilityNetwork.SubnetworkExportOptions.SubnetworkExportResultTypes
+      // cref:ArcGIS.Core.Data.UtilityNetwork.SubnetworkManager.GetSubnetwork(System.String)
+      // cref:ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref:ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetSubnetworkManager()
+      // cref:ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttributes()
+      // cref:ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSources()
       #region Export Subnetwork
       {
         // This routine exports a subnetwork to a JSON file
@@ -621,12 +642,31 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Subnetwork.Update(ArcGIS.Core.Data.UtilityNetwork.SubnetworkUpdateOptions)
+      #region Force Subnetwork Update
+      {
+        static void ForceSubnetworkUpdate(UtilityNetwork utilityNetwork)
+        {
+          using (SubnetworkManager subnetworkManager = utilityNetwork.GetSubnetworkManager())
+          {
+            Subnetwork waterMainSubnetwork = subnetworkManager.GetSubnetwork("WaterMain");
+            // Force to udpate a clean subnetwork 
+            if (waterMainSubnetwork.GetState() == SubnetworkStates.Clean)
+            {
+              waterMainSubnetwork.Update(new SubnetworkUpdateOptions() { ForceUpdate = true });
+            }
+          }
+        }
+      }
+      #endregion
+
       #region ProSnippet Group: Tracing
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.DownstreamTracer
       #region Create a DownstreamTracer
       {
@@ -640,9 +680,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.#ctor(System.Collections.Generic.IEnumerable<ArcGIS.Core.Data.UtilityNetwork.Element>)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.#ctor()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Configuration
       #region Create a Trace Argument
       {
@@ -664,10 +702,8 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttribute(System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NetworkAttributeComparison.#ctor(ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute, ArcGIS.Core.Data.UtilityNetwork.Trace.Operator, System.Object)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Operator
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NetworkAttributeComparison
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.And.#ctor(ArcGIS.Core.Data.UtilityNetwork.Trace.ConditionalExpression, ArcGIS.Core.Data.UtilityNetwork.Trace.ConditionalExpression)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.Traversability
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Traversability.Barriers
       #region Create a Condition to compare a Network Attribute against a set of values
@@ -700,7 +736,6 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttribute(System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Add.#ctor(ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Function
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.Functions
       #region Create a Function
@@ -721,9 +756,6 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttribute(System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Add.#ctor(ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.FunctionBarrier.#ctor(ArcGIS.Core.Data.UtilityNetwork.Trace.Function, ArcGIS.Core.Data.UtilityNetwork.Trace.Operator, System.Double)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Function
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.Traversability
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Traversability.FunctionBarriers
       #region Create a FunctionBarrier
@@ -746,7 +778,6 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CategoryOperator
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CategoryComparison.#ctor(ArcGIS.Core.Data.UtilityNetwork.Trace.CategoryOperator, System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.OutputCondition
       #region Create an output condition
       {
@@ -763,7 +794,6 @@ namespace ProSnippets.UtilityNetworkSnippets
       // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttribute(System.String)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Propagator
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PropagatorFunction
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Propagator.#ctor(ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute, ArcGIS.Core.Data.UtilityNetwork.Trace.PropagatorFunction, ArcGIS.Core.Data.UtilityNetwork.Trace.Operator, System.Double)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.Propagators
       #region Create a Propagator
       {
@@ -807,10 +837,11 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfigurationQuery.#ctor
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfigurationQuery.Names
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetNamedTraceConfigurations(ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfigurationQuery)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfiguration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfiguration.Description
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
       #region Fetch a named trace configuration by name
       {
         // This routine fetches a named trace configuration by name from a utility network
@@ -818,7 +849,9 @@ namespace ProSnippets.UtilityNetworkSnippets
         {
           // Query to find named trace configurations
           NamedTraceConfigurationQuery namedTraceConfigurationQuery = new NamedTraceConfigurationQuery
-          { Names = new List<string> { configurationName } };
+          {
+            Names = new List<string> { configurationName }
+          };
 
           // Get the trace manager from the utility network
           using (TraceManager traceManager = utilityNetwork.GetTraceManager())
@@ -826,8 +859,12 @@ namespace ProSnippets.UtilityNetworkSnippets
             // A set of named trace configurations specified by the named traced configuration query
             IReadOnlyList<NamedTraceConfiguration> namedTraceConfigurations =
               traceManager.GetNamedTraceConfigurations(namedTraceConfigurationQuery);
+
             NamedTraceConfiguration waterConfiguration =
               namedTraceConfigurations.First(f => f.Description.Equals(configurationName));
+
+            // Get the trace configuration from the named trace configuration
+            TraceConfiguration traceConfiguration = waterConfiguration.GetTraceConfiguration();
 
             return waterConfiguration;
           }
@@ -837,6 +874,7 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Desktop.Mapping.UtilityNetworkLayer.GetNamedTraceConfigurations()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfiguration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfiguration.Name
       #region Fetch named trace configurations from a utility network layer
       {
         // This routine fetches a named trace configuration by name from a utility network layer
@@ -859,9 +897,9 @@ namespace ProSnippets.UtilityNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer(ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfiguration)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.#ctor(ArcGIS.Core.Data.UtilityNetwork.Trace.NamedTraceConfiguration,IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Element})
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Result
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
       #region Trace a utility network using a named trace configuration
       {
         // This routine demonstrates how to perform a trace using a named trace configuration from a utility network
@@ -884,10 +922,14 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.#ctor(System.Collections.Generic.IEnumerable<ArcGIS.Core.Data.UtilityNetwork.Element>)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.#ctor()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Configuration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.DownstreamTracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeBarriersWithResults
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeIsolatedFeatures
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.UseDigitizedDirection
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
       #region Trace a utility network with the digitized direction
       {
         // This routine demonstrates how to perform a trace using the digitized direction of features
@@ -921,10 +963,46 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument,ArcGIS.Core.Data.ServiceSynchronizationType)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceExportOptions.#ctor
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Export
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetGroup.GetAssetType(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetType.GetTerminalConfiguration()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork.GetTier(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.AssetType
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.Terminal
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.IncludeDomainDescriptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.ServiceSynchronizationType
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.GetAssetGroup(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Terminal.IsUpstreamTerminal
+      // cref: ArcGIS.Core.Data.UtilityNetwork.TerminalConfiguration.Terminals
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Filter.Barriers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.NetworkAttributes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.ResultFields
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Barriers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Configuration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultOptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultTypes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.AllowIndeterminateFlow
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.DomainNetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.Filter
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IgnoreBarriersAtStartingPoints
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeBarriersWithResults
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeContainers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeContent
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeIsolatedFeatures
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeUpToFirstSpatialContainer
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.SourceTier
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.CreateElement(ArcGIS.Core.Data.UtilityNetwork.AssetType,System.Guid)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTable(ArcGIS.Core.Data.UtilityNetwork.NetworkSource)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetDomainNetwork(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttribute(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttributes()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSources()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ConnectedTracer.Export(System.Uri,ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument,ArcGIS.Core.Data.UtilityNetwork.Trace.TraceExportOptions)
       #region Export a utility network trace as a JSON file
       {
         // This routine demonstrates how to perform a trace and export the results as a JSON file
@@ -1068,15 +1146,54 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceExportOptions.#ctor
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Export
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Tracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument,ArcGIS.Core.Data.ServiceSynchronizationType)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetGroup.GetAssetType(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetType.GetTerminalConfiguration()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork.GetTier(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.AssetType
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.Terminal
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.GetAssetGroup(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Terminal.IsUpstreamTerminal
+      // cref: ArcGIS.Core.Data.UtilityNetwork.TerminalConfiguration.Terminals
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceResultFieldValue
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.FeatureElementResult.FeatureElements
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.RelatedRecordResult.RelatedRecords
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.RelatedRecordResult
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.Filter.Barriers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.NetworkAttributes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.ResultFields
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Barriers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Configuration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultOptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultTypes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.AllowIndeterminateFlow
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.DomainNetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.Filter
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IgnoreBarriersAtStartingPoints
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeBarriersWithResults
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeContainers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeContent
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeIsolatedFeatures
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeUpToFirstSpatialContainer
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.SourceTier
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.CreateElement(ArcGIS.Core.Data.UtilityNetwork.AssetType,System.Guid)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTable(ArcGIS.Core.Data.UtilityNetwork.NetworkSource)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetDomainNetwork(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttribute(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttributes()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSources()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ConnectedTracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument,ArcGIS.Core.Data.ServiceSynchronizationType)
       #region Fetch features and network attributes from a utility network during trace
       {
         // This routine demonstrates how to fetch features and network attributes from a utility network during a trace
         static void FetchFeaturesAndAttributes(UtilityNetwork utilityNetwork)
         {
+          using (Geodatabase geodatabase = utilityNetwork.GetDatastore() as Geodatabase)
           using (TraceManager traceManager = utilityNetwork.GetTraceManager())
           using (UtilityNetworkDefinition utilityNetworkDefinition = utilityNetwork.GetDefinition())
           using (NetworkSource deviceNetworkSource = GetNetworkSource(utilityNetworkDefinition, "GasDevice") as NetworkSource)
@@ -1086,6 +1203,9 @@ namespace ProSnippets.UtilityNetworkSnippets
           using (AssetType deviceAssetType = deviceAssetGroup.GetAssetType("Pressure Reducing"))
           using (NetworkAttribute deviceStatusNetworkAttribute = utilityNetworkDefinition.GetNetworkAttribute("DeviceStatus"))
           using (NetworkAttribute accessibleNetworkAttribute = utilityNetworkDefinition.GetNetworkAttribute("Accessible"))
+          using (RelationshipClass valveInspectionRelationshipClass = geodatabase.OpenDataset<RelationshipClass>("GasDeviceToValveInspection"))
+          using (Table valveInspection = geodatabase.OpenDataset<Table>("ValveInspection"))
+          using (TableDefinition valveInspectionDefn = valveInspection.GetDefinition())
           {
             // Domain and tier information
             DomainNetwork domainNetwork = utilityNetworkDefinition.GetDomainNetwork("Gas");
@@ -1136,15 +1256,20 @@ namespace ProSnippets.UtilityNetworkSnippets
               networkattributeNames.Add(networkAttribute.Name);
             }
 
+            // Get the field names for the related records table (ValveInspection)
+            IReadOnlyList<Field> valveRelatedRecords = valveInspectionDefn.GetFields();
+            List<string> valveFieldNames = valveRelatedRecords.Select(f => f.Name).ToList();
+
             // Result Types
-            List<ResultType> resultTypeList = new List<ResultType>() { ResultType.Feature };
+            List<ResultType> resultTypeList = new List<ResultType>() { ResultType.Feature, ResultType.RelatedRecord };
 
             // Resutl Options
             ResultOptions resultOptions = new ResultOptions()
             {
               IncludeGeometry = true,
               NetworkAttributes = networkattributeNames,
-              ResultFields = new Dictionary<NetworkSource, List<string>>() { { deviceNetworkSource, deviceFields } }
+              ResultFields = new Dictionary<NetworkSource, List<string>>() { { deviceNetworkSource, deviceFields } },
+              RelatedRecordFields = new Dictionary<RelationshipClass, List<string>>() { { valveInspectionRelationshipClass, valveFieldNames } }
             };
 
             // Trace Arguments
@@ -1169,6 +1294,55 @@ namespace ProSnippets.UtilityNetworkSnippets
               if (traceResult is FeatureElementResult featureElementResult)
               {
                 IReadOnlyList<FeatureElement> featureElements = featureElementResult.FeatureElements;
+
+                // Iterate through the feature elements
+                foreach (FeatureElement featureElement in featureElements)
+                {
+                  // Get the field values specified in the `ResultOptions`
+                  IReadOnlyList<TraceResultFieldValue> resultFieldValues = featureElement.ResultFieldValues;
+
+                  foreach (TraceResultFieldValue fieldValue in resultFieldValues)
+                  {
+                    if (fieldValue.FieldType == FieldType.Geometry)
+                    {
+                      // Get the geometry of the feature
+                      Geometry geometry = fieldValue.Value as Geometry;
+                    }
+                  }
+                  // Get the Network attribute values specified in the `ResultOptions`
+                  IReadOnlyList<TraceResultFieldValue> networkAttributeValues = featureElement.ResultNetworkAttributeValues;
+                }
+              }
+
+              if (traceResult is RelatedRecordResult relatedRecordResult)
+              {
+                IReadOnlyList<RelatedRecord> relatedRecords = relatedRecordResult.RelatedRecords;
+                // Iterate through the related records
+                foreach (RelatedRecord relatedRecord in relatedRecords)
+                {
+                  IReadOnlyList<RelationshipClassValue> relationshipClassValues = relatedRecord.RelationshipClassValues;
+                  foreach (RelationshipClassValue relationshipClassValue in relationshipClassValues)
+                  {
+                    // Access the IDs and name associated with this relationship class
+                    var destinationId = relationshipClassValue.DestinationID;
+                    var name = relationshipClassValue.Name;
+                    var originId = relationshipClassValue.OriginID;
+
+                    // Access the relationship values associated with this relationship class 
+                    IReadOnlyList<RelationshipValue> relationshipValues = relationshipClassValue.RelationshipValues;
+                    foreach (RelationshipValue relationshipValue in relationshipValues)
+                    {
+                      // Geometry associated with this relationship value
+                      Geometry geometry = relationshipValue.Geometry;
+
+                      // Out fields associated with non attributed relationship class
+                      IReadOnlyList<TraceResultFieldValue> outFields = relationshipValue.OutFields;
+
+                      // Out fields associated with attributed relationship class
+                      // IReadOnlyList<TraceResultFieldValue> relationshipOutFields = relationshipValue.RelationshipOutFields;
+                    }
+                  }
+                }
               }
             }
           }
@@ -1211,7 +1385,11 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetFeaturesForElements
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetFeaturesForElements(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Element})
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ElementResult.Elements
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.UpstreamTracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
       #region Get selected features from a list of elements
       {
         // This routine demonstrates how to get a list of feature selections from a list of elements
@@ -1239,7 +1417,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       #region ProSnippet Group: Network Diagrams
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
       #region Get the Diagram Manager
       {
@@ -1254,7 +1432,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetNetworkDiagrams()
@@ -1290,7 +1468,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetNetworkDiagrams()
@@ -1332,18 +1510,18 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
-      // cref: ArcGIS.Desktop.Mapping.MapFactory.CreateMap(System.String,ArcGIS.Core.CIM.MapType,ArcGIS.Core.CIM.MapViewingMode,ArcGIS.Desktop.Mapping.Basemap)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddDiagramLayer(ArcGIS.Desktop.Mapping.Map, ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.AddDiagramLayer(ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram)
+      // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram.Name
       #region Open a diagram pane from a Network Diagram
       {
         // Create a diagram layer from a NetworkDiagram
-        static void CreateDiagramLayerFromNetworkDiagram(NetworkDiagram networkDiagram)
+        static async Task CreateDiagramLayerFromNetworkDiagramAsync(NetworkDiagram networkDiagram)
         {
           // Create the diagram map
           Map newMap = MapFactory.Instance.CreateMap(networkDiagram.Name, MapType.NetworkDiagram, MapViewingMode.Map);
 
           // Open the diagram map
-          Task<IMapPane> mapPane = ProApp.Panes.CreateMapPaneAsync(newMap, MapViewingMode.Map);
+          IMapPane mapPane = await ProApp.Panes.CreateMapPaneAsync(newMap, MapViewingMode.Map);
 
           //Add the diagram to the map
           DiagramLayer diagramLayer = newMap.AddDiagramLayer(networkDiagram);
@@ -1351,10 +1529,10 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.DiagramLayer.GetNetworkDiagram
+      // cref: ArcGIS.Desktop.Mapping.DiagramLayer.GetNetworkDiagram()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
       // cref: ArcGIS.Desktop.Mapping.DiagramLayer.ConsistencyState
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram.GetConsistencyState
+      // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram.GetConsistencyState()
       // cref: ArcGIS.Desktop.Mapping.DiagramLayerConsistencyState
       #region Get Diagram from DiagramLayer
       {
@@ -1373,7 +1551,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramTemplate
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetDiagramTemplates()
@@ -1396,7 +1574,7 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetDiagramTemplates()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramTemplate.GetNetworkDiagrams()
@@ -1421,10 +1599,11 @@ namespace ProSnippets.UtilityNetworkSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.CreateNetworkDiagram(ArcGIS.Core.Data.NetworkDiagrams.DiagramTemplate, System.Collections.Generic.IEnumerable<System.Guid>)
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
+      // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetDiagramTemplate(System.String)
       #region Create a Network Diagram
       {
         // Create a network diagram from a template and a set of utility network feature GlobalIDs
@@ -1443,11 +1622,11 @@ namespace ProSnippets.UtilityNetworkSnippets
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDiagramManager()
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramTemplate.GetNetworkDiagrams
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram.GetContent(System.Boolean, System.Boolean, System.Boolean, System.Boolean)
+      // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetNetworkDiagram(System.String)
       #region Get Network Diagram Information as JSON string
       {
         static void GetDiagramContent(UtilityNetwork utilityNetwork)
@@ -1465,7 +1644,6 @@ namespace ProSnippets.UtilityNetworkSnippets
 
 
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByExtent
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByExtent.#ctor
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByExtent.ExtentOfInterest
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByExtent.AddContents
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes.QueryDiagramJunctionElement
@@ -1494,7 +1672,7 @@ namespace ProSnippets.UtilityNetworkSnippets
           // Use this DiagramElementQueryByExtent as an argument to the QueryDiagramElements method
           DiagramElementQueryResult result = networkDiagram.QueryDiagramElements(elementQuery);
 
-          // Get the container, junction, edge elements. 
+          // Get the container, junction, edge elements.
 
           IReadOnlyList<DiagramContainerElement> containerElements = result.DiagramContainerElements;
 
@@ -1527,7 +1705,6 @@ namespace ProSnippets.UtilityNetworkSnippets
 
 
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindDiagramFeatureQuery
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.FindDiagramFeatureQuery.#ctor
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindDiagramFeatureQuery.NetworkRowGlobalIDs
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindDiagramFeatureQuery.AddAggregations
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindDiagramFeatureQuery.AddConnectivityAssociations
@@ -1563,7 +1740,6 @@ namespace ProSnippets.UtilityNetworkSnippets
 
 
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindNetworkRowQuery
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.FindNetworkRowQuery.#ctor
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindNetworkRowQuery.DiagramFeatureGlobalIDs
       // cref: ArcGIS.Core.Data.NetworkDiagrams.FindNetworkRowQuery.AddAggregations
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram.FindNetworkRows(ArcGIS.Core.Data.NetworkDiagrams.FindNetworkRowQuery)
@@ -1621,13 +1797,11 @@ namespace ProSnippets.UtilityNetworkSnippets
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramManager.GetNetworkDiagram(System.String)
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes.#ctor
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes.QueryDiagramJunctionElement
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes.QueryDiagramEdgeElement
       // cref: ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes.QueryDiagramContainerElement
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagram.QueryDiagramElements(ArcGIS.Core.Data.NetworkDiagrams.DiagramElementQueryByElementTypes)
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagramSubset
-      // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagramSubset.#ctor
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagramSubset.DiagramJunctionElements
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagramSubset.DiagramEdgeElements
       // cref: ArcGIS.Core.Data.NetworkDiagrams.NetworkDiagramSubset.DiagramContainerElements
@@ -1709,4 +1883,3 @@ namespace ProSnippets.UtilityNetworkSnippets
     }
   }
 }
-

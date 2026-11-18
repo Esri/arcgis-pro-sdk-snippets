@@ -19,15 +19,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Mapping;
 using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.MapAuthoringSnippets.Charts
 {
@@ -48,10 +44,11 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
     /// <remarks>This method provides examples of creating different chart types, including scatter plots,
     /// line charts, bar charts, histograms, and pie charts, using the ArcGIS Core CIM (Cartographic Information Model)
     /// classes. Each chart is configured with specific properties and added to a feature layer's definition.</remarks>
-    public static void ProSnippetsCharts()
+    public static async Task ProSnippetsChartsAsync()
     {
       #region ignore - Variable initialization
-      FeatureLayer featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
+      var mapView = MapView.Active;
+      FeatureLayer featureLayer = mapView.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
       // Fields names used in chart parameters.
       const string xField = "minimum_nights";
       const string yField = "price";
@@ -70,11 +67,12 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
       #endregion
       // cref: ArcGIS.Core.CIM.CIMChart
       // cref: ArcGIS.Core.CIM.CIMChartGeneralProperties
-      // cref: ArcGIS.Core.CIM.CIMChartSeries
       // cref: ArcGIS.Core.CIM.CIMChartScatterSeries
-      #region Create a simple scatter plot    
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      #region Create a simple scatter plot
       {
-        //Note: QueuedTask is required to access the feature layer
+        await QueuedTask.Run(() =>
         {
           // For more information on the chart CIM specification:
           // https://github.com/Esri/cim-spec/blob/main/docs/v3/CIMCharts.md
@@ -106,25 +104,26 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
           // Add new chart to layer's existing list of charts (if any exist)
           var newChartsScatter = new CIMChart[] { scatterPlot };
           var allChartsScatter = (lyrDefScatter == null) ? newChartsScatter : lyrDefScatter.Charts.Concat(newChartsScatter);
-          // Add CIM chart to layer definition 
+          // Add CIM chart to layer definition
           lyrDefScatter.Charts = allChartsScatter.ToArray();
           featureLayer.SetDefinition(lyrDefScatter);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMChart
       // cref: ArcGIS.Core.CIM.CIMChartGeneralProperties
-      // cref: ArcGIS.Core.CIM.CIMChartSeries
       // cref: ArcGIS.Core.CIM.CIMChartLineSeries
       // cref: ArcGIS.Core.CIM.CIMChartLineSymbolProperties
       // cref: ArcGIS.Core.CIM.CIMChartMarkerSymbolProperties
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Create a line chart with custom time binning and style
       {
         // For more information on the chart CIM specification:
         // https://github.com/Esri/cim-spec/blob/main/docs/v3/CIMCharts.md
 
-        // Note: QueuedTask is required to access the feature layer
+        await QueuedTask.Run(() =>
         {
           var lyrDefLine = featureLayer.GetDefinition();
 
@@ -172,17 +171,18 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
           // Add CIM chart to layer definition
           lyrDefLine.Charts = allChartsLine.ToArray();
           featureLayer.SetDefinition(lyrDefLine);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMChart
       // cref: ArcGIS.Core.CIM.CIMChartGeneralProperties
-      // cref: ArcGIS.Core.CIM.CIMChartSeries
       // cref: ArcGIS.Core.CIM.CIMChartBarSeries
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Create a bar chart
       {
-        // Note: QueuedTask is required to access the feature layer
+        await QueuedTask.Run(() =>
         {
           var layerDefinition = featureLayer.GetDefinition();
           string fieldXAxis = "textField";
@@ -214,17 +214,21 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
           // Add new chart to layer's existing list of charts (if any exist)
           var newBarCharts = new CIMChart[] { myBarChart };
           var allChartsBar = (layerDefinition.Charts == null) ? newBarCharts : layerDefinition.Charts.Concat(newBarCharts);
-          // Add CIM chart to layer definition 
+          // Add CIM chart to layer definition
           layerDefinition.Charts = allChartsBar.ToArray();
           featureLayer.SetDefinition(layerDefinition);
-        }
+        });
 
       }
       #endregion
       // cref: ArcGIS.Core.CIM.CIMChart
       // cref: ArcGIS.Core.CIM.CIMChartGeneralProperties
-      // cref: ArcGIS.Core.CIM.CIMChartSeries
       // cref: ArcGIS.Core.CIM.CIMChartHistogramSeries
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.GetFieldDescriptions()
+      // cref: ArcGIS.Desktop.Mapping.FieldDescription.Name
+      // cref: ArcGIS.Desktop.Mapping.FieldDescription.Type
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Create a histogram for every field of type Double
       {
         // For more information on the chart CIM specification:
@@ -269,7 +273,7 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
 
         // Add new chart to layer's existing list of charts (if any exist)
         var allChartsHistogram = (lyrDefHistogram == null) ? histograms : lyrDefHistogram.Charts.Concat(histograms);
-        // Add CIM chart to layer definition 
+        // Add CIM chart to layer definition
         lyrDefHistogram.Charts = allChartsHistogram.ToArray();
         featureLayer.SetDefinition(lyrDefHistogram);
       }
@@ -279,6 +283,9 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
       // cref: ArcGIS.Core.CIM.CIMChartGeneralProperties
       // cref: ArcGIS.Core.CIM.CIMChartSeries
       // cref: ArcGIS.Core.CIM.CIMChartBarSeries
+      // cref: ArcGIS.Desktop.Mapping.BasicFeatureLayer.Search(ArcGIS.Core.Data.QueryFilter,ArcGIS.Desktop.Mapping.TimeRange,ArcGIS.Desktop.Mapping.RangeExtent,ArcGIS.Core.CIM.CIMFloorFilterSettings)
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Create a multiseries bar chart
       {
         // For more information on the chart CIM specification:
@@ -337,7 +344,7 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
         // Add new chart to layer's existing list of charts (if any exist)
         var newChartsBar = new CIMChart[] { barChart };
         var allBarCharts = (lyrDefBar == null) ? newChartsBar : lyrDefBar.Charts.Concat(newChartsBar);
-        // Add CIM chart to layer definition 
+        // Add CIM chart to layer definition
         lyrDefBar.Charts = allBarCharts.ToArray();
         featureLayer.SetDefinition(lyrDefBar);
       }
@@ -345,8 +352,9 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
 
       // cref: ArcGIS.Core.CIM.CIMChart
       // cref: ArcGIS.Core.CIM.CIMChartGeneralProperties
-      // cref: ArcGIS.Core.CIM.CIMChartSeries
       // cref: ArcGIS.Core.CIM.CIMChartPieSeries
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Create a pie chart with custom legend formatting
       {
         // For more information on the chart CIM specification:
@@ -384,7 +392,7 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
         // Add new chart to layer's existing list of charts (if any exist)
         var newCharts = new CIMChart[] { pieChart };
         var allCharts = (lyrDef?.Charts == null) ? newCharts : lyrDef.Charts.Concat(newCharts);
-        // Add CIM chart to layer definition 
+        // Add CIM chart to layer definition
         lyrDef.Charts = allCharts.ToArray();
         featureLayer.SetDefinition(lyrDef);
       }
@@ -392,10 +400,3 @@ namespace ProSnippets.MapAuthoringSnippets.Charts
     }
   }
 }
-
-
-
-
-
-
-

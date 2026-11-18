@@ -1,14 +1,13 @@
-﻿using ArcGIS.Core.Geometry;
-using ArcGIS.Core.Internal.CIM;
-using ArcGIS.Core.Parcels;
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Editing.COGO;
-using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static ArcGIS.Desktop.Internal.Core.PortalTrafficDataService.PortalDescriptionResponse;
+using ArcGIS.Core.Geometry;
+using ArcGIS.Core.OCR;
+using ArcGIS.Core.Parcels;
+using ArcGIS.Desktop.Editing;
+using ArcGIS.Desktop.Editing.COGO;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.EditingSnippets.COGO
 {
@@ -36,115 +35,108 @@ namespace ProSnippets.EditingSnippets.COGO
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOStraightLine(System.Double, System.Double)
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLine
       #region Create a COGOLine defined by direction and distance
+      {
 
-      var nAzDirection = ParcelUtilities.Instance.ConvertQuadrantBearingDMSToNorthAzimuthDecDeg("S7-46-51-E");
-      var cogoStraightLine = COGOLineBuilder.CreateCOGOStraightLine(nAzDirection, 61.45);
+        var nAzDirection = ParcelUtilities.Instance.ConvertQuadrantBearingDMSToNorthAzimuthDecDeg("S7-46-51-E");
+        var cogoStraightLine = COGOLineBuilder.CreateCOGOStraightLine(nAzDirection, 61.45);
 
+      }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(System.Double, System.boolean, System.Double)
+      // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(System.Double,System.Boolean,System.Double)
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLine
       #region Create a COGOLine defined by deflection angle and distance
+      {
 
-      // Clockwise deflection angle 90 degrees, 50.00
-      var deflectionLine = COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(90.0, false, 50.00);
+        // Clockwise deflection angle 90 degrees, 50.00
+        var deflectionLine = COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(90.0, false, 50.00);
 
-      //Clockwise backsight deflection angle 270 degrees, 50.00'
-      var backSightDeflectionLine = COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(270.0, true, 50.00);
+        //Clockwise backsight deflection angle 270 degrees, 50.00'
+        var backSightDeflectionLine = COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(270.0, true, 50.00);
 
+      }
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.Radius
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.ArcLength
       // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.ChordDirection
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.ChordLength
       // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.TangentDirection
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CentralAngle
       // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.RadialDirection
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOCircularArc(ArcGIS.Desktop.Editing.COGO.CircularArcDefinition)
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLine
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.ArcLength
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.CentralAngle
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.ChordLength
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.Radius
       #region Create a COGOLine defined by a circular arc
-
-      // define with a radius, arcLength and chord direction 
-      var circularArcDef = new CircularArcDefinition
       {
-        Radius = -201.0,
-        ArcLength = 45.29,
-        ChordDirection = ParcelUtilities.Instance.ConvertQuadrantBearingDMSToNorthAzimuthDecDeg("N21-47-57W")
-      };
-      var cogoCircArc = COGOLineBuilder.CreateCOGOCircularArc(circularArcDef);
+
+        // define with a radius, arcLength and chord direction
+        var circularArcDef = new CircularArcDefinition
+        {
+          Radius = -201.0,
+          ArcLength = 45.29,
+          ChordDirection = ParcelUtilities.Instance.ConvertQuadrantBearingDMSToNorthAzimuthDecDeg("N21-47-57W")
+        };
+        var cogoCircArc = COGOLineBuilder.CreateCOGOCircularArc(circularArcDef);
 
 
-      // define with a radius, chordLength and tangent direction 
-      var circularArcDef2 = new CircularArcDefinition
-      {
-        Radius = -201.0,
-        ChordLength = 44.0,
-        TangentDirection = 340.0
-      };
-      var cogoCircArc2 = COGOLineBuilder.CreateCOGOCircularArc(circularArcDef2);
+        // define with a radius, chordLength and tangent direction
+        var circularArcDef2 = new CircularArcDefinition
+        {
+          Radius = -201.0,
+          ChordLength = 44.0,
+          TangentDirection = 340.0
+        };
+        var cogoCircArc2 = COGOLineBuilder.CreateCOGOCircularArc(circularArcDef2);
 
-      // define with a radius, central angle and radial direction
-      var circularArcDef3 = new CircularArcDefinition
-      {
-        Radius = -201.0,
-        CentralAngle = 44.0,
-        RadialDirection = 340.0
-      };
-      var cogoCircArc3 = COGOLineBuilder.CreateCOGOCircularArc(circularArcDef3);
+        // define with a radius, central angle and radial direction
+        var circularArcDef3 = new CircularArcDefinition
+        {
+          Radius = -201.0,
+          CentralAngle = 44.0,
+          RadialDirection = 340.0
+        };
+        var cogoCircArc3 = COGOLineBuilder.CreateCOGOCircularArc(circularArcDef3);
 
+      }
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition
-      // cref: ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition.Radius
-      // cref: ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition.ArcLength
-      // cref: ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition.ChordLength
-      // cref: ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition.CentralAngle
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOCircularArc(ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition)
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLine
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.ArcLength
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.CentralAngle
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.ChordLength
+      // cref: ArcGIS.Desktop.Editing.COGO.BaseCurveDefinition.Radius
       #region Create a COGOLine defined by a tangent curve
-
-      var tangentCircArcDef = new TangentCurveDefinition
       {
-        Radius = 169.0,
-        ArcLength = 52.40
-      };
-      var cogoTangentArc = COGOLineBuilder.CreateCOGOCircularArc(tangentCircArcDef);
 
-      var tangentCircArcDef2 = new TangentCurveDefinition
-      {
-        Radius = -201.0,
-        ChordLength = 23.24
-      };
-      var cogoTangentArc2 = COGOLineBuilder.CreateCOGOCircularArc(tangentCircArcDef2);
+        var tangentCircArcDef = new TangentCurveDefinition
+        {
+          Radius = 169.0,
+          ArcLength = 52.40
+        };
+        var cogoTangentArc = COGOLineBuilder.CreateCOGOCircularArc(tangentCircArcDef);
 
-      var tangentCircArcDef3 = new TangentCurveDefinition
-      {
-        Radius = 169.0,
-        CentralAngle = 44.0
-      };
-      var cogoTangentArc3 = COGOLineBuilder.CreateCOGOCircularArc(tangentCircArcDef3);
+        var tangentCircArcDef2 = new TangentCurveDefinition
+        {
+          Radius = -201.0,
+          ChordLength = 23.24
+        };
+        var cogoTangentArc2 = COGOLineBuilder.CreateCOGOCircularArc(tangentCircArcDef2);
 
+        var tangentCircArcDef3 = new TangentCurveDefinition
+        {
+          Radius = 169.0,
+          CentralAngle = 44.0
+        };
+        var cogoTangentArc3 = COGOLineBuilder.CreateCOGOCircularArc(tangentCircArcDef3);
+
+      }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLine.IsStraightLine
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLine.IsCircularArc
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLine.Distance
       // cref: ArcGIS.Desktop.Editing.COGO.COGOLine.Direction
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLine.ToCircularArcDefinition
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.IsDefinedByArcLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.ArcLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CanCalculateArcLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CalculateArcLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.IsDefinedByChordLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.ChordLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CanCalculateChordLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CalculateChordLength
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.IsDefinedByCentralAngle
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CentralAngle
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CanCalculateCentralAngle
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition.CalculateCentralAngle
       #region Get COGOLine parameter information
 
       if (cogoLine.IsStraightLine)
@@ -158,7 +150,7 @@ namespace ProSnippets.EditingSnippets.COGO
         string s = "";
 
         //show Arc length, either entered or calculated
-        if (circArcDefinition.IsDefinedByArcLength) 
+        if (circArcDefinition.IsDefinedByArcLength)
         {
           if (circArcDefinition.ArcLength.HasValue)
           {
@@ -174,7 +166,9 @@ namespace ProSnippets.EditingSnippets.COGO
                  + Environment.NewLine;
           }
           else
+          {
             s += "<calc> not able to calc arc length." + Environment.NewLine;
+          }
         }
 
         // chordLength
@@ -194,7 +188,9 @@ namespace ProSnippets.EditingSnippets.COGO
                  + Environment.NewLine;
           }
           else
+          {
             s += "<calc> not able to calc chord length." + Environment.NewLine;
+          }
         }
 
         // central Angle
@@ -214,26 +210,18 @@ namespace ProSnippets.EditingSnippets.COGO
                  + Environment.NewLine;
           }
           else
+          {
             s += "<calc> not able to calc Central Angle." + Environment.NewLine;
+          }
         }
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLine
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOStraightLine(System.Double, System.Double)
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOStraightLineByClockwiseDeflectionAngle(System.Double, System.boolean, System.Double)
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOCircularArc(ArcGIS.Desktop.Editing.COGO.CircularArcDefinition)
-      // cref: ArcGIS.Desktop.Editing.COGO.COGOLineBuilder.CreateCOGOCircularArc(ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition)
-      // cref: ArcGIS.Desktop.Editing.COGO.CircularArcDefinition
-      // cref: ArcGIS.Desktop.Editing.COGO.TangentCurveDefinition
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.AddCoursesAsync
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.IsValid
       #region Create a Traverse
 
       List<COGOLine> lstCOGOLines = new();
       var direction = ParcelUtilities.Instance.ConvertQuadrantBearingDMSToNorthAzimuthDecDeg("S7-46-51-E");
-      lstCOGOLines.Add(COGOLineBuilder.CreateCOGOStraightLine(nAzDirection, 61.45)); //1
+      lstCOGOLines.Add(COGOLineBuilder.CreateCOGOStraightLine(direction, 61.45)); //1
       lstCOGOLines.Add(COGOLineBuilder.CreateCOGOStraightLine(166.2625, 37.22));//2
       lstCOGOLines.Add(COGOLineBuilder.CreateCOGOStraightLine(255.2833333, 71.4));//3
       var circArcDef = new CircularArcDefinition
@@ -274,8 +262,6 @@ namespace ProSnippets.EditingSnippets.COGO
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.Courses
-      // cref: ArcGIS.Desktop.Editing.COGO.Course
       // cref: ArcGIS.Desktop.Editing.COGO.Course.COGOLine
       // cref: ArcGIS.Desktop.Editing.COGO.Course.EntranceTangentDirection
       // cref: ArcGIS.Desktop.Editing.COGO.Course.ExitTangentDirection
@@ -309,7 +295,7 @@ namespace ProSnippets.EditingSnippets.COGO
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseClosure.MiscloseX
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseClosure.MiscloseY
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseClosure.CalculatedArea
-      #region Traverse Closure 
+      #region Traverse Closure
 
       if (travParcel.IsValid())
       {
@@ -337,6 +323,7 @@ namespace ProSnippets.EditingSnippets.COGO
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseAdjustmentResults.AdjustedCourses
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseAdjustmentResults.DistanceResiduals
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseAdjustmentResults.DirectionalResiduals
+      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.AdjustmentResults
       #region Traverse Adjustment
 
       if (travParcel.IsValid())
@@ -360,16 +347,13 @@ namespace ProSnippets.EditingSnippets.COGO
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.StartPoint
       // cref: ArcGIS.Desktop.Editing.COGO.Traverse.UseGroundToGridCorrections
       // cref: ArcGIS.Desktop.Editing.COGO.Traverse.GroundToGridCorrection
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.CanCalculateCoordinates()
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.CalculateCoordinates()
       #region Calculating Coordinates
 
       var startPoint = MapPointBuilderEx.CreateMapPoint(7500500.0, 445900.0, spatialReference);
       travParcel.StartPoint = startPoint;
-      
+
       // The geometry of the features created is affected by the ground to grid correction.
       // This correction is also assigned to the traverse and in the following code the
       // active map's ground to grid correction is used.
@@ -380,9 +364,11 @@ namespace ProSnippets.EditingSnippets.COGO
         travParcel.GroundToGridCorrection = g2gCorrection;
       }
       else
+      {
         travParcel.UseGroundToGridCorrections = false;
+      }
 
-      // calculate coordinates 
+      // calculate coordinates
       if (travParcel.CanCalculateCoordinates())
       {
         var coords = travParcel.CalculateCoordinates();
@@ -395,10 +381,35 @@ namespace ProSnippets.EditingSnippets.COGO
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.EditOperation.CanCreateTraverse(ArcGIS.Desktop.Editing.COGO.Traverse, ArcGIS.Desktop.Editing.Templates.EditingTemplate)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateTraverse(ArcGIS.Desktop.Editing.COGO.Traverse, ArcGIS.Desktop.Editing.Templates.EditingTemplate)
-      // cref: ArcGIS.Desktop.Editing.COGO.Course.MapMember
-      // cref: ArcGIS.Desktop.Editing.COGO.Course.ObjectID
+      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.GetCourseGeometries()
+      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.GetPolygonGeometry()
+      #region Traverse Geometries
+      {
+        // get polyline and polygon geometries
+        IReadOnlyList<ArcGIS.Core.Geometry.Polyline> polyLines = travParcel.GetCourseGeometries();
+        ArcGIS.Core.Geometry.Polygon polygon = travParcel.GetPolygonGeometry();
+
+        // build some symbols to add the geometries to the overlay
+        var lineSymbol = SymbolFactory.Instance.ConstructLineSymbol(ColorFactory.Instance.RedRGB);
+        var polygonSymbol = SymbolFactory.Instance.ConstructPolygonSymbol(ColorFactory.Instance.BlueRGB, SimpleFillStyle.Horizontal);
+
+        var lineSymbolRef = lineSymbol.MakeSymbolReference();
+        var polySymbolRef = polygonSymbol.MakeSymbolReference();
+
+        // add to overlay
+        foreach (var polyline in polyLines)
+        {
+          var disp = MapView.Active.AddOverlay(polyline, lineSymbolRef);
+        }
+
+        if (polygon != null)
+        {
+          var polyDisp = MapView.Active.AddOverlay(polygon, polySymbolRef);
+        }
+      }
+      #endregion
+
+      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateTraverse(ArcGIS.Desktop.Editing.COGO.Traverse,ArcGIS.Desktop.Editing.Templates.EditingTemplate,System.Collections.Generic.Dictionary{System.String,System.Object})
       #region Create Features
 
       var layerName = "Lot_Lines"; //Name of the COGO enabled line layer in the map
@@ -426,7 +437,7 @@ namespace ProSnippets.EditingSnippets.COGO
       {
         editOper.Execute();
 
-        // access the mapMember, OID for each created feature 
+        // access the mapMember, OID for each created feature
         foreach (var course in travParcel.Courses)
         {
           var mapMember = course.MapMember;
@@ -439,40 +450,76 @@ namespace ProSnippets.EditingSnippets.COGO
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.COGO.TraverseManager.LoadTraverse(ArcGIS.Desktop.Editing.COGO.Traverse, System.String)
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse
       #region Loading a traverse into the Traverse UI
 
       var isValidTrav = travParcel.IsValid(); //confirm it's a valid traverse
       if (!isValidTrav)
+      {
         return;
+      }
 
       //Load the traverse into the traverse grid
       await TraverseManager.Current.LoadTraverse(travParcel, "Load my custom traverse");
       #endregion
 
+      // cref: ArcGIS.Desktop.Editing.COGO.TraverseManager.GetTraverseAsync()
+      // cref: ArcGIS.Desktop.Editing.COGO.Traverse
+      // cref: ArcGIS.Desktop.Editing.COGO.TraverseManager.Current
+      #region Get a traverse from the Traverse UI
+      {
+        var traverseFromUI = await TraverseManager.Current.GetTraverseAsync();
+      }
+      #endregion
+
       // cref: ArcGIS.Desktop.Editing.COGO.Traverse.ImportAsync(System.String, ArcGIS.Core.Geometry.SpatialReference)
       // cref: ArcGIS.Desktop.Editing.COGO.Traverse
       #region Import a traverse file
+      {
 
-      var pathAndNameOfTraverseFile = "C:\\MyTraverseFileFolder\\MyTraverseFile.txt";
-      var traverse = await Traverse.ImportAsync(pathAndNameOfTraverseFile, spatialReference);
+        var pathAndNameOfTraverseFile = "C:\\MyTraverseFileFolder\\MyTraverseFile.txt";
+        var traverse = await Traverse.ImportAsync(pathAndNameOfTraverseFile, spatialReference);
 
+      }
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.COGO.TraverseExportOptions
       // cref: ArcGIS.Desktop.Editing.COGO.Traverse.Export(ArcGIS.Desktop.Editing.COGO.TraverseExportOptions)
-      // cref: ArcGIS.Desktop.Editing.COGO.Traverse
       #region Export a traverse to a file
+      {
 
-      var directionDecimalPlaces = 0;
-      var distanceDecimalPlaces = 3;
-      var exportOptions = new TraverseExportOptions("C:\\MyTraverseFileFolder\\MyTraverseFile.txt", 
-                                    ArcGIS.Core.CIM.DirectionType.QuadrantBearing,
-                                    ArcGIS.Core.CIM.DirectionUnits.DegreesMinutesSeconds, 
-                                    directionDecimalPlaces, distanceDecimalPlaces);
-      travParcel.Export(exportOptions);
+        var directionDecimalPlaces = 0;
+        var distanceDecimalPlaces = 3;
+        var exportOptions = new TraverseExportOptions("C:\\MyTraverseFileFolder\\MyTraverseFile.txt",
+                                      ArcGIS.Core.CIM.DirectionType.QuadrantBearing,
+                                      ArcGIS.Core.CIM.DirectionUnits.DegreesMinutesSeconds,
+                                      directionDecimalPlaces, distanceDecimalPlaces);
+        travParcel.Export(exportOptions);
 
+      }
+      #endregion
+
+
+      // cref: ArcGIS.Core.OCR.OCRExtensions.ExtractTraverseFromDeedAsync(System.String,ArcGIS.Core.Geometry.SpatialReference)
+      // cref: ArcGIS.Desktop.Editing.COGO.Traverse.Courses
+      #region Extract a traverse from a deed
+      {
+        string deedFileName = "c:\\MyTraverseFileFolder\\MyTraverseDeed.pdf";
+
+        var traverseList = await OCRManager.Instance.ExtractTraverseFromDeedAsync(deedFileName, spatialReference);
+
+        // or extract from a specific page
+        //int pageIdx = 1;
+        //var traverseList = await OCRManager.Instance.ExtractTraverseFromDeedAsync(deedFileName, pageIdx, spatialReference);
+
+        foreach (var trav in traverseList)
+        {
+          // iterate thorugh the courses
+          foreach (var course in trav.Courses)
+          {
+            // ...
+          }
+        }
+      }
       #endregion
     }
   }

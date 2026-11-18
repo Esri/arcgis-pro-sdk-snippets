@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2025 Esri
 
@@ -16,24 +16,19 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Internal.Mapping;
 using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Presentations;
 using ArcGIS.Desktop.Presentations.Events;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace ProSnippets.LayoutsSnippets.Presentations
 {
@@ -47,7 +42,7 @@ namespace ProSnippets.LayoutsSnippets.Presentations
     /// Each region in the method contains a specific code snippet that demonstrates a particular functionality.
     /// Note that some methods may require to be launched on the ArcGIS Pro's Main CIM thread. These methods are marked in the code comments as requiring a QueuedTask to run.
     /// Crefs are used for internal purposes only. Please ignore them in the context of this example.
-    public static async void ProsnippetsPresentations()
+    public static async Task ProsnippetsPresentationsAsync()
     {
       #region ignore - Variable initialization
       //Create a new presentation without parameters
@@ -59,7 +54,7 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       //From active view
       PresentationView activePresentationView = PresentationView.Active;
       //Reference a page
-      //Reference a page and its transition 
+      //Reference a page and its transition
       PresentationPage page = activePresentationView.Presentation.GetPage(0);
       //Or
       PresentationPage activePage = activePresentationView.ActivePage;
@@ -77,9 +72,8 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem
-      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation
-      // cref: ArcGIS.Desktop.Core.PresentationFrameworkExtender.CreatePresentationPaneAsync
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Active
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Presentation
       #region Reference an existing presentation
       {
         //Reference a presentation associated with an active presentation view
@@ -92,7 +86,7 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       #endregion
 
       // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem
-      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation
+      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation()
       #region Get a specific presentation
       {
         PresentationProjectItem presentationProjItem = Project.Current.GetItems<PresentationProjectItem>().FirstOrDefault(item => item.Name.Equals(presentationName));
@@ -101,19 +95,18 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       #endregion
 
       // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem
-      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation
-      // cref: ArcGIS.Desktop.Core.PresentationFrameworkExtender.CreatePresentationPaneAsync
+      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation()
+      // cref: ArcGIS.Desktop.Core.PresentationFrameworkExtender.CreatePresentationPaneAsync(ArcGIS.Desktop.Presentations.Presentation)
       #region Open a presentation project item in a new view
       {
         //Open a presentation project item in a new view.
-        //A presentation project item may exist but it may not be open in a view. 
+        //A presentation project item may exist but it may not be open in a view.
 
         //Reference a presentation project item by name
         PresentationProjectItem presentationPrjItem = Project.Current.GetItems<PresentationProjectItem>().FirstOrDefault(item => item.Name.Equals(presentationName));
 
         //Get the presentation associated with the presentation project item
-        //Note: Must be within QueuedTask.Run
-        Presentation presentationToOpen = presentationPrjItem.GetPresentation();
+        Presentation presentationToOpen = await QueuedTask.Run(() => presentationPrjItem.GetPresentation());
 
         //Create the new pane
         IPresentationPane iNewPresentationPane = await ProApp.Panes.CreatePresentationPaneAsync(presentationToOpen); //GUI thread
@@ -124,54 +117,62 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       #region ProSnippet Group: Create and export Presentation
       #endregion
       // cref: ArcGIS.Desktop.Presentations.PresentationFactory
-      // cref: ArcGIS.Desktop.Presentations.PresentationFactory.CreatePresentation
+      // cref: ArcGIS.Desktop.Presentations.IPresentationFactory.CreatePresentation()
+      // cref: ArcGIS.Desktop.Presentations.IPresentationFactory.CreatePresentation(System.String)
+      // cref: ArcGIS.Desktop.Presentations.PresentationFactory.Instance
       #region Create presentation
       {
-        //Note: Must be in QueuedTask.Run()
-        //Create a new presentation without parameters
-        var presentationNew = PresentationFactory.Instance.CreatePresentation();
-        // Use the new Presentation
+        await QueuedTask.Run(() =>
+        {
+          //Create a new presentation without parameters
+          var presentationNew = PresentationFactory.Instance.CreatePresentation();
+          // Use the new Presentation
 
-        // Create a presentation specifying the name of the new presentation
-        var presentationSpecifyName = PresentationFactory.Instance.CreatePresentation("New Presentation");
-        // Use the new Presentation
+          // Create a presentation specifying the name of the new presentation
+          var presentationSpecifyName = PresentationFactory.Instance.CreatePresentation("New Presentation");
+          // Use the new Presentation
+        });
       }
       #endregion
 
 
-      // cref: ArcGIS.Desktop.Presentations.Presentation
       // cref: ArcGIS.Desktop.Presentations.PresentationExportOptions
-      // cref: ArcGIS.Desktop.Presentations.Presentation.Export
+      // cref: ArcGIS.Desktop.Presentations.Presentation.Export(ArcGIS.Desktop.Mapping.ExportFormat,ArcGIS.Desktop.Presentations.PresentationExportOptions)
       // cref: ArcGIS.Desktop.Mapping.ExportPageOptions
       // cref: ArcGIS.Desktop.Mapping.MP4VideoFormat
+      // cref: ArcGIS.Desktop.Presentations.PresentationExportOptions.CustomPages
+      // cref: ArcGIS.Desktop.Presentations.PresentationExportOptions.PageRangeOption
       #region Export a presentation
       {
-        //Note: Call within QueuedTask.Run()
-        //Create mp4 format with appropriate settings
-        MP4VideoFormat mp4Format = new MP4VideoFormat();
-        mp4Format.Width = 800;
-        mp4Format.Height = 600;
-        mp4Format.OutputFileName = @"my folder\presentation.mp4";
-
-        //Define Export Options
-        PresentationExportOptions options = new PresentationExportOptions
+        await QueuedTask.Run(() =>
         {
-          PageRangeOption = ExportPageOptions.ExportByPageRange,
-          CustomPages = "1,2,8"
-        };
+          //Create mp4 format with appropriate settings
+          MP4VideoFormat mp4Format = new MP4VideoFormat();
+          mp4Format.Width = 800;
+          mp4Format.Height = 600;
+          mp4Format.OutputFileName = @"my folder\presentation.mp4";
 
-        //export as mp4
-        presentation.Export(mp4Format, options);
+          //Define Export Options
+          PresentationExportOptions options = new PresentationExportOptions
+          {
+            PageRangeOption = ExportPageOptions.ExportByPageRange,
+            CustomPages = "1,2,8"
+          };
+
+          //export as mp4
+          presentation.Export(mp4Format, options);
+        });
       }
       #endregion
 
 
-      #region ProSnippet Group: Presentation View 
+      #region ProSnippet Group: Presentation View
       #endregion
       // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem
-      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation
-      // cref: ArcGIS.Desktop.Core.PresentationFrameworkExtender.CreatePresentationPaneAsync
-      // cref: ArcGIS.Desktop.Presentations.PresentationView
+      // cref: ArcGIS.Desktop.Presentations.PresentationProjectItem.GetPresentation()
+      // cref: ArcGIS.Desktop.Core.PresentationFrameworkExtender.CreatePresentationPaneAsync(ArcGIS.Desktop.Presentations.Presentation)
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Presentation
+      // cref: ArcGIS.Desktop.Presentations.IPresentationPane.PresentationView
       #region Activate a presentation view
       {
         //Assume we want to open a view for a particular presentation or activate a view if one is already open
@@ -179,19 +180,20 @@ namespace ProSnippets.LayoutsSnippets.Presentations
         //A presentation project item is an item that appears in the Presentation folder in the Catalog pane.
         PresentationProjectItem presentationItem = Project.Current.GetItems<PresentationProjectItem>()
                                                    .FirstOrDefault(item => item.Name.Equals("Presentation Name"));
-        //Note: Must be on QueuedTask.Run
         //Reference a presentation associated with a presentation project item
         if (presentationItem != null)
         {
           //Get the presentation associated with the presentationItem
-          Presentation presentationToOpen = presentationItem.GetPresentation();
+          Presentation presentationToOpen = await QueuedTask.Run(() => presentationItem.GetPresentation());
 
           //Next check to see if a presentation view is already open that references the presentation
           foreach (var pane in ProApp.Panes)
           {
             var prePane = pane as IPresentationPane;
             if (prePane == null)  // Not a presentation view, continue to the next pane
+            {
               continue;
+            }
 
             //if there is a match, activate the view
             if (prePane.PresentationView.Presentation == presentationToOpen)
@@ -211,31 +213,39 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       #endregion
 
       // cref: ArcGIS.Desktop.Presentations.PresentationView
-      // cref: ArcGIS.Desktop.Presentations.Presentation.AddBlankPage
+      // cref: ArcGIS.Desktop.Presentations.Presentation.AddBlankPage(ArcGIS.Desktop.Presentations.BlankPageTemplateType,System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Active
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Presentation
       #region Blank page
       {
         Presentation presentationActive = PresentationView.Active.Presentation;
-        // Note: Must be on QueuedTask
-        // add a blank page with with title and paragraph body text element
-        presentation.AddBlankPage(BlankPageTemplateType.TitleAndParagraph, -1);
+        await QueuedTask.Run(() =>
+        {
+          // add a blank page with with title and paragraph body text element
+          presentation.AddBlankPage(BlankPageTemplateType.TitleAndParagraph, -1);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.Presentation
-      // cref: ArcGIS.Desktop.Presentations.Presentation.AddImagePage
+      // cref: ArcGIS.Desktop.Presentations.Presentation.AddImagePage(System.String,System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.ImagePresentationPage.SetImageSource(System.String)
       #region Image page
       {
-        //Note: Must be on QueuedTask
-        // add a new image page in current active presentation
-        var imagePage = presentation.AddImagePage("my image source", -1);
+        await QueuedTask.Run(() =>
+        {
+          // add a new image page in current active presentation
+          var imagePage = presentation.AddImagePage("my image source", -1);
 
-        // change the image source
-        imagePage.SetImageSource("new image source");
+          // change the image source
+          imagePage.SetImageSource("new image source");
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.Presentation
-      // cref: ArcGIS.Desktop.Presentations.Presentation.AddVideoPage
+      // cref: ArcGIS.Desktop.Presentations.Presentation.AddVideoPage(System.String,System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.VideoPresentationPage.SetEndTime(System.Double)
+      // cref: ArcGIS.Desktop.Presentations.VideoPresentationPage.SetStartTime(System.Double)
+      // cref: ArcGIS.Desktop.Presentations.VideoPresentationPage.SetVideoSource(System.String)
       #region Video page
       {
         // add a new video page in current active presentation
@@ -251,74 +261,83 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.Presentation
-      // cref: ArcGIS.Desktop.Presentations.Presentation.AddMapPage
+      // cref: ArcGIS.Desktop.Presentations.Presentation.AddMapPage(ArcGIS.Desktop.Mapping.Map,System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.Presentation.AddMapPage(ArcGIS.Desktop.Mapping.Bookmark,System.Int32)
       #region Map page
       {
-        //Note: Must be on QueuedTask
+        await QueuedTask.Run(() =>
+        {
+          // retrieve a map from the project based on the map name
+          MapProjectItem mpi = Project.Current.GetItems<MapProjectItem>()
+                                     .FirstOrDefault(m => m.Name.Equals("Your Map Name", StringComparison.CurrentCultureIgnoreCase));
+          Map map = mpi.GetMap();
+          //create a map page using map's default extent
+          presentation.AddMapPage(map, -1);
 
-        // retrieve a map from the project based on the map name
-        MapProjectItem mpi = Project.Current.GetItems<MapProjectItem>()
-                                   .FirstOrDefault(m => m.Name.Equals("Your Map Name", StringComparison.CurrentCultureIgnoreCase));
-        Map map = mpi.GetMap();
-        //create a map page using map's default extent
-        presentation.AddMapPage(map, -1);
-
-        //create a page using map's bookmark
-        Bookmark bookmark = map.GetBookmarks().FirstOrDefault(
-                     b => b.Name == "Your bookmark"); // get the bookmark based on the bookmark's name
-        presentation.AddMapPage(bookmark, -1);
+          //create a page using map's bookmark
+          Bookmark bookmark = map.GetBookmarks().FirstOrDefault(
+                       b => b.Name == "Your bookmark"); // get the bookmark based on the bookmark's name
+          presentation.AddMapPage(bookmark, -1);
+        });
       }
       #endregion
 
       #region ProSnippet Group: Map Page
       #endregion
       // cref: ArcGIS.Desktop.Presentations.MapPresentationPage
-      // cref: ArcGIS.Desktop.Presentations.Presentation.GetPage
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage
-      // cref: ArcGIS.Desktop.Presentations.MapPresentationPage.SetCamera
+      // cref: ArcGIS.Desktop.Presentations.Presentation.GetPage(System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.MapPresentationPage.SetCamera(ArcGIS.Desktop.Mapping.Camera)
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Presentation
       #region Change map page camera settings
       {
-        //Note: Must be on the QueuedTask
-        //Reference a map page
-        var mpage = activePresentationView.Presentation.GetPage(4) as MapPresentationPage;
+        await QueuedTask.Run(() =>
+        {
+          //Reference a map page
+          var mpage = activePresentationView.Presentation.GetPage(4) as MapPresentationPage;
 
-        //Set the map frame extent based on the new camera's X,Y, Scale and heading values
-        Camera cam = new Camera(329997.6648, 6248553.1457, 2403605.8968, 24);
-        mpage.SetCamera(cam);
+          //Set the map frame extent based on the new camera's X,Y, Scale and heading values
+          Camera cam = new Camera(329997.6648, 6248553.1457, 2403605.8968, 24);
+          mpage.SetCamera(cam);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Presentations.MapPresentationPage
-      // cref: ArcGIS.Desktop.Presentations.Presentation.GetPage
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage
-      // cref: ArcGIS.Desktop.Presentations.MapPresentationPage.SetCamera
+      // cref: ArcGIS.Desktop.Presentations.Presentation.GetPage(System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.MapPresentationPage.SetCamera(ArcGIS.Desktop.Mapping.Layer)
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Presentation
       #region Zoom map page to extent of a single layer
       {
-        //Note: Must be on the QueuedTask
-        //Reference map page
-        var mpage = activePresentationView.Presentation.GetPage(4) as MapPresentationPage;
+        await QueuedTask.Run(() =>
+        {
+          //Reference map page
+          var mpage = activePresentationView.Presentation.GetPage(4) as MapPresentationPage;
 
-        //Reference map and layer
-        MapProjectItem mp = Project.Current.FindItem("Page name") as MapProjectItem;
-        Map map = mp.GetMap();
-        FeatureLayer lyr = map.FindLayers("GreatLakes").First() as FeatureLayer;
+          //Reference map and layer
+          MapProjectItem mp = Project.Current.FindItem("Page name") as MapProjectItem;
+          Map map = mp.GetMap();
+          FeatureLayer lyr = map.FindLayers("GreatLakes").First() as FeatureLayer;
 
-        //Set the map frame extent to all features in the layer
-        mpage.SetCamera(lyr);
+          //Set the map frame extent to all features in the layer
+          mpage.SetCamera(lyr);
+        });
       }
 
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.PresentationView.ActivateMapPageAsync
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.ActivateMapPageAsync()
       // cref: ArcGIS.Desktop.Presentations.PresentationView.ActivePage
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Active
       #region Activate a map page
       {
         // Note: we are on the UI thread!
         // A presentation view must be active
         if (PresentationView.Active == null)
+        {
           return;
+        }
+
         PresentationPage currentActivePage = activePresentationView.ActivePage;
 
         //check if the current page is a map page
@@ -327,7 +346,6 @@ namespace ProSnippets.LayoutsSnippets.Presentations
           await activePresentationView.ActivateMapPageAsync();
         }
 
-        //move to the QueuedTask to do something
         await QueuedTask.Run(() =>
         {
           // TODO
@@ -344,17 +362,19 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       // cref: ArcGIS.Core.CIM.CIMRGBColor
       // cref: ArcGIS.Core.CIM.CIMPresentationTransition
       // cref: ArcGIS.Core.CIM.PresentationTransitionType
-      // cref: ArcGIS.Desktop.Presentations.Presentation.GetPage
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SetTransition
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SetMargin
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SetBackgroundColor
+      // cref: ArcGIS.Desktop.Presentations.Presentation.GetPage(System.Int32)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SetTransition(ArcGIS.Core.CIM.CIMPresentationTransition)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SetMargin(ArcGIS.Core.CIM.CIMMargin)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SetBackgroundColor(ArcGIS.Core.CIM.CIMColor)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.Transition
+      // cref: ArcGIS.Desktop.Presentations.PresentationView.Presentation
       #region Presentation page design
       {
-        // create customized margin and color 
+        // create customized margin and color
         CIMMargin pMargin = new CIMMargin() { Left = 0.2, Right = 0.3, Top = 0.15, Bottom = 0.25 };
         CIMRGBColor pColor = new CIMRGBColor() { R = 255, G = 255, B = 0, Alpha = 50 };
 
-        //Reference a page and its transition 
+        //Reference a page and its transition
         var pageReference = activePresentationView.Presentation.GetPage(0);
         CIMPresentationTransition transition = page.Transition;
 
@@ -363,12 +383,13 @@ namespace ProSnippets.LayoutsSnippets.Presentations
         transition.Duration = 2.0;
         transition.SwipeDirection = SwipeDirection.Top;
 
-        //Must be on the QueuedTask
-
-        //Set the new margin, new background color and new transition effect
-        page.SetMargin(pMargin);
-        page.SetBackgroundColor(pColor);
-        page.SetTransition(transition);
+        await QueuedTask.Run(() =>
+        {
+          //Set the new margin, new background color and new transition effect
+          page.SetMargin(pMargin);
+          page.SetBackgroundColor(pColor);
+          page.SetTransition(transition);
+        });
       }
 
       #endregion
@@ -376,110 +397,121 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       #region ProSnippet Group: Elements in presentations
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.IPresentationElementFactory
       // cref: ArcGIS.Desktop.Presentations.PresentationElementFactory
       // cref: ArcGIS.Desktop.Presentations.PresentationElementFactory.Instance
-      // cref: ArcGIS.Desktop.Presentations.PresentationElementFactory.CreateGraphicElement
-      // cref: ArcGIS.Desktop.Presentations.PresentationElementFactory.CreatePictureGraphicElement
-      // cref: ArcGIS.Desktop.Presentations.PresentationElementFactory.CreateTextGraphicElement
-      // cref: ArcGIS.Desktop.Presentations.PresentationElementFactory.CreateGroupElement
+      // cref: ArcGIS.Desktop.Presentations.IPresentationElementFactory.CreatePictureGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Geometry,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Presentations.IPresentationElementFactory.CreateTextGraphicElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Desktop.Layouts.TextType,ArcGIS.Core.Geometry.Geometry,ArcGIS.Core.CIM.CIMTextSymbol,System.String,System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
+      // cref: ArcGIS.Desktop.Presentations.IPresentationElementFactory.CreateGroupElement(ArcGIS.Desktop.Mapping.IElementContainer,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element},System.String,System.Boolean,ArcGIS.Desktop.Layouts.ElementInfo)
       // cref: ArcGIS.Core.CIM.CIMTextSymbol
       // cref: ArcGIS.Desktop.Layouts.ElementInfo
+      // cref: ArcGIS.Desktop.Layouts.ElementInfo.Anchor
+      // cref: ArcGIS.Desktop.Layouts.ElementInfo.Rotation
       #region Create elements on a presentation page
       {
-        //Note: Must be on QueuedTask
-        //create a picture element
-        var imgPath = @"https://www.esri.com/content/dam/esrisites/en-us/home/" +
-         "homepage-tile-podcast-business-resilience-climate-change.jpg";
-
-        //Build a geometry to place the picture
-        Coordinate2D ll = new Coordinate2D(3.5, 1);
-        Coordinate2D ur = new Coordinate2D(6, 5);
-        Envelope env = EnvelopeBuilderEx.CreateEnvelope(ll, ur);
-        //create a picture element on the page
-        var gElement = PresentationElementFactory.Instance.CreatePictureGraphicElement(page, env, imgPath);
-
-        //create a text element
-        //Set symbology, create and add element to a presentation page
-        CIMTextSymbol sym = SymbolFactory.Instance.ConstructTextSymbol(
-                      ColorFactory.Instance.RedRGB, 15, "Arial", "Regular");
-        //use ElementInfo to set placement properties
-        var elemInfo = new ElementInfo()
+        await QueuedTask.Run(() =>
         {
-          Anchor = Anchor.CenterPoint,
-          Rotation = 45
-        };
-        string textString = "My text";
-        var textPos = new Coordinate2D(5, 3).ToMapPoint();
-        var tElement = PresentationElementFactory.Instance.CreateTextGraphicElement(page,
-          TextType.PointText, textPos, sym, textString, "telement", false, elemInfo);
+          //create a picture element
+          var imgPath = @"https://www.esri.com/content/dam/esrisites/en-us/home/" +
+           "homepage-tile-podcast-business-resilience-climate-change.jpg";
 
-        //create a group element with elements created above
-        var elmList = new List<Element> { gElement, tElement };
-        GroupElement grp1 = PresentationElementFactory.Instance.CreateGroupElement(page, elmList, "My Group");
+          //Build a geometry to place the picture
+          Coordinate2D ll = new Coordinate2D(3.5, 1);
+          Coordinate2D ur = new Coordinate2D(6, 5);
+          Envelope env = EnvelopeBuilderEx.CreateEnvelope(ll, ur);
+          //create a picture element on the page
+          var gElement = PresentationElementFactory.Instance.CreatePictureGraphicElement(page, env, imgPath);
+
+          //create a text element
+          //Set symbology, create and add element to a presentation page
+          CIMTextSymbol sym = SymbolFactory.Instance.ConstructTextSymbol(
+                        ColorFactory.Instance.RedRGB, 15, "Arial", "Regular");
+          //use ElementInfo to set placement properties
+          var elemInfo = new ElementInfo()
+          {
+            Anchor = Anchor.CenterPoint,
+            Rotation = 45
+          };
+          string textString = "My text";
+          var textPos = new Coordinate2D(5, 3).ToMapPoint();
+          var tElement = PresentationElementFactory.Instance.CreateTextGraphicElement(page,
+            TextType.PointText, textPos, sym, textString, "telement", false, elemInfo);
+
+          //create a group element with elements created above
+          var elmList = new List<Element> { gElement, tElement };
+          GroupElement grp1 = PresentationElementFactory.Instance.CreateGroupElement(page, elmList, "My Group");
+        });
       }
 
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.FindElement
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.FindElements
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetElements
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetFlattenedElements
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.FindElements(System.Collections.Generic.IEnumerable{System.String})
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetElements()
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetFlattenedElements()
+      // cref: ArcGIS.Desktop.Layouts.Element.IsVisible
       #region Element selection and navigation
       {
-        //Note: Must be on QueuedTask
-        // Find specific elements by name
-        var ge_rect = page.FindElement("Rectangle") as GraphicElement;
-        var elements = new List<string>();
-        elements.Add("Text");
-        elements.Add("Polygon");
-        var elems = page.FindElements(elements);
+        await QueuedTask.Run(() =>
+        {
+          // Find specific elements by name
+          var ge_rect = page.FindElement("Rectangle") as GraphicElement;
+          var elements = new List<string>();
+          elements.Add("Text");
+          elements.Add("Polygon");
+          var elems = page.FindElements(elements);
 
-        //Get elements retaining hierarchy
-        var top_level_elems = page.GetElements();
+          //Get elements retaining hierarchy
+          var top_level_elems = page.GetElements();
 
-        //Flatten hierarchy
-        var all_elems = page.GetFlattenedElements();
+          //Flatten hierarchy
+          var all_elems = page.GetFlattenedElements();
 
-        //Use LINQ with any of the collections
-        //Retrieve just those elements that are Visible
-        var some_elems = all_elems.Where(ge => ge.IsVisible).ToList();
+          //Use LINQ with any of the collections
+          //Retrieve just those elements that are Visible
+          var some_elems = all_elems.Where(ge => ge.IsVisible).ToList();
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.FindElement
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetElements
-      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetFlattenedElements
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.FindElement(System.String)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetFlattenedElements()
+      // cref: ArcGIS.Desktop.Layouts.Element.IsVisible
+      // cref: ArcGIS.Desktop.Layouts.Element.Name
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SelectElement(ArcGIS.Desktop.Layouts.Element)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.SelectElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.UnSelectElement(ArcGIS.Desktop.Layouts.Element)
+      // cref: ArcGIS.Desktop.Presentations.PresentationPage.UnSelectElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
       #region Element selection manipulation
       {
-        //Note: Must be on QueuedTask
-        //Select/unselect some elements...
-        var elems = activePage.GetFlattenedElements();
-        //select any element not a group element
-        activePage.SelectElements(elems.Where(e => !e.Name.StartsWith("Group")));
-        activePage.UnSelectElements(elems.Where(e => !e.Name.StartsWith("Group")));
-
-        //Select/unselect all visible, graphic elements
-        var ge_elems = elems.Where(ge => ge.IsVisible).ToList();
-        activePage.SelectElements(ge_elems);
-        activePage.UnSelectElements(ge_elems);
-
-        //Select/unselect a specific element
-        var na = activePage.FindElement("My Text Element");
-        activePage.SelectElement(na);
-        activePage.UnSelectElement(na);
-
-        //Select everything
-        activePage.SelectElements(elems);
-
-        //enumerate the selected elements
-        foreach (var sel_elem in activePage.GetSelectedElements())
+        await QueuedTask.Run(() =>
         {
-          //TODO
-        }
+          //Select/unselect some elements...
+          var elems = activePage.GetFlattenedElements();
+          //select any element not a group element
+          activePage.SelectElements(elems.Where(e => !e.Name.StartsWith("Group")));
+          activePage.UnSelectElements(elems.Where(e => !e.Name.StartsWith("Group")));
+
+          //Select/unselect all visible, graphic elements
+          var ge_elems = elems.Where(ge => ge.IsVisible).ToList();
+          activePage.SelectElements(ge_elems);
+          activePage.UnSelectElements(ge_elems);
+
+          //Select/unselect a specific element
+          var na = activePage.FindElement("My Text Element");
+          activePage.SelectElement(na);
+          activePage.UnSelectElement(na);
+
+          //Select everything
+          activePage.SelectElements(elems);
+
+          //enumerate the selected elements
+          foreach (var sel_elem in activePage.GetSelectedElements())
+          {
+            //TODO
+          }
+        });
       }
       #endregion
 
@@ -488,9 +520,9 @@ namespace ProSnippets.LayoutsSnippets.Presentations
 
       // cref: ArcGIS.Desktop.Presentations.Presentation
       // cref: ArcGIS.Desktop.Presentations.Events.PresentationEvent
-      // cref: ArcGIS.Desktop.Presentations.Events.PresentationEvent.Subscribe
+      // cref: ArcGIS.Desktop.Presentations.Events.PresentationEvent.Subscribe(System.Action{ArcGIS.Desktop.Presentations.Events.PresentationEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Presentations.Events.PresentationEventHint
-      // cref: ArcGIS.Desktop.Presentations.Events.PresentationEventArgs
+      // cref: ArcGIS.Desktop.Presentations.Events.PresentationEventArgs.Hint
       #region Detect changes to the presentation
       {
         ArcGIS.Desktop.Presentations.Events.PresentationEvent.Subscribe((args) =>
@@ -518,11 +550,11 @@ namespace ProSnippets.LayoutsSnippets.Presentations
       #endregion
 
       // cref: ArcGIS.Desktop.Presentations.Events.PresentationViewEvent
-      // cref: ArcGIS.Desktop.Presentations.Events.PresentationViewEvent.Subscribe
+      // cref: ArcGIS.Desktop.Presentations.Events.PresentationViewEvent.Subscribe(System.Action{ArcGIS.Desktop.Presentations.Events.PresentationViewEventArgs},System.Boolean)
       // cref: ArcGIS.Desktop.Presentations.Events.PresentationViewEventHint
-      // cref: ArcGIS.Desktop.Presentations.Events.PresentationViewEventArgs
       // cref: ArcGIS.Desktop.Presentations.PresentationView
       // cref: ArcGIS.Desktop.Presentations.Presentation
+      // cref: ArcGIS.Desktop.Presentations.Events.PresentationViewEventArgs.Hint
       #region Detect changes to the presentation view
       {
         //For UI context changes associated with a presentation, subscribe to the PresentationView

@@ -16,11 +16,12 @@
    limitations under the License.
 
 */
-using ArcGIS.Desktop.Editing.Attributes;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Mapping;
 using System.Linq;
 using System.Threading.Tasks;
+using ArcGIS.Desktop.Editing.Attributes;
+using ArcGIS.Desktop.Framework.Dialogs;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -33,7 +34,7 @@ namespace ProSnippets.EditingSnippets
     /// Demonstrates various operations using the <see cref="Inspector"/> class,
     /// including loading features, retrieving and updating attributes, and schema inspection.
     /// </summary>
-    public static async Task InspectorEditing()
+    public static async Task InspectorEditingAsync()
     {
 
       #region ignore - Variable initialization
@@ -44,7 +45,6 @@ namespace ProSnippets.EditingSnippets
       var selectedFeatures = activeMap.GetSelection();
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.#ctor
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(ArcGIS.Desktop.Mapping.MapMember, System.Int64)
       #region Load a feature from a layer into the inspector
       {
@@ -56,11 +56,8 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(MAPMEMBER,INT64)
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary``1()
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
-      // cref: ArcGIS.Desktop.Mapping.Map.GetSelection
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary()
       #region Load map selection into Inspector
       {
         // Loads the selected features into an Inspector instance.
@@ -73,12 +70,9 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember, System.Int64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Shape
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary``1()
-      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary
-      // cref: ArcGIS.Desktop.Mapping.Map.GetSelection
+      // cref: ArcGIS.Desktop.Mapping.MapMemberIDSet.ToDictionary()
       #region Get selected feature's attribute value
       // Retrieves the value of a specific attribute and the geometry of the first selected feature from the provided selection set.
       await QueuedTask.Run(() =>
@@ -98,8 +92,8 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Item(System.String)
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.ApplyAsync()
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadAsync(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
       #region Load map selection into Inspector and Change Attributes
       // Updates the "Description" attribute of the selected features in the specified selection set.
       {
@@ -112,13 +106,12 @@ namespace ProSnippets.EditingSnippets
         // assign the new attribute value to the field "Description"
         // if more than one features are loaded, the change applies to all features
         inspector["Description"] = "The new value.";
-        // apply the changes as an edit operation 
+        // apply the changes as an edit operation
         await inspector.ApplyAsync();
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadSchema(ArcGIS.Desktop.Mapping.MapMember)
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetEnumerator()
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldName
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldAlias
@@ -129,6 +122,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.IsSystemField
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.IsGeometryField
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.GetField()
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldIndex
       #region Get a layers schema using Inspector
       // Loads the schema of the specified feature layer and iterates through its attributes,  providing access to their properties such as field name, alias, type, and other metadata.
       await QueuedTask.Run(() =>
@@ -154,21 +148,38 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
       // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError.Create(System.String,ArcGIS.Desktop.Editing.Attributes.Severity)
-      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.AddValidate
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.#ctor
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.AddValidate(System.Func{System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError}})
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector
-      #region Inspector.AddValidate
-      // Adds a custom validation rule to the "Mineral" field of the specified feature layer.
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.CurrentValue
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldName
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadSchema(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.TryGetValue(System.String,System.Object@)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.TrySetValue(System.String,System.Object)
+      #region Adds a custom validation rule to the "Mineral" field of the specified feature layer.
       await QueuedTask.Run(() =>
       {
         var insp = new Inspector();
         insp.LoadSchema(featureLayer);
+
+        bool success = insp.TrySetValue("mineral", "Salt");
+        object result = null;
+        success = insp.TryGetValue("mineral", out result);
+        if (result != null && success)
+        {
+          MessageBox.Show($"Successfully stored and retrieved the value of field 'Mineral': {result.ToString()}");
+        }
+
         var attrib = insp.Where(a => a.FieldName == "Mineral").First();
         attrib.AddValidate(() =>
         {
           if (attrib.CurrentValue.ToString() == "Salt")
+          {
             return [];
-          else return [ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError.Create("Error", Severity.Low)];
+          }
+          else
+          {
+            return [ArcGIS.Desktop.Editing.Attributes.Attribute.ValidationError.Create("Error", Severity.Low)];
+          }
         });
       });
       #endregion

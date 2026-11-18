@@ -16,13 +16,13 @@
    limitations under the License.
 
 */
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Editing.Attributes;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -43,7 +43,10 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(Inspector)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Read and Write blob fields with the attribute inspector
       await QueuedTask.Run(() =>
       {
@@ -76,8 +79,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Callback(System.Action{ArcGIS.Desktop.Editing.EditOperation.IEditContext},ArcGIS.Core.Data.Dataset)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Callback(System.Action{ArcGIS.Desktop.Editing.EditOperation.IEditContext},System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.Dataset})
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Callback(System.Action{ArcGIS.Desktop.Editing.EditOperation.IEditContext},ArcGIS.Core.Data.Dataset[])
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Read and Write blob fields with a row cursor in a callback
       await QueuedTask.Run(() =>
         {

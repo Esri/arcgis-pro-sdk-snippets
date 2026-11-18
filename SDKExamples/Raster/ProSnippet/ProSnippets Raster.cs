@@ -17,17 +17,14 @@
 
 */
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Desktop.Core;
 using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.Raster;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.RasterSnippets
 {
@@ -48,34 +45,35 @@ namespace ProSnippets.RasterSnippets
       #region ignore - Variable initialization
 
       string sBandName = "";
+      RasterDataset fileRasterDataset = null;
 
       #endregion
 
-      // cref: ArcGIS.Core.Data.FileSystemConnectionPath.#ctor(System.Uri, ArcGIS.Core.Data.FileSystemDatastoreType)
       // cref: ArcGIS.Core.Data.FileSystemDatastoreType
-      // cref: ArcGIS.Core.Data.FileSystemDatastore.#ctor(ArcGIS.Core.Data.FileSystemConnectionPath)
       // cref: ArcGIS.Core.Data.FileSystemDatastore.OpenDataset``1(System.String)
       // cref: ArcGIS.Core.Data.Raster.RasterDataset
       #region Open raster dataset in a folder
-      // Create a FileSystemConnectionPath using the folder path.
-      FileSystemConnectionPath connectionPath = new(new System.Uri(@"C:\Temp"), FileSystemDatastoreType.Raster);
-      // Create a new FileSystemDatastore using the FileSystemConnectionPath.
-      FileSystemDatastore dataStore = new(connectionPath);
-      // Open the raster dataset.
-      RasterDataset fileRasterDataset = dataStore.OpenDataset<RasterDataset>("Sample.tif");
+      {
+        // Create a FileSystemConnectionPath using the folder path.
+        FileSystemConnectionPath connectionPath = new(new System.Uri(@"C:\Temp"), FileSystemDatastoreType.Raster);
+        // Create a new FileSystemDatastore using the FileSystemConnectionPath.
+        FileSystemDatastore dataStore = new(connectionPath);
+        // Open the raster dataset.
+        fileRasterDataset = dataStore.OpenDataset<RasterDataset>("Sample.tif");
+      }
       #endregion
 
-      // cref: ArcGIS.Core.Data.FileGeodatabaseConnectionPath.#ctor(System.Uri)
-      // cref: ArcGIS.Core.Data.Geodatabase.#ctor(ArcGIS.Core.Data.FileGeodatabaseConnectionPath)
       // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
       // cref: ArcGIS.Core.Data.Raster.RasterDataset
       #region Open raster dataset in a geodatabase
-      // Create a FileGeodatabaseConnectionPath using the path to the gdb. Note: This can be a path to a .sde file.
-      FileGeodatabaseConnectionPath geodatabaseConnectionPath = new(new Uri(@"C:\Temp\rasters.gdb"));
-      // Create a new Geodatabase object using the FileGeodatabaseConnectionPath.
-      Geodatabase geodatabase = new(geodatabaseConnectionPath);
-      // Open the raster dataset.
-      RasterDataset gdbRasterDataset = geodatabase.OpenDataset<RasterDataset>("sample");
+      {
+        // Create a FileGeodatabaseConnectionPath using the path to the gdb. Note: This can be a path to a .sde file.
+        FileGeodatabaseConnectionPath geodatabaseConnectionPath = new(new Uri(@"C:\Temp\rasters.gdb"));
+        // Create a new Geodatabase object using the FileGeodatabaseConnectionPath.
+        Geodatabase geodatabase = new(geodatabaseConnectionPath);
+        // Open the raster dataset.
+        RasterDataset gdbRasterDataset = geodatabase.OpenDataset<RasterDataset>("sample");
+      }
       #endregion
 
       RasterDataset rasterDataset = fileRasterDataset;
@@ -118,7 +116,6 @@ namespace ProSnippets.RasterSnippets
 
       // cref: ArcGIS.Desktop.Mapping.RasterLayer
       // cref: ArcGIS.Desktop.Mapping.BasicRasterLayer.GetRaster()
-      // cref: ArcGIS.Core.Data.Raster.Raster
       // cref: ArcGIS.Core.Data.Raster.Raster.GetAttributeTable()
       #region Access rows in a raster attribute table
       {
@@ -144,7 +141,7 @@ namespace ProSnippets.RasterSnippets
       // cref: ArcGIS.Core.Data.Raster.Raster.CreateCursor(System.Int32, System.Int32)
       // cref: ArcGIS.Core.Data.Raster.RasterCursor
       // cref: ArcGIS.Core.Data.Raster.RasterCursor.Current
-      // cref: ArcGIS.Core.Data.Raster.RasterCursor.MoveNext
+      // cref: ArcGIS.Core.Data.Raster.RasterCursor.MoveNext()
       // cref: ArcGIS.Core.Data.Raster.PixelBlock
       #region Create a raster cursor to iterate through the raster data
       await QueuedTask.Run(() =>
@@ -277,10 +274,14 @@ namespace ProSnippets.RasterSnippets
         // cref: ArcGIS.Core.CIM.StatsHistogram.min
         #region Calculate Raster statistics
         //If a raster dataset has statistics, you can create a raster layer and get these statistics by accessing the colorizer.
+        var rasterStatisticsMapView = MapView.Active;
+        if (rasterStatisticsMapView == null)
+          return;
+
         await QueuedTask.Run(() =>
         {
           //Accessing the raster layer
-          var lyr = MapView.Active.Map.GetLayersAsFlattenedList().OfType<BasicRasterLayer>().FirstOrDefault();
+          var lyr = rasterStatisticsMapView.Map.GetLayersAsFlattenedList().OfType<BasicRasterLayer>().FirstOrDefault();
           //Getting the colorizer
           var colorizer = lyr.GetColorizer() as CIMRasterStretchColorizer;
           //Accessing the statistics
@@ -295,8 +296,6 @@ namespace ProSnippets.RasterSnippets
       #region ProSnippet Group: Raster and Imagery Options
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.ApplicationOptions.RasterImageryOptions
-      // cref: ArcGIS.Desktop.Core.RasterImageryOptions
       // cref: ArcGIS.Core.CIM.RasterResamplingType
       // cref: ArcGIS.Core.CIM.RasterStretchType
       // cref:ArcGIS.Desktop.Core.BuildPyramidOption

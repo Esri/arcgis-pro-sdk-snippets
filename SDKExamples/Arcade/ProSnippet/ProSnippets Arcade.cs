@@ -16,17 +16,16 @@
    limitations under the License.
 
 */
-using ArcGIS.Core.Arcade;
-using ArcGIS.Core.CIM;
-using ArcGIS.Core.Data;
-using ArcGIS.Core.Data.UtilityNetwork.Trace;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArcGIS.Core.Arcade;
+using ArcGIS.Core.CIM;
+using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.ArcadeSnippets
 {
@@ -52,7 +51,7 @@ namespace ProSnippets.ArcadeSnippets
     /// Modifying renderers and label expressions using Arcade. - Evaluating attribute rule expressions.  For more
     /// information on Arcade expressions, refer to the official documentation at
     /// https://developers.arcgis.com/arcade/.</remarks>
-    public static void ArcadeProSnippets()
+    public static async Task ArcadeProSnippetsAsync()
     {
       #region ProSnippet Group: Basic Queries
       #endregion
@@ -67,15 +66,16 @@ namespace ProSnippets.ArcadeSnippets
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo.Expression
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo.ReturnType
-      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
       #region Basic Query
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //construct an expression
           var query = @"Count($layer)";//count of features in "layer"
@@ -118,23 +118,24 @@ namespace ProSnippets.ArcadeSnippets
             //something wrong with the query evaluation
             //TODO...
           }
-        }
+        });
       }
       #endregion
 
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo.Expression
       //cref: ArcGIS.Core.CIM.CIMExpressionInfo.ReturnType
-      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
       #region Basic Query using Features
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //construct an expression
           var query = @"$feature.AreaInAcres * 43560.0";//convert acres to ft 2
@@ -185,19 +186,21 @@ namespace ProSnippets.ArcadeSnippets
               //TODO...
             }
           }
-        }
+        });
       }
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Retrieve features using FeatureSetByName
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //construct a query
           var query = new StringBuilder();
@@ -245,19 +248,21 @@ namespace ProSnippets.ArcadeSnippets
             //something wrong with the query evaluation
             //TODO...
           }
-        }
+        });
       }
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Retrieve features using Filter
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //construct a query
           var query = new StringBuilder();
@@ -304,19 +309,21 @@ namespace ProSnippets.ArcadeSnippets
             //something wrong with the query evaluation
             //TODO...
           }
-        }
+        });
       }
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Calculate basic statistics with Math functions
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //construct a query
           var query = new StringBuilder();
@@ -371,25 +378,27 @@ namespace ProSnippets.ArcadeSnippets
             //something wrong with the query evaluation
             //TODO...
           }
-        }
+        });
       }
       #endregion
 
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Using FeatureSet functions Filter and Intersects
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //construct a query
           var query = new StringBuilder();
           //https://developers.arcgis.com/arcade/function-reference/featureset_functions/
 
-          //Assume we have two layers - a polygon and a points layer. 
+          //Assume we have two layers - a polygon and a points layer.
           //Select all points within the relevant polygon boundaries and sum the count
           query.AppendLine("var results = [];");
 
@@ -454,7 +463,7 @@ namespace ProSnippets.ArcadeSnippets
             //something wrong with the query evaluation
             //TODO...
           }
-        }
+        });
       }
       #endregion
 
@@ -463,7 +472,9 @@ namespace ProSnippets.ArcadeSnippets
 
       //cref: ArcGIS.Core.CIM.CIMLabelClass
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Evaluating an Arcade Labeling Expression
       {
         string ArcadeLabelingExpressionName = "My Arcade Label Expression";
@@ -472,7 +483,7 @@ namespace ProSnippets.ArcadeSnippets
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //Given a layer that has an arcade labeling
           //expression and we evaluate it interactively...
@@ -485,7 +496,9 @@ namespace ProSnippets.ArcadeSnippets
                                       lc.ExpressionEngine == LabelExpressionEngine.Arcade;
                              });
           if (label_class == null)
+          {
             return;
+          }
 
           //evaluate the label expression against the features
           var expr_info = new CIMExpressionInfo()
@@ -509,7 +522,7 @@ namespace ProSnippets.ArcadeSnippets
             System.Diagnostics.Debug.WriteLine(
                $"[{rc.Current.GetObjectID()}]: {result}");
           }
-        }
+        });
       }
       #endregion
 
@@ -517,16 +530,17 @@ namespace ProSnippets.ArcadeSnippets
       //cref: ArcGIS.Core.CIM.CIMColorVisualVariable
       //cref: ArcGIS.Core.CIM.CIMTransparencyVisualVariable
       //cref: ArcGIS.Core.CIM.CIMSizeVisualVariable
-      //cref: ArcGIS.Core.CIM.CIMUniqueValueRenderer.ValueExpressionInfo
       //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(IEnumerable<KeyValuePair<string, object>>)
-      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Evaluating Arcade Visual Variable Expressions on a Renderer
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/ for more examples
         //and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //Assume we have a layer that is using Visual Variable
           //expressions that we want to evaluate interactively...
@@ -537,7 +551,10 @@ namespace ProSnippets.ArcadeSnippets
           List<CIMVisualVariable> vis_variables = renderer.VisualVariables?.ToList() ??
                                 [];
           if (vis_variables.Count == 0)
+          {
             return;//there are none
+          }
+
           var vis_var_with_expr = new Dictionary<string, string>();
           //see if any are using expressions
           foreach (var vv in vis_variables)
@@ -545,21 +562,29 @@ namespace ProSnippets.ArcadeSnippets
             if (vv is CIMColorVisualVariable cvv)
             {
               if (!string.IsNullOrEmpty(cvv.ValueExpressionInfo?.Expression))
+              {
                 vis_var_with_expr.Add("Color", cvv.ValueExpressionInfo?.Expression);
+              }
             }
             else if (vv is CIMTransparencyVisualVariable tvv)
             {
               if (!string.IsNullOrEmpty(tvv.ValueExpressionInfo?.Expression))
+              {
                 vis_var_with_expr.Add("Transparency", tvv.ValueExpressionInfo?.Expression);
+              }
             }
             else if (vv is CIMSizeVisualVariable svv)
             {
               if (!string.IsNullOrEmpty(svv.ValueExpressionInfo?.Expression))
+              {
                 vis_var_with_expr.Add("Outline", svv.ValueExpressionInfo?.Expression);
+              }
             }
           }
           if (vis_var_with_expr.Count == 0)
+          {
             return;//there aren't any with expressions
+          }
 
           //loop through the features (outer)
           //per feature evaluate each visual variable.... (inner)
@@ -595,7 +620,7 @@ namespace ProSnippets.ArcadeSnippets
                  $"[{rc.Current.GetObjectID()}] '{kvp.Key}': {result}");
             }
           }
-        }
+        });
       }
       #endregion
 
@@ -607,7 +632,7 @@ namespace ProSnippets.ArcadeSnippets
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetRenderer(ArcGIS.Core.CIM.CIMRenderer)
       #region Modify renderer using Arcade
       {
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           // GetRenderer from Layer (assumes it is a unique value renderer)
           if (featureLayer.GetRenderer() is not CIMUniqueValueRenderer uvRenderer)
@@ -627,7 +652,7 @@ namespace ProSnippets.ArcadeSnippets
 
           //SetRenderer on Layer
           featureLayer.SetRenderer(uvRenderer);
-        }
+        });
       }
       #endregion
 
@@ -637,7 +662,7 @@ namespace ProSnippets.ArcadeSnippets
       // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Modify label expression using Arcade
       {
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //Get the layer's definition, using the community sample Data\Admin\AdminSample.aprx
           if (featureLayer.GetDefinition() is not CIMFeatureLayer lyrDefn)
@@ -652,19 +677,23 @@ namespace ProSnippets.ArcadeSnippets
           theLabelClass.Expression = "return $feature.STATE_NAME + TextFormatting.NewLine + $feature.POP2000;";
           //Set the label definition back to the layer.
           featureLayer.SetDefinition(lyrDefn);
-        }
+        });
       }
       #endregion
 
       //cref: ArcGIS.Core.Data.TableDefinition.GetAttributeRules(AttributeRuleType)
       //cref: ArcGIS.Core.Data.AttributeRuleDefinition.GetScriptExpression()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluationResult.GetResult()
+      //cref: ArcGIS.Core.Arcade.ArcadeEvaluator.Evaluate(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Object}})
+      //cref: ArcGIS.Core.Arcade.ArcadeScriptEngine.Instance
+      //cref: ArcGIS.Core.Arcade.IArcadeScriptEngine.CreateEvaluator(ArcGIS.Core.CIM.CIMExpressionInfo,ArcGIS.Core.Arcade.ArcadeProfile)
       #region Evaluate AttributeRule Expression
       {
         //Consult https://github.com/Esri/arcade-expressions/ and
         //https://developers.arcgis.com/arcade/profiles/attribute-rules/ for
         //more examples and arcade reference
 
-        // Note: the following should be embedded in a QueuedTask.Run() statement
+        await QueuedTask.Run(() =>
         {
           //Retrieve the desired feature class/table
           FeatureClassDefinition def = featureLayer.GetFeatureClass().GetDefinition();
@@ -674,7 +703,9 @@ namespace ProSnippets.ArcadeSnippets
           AttributeRuleDefinition validation_rule = def.GetAttributeRules(
                                                     AttributeRuleType.Validation).FirstOrDefault();
           if (validation_rule == null)
+          {
             return;
+          }
 
           //Get the expression
           var expr = validation_rule.GetScriptExpression();
@@ -725,7 +756,7 @@ namespace ProSnippets.ArcadeSnippets
               //TODO...
             }
           }
-        }
+        });
       }
       #endregion
     }

@@ -16,6 +16,10 @@
    limitations under the License.
 
 */
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Editing;
@@ -23,10 +27,6 @@ using ArcGIS.Desktop.Editing.Attributes;
 using ArcGIS.Desktop.Editing.Templates;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -80,8 +80,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute
-      // cref: ArcGIS.Desktop.Editing.EditOperation.ExecuteAsync
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation - check for actions before Execute
       // Checks for pending actions in an edit operation before attempting to execute it.
       await QueuedTask.Run(() =>
@@ -106,11 +107,11 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.EditOperation.#ctor()
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.Layer, ArcGIS.Core.Geometry.Geometry)
       // cref: ArcGIS.Desktop.Editing.EditOperation.IsSucceeded
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute
-      // cref: ArcGIS.Desktop.Editing.EditOperation.ExecuteAsync
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Create Features
       // Creates new features in a feature layer using the specified geometry, attributes, or editing template.
       await QueuedTask.Run(() =>
@@ -151,6 +152,9 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.Current
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.Templates.EditingTemplate, ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Create a feature using the current template
       // Creates a new feature using the current editing template and the specified geometry.
       await QueuedTask.Run(() =>
@@ -168,6 +172,13 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, System.Collections.Generic.Dictionary<string, object>)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.CurrentValue
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldName
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.MapMember
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Create feature from a modified inspector
       // Creates a new feature by copying and optionally modifying the attributes of an existing feature using an inspector.
       await QueuedTask.Run(() =>
@@ -191,6 +202,10 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember, System.Collections.Generic.Dictionary<string, object>)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.EditOperation.SelectNewFeatures
       #region Create features from a CSV file
       // Creates new point features in the specified feature layer using data from a CSV source.
       var csvData = new List<(double X, double Y, double StopOrder, double FacilityID)>();
@@ -200,7 +215,7 @@ namespace ProSnippets.EditingSnippets
         //Create the edit operation
         var createOperation = new ArcGIS.Desktop.Editing.EditOperation() { Name = "Generate points", SelectNewFeatures = false };
 
-        // determine the shape field name - it may not be 'Shape' 
+        // determine the shape field name - it may not be 'Shape'
         string shapeField = featureLayer.GetFeatureClass().GetDefinition().GetShapeField();
 
         //Loop through csv data
@@ -228,11 +243,16 @@ namespace ProSnippets.EditingSnippets
           return createOperation.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not
         }
         else
+        {
           return false;
+        }
       });
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.Templates.EditingTemplate)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Create row in a table using a table template
       // Creates a new row in a standalone table using the specified table template.
       await QueuedTask.Run(() =>
@@ -249,6 +269,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Clip(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Core.Geometry.Geometry, ArcGIS.Desktop.Editing.ClipMode)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Clip Features
       // Clips a feature to the specified polygon.
       await QueuedTask.Run(() =>
@@ -268,11 +291,18 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Cut Features
       // Cuts features in the specified feature layer using the provided cut line and clip polygon.
+      var cutMapView = MapView.Active;
+      if (cutMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
         {
-          var select = MapView.Active.SelectFeatures(clipPolygon);
+          var select = cutMapView.SelectFeatures(clipPolygon);
 
           var cutFeatures = new EditOperation() { Name = "Cut Features" };
           cutFeatures.Split(featureLayer, objectId, cutLine);
@@ -295,6 +325,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Delete(ArcGIS.Desktop.Mapping.MapMember, System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Delete Features
       // Deletes a single feature from the specified feature layer using its ObjectID.
       await QueuedTask.Run(() =>
@@ -314,7 +347,16 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.Dictionary{System.String,System.Object})
-      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation
+      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation()
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.CurrentValue
+      // cref: ArcGIS.Desktop.Editing.Attributes.Attribute.FieldName
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.MapMember
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.RowToken.ObjectID
       #region Edit Operation Duplicate Features
       // Duplicates a feature in a feature layer and modifies its geometry.
       await QueuedTask.Run(() =>
@@ -346,6 +388,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Explode(ArcGIS.Desktop.Mapping.Layer,System.Collections.Generic.IEnumerable{Int64},Boolean)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Explode Features
       // Explodes a multi-part feature into individual features.
       await QueuedTask.Run(() =>
@@ -369,6 +414,10 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Merge(ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Mapping.Layer,System.Collections.Generic.IEnumerable{Int64},ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Merge Features
       // Merges multiple features from a source feature layer into a new feature, optionally using a template or inspector, and supports merging into a destination layer.
       await QueuedTask.Run(() =>
@@ -405,7 +454,11 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Core.Geometry.Geometry, Nullable<System.Collections.Generic.Dictionary<System.String, System.object>>)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Int64)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Modify single feature
       // Modifies a single feature in the specified feature layer.
       await QueuedTask.Run(() =>
@@ -442,6 +495,11 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.ExecuteAsync()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.EditOperation.ShowProgressor
       #region Edit Operation Modify multiple features
       // Modifies multiple features in the specified feature layer by updating their attributes.
       await QueuedTask.Run(() =>
@@ -476,6 +534,11 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Search for layer features and update a field
       {
         var oidSet = new List<long>();
@@ -499,7 +562,7 @@ namespace ProSnippets.EditingSnippets
           }
         }
 
-        //Create edit operation 
+        //Create edit operation
         var modifyOp = new EditOperation() { Name = "Update date" };
 
         // load features into inspector and update field
@@ -517,6 +580,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Move(ArcGIs.Desktop.Mapping.SelectionSet, System.Double, System.Double)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Move features
       // Moves the shapes (geometries) of all selected features of a given feature layer of the active map view by a fixed offset.
       await QueuedTask.Run<bool>(() =>
@@ -525,7 +591,9 @@ namespace ProSnippets.EditingSnippets
           double yOffset = 100; // specify your units along the y-axis to move the geometry
                                 // If there are no selected features, return
           if (featureLayer.GetSelection().GetObjectIDs().Count == 0)
+          {
             return false;
+          }
           // set up a dictionary to store the layer and the object IDs of the selected features
           var selectionDictionary = new Dictionary<MapMember, List<long>>
             {
@@ -542,7 +610,10 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(LAYER,INT64,GEOMETRY,DICTIONARY{STRING,OBJECT})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Move feature to a specific coordinate
       // Moves the first selected feature in the specified feature layer to the given coordinates.
       await QueuedTask.Run<bool>(() =>
@@ -555,7 +626,7 @@ namespace ProSnippets.EditingSnippets
          var moveToPoint = new MapPointBuilderEx(xCoordinate, yCoordinate, 0.0, 0.0, featureLayer.GetSpatialReference());
 
          var moveEditOperation = new EditOperation() { Name = "Move features" };
-         moveEditOperation.Modify(featureLayer, selOid ?? -1, moveToPoint.ToGeometry());  //Modify the feature to the new geometry 
+         moveEditOperation.Modify(featureLayer, selOid ?? -1, moveToPoint.ToGeometry());  //Modify the feature to the new geometry
          if (!moveEditOperation.IsEmpty)
          {
            var result = moveEditOperation.Execute(); //Execute and ExecuteAsync will return true if the operation was successful and false if not
@@ -566,12 +637,15 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Planarize(Layer,IEnumerable{Int64},Nullable{Double})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Planarize Features
       // Planarizes the specified feature in the given feature layer.
       await QueuedTask.Run(() =>
         {
-          // note - EditOperation.Planarize requires a standard license. 
-          //  An exception will be thrown if Pro is running under a basic license. 
+          // note - EditOperation.Planarize requires a standard license.
+          //  An exception will be thrown if Pro is running under a basic license.
 
           var planarizeFeatures = new EditOperation() { Name = "Planarize Features" };
 
@@ -590,21 +664,35 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.#ctor
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.ParallelOffset.Builder)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.AlignConnected
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.CopyToSeparateFeatures
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.Corner
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.Distance
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.Iterations
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.RemoveSelfIntersectingLoops
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.Selection
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.Side
+      // cref: ArcGIS.Desktop.Editing.ParallelOffset.Builder.Template
       #region Edit Operation ParallelOffset
       // Creates parallel offset features from the selected features.
-      await QueuedTask.Run(static () =>
+      var parallelOffsetMapView = MapView.Active;
+      if (parallelOffsetMapView == null)
+        return;
+
+      await QueuedTask.Run(() =>
         {
           //Create parallel features from the selected features
 
           //find the roads layer
-          var roadsLayer = MapView.Active.Map.FindLayers("Roads")?[0];
+          var roadsLayer = parallelOffsetMapView.Map.FindLayers("Roads")?[0];
 
           //instantiate parallelOffset builder and set parameters
           var parOffsetBuilder = new ParallelOffset.Builder()
           {
-            Selection = MapView.Active.Map.GetSelection(),
+            Selection = parallelOffsetMapView.Map.GetSelection(),
             Template = roadsLayer.GetTemplate("Freeway"),
             Distance = 200,
             Side = ParallelOffset.SideType.Both,
@@ -626,8 +714,15 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Reshape(ArcGIS.Desktop.Mapping.SelectionSet, ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Reshape Features
       // Reshapes the specified feature in the given feature layer.
+      var reshapeMapView = MapView.Active;
+      if (reshapeMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
         {
           var reshapeFeatures = new EditOperation() { Name = "Reshape Features" };
@@ -636,7 +731,7 @@ namespace ProSnippets.EditingSnippets
 
           //Reshape a set of features that intersect some geometry....
 
-          reshapeFeatures.Reshape(MapView.Active.GetFeatures(modifyLine), modifyLine);
+          reshapeFeatures.Reshape(reshapeMapView.GetFeatures(modifyLine), modifyLine);
 
           //Execute to execute the operation
           //Must be called within QueuedTask.Run
@@ -651,8 +746,15 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Rotate(ArcGIS.Desktop.Mapping.SelectionSet, ArcGIS.Core.Geometry.MapPoint, System.Double)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Rotate Features
       // Rotates the selected features by a specified angle.
+      var rotateMapView = MapView.Active;
+      if (rotateMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
         {
           var rotateFeatures = new EditOperation() { Name = "Rotate Features" };
@@ -660,7 +762,7 @@ namespace ProSnippets.EditingSnippets
           //Rotate works on a selected set of features
           //Get all features that intersect a polygon
           //Rotate selected features 90 deg about "origin"
-          rotateFeatures.Rotate(MapView.Active.GetFeatures(polygon), origin, angle);
+          rotateFeatures.Rotate(rotateMapView.GetFeatures(polygon), origin, angle);
 
           //Execute to execute the operation
           //Must be called within QueuedTask.Run
@@ -675,8 +777,15 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Scale(ArcGIS.Desktop.Mapping.SelectionSet, ArcGIS.Core.Geometry.MapPoint, System.Double, System.Double, System.Double)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Scale Features
       // Scales the selected features by a specified factor.
+      var scaleMapView = MapView.Active;
+      if (scaleMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
         {
           var scaleFeatures = new EditOperation() { Name = "Scale Features" };
@@ -684,7 +793,7 @@ namespace ProSnippets.EditingSnippets
 
           //Rotate works on a selected set of features
           //Scale the selected features by scale in the X and Y direction
-          scaleFeatures.Scale(MapView.Active.GetFeatures(polygon), origin, scale, scale, 0.0);
+          scaleFeatures.Scale(scaleMapView.GetFeatures(polygon), origin, scale, scale, 0.0);
 
           //Execute to execute the operation
           //Must be called within QueuedTask.Run
@@ -698,11 +807,10 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.SplitByPercentage.#ctor
-      // cref: ArcGIS.Desktop.Editing.SplitByEqualParts.#ctor
-      // cref: ArcGIS.Desktop.Editing.SplitByDistance.#ctor
-      // cref: ArcGIS.Desktop.Editing.SplitByVaryingDistance.#ctor
       // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer,System.Int64,System.Collections.Generic.IEnumerable<ArcGIS.Core.Geometry.MapPoint>)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation Split Features
       // Splits the specified feature at the given points.
       await QueuedTask.Run(() =>
@@ -813,8 +921,9 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.TransferAttributes(ArcGIS.Desktop.Mapping.MapMember,System.Int64,ArcGIS.Desktop.Mapping.MapMember,System.Int64)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.TransferAttributes(ArcGIS.Desktop.Mapping.MapMember,System.Int64,ArcGIS.Desktop.Mapping.MapMember,System.Int64,System.String)
-      // cref: ArcGIS.Desktop.Editing.EditOperation.TransferAttributes(ArcGIS.Desktop.Mapping.MapMember,System.Int64,ArcGIS.Desktop.Mapping.MapMember,System.Int64,System.Collections.Generic.Dictionary{System.String,System.String})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Edit Operation: Transfer Attributes
       // Transfers attributes from a source feature to a target feature between specified layers.
       await QueuedTask.Run(() =>
@@ -903,12 +1012,20 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.TransformByLinkLayer.#ctor
       // cref: ArcGIS.Desktop.Editing.TransformMethodType
       // cref: ArcGIS.Desktop.Editing.EditOperation.Transform(ArcGIS.Desktop.Mapping.Layer,ArcGIS.Desktop.Editing.TransformMethod)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Transform(ArcGIS.Desktop.Mapping.SelectionSet,ArcGIS.Desktop.Editing.TransformMethod)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.TransformByLinkLayer.LinkLayer
+      // cref: ArcGIS.Desktop.Editing.TransformMethod.TransformType
       #region Edit Operation Transform Features
       // Transforms features from a source layer to a target layer using a specified transformation method.
+      var transformMapView = MapView.Active;
+      if (transformMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
         {
           //Transform features using EditOperation.Transform overloads
@@ -923,7 +1040,7 @@ namespace ProSnippets.EditingSnippets
             TransformType = TransformMethodType.Affine //TransformMethodType.Similarity
           };
           //Transform a selected set of features
-          transformFeatures.Transform(MapView.Active.GetFeatures(polygon), affine_transform);
+          transformFeatures.Transform(transformMapView.GetFeatures(polygon), affine_transform);
           //Perform an affine transformation
           transformFeatures.Transform(featureLayer, affine_transform);
           //Execute to execute the operation
@@ -938,9 +1055,16 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.RubbersheetByGeometries.#ctor
-      // cref: ArcGIS.Desktop.Editing.RubbersheetByLayers.#ctor
       // cref: ArcGIS.Desktop.Editing.EditOperation.Rubbersheet(ArcGIS.Desktop.Mapping.Layer, ArcGIS.Desktop.Editing.RubbersheetMethod)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.RubbersheetByGeometries.AnchorPoints
+      // cref: ArcGIS.Desktop.Editing.RubbersheetByGeometries.LimitedAdjustmentAreas
+      // cref: ArcGIS.Desktop.Editing.RubbersheetByGeometries.LinkLines
+      // cref: ArcGIS.Desktop.Editing.RubbersheetByLayers.AnchorPointLayer
+      // cref: ArcGIS.Desktop.Editing.RubbersheetByLayers.LimitedAdjustmentAreaLayer
+      // cref: ArcGIS.Desktop.Editing.RubbersheetByLayers.LinkLayer
+      // cref: ArcGIS.Desktop.Editing.RubbersheetMethod.RubbersheetType
       #region Edit Operation Rubbersheet Features
       // Performs a rubber-sheet transformation on the features of a specified layer using the provided link lines, anchor points, and limited adjustment areas.
       await QueuedTask.Run(() =>
@@ -983,6 +1107,11 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.EditOperation.Planarize(Layer,Int64,Nullable{Double})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Clip(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry,ArcGIS.Desktop.Editing.ClipMode)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry)
       #region Edit Operation Perform a Clip, Cut, and Planarize
       // Performs a sequence of editing operations on a feature, including clipping, cutting, and planarizing.
       await QueuedTask.Run(() =>
@@ -996,7 +1125,7 @@ namespace ProSnippets.EditingSnippets
 
           if (!clipCutPlanarizeFeatures.IsEmpty)
           {
-            //Note: An edit operation is a single transaction. 
+            //Note: An edit operation is a single transaction.
             //Execute the operations (in the order they were declared)
             //Execute and ExecuteAsync will return true if the operation was successful and false if not
             clipCutPlanarizeFeatures.Execute();
@@ -1006,17 +1135,23 @@ namespace ProSnippets.EditingSnippets
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation
+      // cref: ArcGIS.Desktop.Editing.EditOperation.CreateChainedOperation()
       // cref: ArcGIS.Desktop.Editing.EditOperation.AddAttachment(ArcGIS.Desktop.Mapping.MapMember,System.Int64,System.String)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.Templates.EditingTemplate,ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsSucceeded
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.RowToken.ObjectID
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.Layer
       #region Edit Operation Chain Edit Operations
       // Chains multiple edit operations into a single undo-able transaction.
       await QueuedTask.Run(() =>
         {
-          //Chaining operations is a special case. Use "Chained Operations" when you require multiple transactions 
+          //Chaining operations is a special case. Use "Chained Operations" when you require multiple transactions
           //to be undo-able with a single "Undo".
 
-          //The most common use case for operation chaining is creating a feature with an attachment. 
-          //Adding an attachment requires the object id (of a new feature) has already been created. 
+          //The most common use case for operation chaining is creating a feature with an attachment.
+          //Adding an attachment requires the object id (of a new feature) has already been created.
           var editOperation1 = new EditOperation() { Name = string.Format("Create point in '{0}'", currentTemplate.Layer.Name) };
 
           long newFeatureID = -1;
@@ -1028,8 +1163,8 @@ namespace ProSnippets.EditingSnippets
           if (editOperation1.IsSucceeded)
           {
             newFeatureID = (long)token2.ObjectID;
-            //Now, because we have the object id, we can add the attachment.  As we are chaining it, adding the attachment 
-            //can be undone as part of the "Undo Create" operation. In other words, only one undo operation will show on the 
+            //Now, because we have the object id, we can add the attachment.  As we are chaining it, adding the attachment
+            //can be undone as part of the "Undo Create" operation. In other words, only one undo operation will show on the
             //Pro UI and not two.
             var editOperation2 = editOperation1.CreateChainedOperation();
             //Add the attachment using the new feature id
@@ -1043,11 +1178,16 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Editing.RowToken
       // cref: ArcGIS.Desktop.Editing.EditOperation.AddAttachment(ArcGIS.Desktop.Editing.RowToken,System.String)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Desktop.Editing.Templates.EditingTemplate,ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.Layer
       #region Edit Operation add attachment via RowToken
       // Creates a new feature using the specified editing template and polygon geometry, and adds an attachment to the feature in a single edit operation.
       await QueuedTask.Run(() =>
         {
-          //The EditOperation.AddAttachment method to take a RowToken as a parameter 
+          //The EditOperation.AddAttachment method to take a RowToken as a parameter
           //allows you to create a feature, using EditOperation.CreateEx, and add an attachment in one transaction.
 
           EditOperation editOpAttach = new()
@@ -1071,6 +1211,9 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.EditOperation.ExecuteMode
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Core.Data.Row,System.String, System.object)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Split(ArcGIS.Desktop.Mapping.Layer, System.Int64, ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Order edits sequentially
       // Modifies the "NAME" attribute of a specified feature and then splits the feature using the provided polyline, all within a single sequential edit operation.
       // perform an edit and then a split as one operation.
@@ -1106,16 +1249,25 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.EditOperation.SetOnUndone(System.Action)
       // cref: ArcGIS.Desktop.Editing.EditOperation.SetOnComitted(System.Action<System.Boolean>)
       // cref: ArcGIS.Desktop.Editing.EditOperation.SetOnRedone(System.Action)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region SetOnUndone, SetOnRedone, SetOnComitted
       // Demonstrates how to use the <see cref="ArcGIS.Desktop.Editing.EditOperation"/> methods  <see
+      var selectionMapView = MapView.Active;
+      if (selectionMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
         {
-          // SetOnUndone, SetOnRedone and SetOnComitted can be used to manage 
-          // external actions(such as writing to a log table) that are associated with 
+          // SetOnUndone, SetOnRedone and SetOnComitted can be used to manage
+          // external actions(such as writing to a log table) that are associated with
           // each edit operation.
 
           //get selected feature and update attribute
-          var selectedFeatures = MapView.Active.Map.GetSelection();
+          var selectedFeatures = selectionMapView.Map.GetSelection();
           var testInspector = new Inspector();
           testInspector.Load(selectedFeatures.ToDictionary().Keys.First(), selectedFeatures.ToDictionary().Values.First());
           testInspector["Name"] = "test";
@@ -1153,6 +1305,8 @@ namespace ProSnippets.EditingSnippets
 
       //cref: ArcGIS.Core.Geometry.MapPointBuilderEx.HasID
       //cref: ArcGIS.Core.Geometry.MapPointBuilderEx.ID
+      //cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      //cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Mapping.Layer,System.Int64,ArcGIS.Core.Geometry.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
       #region Convert vertices in a polyline to a Control Point
       //Control points are special vertices used to apply symbol effects to line or polygon features.
       //By default, they appear as diamonds when you edit them.
@@ -1170,7 +1324,7 @@ namespace ProSnippets.EditingSnippets
           var line = lineFeature.GetShape() as Polyline;
           int vertexIndex = 1;
           objectId = lineFeature.GetObjectID();
-          //Each point is converted into a MapPoint and gets added to a list. 
+          //Each point is converted into a MapPoint and gets added to a list.
           foreach (var point in line.Points)
           {
             MapPointBuilderEx mapPointBuilderEx = new(point);

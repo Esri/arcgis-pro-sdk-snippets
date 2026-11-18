@@ -16,11 +16,11 @@
    limitations under the License.
 
 */
+using System;
+using System.Linq;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Linq;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -31,11 +31,15 @@ namespace ProSnippets.EditingSnippets
 
     public static async void ReadwriteRasterFieldAsync()
     {
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(MapMember,Int64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
       #region Read from a raster field
+      var readRasterMapView = MapView.Active;
+      if (readRasterMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
       {
-        var sel = MapView.Active.Map.GetSelection();
+        var sel = readRasterMapView.Map.GetSelection();
 
         //Read a raster from a raster field as an InteropBitmap
         //the bitmap can then be used as an imagesource or written to disk
@@ -45,11 +49,19 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(MapMember,Int64)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Desktop.Editing.Attributes.Inspector)
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Write an image to a raster field
+      var writeRasterMapView = MapView.Active;
+      if (writeRasterMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
       {
-        var sel = MapView.Active.Map.GetSelection();
+        var sel = writeRasterMapView.Map.GetSelection();
 
         //Insert an image into a raster field
         //Image will be written with no compression
@@ -66,13 +78,20 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.#ctor
-      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.SetCompressionType
-      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.SetCompressionQuality
+      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.SetCompressionType(ArcGIS.Core.Data.Raster.RasterCompressionType)
+      // cref: ArcGIS.Core.Data.Raster.RasterStorageDef.SetCompressionQuality(System.Int32)
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(Inspector)
-      // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterStorageDef
-      // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterDataset
+      // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterStorageDef(ArcGIS.Core.Data.Raster.RasterStorageDef)
+      // cref: ArcGIS.Core.Data.Raster.RasterValue.SetRasterDataset(ArcGIS.Core.Data.Raster.RasterDataset)
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.Load(ArcGIS.Desktop.Mapping.MapMember,System.Collections.Generic.IEnumerable{System.Int64})
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Execute()
+      // cref: ArcGIS.Desktop.Editing.EditOperation.IsEmpty
+      // cref: ArcGIS.Desktop.Editing.EditOperation.Name
       #region Write a compressed image to a raster field
+      var compressedRasterMapView = MapView.Active;
+      if (compressedRasterMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
       {
         //Open the raster dataset on disk and create a compressed raster value dataset object
@@ -87,7 +106,7 @@ namespace ProSnippets.EditingSnippets
           rv.SetRasterDataset(fileRasterDataset);
           rv.SetRasterStorageDef(storageDef);
 
-          var sel = MapView.Active.Map.GetSelection();
+          var sel = compressedRasterMapView.Map.GetSelection();
 
           //insert a raster value object into the raster field
           var insp = new ArcGIS.Desktop.Editing.Attributes.Inspector();

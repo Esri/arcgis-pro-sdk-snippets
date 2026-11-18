@@ -16,13 +16,13 @@
    limitations under the License.
 
 */
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -203,7 +203,6 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Core.VertexSymbolOptions
       // cref: ArcGIS.Desktop.Core.VertexSymbolType
-      // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.#ctor(ArcGIS.Desktop.Core.VertexSymbolType)
       // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.OutlineColor
       // cref: ArcGIS.Desktop.Core.VertexSymbolOptions.MarkerType
       // cref: ArcGIS.Desktop.Core.VertexMarkerType
@@ -238,7 +237,7 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Core.EditingOptions.GetSegmentSymbolOptions()
       // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
       // cref: ArcGIS.Desktop.Core.EditingOptions.CanSetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
-      // cref: ArcGIS.desktop.Core.EditingOptions.SetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
+      // cref: ArcGIS.Desktop.Core.EditingOptions.SetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
       #region Set Sketch Segment Symbol Options
       {
         var options = ApplicationOptions.EditingOptions;
@@ -281,9 +280,9 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.EditingOptions.GetDefaultSegmentSymbolOptions
+      // cref: ArcGIS.Desktop.Core.EditingOptions.GetDefaultSegmentSymbolOptions()
       // cref: ArcGIS.Desktop.Core.SegmentSymbolOptions
-      // cref: ArcGIS.Desktop.Core.EditingOptions.SetSegmentSymbolOptions
+      // cref: ArcGIS.Desktop.Core.EditingOptions.SetSegmentSymbolOptions(ArcGIS.Desktop.Core.SegmentSymbolOptions)
       #region Set Sketch Segment Symbol Back to Default
       {
         var options = ApplicationOptions.EditingOptions;

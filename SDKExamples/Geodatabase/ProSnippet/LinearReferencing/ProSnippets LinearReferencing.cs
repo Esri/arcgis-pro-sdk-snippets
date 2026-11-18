@@ -1,25 +1,9 @@
-﻿using ArcGIS.Core.CIM;
+using System.Collections.Generic;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.DDL;
 using ArcGIS.Core.Data.LinearReferencing;
 using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Catalog;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Editing;
-using ArcGIS.Desktop.Extensions;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Framework.Dialogs;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.KnowledgeGraph;
-using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FieldDescription = ArcGIS.Core.Data.DDL.FieldDescription;
 
 namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
@@ -38,7 +22,12 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
     /// </remarks>
     public static void ProSnippetsLinearReferencingAsync()
     {
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteInfo.#ctor(ArcGIS.Core.Data.FeatureClass,System.String)
+      // cref: ArcGIS.Core.Data.DDL.FieldDescription.CreateIntegerField(System.String)
+      // cref: ArcGIS.Core.Data.DDL.FieldDescription.CreateStringField(System.String,System.Int32)
+      // cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Build()
+      // cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Create(ArcGIS.Core.Data.DDL.FeatureClassDescription)
+      // cref: ArcGIS.Core.Data.DDL.ShapeDescription.HasM
+      // cref: ArcGIS.Core.Data.DDL.ShapeDescription.HasZ
       #region Create a routes feature class using the DDL
       {
         static void CreateRoutes(SchemaBuilder schemaBuilder)
@@ -46,12 +35,15 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
           FieldDescription routeIdDescription = FieldDescription.CreateIntegerField("RouteID");
           FieldDescription routeNameDescription = FieldDescription.CreateStringField("RouteName", 100);
           ShapeDescription shapeDescription = new ShapeDescription(GeometryType.Polyline, SpatialReferences.WGS84)
-          { HasM = true, HasZ = false };
+          {
+            HasM = true,
+            HasZ = false
+          };
 
           FeatureClassDescription routeFeatureClassDescription = new FeatureClassDescription("Routes",
             new List<FieldDescription>() { routeIdDescription, routeNameDescription }, shapeDescription);
 
-          //Create an M-enabled poly-line feature class 
+          //Create an M-enabled poly-line feature class
           schemaBuilder.Create(routeFeatureClassDescription);
           schemaBuilder.Build();
         }
@@ -59,7 +51,9 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.LinearReferencing.LineEventInfo.#ctor(ArcGIS.Core.Data.Table,System.String,System.String,System.String)
+      // cref: ArcGIS.Core.Data.DDL.FieldDescription.CreateIntegerField(System.String)
+      // cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Build()
+      // cref: ArcGIS.Core.Data.DDL.SchemaBuilder.Create(ArcGIS.Core.Data.DDL.TableDescription)
       #region Create an events table using the DDL
       {
         static void CreateEvents(SchemaBuilder schemaBuilder)
@@ -78,7 +72,9 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteInfo.#ctor(ArcGIS.Core.Data.FeatureClass,System.String)
+      // cref: ArcGIS.Core.Data.FeatureClass.GetDefinition()
+      // cref: ArcGIS.Core.Data.FeatureClassDefinition.HasM()
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
       #region Get route information from a polyline feature class with M-values
       {
         static void CreateRouteInfo(Geodatabase geodatabase, string routeFeatureClassName = "Roads", string routeIdFieldName = "RouteID")
@@ -98,7 +94,8 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.LinearReferencing.PointEventInfo.#ctor(ArcGIS.Core.Data.Table,System.String,System.String)
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.LinearReferencing.PointEventInfo.EventType
       #region Get event information
       {
         static void CreateEventInfo(Geodatabase geodatabase, string eventTableName = "Accidents", string routeIdFieldName = "RID", string measureFieldName = "Measure", string offsetFieldName = "Offset")
@@ -119,7 +116,11 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
       // cref: ArcGIS.Core.Data.LinearReferencing.PointEventInfo.#ctor(ArcGIS.Core.Data.Table,System.String,System.String)
       // cref: ArcGIS.Core.Data.LinearReferencing.PointEventSourceOptions.#ctor
       // cerf: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.GetErrors
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.#ctor(ArcGIS.Core.Data.LinearReferencing.RouteInfo,ArcGIS.Core.Data.LinearReferencing.EventInfo,ArcGIS.Core.Data.LinearReferencing.RouteEventSourceOptions)
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.LinearReferencing.PointEventSourceOptions.ComplementAngle
+      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.GetDefinition()
+      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.GetErrors()
+      // cref: ArcGIS.Core.Data.TableDefinition.GetFields()
       #region Create a RouteEventSource via dynamic segmentation process for point events
       {
         static void CreatePointEventSource(Geodatabase geodatabase, string routeFeatureClassName = "Roads", string eventTableName = "Accidents", string routeIdFieldName = "RID", string measureFieldName = "Measure")
@@ -130,15 +131,17 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
             RouteInfo routeInfo = new RouteInfo(routesFeatureClass, routeIdFieldName);
             EventInfo eventInfo = new PointEventInfo(eventsTable, routeIdFieldName, measureFieldName);
             RouteEventSourceOptions routeEventSourceOptions = new PointEventSourceOptions(AngleType.Tangent)
-            { ComplementAngle = true };
+            {
+              ComplementAngle = true
+            };
 
             using (RouteEventSource routeEventSource = new RouteEventSource(routeInfo, eventInfo, routeEventSourceOptions))
             using (RouteEventSourceDefinition routeEventSourceDefinition = routeEventSource.GetDefinition())
             {
-              // Locating errors 
+              // Locating errors
               IReadOnlyList<RouteEventSourceError> errors = routeEventSource.GetErrors();
 
-              // Route event source fields 
+              // Route event source fields
               IReadOnlyList<Field> routeEventSourceFields = routeEventSourceDefinition.GetFields();
 
               // Add RouteEventSource to the ArcGIS Pro map
@@ -155,11 +158,11 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
       #endregion
 
 
-      // cref: ArcGIS.Core.Data.LinearReferencing.LineEventInfo.#ctor(ArcGIS.Core.Data.Table,System.String,System.String,System.String,System.String)
-      // cref: ArcGIS.Core.Data.LinearReferencing.LineEventInfo.#ctor(ArcGIS.Core.Data.Table,System.String,System.String,System.String)
-      // cref: ArcGIS.Core.Data.LinearReferencing.LineEventSourceOptions.#ctor
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.GetErrors
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.#ctor(ArcGIS.Core.Data.LinearReferencing.RouteInfo,ArcGIS.Core.Data.LinearReferencing.EventInfo,ArcGIS.Core.Data.LinearReferencing.RouteEventSourceOptions)
+      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.GetErrors()
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.GetDefinition()
+      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSourceOptions.IsPositiveOffsetOnRight
+      // cref: ArcGIS.Core.Data.TableDefinition.GetFields()
       #region Create a RouteEventSource via dynamic segmentation process for line events
       {
         static void CreateLineEventSource(Geodatabase geodatabase, string routeFeatureClassName = "Roads", string eventTableName = "Accidents", string routeIdFieldName = "RID", string toMeasureFieldName = "toMeasure", string fromMeasureFieldName = "fromMeasure", string offsetFieldName = "Offset")
@@ -174,10 +177,10 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
             using (RouteEventSource routeEventSource = new RouteEventSource(routeInfo, eventInfo, routeEventSourceOptions))
             using (RouteEventSourceDefinition routeEventSourceDefinition = routeEventSource.GetDefinition())
             {
-              // Locating errors 
+              // Locating errors
               IReadOnlyList<RouteEventSourceError> errors = routeEventSource.GetErrors();
 
-              // Route event source fields 
+              // Route event source fields
               IReadOnlyList<Field> routeEventSourceFields = routeEventSourceDefinition.GetFields();
 
               // Add RouteEventSource to the ArcGIS Pro map
@@ -195,8 +198,9 @@ namespace ProSnippets.GeoDatabaseSnippets.LinearReferencing
 
 
       // cref: ArcGIS.Core.Data.LinearReferencing.RouteInfo.LocateFeatures(ArcGIS.Core.Data.FeatureClass,System.Double,ArcGIS.Core.Data.LinearReferencing.EventTableConfiguration)
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteInfo.LocateFeatures(ArcGIS.Core.Data.Selection,System.Double,ArcGIS.Core.Data.LinearReferencing.EventTableConfiguration)
-      // cref: ArcGIS.Core.Data.LinearReferencing.RouteEventSource.#ctor(ArcGIS.Core.Data.LinearReferencing.RouteInfo,ArcGIS.Core.Data.LinearReferencing.EventInfo,ArcGIS.Core.Data.LinearReferencing.RouteEventSourceOptions)
+      // cref: ArcGIS.Core.Data.Geodatabase.OpenDataset``1(System.String)
+      // cref: ArcGIS.Core.Data.LinearReferencing.EventTableConfiguration.KeepAllFields
+      // cref: ArcGIS.Core.Data.LinearReferencing.EventTableConfiguration.MDirectionOffset
       #region Locate features along routes
       {
         static void LocateLineFeaturesAlongRoutes(Geodatabase geodatabase, string routeFeatureClassName = "Roads", string eventTableName = "Accidents", string routeIdFieldName = "RID", string toMeasureFieldName = "toMeasure", string fromMeasureFieldName = "fromMeasure")

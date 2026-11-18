@@ -20,21 +20,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ArcGIS.Core.Geometry;
+using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Extensions;
-using ArcGIS.Desktop.Mapping;
-using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.GeoProcessing;
 using ArcGIS.Desktop.Editing.Templates;
-using System.Threading;
-using ArcGIS.Core.Data;
+using ArcGIS.Desktop.GeoProcessing;
+using ArcGIS.Desktop.Mapping;
 
 namespace ProSnippets.GeoprocessingSnippets
 {
@@ -55,7 +49,7 @@ namespace ProSnippets.GeoprocessingSnippets
     /// <remarks>
     /// The code snippets in this class are intended to demonstrate various geoprocessing functionalities.
     /// </remarks>
-    public static void GeoprocessingProSnippets()
+    public static async Task GeoprocessingProSnippetsAsync()
     {
       #region ignore - Variable initialization
       string input_roads = @"C:\data\Input.gdb\PlanA_Roads";
@@ -73,13 +67,11 @@ namespace ProSnippets.GeoprocessingSnippets
       EditingTemplate currentTemplate = null; // assume this is set elsewhere in your code
       #endregion Variable initialization
 
-      #region ProSnippet Group: General 
+      #region ProSnippet Group: General
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region How to execute a Model tool
       {
         // get the model tool's parameter syntax from the model's help
@@ -91,11 +83,9 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MAKEENVIRONMENTARRAY
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeEnvironmentArray(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Nullable{System.Double},System.Object,System.Nullable{System.Double},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.String,System.String,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region Set Geoprocessing extent environment
       {
         var parameters = Geoprocessing.MakeValueArray(@"C:\data\data.gdb\HighwaysUTM11", @"C:\data\data.gdb\Highways_extent");
@@ -107,7 +97,7 @@ namespace ProSnippets.GeoprocessingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.OpenToolDialog(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Boolean,ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler)
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
       #region Open a script tool dialog in Geoprocessing pane
       {
         // use defaults for other parameters - no need to pass any value
@@ -119,8 +109,8 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.OpenToolDialog
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.OpenToolDialog(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Boolean,ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler)
       #region Open the Geoprocessing Tool Pane for a specific Tool
       {
         // For a System toolbox, to identify the specific tool to show, use
@@ -138,7 +128,7 @@ namespace ProSnippets.GeoprocessingSnippets
         // the full path would be:
         // o "C:\Data\DeepThought-ProAddin\Toolboxes\toolboxes\DeepThought.tbx\Answer"
 
-        //Open the Buffer Tool GP Dialog - use either the full path or just 
+        //Open the Buffer Tool GP Dialog - use either the full path or just
         //use "ToolboxName.ToolName"
         var path = @"C:\ArcGIS\Resources\ArcToolBox\Toolboxes\Analysis Tools.tbx";
         var full_tool_name = System.IO.Path.Combine(path, "Buffer");
@@ -150,20 +140,20 @@ namespace ProSnippets.GeoprocessingSnippets
         var extent = MapView.Active.Extent;
         IReadOnlyList<string> val_array = null;
 
-        // Note: Needs QueuedTask to run
+        await QueuedTask.Run(() =>
         {
           var rect = GeometryEngine.Instance.Scale(extent, extent.Center, 0.25, 0.25) as Envelope;
           var poly = PolygonBuilderEx.CreatePolygon(rect, rect.SpatialReference);
           var geom = new List<object>() { poly };
 
           val_array = Geoprocessing.MakeValueArray(geom, null, @"1000 Meters");
-        }
+        });
         //Call OpenToolDialog on the UI thread!
         Geoprocessing.OpenToolDialog(tool_name, val_array, null, false);
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.GEOPROCESSING.GEOPROCESSINGPROJECTITEM
+      // cref: ArcGIS.Desktop.GeoProcessing.GeoprocessingProjectItem
       #region Get Geoprocessing project items
       {
         var gpItems = CoreModule.CurrentProject.Items.OfType<GeoprocessingProjectItem>();
@@ -184,28 +174,24 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region Stop a feature class created with GP from automatically adding to the map
       {
         // However, settings in Pro App's Geoprocessing Options will override option set in code
         // for example, in Pro App's Options > Geoprocessing dialog, if you check 'Add output datasets to an open map'
         // then the output WILL BE added to history overriding settings in code
         var CopyfeaturesParams = Geoprocessing.MakeValueArray("C:\\data\\Input.gdb\\PlanA_Roads", "C:\\data\\Input.gdb\\Roads_copy");
-        IGPResult gpResult = Geoprocessing.ExecuteToolAsync("management.CopyFeatures", CopyfeaturesParams, null, null, null, GPExecuteToolFlags.None).Result;
+        IGPResult gpResult = await Geoprocessing.ExecuteToolAsync("management.CopyFeatures", CopyfeaturesParams, null, null, null, GPExecuteToolFlags.None);
 
         // use the result as needed
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region GPExecuteToolFlags.AddToHistory will add the execution messages to History
       {
         // However, settings in Pro App's Geoprocessing Options will override option set in code
@@ -218,14 +204,11 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.IGPRESULT
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.IGPRESULT.RETURNVALUE
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.IGPRESULT.ERRORMESSAGES
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPResult
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPResult.ReturnValue
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPResult.ErrorMessages
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region Multi Ring Buffer
       {
         //The data referenced in this snippet can be downloaded from the arcgis-pro-sdk-community-samples repo
@@ -236,7 +219,7 @@ namespace ProSnippets.GeoprocessingSnippets
                       new List<string> { "1000", "2000" }, "Meters", "Distance",
                       "ALL", "FULL");
 
-          IGPResult gpResult = Geoprocessing.ExecuteToolAsync("Analysis.MultipleRingBuffer", paramsArray).Result;
+          IGPResult gpResult = await Geoprocessing.ExecuteToolAsync("Analysis.MultipleRingBuffer", paramsArray);
           var messages = string.IsNullOrEmpty(gpResult.ReturnValue)
                   ? $@"Error in Geoprocessing tool: {gpResult.ErrorMessages}"
                   : $@"Ok: {gpResult.ReturnValue}";
@@ -245,12 +228,10 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.IGPRESULT
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPResult
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region Non-blocking execution of a Geoprocessing tool
       {
         //The data referenced in this snippet can be downloaded from the arcgis-pro-sdk-community-samples repo
@@ -264,17 +245,14 @@ namespace ProSnippets.GeoprocessingSnippets
         // use the GPThread option of GPExecuteToolFlags
         //
         GPExecuteToolFlags flags = GPExecuteToolFlags.GPThread;  // instruct the tool run non-blocking GPThread
-        IGPResult bufferResult = Geoprocessing.ExecuteToolAsync("Analysis.Buffer", valueArray, null, null, null, flags).Result;
+        IGPResult bufferResult = await Geoprocessing.ExecuteToolAsync("Analysis.Buffer", valueArray, null, null, null, flags);
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.ShowMessageBox
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MAKEENVIRONMENTARRAY
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeEnvironmentArray(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Nullable{System.Double},System.Object,System.Nullable{System.Double},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.String,System.String,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region How to pass parameter with multiple or complex input values
       {
         var environments = Geoprocessing.MakeEnvironmentArray(overwriteoutput: true);
@@ -292,17 +270,15 @@ namespace ProSnippets.GeoprocessingSnippets
 
         GPExecuteToolFlags tokens = GPExecuteToolFlags.RefreshProjectItems | GPExecuteToolFlags.GPThread | GPExecuteToolFlags.AddToHistory;
 
-        IGPResult snapResult = Geoprocessing.ExecuteToolAsync(toolName, snapParams, environments, null, null, tokens).Result;
+        IGPResult snapResult = await Geoprocessing.ExecuteToolAsync(toolName, snapParams, environments, null, null, tokens);
 
         // use the result as needed
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MAKEENVIRONMENTARRAY
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeEnvironmentArray(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Nullable{System.Double},System.Object,System.Nullable{System.Double},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.String,System.String,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region How to pass native objects as parameter values to run geoprocessing tool
       {
         string tool2 = "analysis.Buffer";
@@ -317,8 +293,8 @@ namespace ProSnippets.GeoprocessingSnippets
         Multipoint multiPoint = MultipointBuilderEx.CreateMultipoint(list);
         var spatial_ref = SpatialReferenceBuilder.CreateSpatialReference(3857);
 
-        // Note: Needs QueuedTask to run
-        var args3 = Geoprocessing.MakeValueArray(multiPoint, "memory\\Buffers", "800 meters");
+        var args3 = await QueuedTask.Run(() =>
+          Geoprocessing.MakeValueArray(multiPoint, "memory\\Buffers", "800 meters"));
 
         var env1 = Geoprocessing.MakeEnvironmentArray(outputCoordinateSystem: spatial_ref);
         var messages = new List<string>(); // list to collect all output messages
@@ -327,30 +303,32 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.PROJECT.OPENASYNC
-      // cref: ARCGIS.DESKTOP.CORE.PROJECT.ITEMS
-      // cref: ARCGIS.DESKTOP.MAPPING.MapProjectItem
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.IGPHistoryItem	  
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MAKEENVIRONMENTARRAY
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Project.OpenAsync(System.String)
+      // cref: ArcGIS.Desktop.Mapping.MapProjectItem
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPHistoryItem
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeEnvironmentArray(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Nullable{System.Double},System.Object,System.Nullable{System.Double},System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Double},System.Object,System.Nullable{System.Int32},System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Boolean},System.Object,System.Object,System.Object,System.Object,System.Nullable{System.Int32},System.String,System.String,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPHistoryItem.GPResult
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPHistoryItem.TimeStamp
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPHistoryItem.ToolPath
       #region How to access Geoprocessing History
       {
         string openProjectPath = @"D\DATA\IGPHistoryItemTestProject\IGPHistoryItemTestProject.aprx";
-        Project.OpenAsync(openProjectPath);
+        await Project.OpenAsync(openProjectPath);
         MapProjectItem mapProjItem = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(item => item.Name.Equals("Map", StringComparison.CurrentCultureIgnoreCase));
 
-        // Note: Needs QueuedTask to run
-        var map = mapProjItem.GetMap();
-        var ftrLayer = map.Layers[0] as FeatureLayer;
+        var ftrLayer = await QueuedTask.Run(() =>
+        {
+          var map = mapProjItem.GetMap();
+          return map.Layers[0] as FeatureLayer;
+        });
         string tool1 = "management.GetCount";
         var args1 = Geoprocessing.MakeValueArray(ftrLayer);
         var env = Geoprocessing.MakeEnvironmentArray(overwriteoutput: true);
         GPExecuteToolFlags executeFlags = GPExecuteToolFlags.AddToHistory;
-        var t = Geoprocessing.ExecuteToolAsync(tool1, args1, env, null, null, executeFlags);
+        var t = await Geoprocessing.ExecuteToolAsync(tool1, args1, env, null, null, executeFlags);
 
         IEnumerable<IGPHistoryItem> hisItems = Project.Current.GetProjectItemContainer(Geoprocessing.HistoryContainerKey) as IEnumerable<IGPHistoryItem>;
 
@@ -372,12 +350,10 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.ShowMessageBox	  
-      // cref: ARCGIS.DESKTOP.CORE.Events.GPExecuteToolEvent	          
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},NULLABLE{CANCELLATIONTOKEN},GPTOOLEXECUTEEVENTHANDLER,GPEXECUTETOOLFLAGS)
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(STRING,IENUMERABLE{STRING},IENUMERABLE{KEYVALUEPAIR{STRING,STRING}},CANCELABLEPROGRESSOR,GPEXECUTETOOLFLAGS)
+      // cref: ArcGIS.Desktop.Core.Events.GPExecuteToolEvent
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.IGPResult.ReturnValue
       #region How to use Geoprocessing public event
       {
         ArcGIS.Desktop.Core.Events.GPExecuteToolEvent.Subscribe(e =>
@@ -385,7 +361,10 @@ namespace ProSnippets.GeoprocessingSnippets
                 // Handle the event
                 string id = e.ID;           // Same as history ID
                 if (e.IsStarting == false)  // Execute completed
+                {
                   _ = e.GPResult.ReturnValue;
+                }
+
                 System.Windows.MessageBox.Show("event triggered.");
               });
         Geoprocessing.ExecuteToolAsync("management.GetCount", Geoprocessing.MakeValueArray(@"c:\shape_file.shp"));
@@ -393,41 +372,45 @@ namespace ProSnippets.GeoprocessingSnippets
       #endregion
 
 
-      #region ProSnippet Group: Parameter Value Array 
+      #region ProSnippet Group: Parameter Value Array
       #endregion
 
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GPEXECUTETOOLFLAGS
-      // cref: ARCGIS.DESKTOP.CORE.GEOPROCESSING.GEOPROCESSING.MakeValueArray
-      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.MakeValueArray(System.Object[])
+      // cref: ArcGIS.Desktop.Core.Geoprocessing.Geoprocessing.ExecuteToolAsync(System.String,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Nullable{System.Threading.CancellationToken},ArcGIS.Desktop.Core.Geoprocessing.GPToolExecuteEventHandler,ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags)
       #region Add Geometry via MakeValueArray to GP Tool parameter lists
       {
         var tool_name = "analysis.Clip";
         var extent = MapView.Active.Extent;
         var sel_layer = MapView.Active.Map.GetLayersAsFlattenedList()
                           .OfType<FeatureLayer>().FirstOrDefault(l => l.Name == "GreatLakes");
-        if (sel_layer == null) return;
+        if (sel_layer == null)
+        {
+          return;
+        }
 
         var gdb = Project.Current.DefaultGeodatabasePath;
         var out_fc = System.IO.Path.Combine(gdb, "clipped_lakes_out");
 
-        // Note: Needs QueuedTask to run
-        var rect = GeometryEngine.Instance.Scale(extent, extent.Center, 0.5, 0.5) as Envelope;
-        var clip_poly = PolygonBuilderEx.CreatePolygon(rect, rect.SpatialReference);
+        var val_array = await QueuedTask.Run(() =>
+        {
+          var rect = GeometryEngine.Instance.Scale(extent, extent.Center, 0.5, 0.5) as Envelope;
+          var clip_poly = PolygonBuilderEx.CreatePolygon(rect, rect.SpatialReference);
 
-        //Add the geometry to a list before calling MakeValueArray
-        //Envelope and Geometry types are supported
-        var geom = new List<object>() { clip_poly };
-        var val_array = Geoprocessing.MakeValueArray([sel_layer, geom, out_fc]);
+          //Add the geometry to a list before calling MakeValueArray
+          //Envelope and Geometry types are supported
+          var geom = new List<object>() { clip_poly };
+          return Geoprocessing.MakeValueArray([sel_layer, geom, out_fc]);
+        });
 
         Geoprocessing.ExecuteToolAsync(tool_name, val_array,
         null, null, null, GPExecuteToolFlags.InheritGPOptions);
       }
       #endregion
 
-      #region ProSnippet Group: Geoprocessing Options 
+      #region ProSnippet Group: Geoprocessing Options
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.GeoprocessingOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.GeoprocessingOptions
       #region Get GeoprocessingOptions
       {
@@ -440,7 +423,6 @@ namespace ProSnippets.GeoprocessingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.GeoprocessingOptions
       // cref: ArcGIS.Desktop.Core.ApplicationOptions.GeoprocessingOptions
       #region Set GeoprocessingOptions
       {
@@ -448,13 +430,13 @@ namespace ProSnippets.GeoprocessingSnippets
         //Use the ArcGIS.Desktop.Core.Geoprocessing.GPExecuteToolFlags enum parameter
         //to modify the behavior of Geoprocessing.ExecuteToolAsync(...)
 
-        //Note: Needs QueuedTask to run
+        await QueuedTask.Run(() =>
         {
           ApplicationOptions.GeoprocessingOptions.SetOverwriteExistingDatasets(true);
           ApplicationOptions.GeoprocessingOptions.SetRemoveOverwrittenLayers(false);
           ApplicationOptions.GeoprocessingOptions.SetAddOutputDatasetsToOpenMap(true);
           ApplicationOptions.GeoprocessingOptions.SetWriteGPOperationsToHistory(false);
-        }
+        });
       }
       #endregion
     }

@@ -16,21 +16,18 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
 using ArcGIS.Desktop.Reports;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProSnippets.LayoutsSnippets.Reports
 {
@@ -44,7 +41,7 @@ namespace ProSnippets.LayoutsSnippets.Reports
   /// Crefs are used for internal purposes only. Please ignore them in the context of this example.
   public static partial class ProSnippetsLayouts
   {
-    public static async void ProSnippetsReports()
+    public static async Task ProSnippetsReportsAsync()
     {
       #region ProSnippet Group: Report Project Items
       #endregion
@@ -55,8 +52,7 @@ namespace ProSnippets.LayoutsSnippets.Reports
       string reportName = "MyReport"; //Name of a report in the project
       ReportProjectItem reportProjectItem = Project.Current.GetItems<ReportProjectItem>()
                                        .FirstOrDefault(); //Reference to a report project item
-      //Note: Needs QueuedTask to run
-      report = reportProjectItem?.GetReport(); //Get the report from a layout project item
+      report = await QueuedTask.Run(() => reportProjectItem?.GetReport()); //Get the report from a layout project item
 
       //Reference a feature layer in the map to use as a data source for a report
       var featureLayer = MapView.Active?.Map.GetLayersAsFlattenedList()
@@ -75,29 +71,27 @@ namespace ProSnippets.LayoutsSnippets.Reports
       }
       #endregion
       // cref: ArcGIS.Desktop.Reports.ReportProjectItem
-      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport
+      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport()
       #region Get a specific report
       {
         ReportProjectItem reportProjItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(item => item.Name.Equals("Report Name"));
-        //Note: Needs QueuedTask to run
-        Report reportInProject = reportProjItem?.GetReport();
+        Report reportInProject = await QueuedTask.Run(() => reportProjItem?.GetReport());
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Reports.ReportProjectItem
-      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport
-      // cref: ArcGIS.Desktop.Core.ReportFrameworkExtender.CreateReportPaneAsync
+      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport()
+      // cref: ArcGIS.Desktop.Core.ReportFrameworkExtender.CreateReportPaneAsync(ArcGIS.Desktop.Reports.Report)
       #region Open a Report project item in a new view
       {
         //Open a report project item in a new view.
-        //A report project item may exist but it may not be open in a view. 
+        //A report project item may exist but it may not be open in a view.
 
         //Reference a report project item by name
         ReportProjectItem reportPrjItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(item => item.Name.Equals("MyReport"));
 
         //Get the report associated with the report project item
-        //Note: Needs QueuedTask to run
-        Report reportToOpen = reportPrjItem.GetReport();
+        Report reportToOpen = await QueuedTask.Run(() => reportPrjItem.GetReport());
 
         //Create the new pane
         IReportPane iNewReportPane = await ProApp.Panes.CreateReportPaneAsync(reportToOpen); //GUI thread
@@ -106,15 +100,18 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Desktop.Reports.IReportPane
       // cref: ArcGIS.Desktop.Reports.IReportPane.ReportView
       // cref: ArcGIS.Desktop.Reports.ReportProjectItem
-      // cref: ArcGIS.Desktop.Core.ReportFrameworkExtender.FindReportPanes
-      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Activate
+      // cref: ArcGIS.Desktop.Core.ReportFrameworkExtender.FindReportPanes(ArcGIS.Desktop.Reports.Report)
+      // cref: ArcGIS.Desktop.Framework.Contracts.Pane.Activate()
+      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport()
       #region Activate an already open report view
       {
-        //Note: Needs QueuedTask to run
-        Report reportToActivate = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault().GetReport();
+        Report reportToActivate = await QueuedTask.Run(() =>
+          Project.Current.GetItems<ReportProjectItem>().FirstOrDefault().GetReport());
         var reportPane = FrameworkApplication.Panes.FindReportPanes(report).Last();
         if (reportPane == null)
+        {
           return;
+        }
         //Activate the pane
         (reportPane as ArcGIS.Desktop.Framework.Contracts.Pane).Activate();
         //Get the "ReportView" associated with the Report Pane.
@@ -122,8 +119,6 @@ namespace ProSnippets.LayoutsSnippets.Reports
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.ReportView
-      // cref: ArcGIS.Desktop.Reports.ReportView.Active
       #region Reference the active report view
       //Confirm if the current, active view is a report view.  If it is, do something.
       ReportView activeReportView = ReportView.Active;
@@ -133,46 +128,51 @@ namespace ProSnippets.LayoutsSnippets.Reports
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.ReportView.Refresh
+      // cref: ArcGIS.Desktop.Reports.ReportView.Refresh()
       #region Refresh the report view
       {
         if (reportView == null)
+        {
           return;
+        }
+
         reportView.Refresh();
       }
       #endregion
-      // cref: ArcGIS.Desktop.Reports.ReportView.ZoomToWholePage
+      // cref: ArcGIS.Desktop.Reports.ReportView.ZoomToWholePage()
       #region Zoom to whole page
       {
-        //Note: Needs QueuedTask to run
-        reportView.ZoomToWholePage();
+        await QueuedTask.Run(() => reportView.ZoomToWholePage());
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Reports.ReportDetails
       // cref: ArcGIS.Desktop.Reports.ReportSection
-      // cref: ArcGIS.Desktop.Layouts.Element.GetBounds
+      // cref: ArcGIS.Desktop.Layouts.Element.GetBounds(System.Boolean)
       // cref: ArcGIS.Desktop.Reports.ReportView.ZoomTo(ArcGIS.Core.Geometry.Geometry)
+      // cref: ArcGIS.Desktop.Layouts.GroupElement.Elements
+      // cref: ArcGIS.Desktop.Reports.Report.Elements
+      // cref: ArcGIS.Desktop.Reports.ReportView.Active
       #region Zoom to specific location on Report view
       {
-        //Note: On the QueuedTask
-        var detailsSection = report.Elements.OfType<ReportSection>().FirstOrDefault().Elements.OfType<ReportDetails>().FirstOrDefault();
-        var bounds = detailsSection.GetBounds();
-        ReportView.Active.ZoomTo(bounds);
+        await QueuedTask.Run(() =>
+        {
+          var detailsSection = report.Elements.OfType<ReportSection>().FirstOrDefault().Elements.OfType<ReportDetails>().FirstOrDefault();
+          var bounds = detailsSection.GetBounds();
+          ReportView.Active.ZoomTo(bounds);
+        });
       }
       #endregion
-      // cref: ArcGIS.Desktop.Reports.ReportView.ZoomToPageWidth
+      // cref: ArcGIS.Desktop.Reports.ReportView.ZoomToPageWidth()
       #region Zoom to page width
       {
-        //Process on worker thread
-        reportView.ZoomToPageWidth();
+        await QueuedTask.Run(() => reportView.ZoomToPageWidth());
       }
       #endregion
       #region ProSnippet Group: Create Report
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMReportField
-      // cref: ArcGIS.Core.CIM.CIMTableField
       // cref: ArcGIS.Core.CIM.CIMTableField.Name
       // cref: ArcGIS.Core.CIM.CIMTableField.FieldOrder
       // cref: ArcGIS.Core.CIM.CIMTableField.Group
@@ -194,9 +194,9 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Core.CIM.CIMMargin.Top
       // cref: ArcGIS.Core.Geometry.LinearUnit
       // cref: ArcGIS.Desktop.Reports.ReportTemplateManager
-      // cref: ArcGIS.Desktop.Reports.ReportTemplateManager.GetTemplatesAsync
+      // cref: ArcGIS.Desktop.Reports.ReportTemplateManager.GetTemplatesAsync()
       // cref: ArcGIS.Desktop.Reports.ReportStylingManager
-      // cref: ArcGIS.Desktop.Reports.ReportStylingManager.GetStylingsAsync
+      // cref: ArcGIS.Desktop.Reports.ReportStylingManager.GetStylingsAsync()
       // cref: ArcGIS.Desktop.Reports.ReportTemplate
       // cref: ArcGIS.Desktop.Reports.ReportTemplate.Name
       // cref: ArcGIS.Desktop.Reports.ReportFieldStatistic
@@ -204,100 +204,107 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Desktop.Reports.ReportFieldStatistic.Statistic
       // cref: ArcGIS.Core.CIM.FieldStatisticsFlag
       // cref: ArcGIS.Desktop.Reports.ReportFactory
-      // cref: ArcGIS.Desktop.Reports.ReportFactory.CreateReport
+      // cref: ArcGIS.Desktop.Reports.IReportFactory.CreateReport(System.String,ArcGIS.Desktop.Reports.ReportDataSource,ArcGIS.Core.CIM.CIMPage,System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Reports.ReportFieldStatistic},ArcGIS.Desktop.Reports.ReportTemplate,System.String)
+      // cref: ArcGIS.Desktop.Reports.ReportFactory.Instance
       #region Create report
       {
-        //Note: Call within QueuedTask.Run()
-        //The fields in the datasource used for the report
-        //This uses a US Cities dataset
-        var listFields = new List<CIMReportField> {
+        await QueuedTask.Run(async () =>
+        {
+          //The fields in the datasource used for the report
+          //This uses a US Cities dataset
+          var listFields = new List<CIMReportField> {
                 //Grouping should be the first field
                 new CIMReportField{Name = "STATE_NAME", FieldOrder = 0, Group = true, SortInfo = FieldSortInfo.Desc}, //Group cities using STATES
                 new CIMReportField{Name = "CITY_NAME", FieldOrder = 1},
                 new CIMReportField{Name = "POP1990", FieldOrder = 2, },
             };
-        //Definition query to use for the data source
-        var defQuery = "STATE_NAME LIKE 'C%'";
-        //Define the Datasource
-        var reportDataSource = new ReportDataSource(featureLayer, defQuery, listFields);
-        //The CIMPage defintion - page size, units, etc
-        var cimReportPage = new CIMPage
-        {
-          Height = 11,
-          StretchElements = false,
-          Width = 6.5,
-          ShowRulers = true,
-          ShowGuides = true,
-          Margin = new CIMMargin { Bottom = 1, Left = 1, Right = 1, Top = 1 },
-          Units = LinearUnit.Inches
-        };
+          //Definition query to use for the data source
+          var defQuery = "STATE_NAME LIKE 'C%'";
+          //Define the Datasource
+          var reportDataSource = new ReportDataSource(featureLayer, defQuery, listFields);
+          //The CIMPage defintion - page size, units, etc
+          var cimReportPage = new CIMPage
+          {
+            Height = 11,
+            StretchElements = false,
+            Width = 6.5,
+            ShowRulers = true,
+            ShowGuides = true,
+            Margin = new CIMMargin { Bottom = 1, Left = 1, Right = 1, Top = 1 },
+            Units = LinearUnit.Inches
+          };
 
-        //Report template
-        var reportTemplates = await ReportTemplateManager.GetTemplatesAsync();
-        var reportTemplate = reportTemplates.Where(r => r.Name == "Attribute List with Grouping").First();
+          //Report template
+          var reportTemplates = await ReportTemplateManager.GetTemplatesAsync();
+          var reportTemplate = reportTemplates.Where(r => r.Name == "Attribute List with Grouping").First();
 
-        //Report Styling
-        var reportStyles = await ReportStylingManager.GetStylingsAsync();
-        var reportStyle = reportStyles.Where(s => s == "Cool Tones").First();
+          //Report Styling
+          var reportStyles = await ReportStylingManager.GetStylingsAsync();
+          var reportStyle = reportStyles.Where(s => s == "Cool Tones").First();
 
-        //Field Statistics
-        var fieldStatisticsList = new List<ReportFieldStatistic> {
+          //Field Statistics
+          var fieldStatisticsList = new List<ReportFieldStatistic> {
                 new ReportFieldStatistic{ Field = "POP1990", Statistic = FieldStatisticsFlag.Sum}
                 //Note: NoStatistics option for FieldStatisticsFlag is not supported.
             };
-        var newReport = ReportFactory.Instance.CreateReport("USAReport", reportDataSource, cimReportPage, fieldStatisticsList, reportTemplate, reportStyle);
+          var newReport = ReportFactory.Instance.CreateReport("USAReport", reportDataSource, cimReportPage, fieldStatisticsList, reportTemplate, reportStyle);
+        });
       }
       #endregion
 
       //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition
-      //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition.#ctor
       //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition.ReportTemplateDataSourceItems
       //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDataSourceInfo
       //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDataSourceInfo.SetReportDataSource(ArcGIS.Desktop.Mapping.MapMember)
       //cref: ArcGIS.Desktop.Reports.TemplateTokenFieldInfoValues
-      //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition.CanCreateReport
-      //cref: ArcGIS.Desktop.Reports.ReportFactory.CreateReport(System.String,ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition)
+      //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition.CanCreateReport()
+      //cref: ArcGIS.Desktop.Reports.IReportFactory.CreateReport(System.String,ArcGIS.Desktop.Reports.ReportCustomTemplateDefinition)
       //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDataSourceInfo.DefinitionQuery
+      //cref: ArcGIS.Desktop.Reports.ReportCustomTemplateDataSourceInfo.TokenInfoValues
+      //cref: ArcGIS.Desktop.Reports.ReportFactory.Instance
+      //cref: ArcGIS.Desktop.Reports.ReportTemplateManager.GetCustomTemplateDefinition(System.String)
       #region Create a report from a custom report template
       {
-        //Note: Run within QueuedTask.Run()
-        // get the first map in the project
-        MapProjectItem item = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(n => n.Name == "Cities");
-        if (item == null)
-          return;
-
-        Map map = item.GetMap();
-        if (map == null)
-          return;
-
-        Layer cityLayer = map.FindLayers("U.S. Cities")[0];
-        if (cityLayer == null)
-          return;
-
-        // load template information
-        var templatePath = System.IO.Path.Combine($@"{Project.Current.HomeFolderPath}\TemplateSimpleReportWithTokens.rptt");
-        ReportCustomTemplateDefinition templateDef = ReportTemplateManager.GetCustomTemplateDefinition(templatePath);
-        if (templateDef == null || templateDef.ReportTemplateDataSourceItems?.Count() < 1)
-          return;
-
-        // get template info of first data source (parent) and set its data source
-        ReportCustomTemplateDataSourceInfo parentDataSourceInfo = templateDef.ReportTemplateDataSourceItems.ElementAt(0);
-
-        parentDataSourceInfo.SetReportDataSource(cityLayer);
-
-        TemplateTokenFieldInfoValues templateTokenFieldInfoValues = parentDataSourceInfo.TokenInfoValues;
-
-        parentDataSourceInfo.DefinitionQuery = "STATE_NAME = 'Massachusetts'";
-        templateTokenFieldInfoValues["[text-field-value-0]"] = "CITY_NAME";
-        templateTokenFieldInfoValues["[text-field-name-0]"] = "City";
-        templateTokenFieldInfoValues["[numeric-field-value-0]"] = "POP1990";
-        templateTokenFieldInfoValues["[numeric-field-name-0]"] = "Population";
-
-        if (templateDef.CanCreateReport())
+        await QueuedTask.Run(() =>
         {
-          // create the report
-          report = ReportFactory.Instance.CreateReport("RelateSiblingsFromCode", templateDef);
-        }
+          // get the first map in the project
+          MapProjectItem item = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(n => n.Name == "Cities");
+          if (item == null)
+            return;
+
+          Map map = item.GetMap();
+          if (map == null)
+            return;
+
+          Layer cityLayer = map.FindLayers("U.S. Cities")[0];
+          if (cityLayer == null)
+            return;
+
+          // load template information
+          var templatePath = System.IO.Path.Combine($@"{Project.Current.HomeFolderPath}\TemplateSimpleReportWithTokens.rptt");
+          ReportCustomTemplateDefinition templateDef = ReportTemplateManager.GetCustomTemplateDefinition(templatePath);
+          if (templateDef == null || templateDef.ReportTemplateDataSourceItems?.Count() < 1)
+            return;
+
+          // get template info of first data source (parent) and set its data source
+          ReportCustomTemplateDataSourceInfo parentDataSourceInfo = templateDef.ReportTemplateDataSourceItems.ElementAt(0);
+
+          parentDataSourceInfo.SetReportDataSource(cityLayer);
+
+          TemplateTokenFieldInfoValues templateTokenFieldInfoValues = parentDataSourceInfo.TokenInfoValues;
+
+          parentDataSourceInfo.DefinitionQuery = "STATE_NAME = 'Massachusetts'";
+          templateTokenFieldInfoValues["[text-field-value-0]"] = "CITY_NAME";
+          templateTokenFieldInfoValues["[text-field-name-0]"] = "City";
+          templateTokenFieldInfoValues["[numeric-field-value-0]"] = "POP1990";
+          templateTokenFieldInfoValues["[numeric-field-name-0]"] = "Population";
+
+          if (templateDef.CanCreateReport())
+          {
+            // create the report
+            report = ReportFactory.Instance.CreateReport("RelateSiblingsFromCode", templateDef);
+          }
+        });
         //UI thread
         if (report != null)
         {
@@ -314,88 +321,102 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Desktop.Mapping.PDFFormat
       // cref: ArcGIS.Desktop.Mapping.ExportFormat.Resolution
       // cref: ArcGIS.Desktop.Mapping.ExportFormat.OutputFileName
-      // cref: ArcGIS.Desktop.Reports.Report.ExportToPDF
+      // cref: ArcGIS.Desktop.Reports.Report.ExportToPDF(System.String,ArcGIS.Desktop.Mapping.PDFFormat,ArcGIS.Desktop.Reports.ReportExportOptions,System.Boolean)
+      // cref: ArcGIS.Desktop.Reports.Report.Name
       #region Export report to pdf
       {
-        //Note: Call within QueuedTask.Run()
-        //Define Export Options
-        var exportOptions = new ReportExportOptions
+        await QueuedTask.Run(() =>
         {
-          ExportPageOption = ExportPageOptions.ExportAllPages,
-          TotalPageNumberOverride = 0
+          //Define Export Options
+          var exportOptions = new ReportExportOptions
+          {
+            ExportPageOption = ExportPageOptions.ExportAllPages,
+            TotalPageNumberOverride = 0
 
-        };
-        //Create PDF format with appropriate settings
-        string path = $@"{Project.Current.HomeFolderPath}\ReportExport.pdf";
-        PDFFormat pdfFormat = new PDFFormat();
-        pdfFormat.Resolution = 300;
-        pdfFormat.OutputFileName = path;
-        report.ExportToPDF($"{report.Name}", pdfFormat, exportOptions, true);
+          };
+          //Create PDF format with appropriate settings
+          string path = $@"{Project.Current.HomeFolderPath}\ReportExport.pdf";
+          PDFFormat pdfFormat = new PDFFormat();
+          pdfFormat.Resolution = 300;
+          pdfFormat.OutputFileName = path;
+          report.ExportToPDF($"{report.Name}", pdfFormat, exportOptions, true);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Core.ItemFactory
-      // cref: ArcGIS.Desktop.Core.ItemFactory.Create
+      // cref: ArcGIS.Desktop.Core.IItemFactory.Create(System.String,ArcGIS.Desktop.Core.ItemFactory.ItemType)
       // cref: ArcGIS.Desktop.Core.IProjectItem
       #region Import a report file
       {
         var reportFilePath = @"c:\temp\Report.rptx";
-        //Note: Call within QueuedTask.Run()
-        Item reportToImport = ItemFactory.Instance.Create(reportFilePath);
-        Project.Current.AddItem(reportToImport as IProjectItem);
+        await QueuedTask.Run(() =>
+        {
+          Item reportToImport = ItemFactory.Instance.Create(reportFilePath);
+          Project.Current.AddItem(reportToImport as IProjectItem);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Reports.ReportProjectItem
-      // cref: ArcGIS.Desktop.Core.Project.GetItems``1
-      // cref: ArcGIS.Desktop.Core.Project.RemoveItem
+      // cref: ArcGIS.Desktop.Core.Project.GetItems``1()
+      // cref: ArcGIS.Desktop.Core.Project.RemoveItem(ArcGIS.Desktop.Core.IProjectItem)
       #region Delete a report
       {
-        //Note: Call within QueuedTask.Run()
-        //Reference a ReportProjectItem in a project by name
-        ReportProjectItem reportItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(item => item.Name.Equals(reportName));
-        if (reportItem != null)
-          //Delete the report from the project
-          Project.Current.RemoveItem(reportItem);
+        await QueuedTask.Run(() =>
+        {
+          //Reference a ReportProjectItem in a project by name
+          ReportProjectItem reportItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(item => item.Name.Equals(reportName));
+          if (reportItem != null)
+          {
+            //Delete the report from the project
+            Project.Current.RemoveItem(reportItem);
+          }
+        });
       }
       #endregion
 
-      #region ProSnippet Group: Modify Reports 
+      #region ProSnippet Group: Modify Reports
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.Report.SetName
+      // cref: ArcGIS.Desktop.Reports.Report.SetName(System.String)
+      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport()
       #region Rename Report
       {
-        //Note: Call within QueuedTask.Run()
-        ReportProjectItem reportProjItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(item => item.Name.Equals("Report Name"));
-        reportProjItem.GetReport().SetName("RenamedReport");
+        await QueuedTask.Run(() =>
+        {
+          ReportProjectItem reportProjItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(item => item.Name.Equals("Report Name"));
+          reportProjItem.GetReport().SetName("RenamedReport");
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.Report.AddGroup
-      // cref: ArcGIS.Desktop.Reports.Report.SetDefinitionQuery
-      // cref: ArcGIS.Desktop.Reports.Report.RemoveGroups
+      // cref: ArcGIS.Desktop.Reports.Report.AddGroup(System.String,System.Boolean,System.Boolean,System.String)
+      // cref: ArcGIS.Desktop.Reports.Report.SetDefinitionQuery(System.String)
+      // cref: ArcGIS.Desktop.Reports.Report.RemoveGroups(System.Collections.Generic.IEnumerable{System.String})
       #region Modify the Report DefinitionQuery
       {
-        //Note: Call within QueuedTask.Run()
-        //Remove Groups
-        // The fields in the datasource used for the report
-        var listFields = new List<string> {
+        await QueuedTask.Run(() =>
+        {
+          //Remove Groups
+          // The fields in the datasource used for the report
+          var listFields = new List<string> {
              "STATE_NAME"
             };
-        report.RemoveGroups(listFields);
+          report.RemoveGroups(listFields);
 
-        //Add Group
-        report.AddGroup("STATE_NAME", true, true, "");
+          //Add Group
+          report.AddGroup("STATE_NAME", true, true, "");
 
-        //Modify the Definition Query
-        var defQuery = "STATE_NAME LIKE 'C%'";
-        report.SetDefinitionQuery(defQuery);
+          //Modify the Definition Query
+          var defQuery = "STATE_NAME LIKE 'C%'";
+          report.SetDefinitionQuery(defQuery);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.Report.SetPage
-      // cref: ArcGIS.Desktop.Reports.Report.SetPageHeight
+      // cref: ArcGIS.Desktop.Reports.Report.SetPage(ArcGIS.Core.CIM.CIMPage)
+      // cref: ArcGIS.Desktop.Reports.Report.SetPageHeight(System.Double)
       // cref: ArcGIS.Core.CIM.CIMPage
       // cref: ArcGIS.Core.CIM.CIMPage.Height
       // cref: ArcGIS.Core.CIM.CIMPage.StretchElements
@@ -411,35 +432,44 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Core.CIM.CIMMargin.Top
       #region Modify the report Page
       {
-        //Note: Call within QueuedTask.Run()
-        var cimReportPage = new CIMPage
+        await QueuedTask.Run(() =>
         {
-          Height = 12,
-          StretchElements = false,
-          Width = 6.5,
-          ShowRulers = true,
-          ShowGuides = true,
-          Margin = new CIMMargin { Bottom = 1, Left = 1, Right = 1, Top = 1 },
-          Units = LinearUnit.Inches
-        };
-        report.SetPage(cimReportPage);
-        //Change only the report's page height
-        report.SetPageHeight(12);
+          var cimReportPage = new CIMPage
+          {
+            Height = 12,
+            StretchElements = false,
+            Width = 6.5,
+            ShowRulers = true,
+            ShowGuides = true,
+            Margin = new CIMMargin { Bottom = 1, Left = 1, Right = 1, Top = 1 },
+            Units = LinearUnit.Inches
+          };
+          report.SetPage(cimReportPage);
+          //Change only the report's page height
+          report.SetPageHeight(12);
+        });
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.Report.AddSubReport
+      // cref: ArcGIS.Desktop.Reports.Report.AddSubReport(ArcGIS.Desktop.Core.Item,System.Int32,System.Boolean)
+      // cref: ArcGIS.Desktop.Reports.ReportProjectItem.GetReport()
       #region Add SubReport
       {
-        //Note: Call within QueuedTask.Run()
-        var mainReport = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(r => r.Name == "USAReports")?.GetReport();
+        await QueuedTask.Run(() =>
+        {
+          var mainReport = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(r => r.Name == "USAReports")?.GetReport();
 
-        if (mainReport == null) return;
-        //Add sub report
-        var vermontReportItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(r => r.Name == "Vermont");
-        if (vermontReportItem == null) return;
-        Report vermontReport = vermontReportItem.GetReport();
-        mainReport.AddSubReport(vermontReportItem, -1, true); //  If -1, the subreport is added to the end of the report.
+          if (mainReport == null)
+            return;
+
+          //Add sub report
+          var vermontReportItem = Project.Current.GetItems<ReportProjectItem>().FirstOrDefault(r => r.Name == "Vermont");
+          if (vermontReportItem == null)
+            return;
+
+          Report vermontReport = vermontReportItem.GetReport();
+          mainReport.AddSubReport(vermontReportItem, -1, true); //  If -1, the subreport is added to the end of the report.
+        });
       }
       #endregion
 
@@ -448,7 +478,7 @@ namespace ProSnippets.LayoutsSnippets.Reports
 
 
       // cref: ArcGIS.Desktop.Reports.ReportTemplateManager
-      // cref: ArcGIS.Desktop.Reports.ReportTemplateManager.GetTemplatesAsync
+      // cref: ArcGIS.Desktop.Reports.ReportTemplateManager.GetTemplatesAsync()
       // cref: ArcGIS.Desktop.Reports.ReportTemplate.Name
       #region Get a report template
       {
@@ -464,7 +494,7 @@ namespace ProSnippets.LayoutsSnippets.Reports
       #endregion
 
       // cref: ArcGIS.Desktop.Reports.ReportStylingManager
-      // cref: ArcGIS.Desktop.Reports.ReportStylingManager.GetStylingsAsync
+      // cref: ArcGIS.Desktop.Reports.ReportStylingManager.GetStylingsAsync()
       #region Get a report styling
       {
         //Report Styling:
@@ -485,6 +515,8 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Desktop.Reports.ReportDetails
       // cref: ArcGIS.Desktop.Reports.ReportPageFooter
       // cref: ArcGIS.Desktop.Reports.ReportFooter
+      // cref: ArcGIS.Desktop.Layouts.GroupElement.Elements
+      // cref: ArcGIS.Desktop.Reports.Report.Elements
       #region Get various Report sections
       {
         //Get the "ReportSection element"
@@ -510,7 +542,7 @@ namespace ProSnippets.LayoutsSnippets.Reports
 
       // cref: ArcGIS.Desktop.Reports.ReportDetails
       // cref: ArcGIS.Desktop.Layouts.GroupElement.Elements
-      // cref: ArcGIS.Desktop.Reports.ReportView.SelectElements(System.Collections.Generic.IReadOnlyList{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Reports.ReportSectionElement.SelectElements(System.Collections.Generic.IReadOnlyList{ArcGIS.Desktop.Layouts.Element})
       #region Select elements
       {
         //Get the "ReportSection element"
@@ -527,7 +559,9 @@ namespace ProSnippets.LayoutsSnippets.Reports
       #endregion
 
       // cref: ArcGIS.Desktop.Reports.ReportPageFooter
-      // cref: ArcGIS.Desktop.Reports.ReportSectionElement.SelectAllElements
+      // cref: ArcGIS.Desktop.Reports.ReportSectionElement.SelectAllElements()
+      // cref: ArcGIS.Desktop.Layouts.GroupElement.Elements
+      // cref: ArcGIS.Desktop.Reports.Report.Elements
       #region Select all elements
       {
         //Select all elements in the Report Footer.
@@ -536,8 +570,9 @@ namespace ProSnippets.LayoutsSnippets.Reports
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.ReportView.GetSelectedElements
-      // cref: ArcGIS.Desktop.Reports.Report.GetSelectedElements
+      // cref: ArcGIS.Desktop.Reports.ReportView.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Reports.Report.GetSelectedElements()
+      // cref: ArcGIS.Desktop.Reports.ReportView.Active
       #region Get selected elements
       {
         IReadOnlyList<Element> selectedElements = report.GetSelectedElements();
@@ -546,22 +581,21 @@ namespace ProSnippets.LayoutsSnippets.Reports
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.ReportView.ZoomToSelectedElements
+      // cref: ArcGIS.Desktop.Reports.ReportView.ZoomToSelectedElements()
       #region Zoom to selected elements
       {
-        //Note: Needs QueuedTask to run
-        reportView.ZoomToSelectedElements();
+        await QueuedTask.Run(() => reportView.ZoomToSelectedElements());
       }
       #endregion Zoom to selected elements
 
-      // cref: ArcGIS.Desktop.Reports.ReportView.ClearElementSelection
+      // cref: ArcGIS.Desktop.Reports.ReportView.ClearElementSelection()
       #region Clear element selection
       {
         reportView.ClearElementSelection();
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.Report.FindElements
+      // cref: ArcGIS.Desktop.Reports.Report.FindElements(System.Collections.Generic.IEnumerable{System.String})
       #region Find specific elements in the report based on their Name.
       {
         var reportElementsToFind = new List<string> { "ReportText1", "ReportText2" };
@@ -569,13 +603,16 @@ namespace ProSnippets.LayoutsSnippets.Reports
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Reports.Report.DeleteElements
+      // cref: ArcGIS.Desktop.Reports.Report.DeleteElements(System.Collections.Generic.IEnumerable{ArcGIS.Desktop.Layouts.Element})
+      // cref: ArcGIS.Desktop.Reports.Report.FindElements(System.Collections.Generic.IEnumerable{System.String})
       #region Delete Elements
       {
-        //Note: Needs QueuedTask to run
-        var reportElementsToFind = new List<string> { "ReportText1", "ReportText2" };
-        var textReportElements = report.FindElements(reportElementsToFind);
-        report.DeleteElements(textReportElements);
+        await QueuedTask.Run(() =>
+        {
+          var reportElementsToFind = new List<string> { "ReportText1", "ReportText2" };
+          var textReportElements = report.FindElements(reportElementsToFind);
+          report.DeleteElements(textReportElements);
+        });
       }
       #endregion
       // cref: ArcGIS.Desktop.Reports.ReportSection
@@ -584,54 +621,63 @@ namespace ProSnippets.LayoutsSnippets.Reports
       // cref: ArcGIS.Core.CIM.CIMReportField
       // cref: ArcGIS.Core.CIM.CIMTableField.Name
       // cref: ArcGIS.Core.CIM.CIMTableField.FieldOrder
-      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic
+      // cref: ArcGIS.Desktop.Layouts.GraphicElement.GetGraphic()
       // cref: ArcGIS.Core.CIM.CIMParagraphTextGraphic
-      // cref: ArcGIS.Desktop.Layouts.Element.GetBounds
-      // cref: ArcGIS.Desktop.Reports.ReportElementFactory.CreateFieldValueTextElement
+      // cref: ArcGIS.Desktop.Layouts.Element.GetBounds(System.Boolean)
+      // cref: ArcGIS.Desktop.Reports.IReportElementFactory.CreateFieldValueTextElement(ArcGIS.Desktop.Mapping.IElementContainer,ArcGIS.Core.Geometry.Envelope,ArcGIS.Core.CIM.CIMReportField,ArcGIS.Core.CIM.CIMTextSymbol)
+      // cref: ArcGIS.Desktop.Reports.ReportElementFactory.Instance
       #region Create a new field in the report
       {
         //This is the gap between two fields
         double fieldIncrement = 0.9388875113593206276389;
-        //On the QueuedTask
-        //New field to add.
-        var newReportField = new CIMReportField
+        await QueuedTask.Run(() =>
         {
-          Name = "POP1990",
-          FieldOrder = 2,
-        };
-        //Get the "ReportSection element"				
-        var mainReportSection = report.Elements.OfType<ReportSection>().FirstOrDefault();
-        if (mainReportSection == null) return;
+          //New field to add.
+          var newReportField = new CIMReportField
+          {
+            Name = "POP1990",
+            FieldOrder = 2,
+          };
+          //Get the "ReportSection element"
+          var mainReportSection = report.Elements.OfType<ReportSection>().FirstOrDefault();
+          if (mainReportSection == null)
+            return;
 
-        //Get the "ReportDetails" within the ReportSectionElement. ReportDetails is where "fields" are.
-        var reportDetailsSection = mainReportSection?.Elements.OfType<ReportDetails>().FirstOrDefault();
-        if (reportDetailsSection == null) return;
+          //Get the "ReportDetails" within the ReportSectionElement. ReportDetails is where "fields" are.
+          var reportDetailsSection = mainReportSection?.Elements.OfType<ReportDetails>().FirstOrDefault();
+          if (reportDetailsSection == null)
+            return;
 
-        //Within ReportDetails find the envelope that encloses a field.
-        //We get the first CIMParagraphTextGraphic in the collection so that we can add the new field next to it.					
-        var lastFieldGraphic = reportDetailsSection.Elements.FirstOrDefault((r) =>
-        {
-          var gr = r as GraphicElement;
-          if (gr == null) return false;
-          return (gr.GetGraphic() is CIMParagraphTextGraphic ? true : false);
+          //Within ReportDetails find the envelope that encloses a field.
+          //We get the first CIMParagraphTextGraphic in the collection so that we can add the new field next to it.
+          var lastFieldGraphic = reportDetailsSection.Elements.FirstOrDefault((r) =>
+          {
+            var gr = r as GraphicElement;
+            if (gr == null)
+            {
+              return false;
+            }
+
+            return (gr.GetGraphic() is CIMParagraphTextGraphic ? true : false);
+          });
+          //Get the Envelope of the last field
+          var graphicBounds = lastFieldGraphic.GetBounds();
+
+          //Min and Max values of the envelope
+          var xMinOfFieldEnvelope = graphicBounds.XMin;
+          var yMinOfFieldEnvelope = graphicBounds.YMin;
+
+          var xMaxOfFieldEnvelope = graphicBounds.XMax;
+          var YMaxOfFieldEnvelope = graphicBounds.YMax;
+          //create the new Envelope to be offset from the existing field
+
+          MapPoint newMinPoint = MapPointBuilderEx.CreateMapPoint(xMinOfFieldEnvelope + fieldIncrement, yMinOfFieldEnvelope);
+          MapPoint newMaxPoint = MapPointBuilderEx.CreateMapPoint(xMaxOfFieldEnvelope + fieldIncrement, YMaxOfFieldEnvelope);
+          Envelope newFieldEnvelope = EnvelopeBuilderEx.CreateEnvelope(newMinPoint, newMaxPoint);
+
+          //Create field
+          GraphicElement fieldGraphic = ReportElementFactory.Instance.CreateFieldValueTextElement(reportDetailsSection, newFieldEnvelope, newReportField);
         });
-        //Get the Envelope of the last field
-        var graphicBounds = lastFieldGraphic.GetBounds();
-
-        //Min and Max values of the envelope
-        var xMinOfFieldEnvelope = graphicBounds.XMin;
-        var yMinOfFieldEnvelope = graphicBounds.YMin;
-
-        var xMaxOfFieldEnvelope = graphicBounds.XMax;
-        var YMaxOfFieldEnvelope = graphicBounds.YMax;
-        //create the new Envelope to be offset from the existing field
-
-        MapPoint newMinPoint = MapPointBuilderEx.CreateMapPoint(xMinOfFieldEnvelope + fieldIncrement, yMinOfFieldEnvelope);
-        MapPoint newMaxPoint = MapPointBuilderEx.CreateMapPoint(xMaxOfFieldEnvelope + fieldIncrement, YMaxOfFieldEnvelope);
-        Envelope newFieldEnvelope = EnvelopeBuilderEx.CreateEnvelope(newMinPoint, newMaxPoint);
-
-        //Create field
-        GraphicElement fieldGraphic = ReportElementFactory.Instance.CreateFieldValueTextElement(reportDetailsSection, newFieldEnvelope, newReportField);
       }
       #endregion
       #region ProSnippet Group: Raster and Imagery Options

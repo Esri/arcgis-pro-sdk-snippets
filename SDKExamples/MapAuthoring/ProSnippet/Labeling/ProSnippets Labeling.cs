@@ -16,18 +16,11 @@
    limitations under the License.
 
 */
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
-using ArcGIS.Core.Internal.CIM;
-using ArcGIS.Desktop.Framework;
-using ArcGIS.Desktop.Framework.Contracts;
-using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProSnippets.MapAuthoringSnippets.Labeling
 {
@@ -49,7 +42,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
     /// Maplex, apply custom text symbols to feature layers, enable label visibility, and modify label placement and
     /// orientation for different geometries (point, line, and polygon). It also shows how to spread labels across
     /// polygon geometries and modify leader line anchor point properties.</remarks>
-    public static void ProSnippetsLabeling()
+    public static async Task ProSnippetsLabelingAsync()
     {
       #region ignore - Variable initialization
       FeatureLayer featureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
@@ -58,15 +51,22 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
 
       // cref: ArcGIS.Core.CIM.CIMGeneralPlacementProperties
       // cref: ArcGIS.Core.CIM.CIMMap.GeneralPlacementProperties
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Get the active map's labeling engine - Maplex or Standard labeling engine
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Get the active map's definition - CIMMap.
-          var cimMap = MapView.Active.Map.GetDefinition();
+          var cimMap = map.GetDefinition();
           //Get the labeling engine from the map definition
           CIMGeneralPlacementProperties labelEngine = cimMap.GeneralPlacementProperties;
-        }
+        });
       }
       #endregion
 
@@ -74,12 +74,20 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref: ArcGIS.Core.CIM.CIMMap.GeneralPlacementProperties
       // cref: ArcGIS.Core.CIM.CIMMaplexGeneralPlacementProperties
       // cref: ArcGIS.Core.CIM.CIMStandardGeneralPlacementProperties
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Map.SetDefinition(ArcGIS.Core.CIM.CIMMap)
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Change the active map's labeling engine from Standard to Maplex or vice versa
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Get the active map's definition - CIMMap.
-          var cimMap = MapView.Active.Map.GetDefinition();
+          var cimMap = map.GetDefinition();
           //Get the labeling engine from the map definition
           var cimGeneralPlacement = cimMap.GeneralPlacementProperties;
 
@@ -100,17 +108,20 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
             cimMap.GeneralPlacementProperties = cimMaplexGeneralPlacementProperties;
           }
           //Set the map's definition
-          MapView.Active.Map.SetDefinition(cimMap);
-        }
+          map.SetDefinition(cimMap);
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMGeoFeatureLayerBase.LabelClasses
       // cref: ArcGIS.Core.CIM.CIMLabelClass
       // cref: ArcGIS.Core.CIM.CIMLabelClass.TextSymbol
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetLabelVisibility(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Apply text symbol to a feature layer
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
@@ -125,21 +136,23 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
                                                //set the label's visibility
           featureLayer.SetLabelVisibility(true);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Desktop.Mapping.FeatureLayer.IsLabelVisible
-      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetLabelVisibility
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetLabelVisibility(System.Boolean)
       #region Enable labeling of a layer
       /// <summary>
       {
-        // Note: call within QueuedTask.Run()
+        await QueuedTask.Run(() =>
         {
           if (!featureLayer.IsLabelVisible)
+          {
             //set the label's visibility
             featureLayer.SetLabelVisibility(true);
-        }
+          }
+        });
       }
       #endregion
 
@@ -152,9 +165,18 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref : ArcGIS.Core.CIM.StandardPointPlacementMethod
       // cref : ArcGIS.Core.CIM.MaplexPointPlacementMethod
       // cref : ArcGIS.Core.CIM.CIMMap.GeneralPlacementProperties
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify the Placement/Position of labels - Point geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
@@ -162,20 +184,24 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           var listLabelClasses = lyrDefn.LabelClasses.ToList();
           var theLabelClass = listLabelClasses.FirstOrDefault();
 
-          //Modify label Placement 
+          //Modify label Placement
           //Check if the label engine is Maplex or standard.
           CIMGeneralPlacementProperties labelEngine =
-             MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
-          if (labelEngine is CIMStandardGeneralPlacementProperties) //Current labeling engine is Standard labeling engine               
+             map.GetDefinition().GeneralPlacementProperties;
+          if (labelEngine is CIMStandardGeneralPlacementProperties) //Current labeling engine is Standard labeling engine
+          {
             theLabelClass.StandardLabelPlacementProperties.PointPlacementMethod =
                      StandardPointPlacementMethod.OnTopPoint;
-          else    //Current labeling engine is Maplex labeling engine            
+          }
+          else    //Current labeling engine is Maplex labeling engine
+          {
             theLabelClass.MaplexLabelPlacementProperties.PointPlacementMethod =
                     MaplexPointPlacementMethod.CenteredOnPoint;
+          }
 
           lyrDefn.LabelClasses = listLabelClasses.ToArray(); //Set the labelClasses back
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
-        }
+        });
       }
       #endregion
 
@@ -190,19 +216,28 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.LineFeatureType
       // cref: ArcGIS.Core.CIM.MaplexLinePlacementMethod
       // cref: ArcGIS.Core.CIM.MaplexLineFeatureType
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify the Placement/Position of labels - Line geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
           //Get the label classes - we need the first one
           var listLabelClasses = lyrDefn.LabelClasses.ToList();
           var theLabelClass = listLabelClasses.FirstOrDefault();
-          //Modify label Placement 
+          //Modify label Placement
           //Check if the label engine is Maplex or standard.
           CIMGeneralPlacementProperties labelEngine =
-              MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+              map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
           {
             //Current labeling engine is Standard labeling engine
@@ -227,7 +262,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           //theLabelClass.MaplexLabelPlacementProperties.LinePlacementMethod = MaplexLinePlacementMethod.CenteredPerpendicularOnLine;
           lyrDefn.LabelClasses = listLabelClasses.ToArray(); //Set the labelClasses back
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
-        }
+        });
       }
       #endregion
 
@@ -240,18 +275,28 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.CanPlaceLabelOutsidePolygon
       // cref: ArcGIS.Core.CIM.MaplexPolygonFeatureType
       // cref: ArcGIS.Core.CIM.MaplexPolygonPlacementMethod
+      // cref: ArcGIS.Desktop.Mapping.FeatureLayer.SetLabelVisibility(System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify the Placement/Position of labels - Polygon geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
           //Get the label classes - we need the first one
           var listLabelClasses = lyrDefn.LabelClasses.ToList();
           var theLabelClass = listLabelClasses.FirstOrDefault();
-          //Modify label Placement 
+          //Modify label Placement
           //Check if the label engine is Maplex or standard.
-          CIMGeneralPlacementProperties labelEngine = MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+          CIMGeneralPlacementProperties labelEngine = map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
           {
             //Current labeling engine is Standard Labeling engine
@@ -274,46 +319,68 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
                                                //set the label's visiblity
           featureLayer.SetLabelVisibility(true);
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.GraticuleAlignment
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.GraticuleAlignmentType
       // cref: ArcGIS.Core.CIM.MaplexGraticuleAlignmentType
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify Orientation of a label using the MaplexEngine - Points and Polygon geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Check if the label engine is Maplex or standard.
-          CIMGeneralPlacementProperties labelEngine = MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+          CIMGeneralPlacementProperties labelEngine = map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
+          {
             return;
+          }
 
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
           //Get the label classes - we need the first one
           var listLabelClasses = lyrDefn.LabelClasses.ToList();
           var theLabelClass = listLabelClasses.FirstOrDefault();
-          //Modify label Orientation                 
+          //Modify label Orientation
           theLabelClass.MaplexLabelPlacementProperties.GraticuleAlignment = true;
           theLabelClass.MaplexLabelPlacementProperties.GraticuleAlignmentType = MaplexGraticuleAlignmentType.Curved;
 
           lyrDefn.LabelClasses = listLabelClasses.ToArray(); //Set the labelClasses back
-          featureLayer.SetDefinition(lyrDefn); //set the layer's definition       
-        }
+          featureLayer.SetDefinition(lyrDefn); //set the layer's definition
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.AlignLabelToLineDirection
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify Orientation of a label using the MaplexEngine - Line geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Check if the label engine is Maplex or standard.
-          CIMGeneralPlacementProperties labelEngine = MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+          CIMGeneralPlacementProperties labelEngine = map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
+          {
             return;
+          }
 
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
@@ -325,7 +392,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
 
           lyrDefn.LabelClasses = listLabelClasses.ToArray(); //Set the labelClasses back
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
-        }
+        });
       }
       #endregion
 
@@ -340,14 +407,25 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref: ArcGIS.Core.CIM.MaplexLabelRotationType
       // cref: ArcGIS.Core.CIM.MaplexRotationAlignmentType
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.RotationProperties
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify label Rotation - Point geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Check if the label engine is Maplex or standard.
-          CIMGeneralPlacementProperties labelEngine = MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+          CIMGeneralPlacementProperties labelEngine = map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
+          {
             return;
+          }
 
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
@@ -359,7 +437,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           {
             Enable = true, //Enable rotation
             RotationField = "ELEVATION", //Field that is used to define rotation angle
-            AdditionalAngle = 15, //Additional rotation 
+            AdditionalAngle = 15, //Additional rotation
             RotationType = MaplexLabelRotationType.Arithmetic,
             AlignmentType = MaplexRotationAlignmentType.Perpendicular,
             AlignLabelToAngle = true
@@ -367,7 +445,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           theLabelClass.MaplexLabelPlacementProperties.RotationProperties = rotationProperties;
           lyrDefn.LabelClasses = listLabelClasses.ToArray(); //Set the labelClasses back
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
-        }
+        });
       }
       #endregion
 
@@ -375,14 +453,25 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.SpreadWords
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.SpreadCharacters
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.MaximumCharacterSpacing
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Spread labels across Polygon geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Check if the label engine is Maplex or standard.
-          CIMGeneralPlacementProperties labelEngine = MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+          CIMGeneralPlacementProperties labelEngine = map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
+          {
             return;
+          }
 
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
@@ -397,21 +486,32 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           theLabelClass.MaplexLabelPlacementProperties.MaximumCharacterSpacing = 50.0;
           lyrDefn.LabelClasses = listLabelClasses.ToArray(); //Set the labelClasses back
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
-        }
+        });
       }
       #endregion
 
       // cref: ArcGIS.Core.CIM.CIMLabelClass.MaplexLabelPlacementProperties
       // cref: ArcGIS.Core.CIM.CIMMaplexLabelPlacementProperties.PolygonAnchorPointType
       // cref: ArcGIS.Core.CIM.MaplexAnchorPointType
+      // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetDefinition()
+      // cref: ArcGIS.Desktop.Mapping.MapView.Active
+      // cref: ArcGIS.Desktop.Mapping.MapView.Map
       #region Modify label's Leader Line Anchor point properties - Polygon geometry
       {
-        // Note: call within QueuedTask.Run()
+        var map = MapView.Active?.Map;
+        if (map == null)
+          return;
+
+        await QueuedTask.Run(() =>
         {
           //Check if the label engine is Maplex or standard.
-          CIMGeneralPlacementProperties labelEngine = MapView.Active.Map.GetDefinition().GeneralPlacementProperties;
+          CIMGeneralPlacementProperties labelEngine = map.GetDefinition().GeneralPlacementProperties;
           if (labelEngine is CIMStandardGeneralPlacementProperties)
+          {
             return;
+          }
 
           //Get the layer's definition
           var lyrDefn = featureLayer.GetDefinition() as CIMFeatureLayer;
@@ -422,7 +522,7 @@ namespace ProSnippets.MapAuthoringSnippets.Labeling
           theLabelClass.MaplexLabelPlacementProperties.PolygonAnchorPointType = MaplexAnchorPointType.Perimeter;
           lyrDefn.LabelClasses = [.. listLabelClasses]; //Set the labelClasses back
           featureLayer.SetDefinition(lyrDefn); //set the layer's definition
-        }
+        });
       }
       #endregion
     }

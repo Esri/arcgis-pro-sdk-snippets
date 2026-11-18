@@ -16,6 +16,10 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
@@ -23,10 +27,6 @@ using ArcGIS.Desktop.Editing.Events;
 using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -47,8 +47,7 @@ namespace ProSnippets.EditingSnippets
 
       #endregion
 
-      // cref: ArcGIs.Desktop.Core.Project.IsEditingEnabled
-      // cref: ArcGIs.Desktop.Core.Project.SetIsEditingEnabledAsync(System.Boolean)
+      // cref: ArcGIS.Desktop.Core.Project.SetIsEditingEnabledAsync(System.Boolean)
       #region Enable Editing
       // Enables editing for the current project asynchronously.
       if (!Project.Current.IsEditingEnabled)
@@ -57,11 +56,10 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIs.Desktop.Core.Project.IsEditingEnabled
-      // cref: ArcGIs.Desktop.Core.Project.HasEdits
-      // cref: ArcGIs.Desktop.Core.Project.DiscardEditsAsync
-      // cref: ArcGIs.Desktop.Core.Project.SaveEditsAsync
-      // cref: ArcGIs.Desktop.Core.Project.SetIsEditingEnabledAsync(System.Boolean)
+      // cref: ArcGIS.Desktop.Core.Project.HasEdits
+      // cref: ArcGIS.Desktop.Core.Project.DiscardEditsAsync()
+      // cref: ArcGIS.Desktop.Core.Project.SaveEditsAsync()
+      // cref: ArcGIS.Desktop.Core.Project.SetIsEditingEnabledAsync(System.Boolean)
       #region Disable Editing
       // Disables editing for the current project.
       // discard any edits if they exist
@@ -73,20 +71,22 @@ namespace ProSnippets.EditingSnippets
         if (Project.Current.HasEdits)
         {
           if (discardEdits)
+          {
             await Project.Current.DiscardEditsAsync();
+          }
           else
+          {
             await Project.Current.SaveEditsAsync();
+          }
         }
-        var bEditingIsEnabled = !Project.Current.SetIsEditingEnabledAsync(false).Result;
+        var bEditingIsEnabled = !await Project.Current.SetIsEditingEnabledAsync(false);
       }
       #endregion
 
       #region ProSnippet Group: Single Workspace Editing
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.EditingOptions.EnableEditingFromEditTab
-      // cref: ArcGIS.Desktop.Core.EditingOptions.IsSingleWorkspaceEditSession
-      // cref: ArcGIS.Desktop.Core.EditingProjectExtender.SetSingleEditWorkspaceAsync(ArcGIS.Desktop.Core.Project, ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Core.EditingProjectExtender.SetSingleEditWorkspaceAsync(ArcGIS.Desktop.Mapping.MapMember)
       #region Start a Single workspace edit session via a MapMember
       {
         // ApplicationOptions.EditingOptions.EnableEditingFromEditTab is true
@@ -95,7 +95,9 @@ namespace ProSnippets.EditingSnippets
         // find a layer
         var mm = MapView.Active.Map.GetLayersAsFlattenedList().FirstOrDefault(l => l.Name == "Roads");
         if (mm == null)
+        {
           return;
+        }
 
         var project = Project.Current;
         var success = await project.SetSingleEditWorkspaceAsync(mm);
@@ -105,11 +107,9 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.EditingOptions.EnableEditingFromEditTab
-      // cref: ArcGIS.Desktop.Core.EditingOptions.IsSingleWorkspaceEditSession
       // cref: ArcGIS.Desktop.Core.Project.IsEditingEnabled
       // cref: ArcGIS.Desktop.Core.Project.HasEdits
-      // cref: ArcGIS.Desktop.Core.EditingProjectExtender.SetSingleEditWorkspaceAsync(ArcGIS.Desktop.Core.Project, ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Core.EditingProjectExtender.SetSingleEditWorkspaceAsync(ArcGIS.Desktop.Mapping.MapMember)
       #region Start a single workspace edit session - Full example
       {
         // ApplicationOptions.EditingOptions.EnableEditingFromEditTab is true
@@ -125,11 +125,17 @@ namespace ProSnippets.EditingSnippets
           {
             var res = MessageBox.Show("Save edits?", "Save Edits?", System.Windows.MessageBoxButton.YesNoCancel);
             if (res == System.Windows.MessageBoxResult.Cancel)
+            {
               return;
+            }
             else if (res == System.Windows.MessageBoxResult.No)
+            {
               await project.DiscardEditsAsync();
+            }
             else
+            {
               await project.SaveEditsAsync();
+            }
           }
           // close the edit session
           await project.SetIsEditingEnabledAsync(false);
@@ -138,7 +144,9 @@ namespace ProSnippets.EditingSnippets
         // find a layer
         var mm = MapView.Active.Map.GetLayersAsFlattenedList().FirstOrDefault(l => l.Name == "Roads");
         if (mm == null)
+        {
           return;
+        }
 
         // start the edit session on the workspace attached to the layer
         var success = await project.SetSingleEditWorkspaceAsync(mm);
@@ -148,11 +156,9 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Core.EditingOptions.EnableEditingFromEditTab
-      // cref: ArcGIS.Desktop.Core.EditingOptions.IsSingleWorkspaceEditSession
       // cref: ArcGIS.Core.Data.DatastoreConfiguration
       // cref: ArcGIS.Core.Data.VersionState
-      // cref: ArcGIS.Desktop.Core.EditingProjectExtender.SetSingleEditWorkspaceAsync(ArcGIS.Desktop.Core.Project, ArcGIS.Core.Data.DatastoreConfiguration)
+      // cref: ArcGIS.Desktop.Core.EditingProjectExtender.SetSingleEditWorkspaceAsync(ArcGIS.Core.Data.DatastoreConfiguration)
       #region Start a Single workspace edit session via a DatastoreConfiguration
       {
         // ApplicationOptions.EditingOptions.EnableEditingFromEditTab is true
@@ -167,7 +173,7 @@ namespace ProSnippets.EditingSnippets
         var project = Project.Current;
         var v_success = await project.SetSingleEditWorkspaceAsync(datastoreConfig);
 
-        // OR 
+        // OR
 
         // setup the configuration to edit the data that is not registered as versioned
         var nonVersionedDatastoreConfig = new DatastoreConfiguration(egdb, VersionState.NonVersioned);
@@ -185,15 +191,18 @@ namespace ProSnippets.EditingSnippets
       // cref: ArcGIS.Desktop.Editing.Events.RowCreatedEvent.Subscribe(System.Action{ArcGIS.Desktop.Editing.Events.RowChangedEventArgs},ArcGIS.Core.Data.Table,System.Boolean)
       // cref: ArcGIS.Desktop.Editing.Events.RowDeletedEvent.Subscribe(System.Action{ArcGIS.Desktop.Editing.Events.RowChangedEventArgs},ArcGIS.Core.Data.Table,System.Boolean)
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEvent
-      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs
       // cref: ArcGIS.Desktop.Editing.Events.RowCreatedEvent
       // cref: ArcGIS.Desktop.Editing.Events.RowDeletedEvent
       #region Subscribe to Row Events
       // Subscribes to row events for the currently selected feature layer in the active map view.
+      var rowEventsMapView = MapView.Active;
+      if (rowEventsMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
       {
         //Listen for row events on a layer
-        var featLayer = MapView.Active.GetSelectedLayers()[0] as FeatureLayer;
+        var featLayer = rowEventsMapView.GetSelectedLayers()[0] as FeatureLayer;
         var layerTable = featLayer.GetTable();
 
         //subscribe to row events
@@ -206,9 +215,9 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.RowCreatedEvent
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Operation
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table, System.Collections.Generic.Dictionary<System.String, System.Object>)
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
       #region Create a record in a separate table in the Map within Row Events
       // attach an event handler to receive notifications when a new row is created in the
       // associated table of the first feature layer found in the active map. Use this method to enable custom logic in
@@ -217,7 +226,7 @@ namespace ProSnippets.EditingSnippets
       Table table = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault().GetTable();
       RowCreatedEvent.Subscribe(rowChangedEventArgs =>
         {
-          // RowEvent callbacks are always called on the QueuedTask so there is no need 
+          // RowEvent callbacks are always called on the QueuedTask so there is no need
           // to wrap your code within a QueuedTask.Run lambda.
 
           // get the edit operation
@@ -238,16 +247,16 @@ namespace ProSnippets.EditingSnippets
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.RowCreatedEvent
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Operation
       // cref: ArcGIS.Desktop.Editing.EditOperation.Create(ArcGIS.Core.Data.Table, System.Collections.Generic.Dictionary<System.String, System.Object>)
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
       #region Create a record in a separate table within Row Events
       // Attach an event handler to the <see cref="ArcGIS.Desktop.Editing.Events.RowCreatedEvent"/> for the table associated with the first <see cref="ArcGIS.Desktop.Mapping.FeatureLayer"/> in the active map. Use this method to monitor when new rows are created
       // in that table, enabling custom logic to be executed in response to record creation events.
       Table firstTable = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault().GetTable();
       RowCreatedEvent.Subscribe(rowChangedEventArgs =>
       {
-        // RowEvent callbacks are always called on the QueuedTask so there is no need 
+        // RowEvent callbacks are always called on the QueuedTask so there is no need
         // to wrap your code within a QueuedTask.Run lambda.
         // update a separate table not in the map when a row is created
         // You MUST use the ArcGIS.Core.Data API to edit the table. Do NOT
@@ -273,11 +282,11 @@ namespace ProSnippets.EditingSnippets
       }, firstTable);
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEvent
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Guid
       // cref: ArcGIS.Core.Data.Row.HasValueChanged(System.Int32)
-      // cref: ArcGIS.Core.Data.Row.Store
+      // cref: ArcGIS.Core.Data.Row.Store()
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit(System.String,System.Boolean)
       #region Modify a record within Row Events - using Row.Store
       // Attach an event handler to receive notifications when a row in the selected
       // table is changed. The subscription targets the first <see cref="ArcGIS.Desktop.Mapping.FeatureLayer"/> found in
@@ -289,14 +298,16 @@ namespace ProSnippets.EditingSnippets
           // set the current row changed guid when you execute the Row.Store method
           // used for re-entry checking
           Guid _currentRowChangedGuid = new();
-          // RowEvent callbacks are always called on the QueuedTask so there is no need 
+          // RowEvent callbacks are always called on the QueuedTask so there is no need
           // to wrap your code within a QueuedTask.Run lambda.
 
           var row = rowChangedEventArgs.Row;
 
           // check for re-entry  (only if row.Store is called)
           if (_currentRowChangedGuid == rowChangedEventArgs.Guid)
+          {
             return;
+          }
 
           var fldIdx = row.FindField("POLICE_DISTRICT");
           if (fldIdx != -1)
@@ -325,9 +336,10 @@ namespace ProSnippets.EditingSnippets
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEvent
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Operation
       // cref: ArcGIS.Desktop.Editing.EditOperation.Modify(ArcGIS.Core.Data.Row, System.String, System.Object)
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Guid
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
       #region Modify a record within Row Events - using EditOperation.Modify
       // Subscribe to the <see cref="ArcGIS.Desktop.Editing.Events.RowChangedEvent"/> for
       // the first  <see cref="ArcGIS.Desktop.Mapping.FeatureLayer"/> in the active map. The event handler can be used to
@@ -339,7 +351,7 @@ namespace ProSnippets.EditingSnippets
           // used for re-entry checking
           Guid _lastEdit = new();
 
-          // RowEvent callbacks are always called on the QueuedTask so there is no need 
+          // RowEvent callbacks are always called on the QueuedTask so there is no need
           // to wrap your code within a QueuedTask.Run lambda.
 
           //example of modifying a field on a row that has been created
@@ -359,17 +371,22 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEvent
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
-      // cref: ArcGIS.Core.Data.Row.GetOriginalvalue
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEvent.Subscribe(System.Action{ArcGIS.Desktop.Editing.Events.RowChangedEventArgs},ArcGIS.Core.Data.Table,System.Boolean)
       #region Determine if Geometry Changed while editing
       // Set up a listener for row change events on the table associated with the
       // provided feature layer. The event subscription occurs within a queued task to ensure thread safety.
+      var geometryChangedMapView = MapView.Active;
+      if (geometryChangedMapView == null)
+        return;
+
       await QueuedTask.Run(() =>
        {
          //Listen to the RowChangedEvent that occurs when a Row is changed.
-         var modifiedFeatureLayer = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(); ;
+         var modifiedFeatureLayer = geometryChangedMapView.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault();
+         ;
          RowChangedEvent.Subscribe(rowChangedEventArgs =>
            {
-             // RowEvent callbacks are always called on the QueuedTask so there is no need 
+             // RowEvent callbacks are always called on the QueuedTask so there is no need
              // to wrap your code within a QueuedTask.Run lambda.
 
              //Get the layer's definition
@@ -398,9 +415,9 @@ namespace ProSnippets.EditingSnippets
        });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.RowDeletedEvent
-      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit
       // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.CancelEdit(System.String,System.Boolean)
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Guid
+      // cref: ArcGIS.Desktop.Editing.Events.RowChangedEventArgs.Row
       #region Cancel a delete
       // Subscribe to the <see cref="ArcGIS.Desktop.Editing.Events.RowDeletedEvent"/> for the first feature layer's table in the active map.  The event handler can be used to intercept and handle row deletion events, such as canceling a delete operation if certain conditions are met.
       // subscribe to the RowDeletedEvent for the appropriate table
@@ -408,12 +425,14 @@ namespace ProSnippets.EditingSnippets
       Table cancelDeleteTable = MapView.Active.Map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault().GetTable();
       RowDeletedEvent.Subscribe(rowChangedEventArgs =>
         {
-          // RowEvent callbacks are always called on the QueuedTask so there is no need 
+          // RowEvent callbacks are always called on the QueuedTask so there is no need
           // to wrap your code within a QueuedTask.Run lambda.
           var row = rowChangedEventArgs.Row;
-          // check for re-entry 
+          // check for re-entry
           if (_currentRowDeletedGuid == rowChangedEventArgs.Guid)
+          {
             return;
+          }
           // cancel the delete if the feature is in Police District 5
           var fldIdx = row.FindField("POLICE_DISTRICT");
           if (fldIdx != -1)
@@ -436,8 +455,6 @@ namespace ProSnippets.EditingSnippets
       #region ProSnippet Group: EditCompletedEvent
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.EditCompletedEvent
-      // cref: ArcGIS.Desktop.Editing.Events.EditCompletedEventArgs
       // cref: ArcGIS.Desktop.Editing.Events.EditCompletedEventArgs.Creates
       // cref: ArcGIS.Desktop.Editing.Events.EditCompletedEventArgs.Modifies
       // cref: ArcGIS.Desktop.Editing.Events.EditCompletedEventArgs.Deletes

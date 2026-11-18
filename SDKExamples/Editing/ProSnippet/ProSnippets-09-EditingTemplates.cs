@@ -16,16 +16,16 @@
    limitations under the License.
 
 */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArcGIS.Core.CIM;
 using ArcGIS.Desktop.Editing;
 using ArcGIS.Desktop.Editing.Attributes;
 using ArcGIS.Desktop.Editing.Templates;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProSnippets.EditingSnippets
 {
@@ -34,7 +34,7 @@ namespace ProSnippets.EditingSnippets
     #region ProSnippet Group: Edit Templates
     #endregion
 
-    public static async Task EditingTemplatesSnippets()
+    public static async Task EditingTemplatesSnippetsAsync()
     {
       #region ignore - Variable initialization
 
@@ -44,11 +44,9 @@ namespace ProSnippets.EditingSnippets
 
       #endregion
 
-      // cref: ARCGIS.DESKTOP.MAPPING.MAP.FINDLAYERS
-      // cref: ARCGIS.DESKTOP.MAPPING.MAP.FINDSTANDALONETABLES
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplate(ArcGIS.Desktop.Mapping.MapMember,System.String)
+      // cref: ArcGIS.Desktop.Mapping.Map.FindLayers(System.String,System.Boolean)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplate(System.String)
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingRowTemplate
       #region Find edit template by name on a layer
       // Finds and retrieves specific editing templates by name from layers in the active map.
       await QueuedTask.Run(() =>
@@ -58,11 +56,10 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingRowTemplate
-      // cref: ARCGIS.DESKTOP.MAPPING.MAP.FINDSTANDALONETABLES(System.String)
-      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList
+      // cref: ArcGIS.Desktop.Mapping.Map.FindStandaloneTables(System.String)
+      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList()
       #region Find table templates belonging to a standalone table
       // retrieve editing templates associated with standalone tables in the active map.
       await QueuedTask.Run(() =>
@@ -77,11 +74,13 @@ namespace ProSnippets.EditingSnippets
 
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.Current
       #region Current template
-      // Retrieves the currently active editing template.
-      EditingTemplate template = EditingTemplate.Current;
+      {
+        // Retrieves the currently active editing template.
+        EditingTemplate template = EditingTemplate.Current;
+      }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateDefaultToolAsync()
       #region Activate template and its default editing tool
@@ -90,7 +89,9 @@ namespace ProSnippets.EditingSnippets
         // Get all templates for the layer
         var templates = featureLayer.GetTemplates();
         if (templates.Count == 0)
+        {
           return;
+        }
         // Get the first template - alternatively get a specific template
         var template = templates.First();
 
@@ -99,9 +100,10 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateToolAsync(System.String)
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ToolIDs
       #region Activate template and a specific editing tool
       {
         await QueuedTask.Run(() =>
@@ -112,13 +114,17 @@ namespace ProSnippets.EditingSnippets
           // Get all templates for the layer
           var templates = featureLayer.GetTemplates();
           if (templates.Count == 0)
+          {
             return;
+          }
           // Get the first template - alternatively get a specific template
           var template = templates.First();
 
           // Confirm the tool is available in the template
           if (template.ToolIDs.FirstOrDefault(_editToolname) == null)
+          {
             return;
+          }
 
           // Activate the tool
           template.ActivateToolAsync(_editToolname);
@@ -127,7 +133,7 @@ namespace ProSnippets.EditingSnippets
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateLastSelectedToolAsync()
       #region Activate template and its last selected tool
@@ -137,7 +143,9 @@ namespace ProSnippets.EditingSnippets
           // Get all templates for the layer
           var templates = featureLayer.GetTemplates();
           if (templates.Count == 0)
+          {
             return;
+          }
           // Get the first template - alternatively get a specific template
           var template = templates.First();
 
@@ -147,7 +155,7 @@ namespace ProSnippets.EditingSnippets
       }
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateAsync()
       #region Activate template without changing current tool
@@ -157,7 +165,9 @@ namespace ProSnippets.EditingSnippets
           // Get all templates for the layer
           var templates = featureLayer.GetTemplates();
           if (templates.Count == 0)
+          {
             return;
+          }
           // Get the first template - alternatively get a specific template
           var template = templates.First();
 
@@ -168,17 +178,13 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplate(ArcGIS.Desktop.Mapping.MapMember,System.String)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplate(System.String)
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingRowTemplate
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.DefaultToolID
       // cref: ArcGIS.Core.CIM.CIMBasicFeatureLayer.AutoGenerateFeatureTemplates
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition()
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate
-      // cref: ArcGIS.Core.CIM.CIMBasicRowTemplate
-      // cref: ArcGIS.Core.CIM.CIMRowTemplate
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate.DefaultToolGUID
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.SetDefinition(ArcGIS.Core.CIM.CIMEditingTemplate)
       #region Change Default Edit tool for a template
       await QueuedTask.Run(() =>
@@ -191,7 +197,10 @@ namespace ProSnippets.EditingSnippets
               // get the definition of the layer
               var layerDef = featureLayer?.GetDefinition() as CIMFeatureLayer;
               if (template == null || layerDef == null)
+              {
                 return;
+              }
+
               if (template.DefaultToolID != toolDamlPlugInID)
               {
                 bool updateLayerDef = false;
@@ -214,33 +223,33 @@ namespace ProSnippets.EditingSnippets
                 //templateDef.ToolProgID = toolContentGUID;
                 templateDef.DefaultToolGUID = toolContentGUID;
 
-                // set the definition back to 
+                // set the definition back to
                 template.SetDefinition(templateDef);
 
                 // update the layer definition too
                 if (updateLayerDef)
+                {
                   featureLayer.SetDefinition(layerDef);
+                }
               }
             });
 
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates(ArcGIS.Desktop.Mapping.MapMember)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.GetTemplates()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate
-      // cref: ArcGIS.Core.CIM.CIMBasicRowTemplate
-      // cref: ArcGIS.Core.CIM.CIMRowTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateDefaultToolAsync
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition()
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateDefaultToolAsync()
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ToolIDs
-      // cref: ArcGIS.Core.CIM.CIMExtensions.GetExcludedToolIDs(ArcGIS.Core.CIM.CIMEditingTemplate)
-      // cref: ArcGIS.Core.CIM.CIMExtensions.SetExcludedToolIDs(ArcGIS.Core.CIM.CIMEditingTemplate,System.String[])
-      // cref: ArcGIS.Core.CIM.CIMExtensions.AllowToolID(ArcGIS.Core.CIM.CIMEditingTemplate,System.String)
+      // cref: ArcGIS.Core.CIM.CIMExtensions.GetExcludedToolIDs()
+      // cref: ArcGIS.Core.CIM.CIMExtensions.SetExcludedToolIDs(System.String[])
+      // cref: ArcGIS.Core.CIM.CIMExtensions.AllowToolID(System.String)
       // cref: ArcGIS.Core.CIM.CIMBasicFeatureLayer.FeatureTemplates
       // cref: ArcGIS.Desktop.Mapping.Layer.GetDefinition()
-      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBasicFeatureLayer)
+      // cref: ArcGIS.Desktop.Mapping.Layer.SetDefinition(ArcGIS.Core.CIM.CIMBaseLayer)
       #region Hide or show editing tools on templates
-      await QueuedTask.Run(() =>
+      await QueuedTask.Run(async () =>
          {
            //hide all tools except line tool on a given feature layer
            var editTemplates = featureLayer.GetTemplates();
@@ -249,7 +258,7 @@ namespace ProSnippets.EditingSnippets
            foreach (var et in editTemplates)
            {
              //initialize template by activating default tool
-             et.ActivateDefaultToolAsync();
+             await et.ActivateDefaultToolAsync();
              var cimEditTemplate = et.GetDefinition();
              //get the visible tools on this template
              var allTools = et.ToolIDs.ToList();
@@ -273,9 +282,8 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadSchema(ArcGIS.Desktop.Mapping.MapMember)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(ArcGIS.Desktop.Mapping.MapMember,System.String,System.String,ArcGIS.Desktop.Editing.Attributes.Inspector,System.String,System.String[],System.String[])
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(System.String,System.String,ArcGIS.Desktop.Editing.Attributes.Inspector,System.String,System.String[],System.String[])
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingRowTemplate
       #region Create New Template using layer.CreateTemplate
       await QueuedTask.Run(() =>
         {
@@ -290,27 +298,24 @@ namespace ProSnippets.EditingSnippets
 
           var tags = new[] { "Polygon", "tag1", "tag2" };
 
-          // set defaultTool using a daml-id 
+          // set defaultTool using a daml-id
           string defaultTool = "esri_editing_SketchCirclePolygonTool";
 
           // tool filter is the tools to filter OUT
           var toolFilter = new[] { "esri_editing_SketchTracePolygonTool" };
 
-          // create a new template  
+          // create a new template
           var newTemplate = featureLayer.CreateTemplate("My new template", "description", insp, defaultTool, tags, toolFilter);
         });
       #endregion
 
-      // cref: ARCGIS.DESKTOP.EDITING.TEMPLATES.EDITINGTEMPLATE.GETDEFINITION
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition()
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate.Description
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate.Name
-      // cref: ArcGIS.Core.CIM.CIMBasicRowTemplate
-      // cref: ArcGIS.Core.CIM.CIMRowTemplate
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(ArcGIS.Desktop.Mapping.MapMember,ArcGIS.Core.CIM.CIMEditingTemplate)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(ArcGIS.Desktop.Mapping.MapMember,System.String,System.String,ArcGIS.Desktop.Editing.Attributes.Inspector,System.String,System.String[],System.String[])
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(ArcGIS.Core.CIM.CIMEditingTemplate)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(System.String,System.String,ArcGIS.Desktop.Editing.Attributes.Inspector,System.String,System.String[],System.String[])
       // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate
-      // cref: ArcGIS.Desktop.Editing.Templates.EditingRowTemplate
       #region Create New Table Template using table.CreateTemplate
       // Creates new table templates for the specified standalone table.
       await QueuedTask.Run(() =>
@@ -329,13 +334,11 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ARCGIS.DESKTOP.EDITING.TEMPLATES.EDITINGTEMPLATE.GETDEFINITION
-      // cref: ARCGIS.DESKTOP.EDITING.TEMPLATES.EDITINGTEMPLATE.SETDEFINITION(ArcGIS.Core.CIM.CIMEditingTemplate)
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.GetDefinition()
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.SetDefinition(ArcGIS.Core.CIM.CIMEditingTemplate)
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate.Description
       // cref: ArcGIS.Core.CIM.CIMEditingTemplate.Name
-      // cref: ArcGIS.Core.CIM.CIMBasicRowTemplate
-      // cref: ArcGIS.Core.CIM.CIMRowTemplate
       #region Update a Table Template
       // Updates the definition of a specified table template by modifying its name and description.
       var table = activeMap.GetStandaloneTablesAsFlattenedList().FirstOrDefault();
@@ -353,14 +356,17 @@ namespace ProSnippets.EditingSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.Mapping.AnnotationFeatureClassDefinition
-      // cref: ArcGIS.Core.Data.Mapping.AnnotationFeatureClassDefinition.GetSymbolCollection
-      // cref: ArcGIS.Core.Data.Mapping.AnnotationFeatureClassDefinition.GetLabelClassCollection
-      // cref: ARCGIS.DESKTOP.MAPPING.FEATURELAYER.GETFEATURECLASS
+      // cref: ArcGIS.Core.Data.Mapping.AnnotationFeatureClassDefinition.GetSymbolCollection()
+      // cref: ArcGIS.Core.Data.Mapping.AnnotationFeatureClassDefinition.GetLabelClassCollection()
       // cref: ArcGIS.Desktop.Editing.AnnotationProperties
       // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.LoadSchema(ArcGIS.Desktop.Mapping.MapMember)
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties
-      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(ArcGIS.Desktop.Mapping.MapMember,System.String,System.String,ArcGIS.Desktop.Editing.Attributes.Inspector,System.String,System.String[],System.String[])
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.GetAnnotationProperties()
+      // cref: ArcGIS.Desktop.Editing.Attributes.Inspector.SetAnnotationProperties(ArcGIS.Desktop.Editing.AnnotationProperties)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.CreateTemplate(System.String,System.String,ArcGIS.Desktop.Editing.Attributes.Inspector,System.String,System.String[],System.String[])
+      // cref: ArcGIS.Desktop.Editing.AnnotationProperties.FontSize
+      // cref: ArcGIS.Desktop.Editing.AnnotationProperties.HorizontalAlignment
+      // cref: ArcGIS.Desktop.Editing.AnnotationProperties.TextString
+      // cref: ArcGIS.Desktop.Editing.AnnotationProperties.VerticalAlignment
       #region Create Annotation Template
       // Creates a new annotation template for the specified annotation layer.
       await QueuedTask.Run(() =>
@@ -376,7 +382,9 @@ namespace ProSnippets.EditingSnippets
 
           // make sure there are labels, symbols
           if (labels.Count == 0 || symbols.Count == 0)
+          {
             return;
+          }
 
           // find the label class required
           //   typically you would use a subtype name or some other characteristic
@@ -402,7 +410,9 @@ namespace ProSnippets.EditingSnippets
           }
           // no symbol?
           if (symbolID == -1)
+          {
             return;
+          }
 
           // load the schema
           insp = new Inspector();
@@ -430,14 +440,13 @@ namespace ProSnippets.EditingSnippets
           // tool filter is the tools to filter OUT
           var toolFilter = new[] { "esri_editing_SketchCurvedAnnoTool" };
 
-          // create a new template 
+          // create a new template
           var newTemplate = annotationLayer.CreateTemplate("new annotation template", "description", insp, defaultTool, tags, toolFilter);
         });
       #endregion
 
-      // cref: ArcGIS.Desktop.Mapping.Map.GetStandaloneTablesAsFlattenedList
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.RemoveTemplate(ArcGIS.Desktop.Mapping.MapMember,ArcGIS.Desktop.Editing.Templates.EditingTemplate)
-      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.RemoveTemplate(ArcGIS.Desktop.Mapping.MapMember,System.String)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.RemoveTemplate(ArcGIS.Desktop.Editing.Templates.EditingTemplate)
+      // cref: ArcGIS.Desktop.Mapping.MappingExtensions.RemoveTemplate(System.String)
       #region Remove a table template
       // Removes predefined editing templates associated with the specified standalone table.
       await QueuedTask.Run(() =>
@@ -450,11 +459,10 @@ namespace ProSnippets.EditingSnippets
       });
       #endregion
 
-      // cref: ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEvent
-      // cref: ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEventArgs
       // cref: ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEventArgs.IncomingTemplate
-      // cref: ARCGIS.DESKTOP.EDITING.TEMPLATES.EDITINGTEMPLATE.ACTIVATETOOLASYNC
-      // cref: ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEvent.Subscribe(System.Action{ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEventArgs},System.Boolean)
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.ActivateToolAsync(System.String)
+      // cref: ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEventArgs.IncomingMapView
+      // cref: ArcGIS.Desktop.Editing.Templates.EditingTemplate.Name
       #region Active Template Changed
       // Subscribes to the active template changed event and handles changes to the editing template.
       ArcGIS.Desktop.Editing.Events.ActiveTemplateChangedEvent.Subscribe(async activeTemplateChangedEventArgs
@@ -462,13 +470,17 @@ namespace ProSnippets.EditingSnippets
       {
         // return if incoming template is null
         if (activeTemplateChangedEventArgs.IncomingTemplate == null)
+        {
           return;
+        }
 
         // Activate two-point line tool for Freeway template in the Layers map
         if (activeTemplateChangedEventArgs.IncomingTemplate.Name == "Freeway" && activeTemplateChangedEventArgs.IncomingMapView.Map.Name == "Layers")
+        {
           await activeTemplateChangedEventArgs.IncomingTemplate.ActivateToolAsync("esri_editing_SketchTwoPointLineTool");
+        }
       });
-      #endregion    
+      #endregion
     }
   }
 }

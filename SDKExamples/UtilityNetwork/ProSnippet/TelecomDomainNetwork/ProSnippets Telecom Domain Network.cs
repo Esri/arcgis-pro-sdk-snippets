@@ -1,4 +1,4 @@
-﻿/*
+/*
 
    Copyright 2018 Esri
 
@@ -17,14 +17,14 @@
 
 */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ArcGIS.Core.Data;
 using ArcGIS.Core.Data.UtilityNetwork;
 using ArcGIS.Core.Data.UtilityNetwork.Telecom;
 using ArcGIS.Core.Data.UtilityNetwork.Trace;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Field = ArcGIS.Core.Data.Field;
 using Geometry = ArcGIS.Core.Geometry.Geometry;
 using NetworkSource = ArcGIS.Core.Data.UtilityNetwork.NetworkSource;
@@ -37,7 +37,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
     /// <summary>
     /// This class contains a collection of code snippets that demonstrate how to work with the telecom domain network in ArcGIS Pro.
     /// </summary>
-    /// 
+    ///
     /// <remarks>
     /// Each region in the class contains a code snippet that demonstrates a specific piece of functionality.
     /// </remarks>
@@ -65,7 +65,23 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.WavelengthScheme
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitProperties.MaxHops
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitProperties.NumPaths
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.ColorScheme.Groups
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.ColorScheme.ID
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.ColorScheme.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.ColorSchemeGroup.Capacity
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.ColorSchemeGroup.ColorCodes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.ColorSchemeGroup.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork.CircuitProperties
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork.ColorSchemes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork.CombinePolicies
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork.DiagramTemplateNames
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork.DividePolicies
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork.WavelengthSchemes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.HasTelecomNetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetDomainNetworks()
       #region Get the telecom domain network and network information from the utility network
 
       await QueuedTask.Run(() =>
@@ -116,7 +132,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
                 }
               }
             }
-            
+
             // Use the telecom domain network to get additional information about the network.
             IReadOnlyList<WavelengthScheme> wavelengthSchemes = telecomDomainNetwork.WavelengthSchemes;
             IReadOnlyList<DividePolicy> dividePolicies = telecomDomainNetwork.DividePolicies;
@@ -128,7 +144,11 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation.#ctor(ArcGIS.Core.Data.UtilityNetwork.Element)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetGroup.GetAssetType(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork.NetworkSources
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.GetAssetGroup(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.CreateElement(ArcGIS.Core.Data.UtilityNetwork.AssetType,System.Guid)
       #region Create a Telecom Element and Circuit Location in the utility network
 
       await QueuedTask.Run(() =>
@@ -152,9 +172,17 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.Create(ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetSubcircuitUserFields
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetCircuitUserFields
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetSubcircuitUserFields()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetCircuitUserFields()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetSubcircuits(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Telecom.Subcircuit})
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetCircuitType(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitType)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetName(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetSectioned(System.Boolean)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetStartLocation(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetStopLocation(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Subcircuit.SetName(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Subcircuit.SetProviderID(System.Guid)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
       #region Create a physical circuit (non-sectioned) in the utility network with subcircuits
       await QueuedTask.Run(() =>
       {
@@ -183,7 +211,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
           Subcircuit subcircuit2 = new Subcircuit(circuitManager);
           subcircuit2.SetName("Subcircuit2");
-          subcircuit2.SetProviderID(new Guid("9B587BB4-FA30-4AC8-ACAC-4CB1BB087111")); // Example GUID 
+          subcircuit2.SetProviderID(new Guid("9B587BB4-FA30-4AC8-ACAC-4CB1BB087111")); // Example GUID
 
           // Add subcircuits to the circuit
           circuit.SetSubcircuits(new List<Subcircuit> {
@@ -202,6 +230,13 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetCircuitSections(System.Collections.Generic.IReadOnlyDictionary{ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitSection,System.Collections.Generic.List{ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitSection}})
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.Create(ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetCircuitType(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitType)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetName(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetSectioned(System.Boolean)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitSection.SetSectionType(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitSectionType)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitSection.SetStartLocation(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitSection.SetStopLocation(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
       #region Create a virtual sectioned circuit in the utility network
       await QueuedTask.Run(() =>
       {
@@ -246,6 +281,12 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.Alter(ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetName(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetStartLocation(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetStopLocation(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.SetSubcircuits(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Telecom.Subcircuit})
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetCircuits(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
       #region Alter an existing circuit in the utility network
       await QueuedTask.Run(() =>
       {
@@ -271,6 +312,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.Delete(System.Collections.Generic.IEnumerable{System.String})
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
       #region Delete circuits from the telecom domain network
 
       await QueuedTask.Run(() =>
@@ -287,9 +329,9 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetCircuits(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter)
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetCircuitNames(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter.#ctor(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocation},ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitLocationTypeFilter)
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter.#ctor(System.Collections.Generic.IEnumerable{System.Guid})
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter.#ctor(System.Collections.Generic.IEnumerable{System.String})
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.Circuit.GetName()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter.Hierarchy
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
       #region Get all circuits at a specific location within the utility network
 
       await QueuedTask.Run(() =>
@@ -322,8 +364,13 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyResult
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyOptions.#ctor
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.Verify(System.Collections.Generic.IEnumerable{System.String},ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyOptions)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyOptions.SynthesizeGeometries
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyResult.Geometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyResult.HasError
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyResult.Message
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitVerifyResult.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
       #region Verify a circuit to check for inconsistencies in the utility network
 
       await QueuedTask.Run(() =>
@@ -343,10 +390,18 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetUnitIdentifierManager
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetUnitIdentifierManager()
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifierManager.Query(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifier})
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitRange
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifier
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitQueryResult.Container
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitQueryResult.UnitRanges
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitRange.Content
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitRange.FirstUnit
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitRange.IsGap
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitRange.LastUnit
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSource(System.String)
       #region Query the contents of equipment containers in the utility network
 
       await QueuedTask.Run(() =>
@@ -384,6 +439,9 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifier
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifierManager.ReserveUnitIDs(ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifier,System.Int16,System.Int16)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetUnitIdentifierManager()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSource(System.String)
       #region Reserve a gap in an equipment container in the utility network
 
       await QueuedTask.Run(() =>
@@ -401,6 +459,9 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifierManager.Reset(System.Collections.Generic.IEnumerable{ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifier})
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetUnitIdentifierManager()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSource(System.String)
       #region Reset the contents of a container in the utility network to remove gaps and make the unit space contiguous
 
       await QueuedTask.Run(() =>
@@ -419,6 +480,9 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       #endregion
 
       // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifierManager.Resize(ArcGIS.Core.Data.UtilityNetwork.Telecom.UnitIdentifier,System.Int16)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetUnitIdentifierManager()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSource(System.String)
       #region Resize the content of a container in the utility network
 
       await QueuedTask.Run(() =>
@@ -440,6 +504,31 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathTracer
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathConnectivity
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetGroup.GetAssetType(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork.NetworkSources
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.GlobalID
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.GetAssetGroup(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathConnectivity.Edge
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathConnectivity.Junction
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathResult.Paths
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathTracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument,ArcGIS.Core.Data.ServiceSynchronizationType)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Configuration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultOptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultTypes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.StoppingLocations
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.DomainNetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.MaxHops
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.NumPaths
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.ValidateConsistency
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath.Geometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath.PathConnectivities
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath.StartLocation
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath.StopLocation
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.CreateElement(ArcGIS.Core.Data.UtilityNetwork.AssetType,System.Guid)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
       #region Run a path trace in the telecom domain network
 
       await QueuedTask.Run(() =>
@@ -458,6 +547,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
           List<TelecomElement> startingLocations = new List<TelecomElement>() { startElement };
           List<TelecomElement> stoppingLocations = new List<TelecomElement>() { stopElement };
 
+          // Path trace configuration 
           TraceConfiguration traceConfiguration = new TraceConfiguration()
           {
             MaxHops = 100,
@@ -466,6 +556,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
             ValidateConsistency = true
           };
 
+          // Trace argument for the path trace with the starting and stopping locations
           TraceArgument traceArgument = new TraceArgument(startingLocations)
           {
             StoppingLocations = stoppingLocations,
@@ -474,6 +565,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
             ResultOptions = new ResultOptions { IncludeGeometry = true }
           };
 
+          // Run the path trace asynchronously
           PathTracer pathTracer = traceManager.GetTracer<PathTracer>();
           IReadOnlyList<Result> results = pathTracer.Trace(traceArgument, ServiceSynchronizationType.Asynchronous);
           // Iterate through the path trace results
@@ -509,23 +601,56 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathConnectivity
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitTracer
       // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitResult.CircuitPaths
-      #region Run a circuit trace in the telecom domain network
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Element.GlobalID
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.GetCircuits(ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitFilter)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitPath.Circuit
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitPath.Geometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitPath.Path
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitPath.SectionPaths
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitTracer.Trace(ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathConnectivity.Edge
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.PathConnectivity.Junction
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.Configuration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultOptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument.ResultTypes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.DomainNetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.InferConnectivity
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.MaxHops
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.NumPaths
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceManager.GetTracer``1()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath.Geometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TracePath.PathConnectivities
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
+      // cref:ArcGIS.Core.Data.UtilityNetwork.Trace.Propagator
+      #region Run a circuit trace in the telecom domain network with a wavelength propagator
 
       await QueuedTask.Run(() =>
       {
+        using (UtilityNetworkDefinition utilityNetworkDefinition = utilityNetwork.GetDefinition())
         using (TraceManager traceManager = utilityNetwork.GetTraceManager())
         using (CircuitManager circuitManager = utilityNetwork.GetCircuitManager(telecomDomainNetwork))
         {
           Circuit circuitToTrace = circuitManager.GetCircuits(new CircuitFilter(circuitNames)).FirstOrDefault();
 
+          // Get wavelength network attribute
+          NetworkAttribute wavelengthAttribute = utilityNetworkDefinition.GetNetworkAttribute("Wavelength");
+
+          // Propagator for the wavelength attribute that uses the CWDM wavelength scheme ( C27 = 1270nm)
+          Propagator propagator = new Propagator(wavelengthAttribute, PropagatorFunction.BitwiseAnd, Operator.IncludesAny, "C27");
+
+          // Trace configuration for the circuit trace with the wavelength propagator
           TraceConfiguration traceConfiguration = new TraceConfiguration()
           {
             MaxHops = 10,
             NumPaths = 5,
             DomainNetwork = telecomDomainNetwork,
-            InferConnectivity = true
+            InferConnectivity = true,
+            Propagators = new List<Propagator>() { propagator }
           };
 
+          // Trace argument for the circuit trace with the trace configuration
           TraceArgument traceArgument = new TraceArgument(circuitToTrace)
           {
             Configuration = traceConfiguration,
@@ -533,6 +658,7 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
             ResultOptions = new ResultOptions() { IncludeGeometry = true }
           };
 
+          // Execute the circuit trace
           CircuitTracer circuitTracer = traceManager.GetTracer<CircuitTracer>();
           IReadOnlyList<Result> results = circuitTracer.Trace(traceArgument);
 
@@ -573,9 +699,28 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitExportOptions.#ctor
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceExportOptions
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.CircuitTracer.Export(System.Uri,ArcGIS.Core.Data.UtilityNetwork.Trace.TraceArgument,ArcGIS.Core.Data.UtilityNetwork.Trace.TraceExportOptions)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.IncludeDomainDescriptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.ExportOptions.ServiceSynchronizationType
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkAttribute.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitExportOptions.ResultOptions
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitExportOptions.ResultTypes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitExportOptions.SetAcknowledged
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitExportOptions.TraceConfiguration
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.IncludeGeometry
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.NetworkAttributes
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.ResultOptions.ResultFields
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.DomainNetwork
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeContainers
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.IncludeContent
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.InferConnectivity
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Trace.TraceConfiguration.SynthesizeGeometries
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetCircuitManager(ArcGIS.Core.Data.UtilityNetwork.Telecom.TelecomDomainNetwork)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetDefinition()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.GetTraceManager()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkAttributes()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetworkDefinition.GetNetworkSources()
+      // cref: ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitManager.Export(System.Collections.Generic.IEnumerable{System.String},ArcGIS.Core.Data.UtilityNetwork.Telecom.CircuitExportOptions,System.Uri)
       #region Export circuits
 
       await QueuedTask.Run(() =>
@@ -624,7 +769,13 @@ namespace ProSnippets.NetworkSnippets.TelecomDomainNetworkSnippets
 
       #endregion
 
-      // cref: ArcGIS.Core.Data.UtilityNetwork.Association.#ctor(ArcGIS.Core.Data.UtilityNetwork.AssociationType,ArcGIS.Core.Data.UtilityNetwork.Element,ArcGIS.Core.Data.UtilityNetwork.Element)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.AssetGroup.GetAssetType(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.DomainNetwork.NetworkSources
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.GetAssetGroup(System.String)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.NetworkSource.Name
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.AddAssociation(ArcGIS.Core.Data.UtilityNetwork.Association)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.CreateElement(ArcGIS.Core.Data.UtilityNetwork.AssetType,System.Guid)
+      // cref: ArcGIS.Core.Data.UtilityNetwork.UtilityNetwork.DeleteAssociation(ArcGIS.Core.Data.UtilityNetwork.Association)
       #region Add or delete an association between Telecom elements in the utility network
 
       await QueuedTask.Run(() =>

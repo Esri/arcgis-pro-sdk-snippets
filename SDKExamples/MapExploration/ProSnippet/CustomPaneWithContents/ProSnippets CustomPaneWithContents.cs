@@ -1,13 +1,9 @@
-﻿using ArcGIS.Core.CIM;
-using ArcGIS.Desktop.Core;
-using ArcGIS.Desktop.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using ArcGIS.Core.CIM;
+using ArcGIS.Desktop.Core;
+using ArcGIS.Desktop.Framework;
 
 namespace ProSnippets.MapExplorationSnippets.CustomPaneWithContents
 {
@@ -74,7 +70,10 @@ namespace ProSnippets.MapExplorationSnippets.CustomPaneWithContents
       get
       {
         if (_operationsManager == null)
+        {
           _operationsManager = new OperationManager();
+        }
+
         return _operationsManager;
       }
     }
@@ -85,7 +84,10 @@ namespace ProSnippets.MapExplorationSnippets.CustomPaneWithContents
 
     Contents IContentsProvider.Contents => throw new NotImplementedException();
 
-    bool IContentsControl.ReadOnly { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    bool IContentsControl.ReadOnly
+    {
+      get => throw new NotImplementedException(); set => throw new NotImplementedException();
+    }
 
     string IContentsControl.CaptionOverride => throw new NotImplementedException();
   }
